@@ -1,0 +1,764 @@
+// weapons.js — 武器行为 / 子弹 / 进化 / 升级选项 / 宝箱
+window.Weapons = (function () {
+  'use strict';
+  var E = Engine;
+
+  // ================= 子弹池 =================
+  var BMAX = 320;
+  var bullets = [];
+  function initPool() {
+    bullets.length = 0;
+    for (var i = 0; i < BMAX; i++) {
+      bullets.push({
+        alive: false, kind: '', spr: '', wid: '',
+        x: 0, y: 0, vx: 0, vy: 0, ttl: 0, born: 0,
+        dmg: 0, pierce: 0, size: 16, knock: 0,
+        angle: 0, spin: 0, phase: 0,
+        ox: 0, oy: 0, orbitR: 0, orbitSpd: 0,
+        slow: 0, slowDur: 0, stun: 0,
+        aux: 0, aux2: 0, evolved: false,
+        hitCd: null, // Map uid -> nextHitTime(run.t)
+        hitSet: null // Set uid(一次性穿透)
+      });
+    }
+  }
+
+  function getBullet() {
+    var oldest = null, ot = 1e18;
+    for (var i = 0; i < BMAX; i++) {
+      var b = bullets[i];
+      if (!b.alive) {
+        if (!b.hitCd) { b.hitCd = new Map(); b.hitSet = new Set(); }
+        b.hitCd.clear(); b.hitSet.clear();
+        return b;
+      }
+      if (b.born < ot) { ot = b.born; oldest = b; }
+    }
+    oldest.hitCd.clear(); oldest.hitSet.clear();
+    return oldest;
+  }
+
+  // ================= 武器数值 =================
+  function wStats(run, w) {
+    var def = w.evolved ? CFG.WEAPONS[CFG.EVOS[w.evoId].of] : CFG.WEAPONS[w.id];
+    var b = def.base, s = run.player.stats;
+    var st = {
+      dmg: b.dmg, cd: b.cd, count: b.count, speed: b.speed || 0,
+      pierce: b.pierce || 0, size: b.size || 16, knock: b.knock || 0,
+      chains: b.chains || 0, range: b.range || 0,
+      slow: b.slow || 0, slowDur: b.slowDur || 0,
+      poolDmg: b.poolDmg || 0, poolR: b.poolR || 0, poolDur: b.poolDur || 0,
+      dur: b.dur || 0, orbitR: b.orbitR || 0, zapCd: b.zapCd || 0,
+      areaMul: 1, durMul: 1
+    };
+    for (var i = 0; i < w.lv - 1 && i < def.lv.length; i++) {
+      var d = def.lv[i];
+      if (d.dmg) st.dmg += d.dmg;
+      if (d.count) st.count += d.count;
+      if (d.pierce) st.pierce += d.pierce;
+      if (d.chains) st.chains += d.chains;
+      if (d.poolDmg) st.poolDmg += d.poolDmg;
+      if (d.cdM) st.cd *= d.cdM;
+      if (d.areaM) st.areaMul *= d.areaM;
+      if (d.durM) st.durMul *= d.durM;
+      if (d.spdM) st.speed *= d.spdM;
+    }
+    if (w.evolved) {
+      var m = CFG.EVOS[w.evoId].mult;
+      if (m.dmg) st.dmg *= m.dmg;
+      if (m.count) st.count += m.count;
+      if (m.area) st.areaMul *= m.area;
+      if (m.chains) st.chains += m.chains;
+    }
+    // 玩家全局属性
+    st.dmg *= s.might;
+    st.cd = Math.max(0.12, st.cd * s.cd);
+    st.speed *= s.projSpd;
+    st.areaMul *= s.area;
+    st.size *= st.areaMul;
+    st.orbitR *= st.areaMul;
+    st.poolR *= st.areaMul;
+    st.range *= st.areaMul;
+    st.dur *= st.durMul;
+    st.poolDur *= st.durMul;
+    return st;
+  }
+
+  // ================= 开火 =================
+  function spawn(run, w, st, kind, spr, x, y, vx, vy, ttl) {
+    var b = getBullet();
+    b.alive = true; b.kind = kind; b.spr = spr; b.wid = w.id;
+    b.x = x; b.y = y; b.vx = vx; b.vy = vy;
+    b.ttl = ttl; b.born = run.t;
+    b.dmg = st.dmg; b.pierce = st.pierce; b.size = st.size; b.knock = st.knock;
+    b.angle = Math.atan2(vy, vx); b.spin = 0; b.phase = 0;
+    b.slow = st.slow; b.slowDur = st.slowDur; b.stun = 0;
+    b.aux = 0; b.aux2 = 0; b.evolved = w.evolved;
+    return b;
+  }
+
+  var scratch = []; // 复用的候选数组
+
+  function nearestEnemy(x, y, r, excludeSet) {
+    return E.gridNearest(x, y, r, excludeSet || null);
+  }
+
+  function collectInRange(x, y, r) {
+    scratch.length = 0;
+    E.gridQuery(x, y, r, function (e) { scratch.push(e); return false; });
+    return scratch;
+  }
+
+  function fire(run, w) {
+    var st = wStats(run, w);
+    var p = run.player;
+    var i, a, e, b;
+    switch (w.id) {
+      case 'crossblade': {
+        var dirs = [];
+        var f = Math.atan2(E.lastDir.y, E.lastDir.x);
+        for (i = 0; i < st.count; i++) {
+          if (i < 4) dirs.push(f + [0, Math.PI, Math.PI / 2, -Math.PI / 2][i]);
+          else dirs.push(f + Math.PI / 4 + (i - 4) * Math.PI / 2);
+        }
+        for (i = 0; i < dirs.length; i++) {
+          a = dirs[i];
+          b = spawn(run, w, st, w.evolved ? 'boomerang' : 'straight',
+            w.evolved ? 'p_slash_big' : 'p_slash',
+            p.x, p.y, Math.cos(a) * st.speed, Math.sin(a) * st.speed, 1.6);
+          if (w.evolved) { b.pierce = 9999; b.ox = p.x; b.oy = p.y; b.aux = st.speed; }
+          b.spin = 0;
+        }
+        AudioSys.play('shoot_slash');
+        break;
+      }
+      case 'arcanebolt': {
+        for (i = 0; i < st.count; i++) {
+          e = nearestEnemy(p.x, p.y, 500);
+          a = e ? Math.atan2(e.y - p.y, e.x - p.x) + (Math.random() - 0.5) * 0.8
+                : Math.random() * Math.PI * 2;
+          b = spawn(run, w, st, 'homing', 'p_bolt', p.x, p.y,
+            Math.cos(a) * st.speed, Math.sin(a) * st.speed, 3.5);
+          b.aux = st.speed;
+        }
+        AudioSys.play('shoot_bolt');
+        break;
+      }
+      case 'windbow': {
+        var base = w.evolved ? 0 : Math.atan2(E.lastDir.y, E.lastDir.x);
+        for (i = 0; i < st.count; i++) {
+          a = w.evolved ? (Math.PI * 2 / st.count) * i + run.t
+                        : base + (i - (st.count - 1) / 2) * 0.12;
+          spawn(run, w, st, 'straight', 'p_arrow', p.x, p.y,
+            Math.cos(a) * st.speed, Math.sin(a) * st.speed, 1.4);
+        }
+        AudioSys.play('shoot_arrow');
+        break;
+      }
+      case 'holyaura': return; // 光环在 update 里持续处理
+      case 'whirlaxe': {
+        for (i = 0; i < st.count; i++) {
+          var vx = (Math.random() - 0.5) * 220 + (E.lastDir.x * 60);
+          b = spawn(run, w, st, 'axe', 'p_axe', p.x, p.y, vx, -st.speed, 2.6);
+          b.spin = 9;
+          b.pierce = 9999;
+        }
+        AudioSys.play('shoot_axe');
+        break;
+      }
+      case 'chainlight': {
+        for (i = 0; i < st.count; i++) chainZap(run, w, st, p.x, p.y);
+        break;
+      }
+      case 'frostnova': {
+        b = spawn(run, w, st, 'nova', '', p.x, p.y, 0, 0, st.size / st.speed + 0.1);
+        b.aux = st.speed;  // 扩张速度
+        b.aux2 = st.size;  // 最大半径
+        b.pierce = 9999;
+        if (w.evolved) b.aux2 *= 1; // 面积已在 mult 中
+        AudioSys.play('nova');
+        break;
+      }
+      case 'fireflask': {
+        for (i = 0; i < st.count; i++) {
+          e = nearestEnemy(p.x, p.y, 320, null);
+          var tx, ty;
+          if (e && Math.random() < 0.8) { tx = e.x + (Math.random() * 60 - 30); ty = e.y + (Math.random() * 60 - 30); }
+          else { a = Math.random() * Math.PI * 2; var d = 90 + Math.random() * 180; tx = p.x + Math.cos(a) * d; ty = p.y + Math.sin(a) * d; }
+          b = spawn(run, w, st, 'lob', 'p_fireflask', p.x, p.y, 0, 0, 0.7);
+          b.ox = p.x; b.oy = p.y; b.aux = tx; b.aux2 = ty;
+          b.spin = 6;
+        }
+        AudioSys.play('shoot_flask');
+        break;
+      }
+      case 'shadowdagger': {
+        for (i = 0; i < st.count; i++) {
+          e = nearestEnemy(p.x + (Math.random() * 120 - 60), p.y + (Math.random() * 120 - 60), 340);
+          a = e ? Math.atan2(e.y - p.y, e.x - p.x)
+                : Math.atan2(E.lastDir.y, E.lastDir.x) + (Math.random() - 0.5) * 0.4;
+          b = spawn(run, w, st, 'straight', 'p_shadow', p.x, p.y,
+            Math.cos(a) * st.speed, Math.sin(a) * st.speed, 1.1);
+          if (w.evolved) { b.kind = 'ricochet'; b.pierce += 2; }
+        }
+        AudioSys.play('shoot_dagger');
+        break;
+      }
+      case 'orbitblade': {
+        // 已有存活刀片则不重复生成
+        if (countKind(w.id) > 0) return;
+        for (i = 0; i < st.count; i++) {
+          b = spawn(run, w, st, 'orbit', 'p_orbitblade', p.x, p.y, 0, 0,
+            w.evolved ? 1e9 : st.dur);
+          b.phase = (Math.PI * 2 / st.count) * i;
+          b.orbitR = st.orbitR; b.orbitSpd = 3.2 * (w.evolved ? 1.4 : 1);
+          b.pierce = 9999;
+        }
+        AudioSys.play('shoot_slash');
+        break;
+      }
+      case 'holytome': {
+        for (i = 0; i < st.count; i++) {
+          a = (Math.PI * 2 / st.count) * i + run.t * 0.7;
+          b = spawn(run, w, st, 'boomerang', 'p_book', p.x, p.y,
+            Math.cos(a) * st.speed, Math.sin(a) * st.speed, 3.0);
+          b.ox = p.x; b.oy = p.y; b.aux = st.speed;
+          b.pierce = 9999; b.spin = 7;
+        }
+        AudioSys.play('shoot_book');
+        break;
+      }
+      case 'teslacoil': {
+        for (i = 0; i < st.count; i++) {
+          a = Math.random() * Math.PI * 2;
+          b = spawn(run, w, st, 'turret', 'p_turret',
+            p.x + Math.cos(a) * 50, p.y + Math.sin(a) * 50, 0, 0, st.dur);
+          b.aux = st.zapCd * run.player.stats.cd; // 电击间隔
+          b.aux2 = 0;
+          b.orbitR = st.range;
+        }
+        AudioSys.play('turret_place');
+        break;
+      }
+    }
+  }
+
+  function countKind(wid) {
+    var n = 0;
+    for (var i = 0; i < BMAX; i++) if (bullets[i].alive && bullets[i].wid === wid) n++;
+    return n;
+  }
+
+  function chainZap(run, w, st, sx, sy) {
+    var cands = collectInRange(sx, sy, st.range || 260);
+    if (!cands.length) return;
+    var cur = cands[Math.floor(Math.random() * cands.length)];
+    var hit = new Set();
+    var px = sx, py = sy;
+    var n = st.chains + 1;
+    for (var i = 0; i < n && cur; i++) {
+      FX.lightning(px, py, cur.x, cur.y, w.evolved ? '#aef' : '#ffe97a');
+      Entities.damageEnemy(run, cur, st.dmg, { stun: w.evolved ? 0.8 : 0 });
+      hit.add(cur.uid);
+      px = cur.x; py = cur.y;
+      cur = nearestEnemy(px, py, 180, hit);
+    }
+    AudioSys.play('zap');
+    FX.shake(1.5, 0.1);
+  }
+
+  // ================= 子弹更新 =================
+  // 命中检测:一次性(hitSet)或周期性(hitCd);复用回调避免每帧闭包分配
+  var _hitB = null, _hitRun = null, _hitCdSec = 0, _hitAny = false, _hitOpts = { kx: 0, ky: 0, slow: 0, slowDur: 0, stun: 0 };
+  function hitCb(e) {
+    var b = _hitB;
+    if (_hitCdSec > 0) {
+      var next = b.hitCd.get(e.uid) || 0;
+      if (_hitRun.t < next) return false;
+      b.hitCd.set(e.uid, _hitRun.t + _hitCdSec);
+    } else {
+      if (b.hitSet.has(e.uid)) return false;
+      b.hitSet.add(e.uid);
+    }
+    var kb = b.knock || 0;
+    var d = Math.hypot(b.vx, b.vy) || 1;
+    _hitOpts.kx = kb * (b.vx / d); _hitOpts.ky = kb * (b.vy / d);
+    _hitOpts.slow = b.slow; _hitOpts.slowDur = b.slowDur; _hitOpts.stun = b.stun;
+    Entities.damageEnemy(_hitRun, e, b.dmg, _hitOpts);
+    AudioSys.play(Math.random() < 0.5 ? 'hit1' : 'hit2');
+    FX.trail(e.x, e.y, '#fff', 2);
+    if (_hitCdSec === 0) {
+      b.pierce--;
+      if (b.pierce < 0) { b.alive = false; return true; }
+    }
+    _hitAny = true;
+    return false;
+  }
+  function hitEnemiesAlong(run, b, radius, cdSec) {
+    _hitB = b; _hitRun = run; _hitCdSec = cdSec; _hitAny = false;
+    E.gridQuery(b.x, b.y, radius + 14, hitCb);
+    return _hitAny;
+  }
+
+  function updateBullets(run, dt) {
+    var p = run.player;
+    for (var i = 0; i < BMAX; i++) {
+      var b = bullets[i];
+      if (!b.alive) continue;
+      b.ttl -= dt;
+      if (b.ttl <= 0) {
+        if (b.kind === 'lob') landFlask(run, b);
+        b.alive = false;
+        continue;
+      }
+      switch (b.kind) {
+        case 'straight':
+        case 'ricochet':
+          b.x += b.vx * dt; b.y += b.vy * dt;
+          b.angle = Math.atan2(b.vy, b.vx);
+          if (hitEnemiesAlong(run, b, b.size * 0.5, 0) && b.kind === 'ricochet' && b.alive) {
+            var nx = nearestEnemy(b.x, b.y, 260, b.hitSet);
+            if (nx) {
+              var d = Math.hypot(b.vx, b.vy);
+              var a = Math.atan2(nx.y - b.y, nx.x - b.x);
+              b.vx = Math.cos(a) * d; b.vy = Math.sin(a) * d;
+            }
+          }
+          break;
+        case 'homing': {
+          var tgt = nearestEnemy(b.x, b.y, 420);
+          if (tgt) {
+            var ta = Math.atan2(tgt.y - b.y, tgt.x - b.x);
+            var ca = Math.atan2(b.vy, b.vx);
+            var da = ta - ca;
+            while (da > Math.PI) da -= Math.PI * 2;
+            while (da < -Math.PI) da += Math.PI * 2;
+            ca += E.clamp(da, -4.5 * dt, 4.5 * dt);
+            b.vx = Math.cos(ca) * b.aux; b.vy = Math.sin(ca) * b.aux;
+          }
+          b.x += b.vx * dt; b.y += b.vy * dt;
+          b.angle = Math.atan2(b.vy, b.vx);
+          if ((run.frame & 3) === 0) FX.trail(b.x, b.y, b.evolved ? '#c9f' : '#96f', 2);
+          var before = b.alive;
+          hitEnemiesAlong(run, b, b.size * 0.6, 0);
+          if (before && !b.alive && b.evolved) { // 奥术爆炸
+            FX.explosion(b.x, b.y, 40);
+            var bb = b;
+            E.gridQuery(b.x, b.y, 52, function (e) {
+              Entities.damageEnemy(run, e, bb.dmg * 0.6, { noCrit: true });
+              return false;
+            });
+          }
+          break;
+        }
+        case 'axe':
+          b.vy += 620 * dt;
+          b.x += b.vx * dt; b.y += b.vy * dt;
+          b.angle += b.spin * dt;
+          hitEnemiesAlong(run, b, b.size * 0.62, 0.3);
+          break;
+        case 'boomerang': {
+          b.phase += dt;
+          var out = b.phase < (b.ttl + b.phase) * 0.42; // 前 42% 时间外飞
+          if (b.kind === 'boomerang') {
+            if (out) { b.x += b.vx * dt; b.y += b.vy * dt; }
+            else { // 折返回玩家
+              var dxp = p.x - b.x, dyp = p.y - b.y;
+              var dd = Math.hypot(dxp, dyp) || 1;
+              var sp = b.aux * 1.25;
+              b.x += dxp / dd * sp * dt; b.y += dyp / dd * sp * dt;
+              if (dd < 24 && b.phase > 0.5) { b.alive = false; continue; }
+            }
+          }
+          b.angle += (b.spin || 5) * dt;
+          hitEnemiesAlong(run, b, b.size * 0.62, 0.35);
+          break;
+        }
+        case 'nova': {
+          b.phase += b.aux * dt; // 当前半径
+          var r = Math.min(b.phase, b.aux2);
+          var bn = b;
+          E.gridQuery(b.x, b.y, r + 10, function (e) {
+            if (bn.hitSet.has(e.uid)) return false;
+            var dd2 = E.dist2(e.x, e.y, bn.x, bn.y);
+            if (dd2 < (r + 8) * (r + 8) && dd2 > (r - 26) * (r - 26)) {
+              bn.hitSet.add(e.uid);
+              var kills = bn.evolved && Math.random() < 0.12 && !e.boss && !e.elite;
+              Entities.damageEnemy(run, e, kills ? e.hp + 999 : bn.dmg, {
+                slow: bn.slow, slowDur: bn.slowDur,
+                kx: (e.x - bn.x) * 0.8, ky: (e.y - bn.y) * 0.8
+              });
+              if (kills) FX.burst(e.x, e.y, { color: '#bff', n: 10, speed: 120, life: 0.4, size: 2 });
+            }
+            return false;
+          });
+          break;
+        }
+        case 'lob': {
+          var tt = 1 - b.ttl / 0.7;
+          b.x = E.lerp(b.ox, b.aux, tt);
+          b.y = E.lerp(b.oy, b.aux2, tt) - Math.sin(tt * Math.PI) * 80;
+          b.angle += b.spin * dt;
+          break;
+        }
+        case 'pool': {
+          if ((run.frame & 3) === 0) FX.trail(b.x + (Math.random() - 0.5) * b.size, b.y + (Math.random() - 0.5) * b.size * 0.7, '#f96', 3);
+          hitEnemiesAlong(run, b, b.size * 0.55, 0.45);
+          break;
+        }
+        case 'orbit': {
+          b.phase += b.orbitSpd * dt;
+          b.x = p.x + Math.cos(b.phase) * b.orbitR;
+          b.y = p.y + Math.sin(b.phase) * b.orbitR;
+          b.angle = b.phase + Math.PI / 2;
+          hitEnemiesAlong(run, b, b.size * 0.62, 0.4);
+          break;
+        }
+        case 'turret': {
+          b.aux2 -= dt;
+          if (b.aux2 <= 0) {
+            b.aux2 = b.aux;
+            var te = nearestEnemy(b.x, b.y, b.orbitR);
+            if (te) {
+              FX.lightning(b.x, b.y - 10, te.x, te.y, '#8ef');
+              Entities.damageEnemy(run, te, b.dmg, {});
+              AudioSys.play('zap');
+              if (b.evolved) { // 天网:链到第二个
+                var t2 = nearestEnemy(te.x, te.y, 150, tmpSet(te.uid));
+                if (t2) {
+                  FX.lightning(te.x, te.y, t2.x, t2.y, '#8ef');
+                  Entities.damageEnemy(run, t2, b.dmg * 0.7, {});
+                }
+              }
+            }
+          }
+          break;
+        }
+      }
+    }
+  }
+
+  var _tmpSet = new Set();
+  function tmpSet(uid) { _tmpSet.clear(); _tmpSet.add(uid); return _tmpSet; }
+
+  function landFlask(run, b) {
+    FX.explosion(b.x, b.y, 30);
+    AudioSys.play('bomb');
+    // 命中直伤
+    var bb = b;
+    E.gridQuery(b.x, b.y, 40, function (e) {
+      Entities.damageEnemy(run, e, bb.dmg, {});
+      return false;
+    });
+    // 燃烧地面
+    var pool = getBullet();
+    pool.alive = true; pool.kind = 'pool'; pool.spr = 'p_firepool'; pool.wid = b.wid;
+    pool.x = b.x; pool.y = b.y; pool.vx = 0; pool.vy = 0;
+    pool.born = run.t;
+    // 从武器当前数值重建池伤害
+    var w = findWeapon(runRef, b.wid);
+    var st = w ? wStats(runRef, w) : null;
+    pool.dmg = st ? st.poolDmg * (b.evolved ? 1.6 : 1) : b.dmg * 0.8;
+    pool.size = st ? st.poolR * 2 : 90;
+    pool.ttl = st ? st.poolDur : 3;
+    pool.pierce = 9999; pool.knock = 0; pool.slow = 0; pool.stun = 0;
+    pool.evolved = b.evolved;
+  }
+
+  function findWeapon(run, wid) {
+    if (!run) return null;
+    for (var i = 0; i < run.weapons.length; i++) if (run.weapons[i].id === wid) return run.weapons[i];
+    return null;
+  }
+
+  var runRef = null;
+
+  // ================= 每帧主更新 =================
+  function update(run, dt) {
+    runRef = run;
+    var p = run.player;
+    for (var i = 0; i < run.weapons.length; i++) {
+      var w = run.weapons[i];
+      if (w.id === 'holyaura') { updateAura(run, w, dt); continue; }
+      w.cdT -= dt;
+      if (w.cdT <= 0) {
+        var st = wStats(run, w);
+        w.cdT = st.cd;
+        if (w.id === 'orbitblade') {
+          if (countKind('orbitblade') === 0) fire(run, w);
+          else w.cdT = 0.5;
+        } else fire(run, w);
+      }
+    }
+    updateBullets(run, dt);
+  }
+
+  function updateAura(run, w, dt) {
+    var p = run.player;
+    w.cdT -= dt;
+    if (w.cdT > 0) return;
+    var st = wStats(run, w);
+    w.cdT = st.cd;
+    w.curR = st.size; // 供绘制
+    var slowAmt = w.evolved ? 0.3 : 0;
+    E.gridQuery(p.x, p.y, st.size, function (e) {
+      Entities.damageEnemy(run, e, st.dmg, {
+        noCrit: false, slow: slowAmt, slowDur: 0.6,
+        kx: (e.x - p.x) * 0.3, ky: (e.y - p.y) * 0.3
+      });
+      return false;
+    });
+    if (w.evolved) p.hp = Math.min(p.stats.hp, p.hp + 0.5);
+  }
+
+  // ================= 绘制 =================
+  function draw(ctx, run) {
+    var p = run.player;
+    // 圣光环
+    var wAura = findWeapon(run, 'holyaura');
+    if (wAura) {
+      var r = wAura.curR || wStats(run, wAura).size;
+      var g = ctx.createRadialGradient(p.x, p.y, r * 0.3, p.x, p.y, r);
+      var col = wAura.evolved ? '255,240,150' : '255,235,170';
+      g.addColorStop(0, 'rgba(' + col + ',0.02)');
+      g.addColorStop(0.8, 'rgba(' + col + ',0.10)');
+      g.addColorStop(0.95, 'rgba(' + col + ',0.28)');
+      g.addColorStop(1, 'rgba(' + col + ',0)');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2); ctx.fill();
+    }
+    for (var i = 0; i < BMAX; i++) {
+      var b = bullets[i];
+      if (!b.alive) continue;
+      if (b.kind === 'nova') {
+        var rr = Math.min(b.phase, b.aux2);
+        ctx.strokeStyle = b.evolved ? 'rgba(190,255,255,0.9)' : 'rgba(140,220,255,0.8)';
+        ctx.lineWidth = 8;
+        ctx.globalAlpha = E.clamp(b.ttl * 3, 0, 1);
+        ctx.beginPath(); ctx.arc(b.x, b.y, rr, 0, Math.PI * 2); ctx.stroke();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+        ctx.beginPath(); ctx.arc(b.x, b.y, rr - 5, 0, Math.PI * 2); ctx.stroke();
+        ctx.globalAlpha = 1;
+        continue;
+      }
+      var img = SpriteGen.get(b.spr);
+      var sc = 2 * (b.size / 16);
+      if (b.kind === 'pool') {
+        ctx.globalAlpha = 0.55 + Math.sin(run.t * 8 + i) * 0.2;
+        var fr = SpriteGen.frames(b.spr);
+        img = fr[Math.floor(run.t * 8) % fr.length];
+        ctx.drawImage(img, b.x - b.size / 2, b.y - b.size / 2, b.size, b.size);
+        ctx.globalAlpha = 1;
+        continue;
+      }
+      if (b.kind === 'turret') {
+        var frT = SpriteGen.frames(b.spr);
+        img = frT[Math.floor(run.t * 6) % frT.length];
+        ctx.drawImage(img, b.x - 16, b.y - 16, 32, 32);
+        if (b.ttl < 1) ctx.globalAlpha = 1; // 淡出可省
+        continue;
+      }
+      ctx.save();
+      ctx.translate(b.x, b.y);
+      ctx.rotate(b.angle);
+      var w2 = img.width * 2 * (b.size / 16) / 2;
+      var h2 = img.height * 2 * (b.size / 16) / 2;
+      ctx.drawImage(img, -w2, -h2, w2 * 2, h2 * 2);
+      ctx.restore();
+    }
+  }
+
+  // ================= 获得 / 升级 / 进化 =================
+  function addWeapon(run, id) {
+    run.weapons.push({ id: id, lv: 1, cdT: 0.2, evolved: false, evoId: null, curR: 0 });
+    Meta.seeCodex('w_' + id);
+    Meta.trackBest('weapons', run.weapons.length);
+  }
+  function addPassive(run, id) {
+    run.passives[id] = (run.passives[id] || 0) + 1;
+    Entities.recomputeStats(run);
+  }
+  function upgradeWeapon(run, w) { w.lv++; }
+
+  function evolveWeapon(run, w) {
+    var def = CFG.WEAPONS[w.id];
+    w.evolved = true;
+    w.evoId = def.evo;
+    Meta.track('evolve');
+    Meta.seeCodex('e_' + def.evo);
+    AudioSys.play('evolve');
+    return CFG.EVOS[def.evo];
+  }
+
+  function canEvolve(run, w) {
+    var def = CFG.WEAPONS[w.id];
+    if (!def || w.evolved) return false;
+    if (w.lv < def.lv.length + 1) return false;
+    return (run.passives[def.evoNeed] || 0) > 0;
+  }
+
+  // ================= 升级选项 =================
+  var DELTA_TXT = {
+    dmg: function (v) { return '伤害 +' + v; },
+    count: function (v) { return '投射物 +' + v; },
+    pierce: function (v) { return '穿透 +' + v; },
+    chains: function (v) { return '连锁 +' + v; },
+    poolDmg: function (v) { return '灼烧伤害 +' + v; },
+    cdM: function (v) { return '冷却 -' + Math.round((1 - v) * 100) + '%'; },
+    areaM: function (v) { return '范围 +' + Math.round((v - 1) * 100) + '%'; },
+    durM: function (v) { return '持续 +' + Math.round((v - 1) * 100) + '%'; },
+    spdM: function (v) { return '弹速 +' + Math.round((v - 1) * 100) + '%'; }
+  };
+  function deltaDesc(delta) {
+    var parts = [];
+    for (var k in delta) if (DELTA_TXT[k]) parts.push(DELTA_TXT[k](delta[k]));
+    return parts.join(',') || '威力提升';
+  }
+
+  function getLevelUpChoices(run) {
+    var pool = [];
+    var i, w, def;
+    // 已有武器升级
+    for (i = 0; i < run.weapons.length; i++) {
+      w = run.weapons[i];
+      def = CFG.WEAPONS[w.id];
+      if (w.evolved || w.lv >= def.lv.length + 1) continue;
+      if (run.banished.has(w.id)) continue;
+      pool.push({ type: 'weapon', id: w.id, isNew: false, weight: 10,
+        name: def.name + ' Lv.' + (w.lv + 1), icon: def.icon,
+        desc: deltaDesc(def.lv[w.lv - 1]), curLv: w.lv, maxLv: def.lv.length + 1 });
+    }
+    // 已有被动升级
+    for (var pid in run.passives) {
+      var pdef = CFG.PASSIVES[pid];
+      var plv = run.passives[pid];
+      if (plv >= pdef.maxLv || run.banished.has(pid)) continue;
+      pool.push({ type: 'passive', id: pid, isNew: false, weight: 8,
+        name: pdef.name + ' Lv.' + (plv + 1), icon: pdef.icon,
+        desc: pdef.desc, curLv: plv, maxLv: pdef.maxLv });
+    }
+    // 新武器
+    if (run.weapons.length < CFG.GAME.MAX_WEAPONS) {
+      for (var wid in CFG.WEAPONS) {
+        if (findWeapon(run, wid) || run.banished.has(wid)) continue;
+        def = CFG.WEAPONS[wid];
+        pool.push({ type: 'weapon', id: wid, isNew: true, weight: 6,
+          name: def.name, icon: def.icon, desc: def.desc, curLv: 0, maxLv: def.lv.length + 1 });
+      }
+    }
+    // 新被动
+    var pCount = 0;
+    for (var k in run.passives) pCount++;
+    if (pCount < CFG.GAME.MAX_PASSIVES) {
+      for (var pid2 in CFG.PASSIVES) {
+        if (run.passives[pid2] !== undefined || run.banished.has(pid2)) continue;
+        pool.push({ type: 'passive', id: pid2, isNew: true, weight: 5,
+          name: CFG.PASSIVES[pid2].name, icon: CFG.PASSIVES[pid2].icon,
+          desc: CFG.PASSIVES[pid2].desc, curLv: 0, maxLv: CFG.PASSIVES[pid2].maxLv });
+      }
+    }
+    // 全满:保底选项
+    if (!pool.length) {
+      return [
+        { type: 'gold', id: 'gold', name: '金币 ×30', icon: 'icon_gold', desc: '立即获得 30 金币', isNew: false, curLv: 0, maxLv: 0 },
+        { type: 'heal', id: 'heal', name: '烤肉', icon: 'meat', desc: '恢复 50 点生命', isNew: false, curLv: 0, maxLv: 0 }
+      ];
+    }
+    // 加权抽取 3~4 个
+    var n = 3;
+    var luck = run.player.stats.luck;
+    if (Math.random() < E.clamp((luck - 1) * 0.5 + 0.08, 0, 0.6)) n = 4;
+    var picks = [];
+    var cand = pool.slice();
+    while (picks.length < n && cand.length) {
+      var total = 0;
+      for (i = 0; i < cand.length; i++) total += cand[i].weight;
+      var r = Math.random() * total;
+      for (i = 0; i < cand.length; i++) {
+        r -= cand[i].weight;
+        if (r <= 0) { picks.push(cand[i]); cand.splice(i, 1); break; }
+      }
+    }
+    return picks;
+  }
+
+  function applyChoice(run, opt) {
+    switch (opt.type) {
+      case 'weapon':
+        if (opt.isNew) addWeapon(run, opt.id);
+        else upgradeWeapon(run, findWeapon(run, opt.id));
+        break;
+      case 'passive':
+        addPassive(run, opt.id);
+        break;
+      case 'gold':
+        run.gold += 30; Meta.track('gold', 30);
+        break;
+      case 'heal':
+        run.player.hp = Math.min(run.player.stats.hp, run.player.hp + 50);
+        break;
+    }
+    AudioSys.play('upgrade_pick');
+  }
+
+  // ================= 宝箱 =================
+  function chestLoot(run) {
+    Meta.track('chest');
+    var luck = run.player.stats.luck;
+    var results = [];
+    // 进化优先
+    for (var i = 0; i < run.weapons.length; i++) {
+      var w = run.weapons[i];
+      if (canEvolve(run, w)) {
+        var evo = evolveWeapon(run, w);
+        results.push({ name: evo.name, icon: evo.icon, desc: evo.desc, evolved: true });
+        break;
+      }
+    }
+    var roll = Math.random();
+    var count = roll < 0.04 * luck ? 5 : (roll < 0.18 * luck ? 3 : 1);
+    for (var j = 0; j < count; j++) {
+      // 随机升一件未满的武器/被动
+      var ups = [];
+      for (i = 0; i < run.weapons.length; i++) {
+        var w2 = run.weapons[i];
+        if (!w2.evolved && w2.lv < CFG.WEAPONS[w2.id].lv.length + 1) ups.push({ t: 'w', o: w2 });
+      }
+      for (var pid in run.passives) {
+        if (run.passives[pid] < CFG.PASSIVES[pid].maxLv) ups.push({ t: 'p', o: pid });
+      }
+      if (ups.length) {
+        var u = ups[Math.floor(Math.random() * ups.length)];
+        if (u.t === 'w') {
+          upgradeWeapon(run, u.o);
+          var d = CFG.WEAPONS[u.o.id];
+          results.push({ name: d.name + ' Lv.' + u.o.lv, icon: d.icon, desc: deltaDesc(d.lv[u.o.lv - 2]) });
+        } else {
+          addPassive(run, u.o);
+          var pd = CFG.PASSIVES[u.o];
+          results.push({ name: pd.name + ' Lv.' + run.passives[u.o], icon: pd.icon, desc: pd.desc });
+        }
+      } else {
+        var g = 25 + Math.floor(Math.random() * 50);
+        run.gold += g; Meta.track('gold', g);
+        results.push({ name: '金币 ×' + g, icon: 'icon_gold', desc: '入账!' });
+      }
+    }
+    // 附赠金币
+    var bonus = 10 + Math.floor(Math.random() * 30 * luck);
+    run.gold += bonus; Meta.track('gold', bonus);
+    results.push({ name: '金币 ×' + bonus, icon: 'icon_gold', desc: '宝箱附赠' });
+    return results;
+  }
+
+  function reset() { initPool(); runRef = null; }
+
+  return {
+    update: update, draw: draw, reset: reset,
+    addWeapon: addWeapon, addPassive: addPassive,
+    getLevelUpChoices: getLevelUpChoices, applyChoice: applyChoice,
+    chestLoot: chestLoot, canEvolve: canEvolve, findWeapon: findWeapon,
+    wStats: wStats
+  };
+})();
