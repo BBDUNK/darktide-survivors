@@ -1,0 +1,73 @@
+{
+  "gold": 50000,
+  "metaLv": {
+    "m_hp": 5,
+    "m_dmg": 5,
+    "m_armor": 3,
+    "m_speed": 3,
+    "m_regen": 3,
+    "m_cd": 3,
+    "m_area": 3,
+    "m_magnet": 3,
+    "m_luck": 3,
+    "m_growth": 3,
+    "m_greed": 3,
+    "m_revive": 1,
+    "m_reroll": 3,
+    "m_banish": 3
+  },
+  "achv": {
+    "a_kill_100": true,
+    "a_kill_1000": true,
+    "a_kill_5000": true,
+    "a_kill_20000": true,
+    "a_survive_5": true,
+    "a_survive_10": true,
+    "a_survive_15": true,
+    "a_survive_10_wilds": true,
+    "a_win": true,
+    "a_win_3": true,
+    "a_boss_first": true,
+    "a_boss_10": true,
+    "a_evolve": true,
+    "a_evolve_5": true,
+    "a_level_50": true,
+    "a_gold_2000": true,
+    "a_gold_10000": true,
+    "a_chest_10": true,
+    "a_weapons_6": true,
+    "a_shop_10": true,
+    "a_die_1": true,
+    "a_bomb_5": true
+  },
+  "codex": {},
+  "settings": {
+    "music": 0.7,
+    "sfx": 0.8,
+    "shake": true,
+    "dmgText": true,
+    "hpBar": true
+  },
+  "stats": {
+    "kills": 25000,
+    "goldEarned": 15000,
+    "deaths": 5,
+    "wins": 5,
+    "bossKills": 20,
+    "evolves": 10,
+    "chests": 50,
+    "shopBuys": 50,
+    "bombs": 20,
+    "bestSurvive": 1200,
+    "bestLevel": 80,
+    "bestWeapons": 6,
+    "bestKillsRun": 5000,
+    "runs": 10,
+    "playTime": 7200,
+    "surviveByMap": {
+      "graveyard": 1200,
+      "wilds": 900,
+      "abyss": 600
+    }
+  }
+}

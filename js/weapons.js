@@ -116,14 +116,13 @@ window.Weapons = (function () {
     switch (w.id) {
       case 'crossblade': {
         for (i = 0; i < st.count; i++) {
-          e = nearestEnemy(p.x, p.y, 500);
-          a = e ? Math.atan2(e.y - p.y, e.x - p.x) + (Math.random() - 0.5) * 0.8
-                : Math.atan2(E.lastDir.y, E.lastDir.x) + (Math.random() - 0.5) * 0.8;
-          b = spawn(run, w, st, w.evolved ? 'boomerang' : 'homing',
+          e = nearestEnemy(p.x, p.y, 300);
+          a = e ? Math.atan2(e.y - p.y, e.x - p.x) + (i - (st.count - 1) / 2) * 0.2
+                : Math.atan2(E.lastDir.y, E.lastDir.x) + (i - (st.count - 1) / 2) * 0.2;
+          b = spawn(run, w, st, w.evolved ? 'boomerang' : 'straight',
             w.evolved ? 'p_slash_big' : 'p_slash',
-            p.x, p.y, Math.cos(a) * st.speed, Math.sin(a) * st.speed, w.evolved ? 1.6 : 2.5);
-          if (w.evolved) { b.pierce = 9999; b.ox = p.x; b.oy = p.y; }
-          b.aux = st.speed;
+            p.x, p.y, Math.cos(a) * st.speed, Math.sin(a) * st.speed, w.evolved ? 1.6 : 2.0);
+          if (w.evolved) { b.pierce = 9999; b.ox = p.x; b.oy = p.y; b.aux = st.speed; }
           b.spin = 0;
         }
         AudioSys.play('shoot_slash');
@@ -131,7 +130,7 @@ window.Weapons = (function () {
       }
       case 'arcanebolt': {
         for (i = 0; i < st.count; i++) {
-          e = nearestEnemy(p.x, p.y, 500);
+          e = nearestEnemy(p.x, p.y, 350);
           a = e ? Math.atan2(e.y - p.y, e.x - p.x) + (Math.random() - 0.5) * 0.8
                 : Math.random() * Math.PI * 2;
           b = spawn(run, w, st, 'homing', 'p_bolt', p.x, p.y,
@@ -142,14 +141,13 @@ window.Weapons = (function () {
         break;
       }
       case 'windbow': {
+        e = nearestEnemy(p.x, p.y, 300);
+        var wbBase = e ? Math.atan2(e.y - p.y, e.x - p.x) : Math.atan2(E.lastDir.y, E.lastDir.x);
         for (i = 0; i < st.count; i++) {
-          e = nearestEnemy(p.x, p.y, 500);
-          a = e ? Math.atan2(e.y - p.y, e.x - p.x) + (i - (st.count - 1) / 2) * 0.15
-                : Math.atan2(E.lastDir.y, E.lastDir.x) + (i - (st.count - 1) / 2) * 0.15;
-          if (w.evolved) a = (Math.PI * 2 / st.count) * i + run.t;
-          b = spawn(run, w, st, 'homing', 'p_arrow', p.x, p.y,
-            Math.cos(a) * st.speed, Math.sin(a) * st.speed, 1.8);
-          b.aux = st.speed;
+          a = w.evolved ? (Math.PI * 2 / st.count) * i + run.t
+                        : wbBase + (i - (st.count - 1) / 2) * 0.15;
+          spawn(run, w, st, 'straight', 'p_arrow', p.x, p.y,
+            Math.cos(a) * st.speed, Math.sin(a) * st.speed, 1.5);
         }
         AudioSys.play('shoot_arrow');
         break;
@@ -179,7 +177,7 @@ window.Weapons = (function () {
       }
       case 'fireflask': {
         for (i = 0; i < st.count; i++) {
-          e = nearestEnemy(p.x, p.y, 320, null);
+          e = nearestEnemy(p.x, p.y, 280, null);
           var tx, ty;
           if (e && Math.random() < 0.8) { tx = e.x + (Math.random() * 60 - 30); ty = e.y + (Math.random() * 60 - 30); }
           else { a = Math.random() * Math.PI * 2; var d = 90 + Math.random() * 180; tx = p.x + Math.cos(a) * d; ty = p.y + Math.sin(a) * d; }
@@ -192,7 +190,7 @@ window.Weapons = (function () {
       }
       case 'shadowdagger': {
         for (i = 0; i < st.count; i++) {
-          e = nearestEnemy(p.x + (Math.random() * 120 - 60), p.y + (Math.random() * 120 - 60), 340);
+          e = nearestEnemy(p.x + (Math.random() * 120 - 60), p.y + (Math.random() * 120 - 60), 300);
           a = e ? Math.atan2(e.y - p.y, e.x - p.x)
                 : Math.atan2(E.lastDir.y, E.lastDir.x) + (Math.random() - 0.5) * 0.4;
           b = spawn(run, w, st, 'straight', 'p_shadow', p.x, p.y,
@@ -527,7 +525,17 @@ window.Weapons = (function () {
     }
     for (var i = 0; i < BMAX; i++) {
       var b = bullets[i];
+      if (!b.alive || b.kind !== 'pool') continue;
+      ctx.globalAlpha = 0.55 + Math.sin(run.t * 8 + i) * 0.2;
+      var fr0 = SpriteGen.frames(b.spr);
+      var img0 = fr0[Math.floor(run.t * 8) % fr0.length];
+      ctx.drawImage(img0, b.x - b.size / 2, b.y - b.size / 2, b.size, b.size);
+      ctx.globalAlpha = 1;
+    }
+    for (var i = 0; i < BMAX; i++) {
+      var b = bullets[i];
       if (!b.alive) continue;
+      if (b.kind === 'pool') continue; // 已在地面层画过
       if (b.kind === 'nova') {
         var rr = Math.min(b.phase, b.aux2);
         ctx.strokeStyle = b.evolved ? 'rgba(190,255,255,0.9)' : 'rgba(140,220,255,0.8)';
@@ -542,14 +550,6 @@ window.Weapons = (function () {
       }
       var img = SpriteGen.get(b.spr);
       var sc = 2 * (b.size / 16);
-      if (b.kind === 'pool') {
-        ctx.globalAlpha = 0.55 + Math.sin(run.t * 8 + i) * 0.2;
-        var fr = SpriteGen.frames(b.spr);
-        img = fr[Math.floor(run.t * 8) % fr.length];
-        ctx.drawImage(img, b.x - b.size / 2, b.y - b.size / 2, b.size, b.size);
-        ctx.globalAlpha = 1;
-        continue;
-      }
       if (b.kind === 'turret') {
         var frT = SpriteGen.frames(b.spr);
         img = frT[Math.floor(run.t * 6) % frT.length];
