@@ -6,6 +6,13 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..');
 
 // ---------------- 浏览器桩 ----------------
+// 浏览器对负半径 arc / NaN 坐标会抛 IndexSizeError,桩必须复现该行为,
+// 否则渲染崩溃(画面撕裂)在无头环境下静默通过。
+function badNums(name, nums) {
+  for (const [k, v] of nums) {
+    if (typeof v !== 'number' || Number.isNaN(v)) throw new Error(`ctx.${name}: ${k} 不是有效数字 (${v})`);
+  }
+}
 function makeCtx(canvas) {
   const noop = () => {};
   const grad = { addColorStop: noop };
@@ -15,12 +22,22 @@ function makeCtx(canvas) {
     font: '', textAlign: '', textBaseline: '', globalCompositeOperation: 'source-over',
     imageSmoothingEnabled: false, lineCap: '', lineJoin: '', shadowBlur: 0, shadowColor: '',
     fillRect: noop, strokeRect: noop, clearRect: noop,
-    beginPath: noop, closePath: noop, moveTo: noop, lineTo: noop, arc: noop, rect: noop,
+    beginPath: noop, closePath: noop, moveTo: noop, lineTo: noop, rect: noop,
+    arc: (x, y, r) => {
+      badNums('arc', [['x', x], ['y', y], ['r', r]]);
+      if (r < 0) throw new Error(`ctx.arc: 半径为负 (${r}) — 浏览器会抛 IndexSizeError`);
+    },
     fill: noop, stroke: noop, save: noop, restore: noop,
     translate: noop, rotate: noop, scale: noop, setTransform: noop, transform: noop,
-    drawImage: noop, fillText: noop, strokeText: noop,
+    drawImage: (img) => { if (!img) throw new Error('ctx.drawImage: 图像为空'); },
+    fillText: noop, strokeText: noop,
     measureText: () => ({ width: 10 }),
-    createRadialGradient: () => grad, createLinearGradient: () => grad, createPattern: () => null,
+    createRadialGradient: (x0, y0, r0, x1, y1, r1) => {
+      badNums('createRadialGradient', [['r0', r0], ['r1', r1]]);
+      if (r0 < 0 || r1 < 0) throw new Error(`ctx.createRadialGradient: 半径为负 (${r0}, ${r1})`);
+      return grad;
+    },
+    createLinearGradient: () => grad, createPattern: () => null,
     getImageData: (x, y, w, hh) => ({ data: new Uint8ClampedArray(Math.max(1, w * hh) * 4), width: w, height: hh }),
     putImageData: noop,
     createImageData: (w, hh) => ({ data: new Uint8ClampedArray(Math.max(1, w * hh) * 4), width: w, height: hh }),
@@ -147,7 +164,7 @@ windowObj.window = windowObj;
 windowObj.globalThis = windowObj;
 const context = vm.createContext(windowObj);
 
-const files = ['js/config.js', 'js/sprites.js', 'js/audio.js', 'js/fx.js', 'js/engine.js', 'js/meta.js', 'js/entities.js', 'js/weapons.js', 'js/minimap.js', 'js/ui.js', 'js/main.js'];
+const files = ['js/config.js', 'js/sprites.js', 'js/audio.js', 'js/fx.js', 'js/engine.js', 'js/meta.js', 'js/entities.js', 'js/weapons.js', 'js/minimap.js', 'js/encyclopedia.js', 'js/ui.js', 'js/main.js'];
 let failed = false;
 for (const f of files) {
   const src = fs.readFileSync(path.join(ROOT, f), 'utf8');
@@ -282,6 +299,39 @@ try {
     console.log('RUN2 OK   第二局 20 秒,新增击杀 ' + (afterKills - beforeKills));
     if (afterKills - beforeKills < 3) { console.error('FAIL      重开后战斗异常'); process.exit(1); }
   }
+  // 9. 全武器满级 + 进化渲染压测
+  //    每把武器单独开一局并直接推到满级/进化,逐帧渲染,捕捉负半径之类的绘制崩溃
+  const allWeapons = Object.keys(G('CFG.WEAPONS'));
+  for (const wid of allWeapons) {
+    vm.runInContext(`__testRun = null; UI.show('menu');`, context);
+    step(2, 'reset for ' + wid);
+    findByText(uiRoot, '开始远征').click(); step(2, 'chars');
+    findByText(uiRoot, '下一步').click(); step(2, 'maps');
+    findByText(uiRoot, '出发').click(); step(2, 'run');
+    // 通过 main.js 暴露的调试钩子拿到 run,替换为满级该武器 + 进化所需被动
+    const ok = vm.runInContext(`(function(){
+      var r = Debug && Debug.run && Debug.run();
+      if (!r) return 'no-run';
+      var def = CFG.WEAPONS['${wid}'];
+      r.weapons.length = 0;
+      Weapons.addWeapon(r, '${wid}');
+      r.weapons[0].lv = def.lv.length + 1;
+      r.passives[def.evoNeed] = CFG.PASSIVES[def.evoNeed].maxLv;
+      Entities.recomputeStats(r);
+      r.pendingChest++;
+      return 'ok';
+    })()`, context);
+    if (ok !== 'ok') throw new Error('无法注入武器 ' + wid + ' (' + ok + ')');
+    // 开宝箱触发进化,然后跑 8 秒渲染
+    step(5, wid + ' chest');
+    clickModals();
+    for (let s = 0; s < 8; s++) { paceDir(s, 1); step(60, wid + ' t=' + s); clickModals(); }
+    setDir([]);
+    const evolved = vm.runInContext(`(function(){var r=Debug.run();return r&&r.weapons[0]?!!r.weapons[0].evolved:false})()`, context);
+    console.log('  WEAPON OK ' + wid + (evolved ? ' (已进化)' : ''));
+  }
+  console.log('WEAPONS OK 全部 ' + allWeapons.length + ' 把武器满级/进化渲染无崩溃');
+
   console.log('\n=== 无头冒烟测试全部通过 ===');
 } catch (e) {
   console.error('\n!!! 冒烟测试失败: ' + e.stack);

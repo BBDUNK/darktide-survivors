@@ -9,3 +9,6 @@ Thumbs.db
 *.iml
 
 .vercel
+
+# 自查截图产物
+shots/

@@ -38,6 +38,7 @@ window.Engine = (function () {
     window.addEventListener('keydown', function (e) {
       keys[e.code] = true;
       if (e.code === 'Escape' || e.code === 'KeyP') { if (Engine.onPause) Engine.onPause(); }
+      if (e.code === 'KeyM') { if (Engine.onToggleMap) Engine.onToggleMap(); }
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].indexOf(e.code) >= 0) e.preventDefault();
     });
     window.addEventListener('keyup', function (e) { keys[e.code] = false; });
@@ -180,6 +181,6 @@ window.Engine = (function () {
     cam: cam, start: start, fitCanvas: fitCanvas,
     setTimeScale: function (s) { timeScale = s; },
     nextUid: function () { return uidCounter++; },
-    onPause: null, onBlur: null
+    onPause: null, onBlur: null, onToggleMap: null
   };
 })();

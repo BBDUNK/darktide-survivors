@@ -53,13 +53,22 @@ window.Entities = (function () {
       if (iv.x > 0.01) p.face = 1; else if (iv.x < -0.01) p.face = -1;
       p.animT += dt;
     }
+    // 地图边界:玩家不能越出结界
+    var R = CFG.GAME.MAP_R;
+    p.x = E.clamp(p.x, -R, R);
+    p.y = E.clamp(p.y, -R, R);
     if (p.iframe > 0) p.iframe -= dt;
     if (p.hurtFlash > 0) p.hurtFlash -= dt;
     // 回复
     if (s.regen > 0 && p.hp < s.hp) p.hp = Math.min(s.hp, p.hp + s.regen * dt);
-    // 相机跟随
+    // 相机跟随(同样夹在边界内,避免镜头越过结界露出空白)
     E.cam.x = E.lerp(E.cam.x, p.x, 1 - Math.pow(0.001, dt));
     E.cam.y = E.lerp(E.cam.y, p.y, 1 - Math.pow(0.001, dt));
+    // 留出余量让结界墙进入视野(不要夹到刚好贴墙,否则看不见边界)
+    var margin = 90;
+    var cmX = Math.max(0, R - CFG.GAME.W / 2 + margin), cmY = Math.max(0, R - CFG.GAME.H / 2 + margin);
+    E.cam.x = E.clamp(E.cam.x, -cmX, cmX);
+    E.cam.y = E.clamp(E.cam.y, -cmY, cmY);
   }
 
   function damagePlayer(run, dmg) {
@@ -145,10 +154,21 @@ window.Entities = (function () {
     return e;
   }
 
+  // 在玩家周围环上取一个位于地图边界内的点
+  function ringPoint(run, radius) {
+    var R = CFG.GAME.MAP_R, p = run.player;
+    for (var tries = 0; tries < 8; tries++) {
+      var a = Math.random() * Math.PI * 2;
+      var x = p.x + Math.cos(a) * radius, y = p.y + Math.sin(a) * radius;
+      if (x >= -R && x <= R && y >= -R && y <= R) return { x: x, y: y };
+    }
+    return { x: E.clamp(p.x, -R, R), y: E.clamp(p.y, -R, R) };
+  }
+
   function spawnAtRing(run, id, opts) {
-    var a = Math.random() * Math.PI * 2;
     var r = CFG.GAME.SPAWN_R + Math.random() * 80;
-    return spawnEnemy(run, id, run.player.x + Math.cos(a) * r, run.player.y + Math.sin(a) * r, opts);
+    var pt = ringPoint(run, r);
+    return spawnEnemy(run, id, pt.x, pt.y, opts);
   }
 
   // 中心伤害入口(武器调用)
@@ -316,11 +336,17 @@ window.Entities = (function () {
 
       contactCheck(run, e, p);
 
+      // 敌人也不能越出结界
+      var eR = CFG.GAME.MAP_R;
+      if (e.x < -eR) { e.x = -eR; e.kx = 0; }
+      else if (e.x > eR) { e.x = eR; e.kx = 0; }
+      if (e.y < -eR) { e.y = -eR; e.ky = 0; }
+      else if (e.y > eR) { e.y = eR; e.ky = 0; }
+
       // 远离过远 → 搬回出生环(Boss除外)
       if (!e.boss && E.dist2(e.x, e.y, p.x, p.y) > CFG.GAME.DESPAWN_R * CFG.GAME.DESPAWN_R) {
-        var a = Math.random() * Math.PI * 2;
-        e.x = p.x + Math.cos(a) * CFG.GAME.SPAWN_R;
-        e.y = p.y + Math.sin(a) * CFG.GAME.SPAWN_R;
+        var rp = ringPoint(run, CFG.GAME.SPAWN_R);
+        e.x = rp.x; e.y = rp.y;
       }
     }
 
@@ -621,17 +647,24 @@ window.Entities = (function () {
     var p = run.player, i, a;
     switch (ev.type) {
       case 'ring': // 包围圈
+        var evR = CFG.GAME.MAP_R;
         for (i = 0; i < ev.n; i++) {
           a = (Math.PI * 2 / ev.n) * i;
-          spawnEnemy(run, ev.id, p.x + Math.cos(a) * 480, p.y + Math.sin(a) * 480);
+          spawnEnemy(run, ev.id,
+            E.clamp(p.x + Math.cos(a) * 480, -evR, evR),
+            E.clamp(p.y + Math.sin(a) * 480, -evR, evR));
         }
         if (run.cb.onWarn) run.cb.onWarn('敌潮从四面八方涌来!');
         break;
       case 'swarm': // 一侧蜂拥
         a = Math.random() * Math.PI * 2;
+        var swR = CFG.GAME.MAP_R;
         for (i = 0; i < ev.n; i++) {
           var da = a + (Math.random() - 0.5) * 0.9;
-          spawnEnemy(run, ev.id, p.x + Math.cos(da) * (CFG.GAME.SPAWN_R + Math.random() * 100), p.y + Math.sin(da) * (CFG.GAME.SPAWN_R + Math.random() * 100));
+          var sd = CFG.GAME.SPAWN_R + Math.random() * 100;
+          spawnEnemy(run, ev.id,
+            E.clamp(p.x + Math.cos(da) * sd, -swR, swR),
+            E.clamp(p.y + Math.sin(da) * sd, -swR, swR));
         }
         if (run.cb.onWarn) run.cb.onWarn('兽群的嚎叫逼近……');
         break;
@@ -720,6 +753,14 @@ window.Entities = (function () {
       if (!g.alive) continue;
       var gname = g.v >= 30 ? 'gem_big' : (g.v >= 10 ? 'gem3' : (g.v >= 3 ? 'gem2' : 'gem1'));
       var bob = Math.sin(g.t * 4 + i) * 2;
+      // 大颗经验加一圈微光
+      if (g.v >= 10) {
+        var gg = ctx.createRadialGradient(g.x, g.y, 1, g.x, g.y, 16);
+        gg.addColorStop(0, 'rgba(89,194,255,0.30)');
+        gg.addColorStop(1, 'rgba(89,194,255,0)');
+        ctx.fillStyle = gg;
+        ctx.beginPath(); ctx.arc(g.x, g.y, 16, 0, Math.PI * 2); ctx.fill();
+      }
       drawSprite(ctx, gname, 0, g.x, g.y + bob, 0.75, false, 1, null);
     }
     // 道具
@@ -728,11 +769,22 @@ window.Entities = (function () {
       if (!it.alive) continue;
       var bob2 = Math.sin(it.t * 3 + i) * 2;
       var nm = it.type === 'coin' ? 'coin' : (it.type === 'chest' ? 'chest' : it.type);
+      // 拾取物地面柔光,远处也能看见
+      var glowCol = it.type === 'chest' ? '255,215,107'
+        : (it.type === 'coin' ? '255,235,120'
+        : (it.type === 'meat' ? '255,120,140' : '120,200,255'));
+      var gr = it.type === 'chest' ? 38 : 20;
+      var pulse = 0.5 + Math.sin(it.t * 4) * 0.5;
+      var ig = ctx.createRadialGradient(it.x, it.y, 1, it.x, it.y, gr);
+      ig.addColorStop(0, 'rgba(' + glowCol + ',' + (0.30 + pulse * 0.22).toFixed(3) + ')');
+      ig.addColorStop(1, 'rgba(' + glowCol + ',0)');
+      ctx.fillStyle = ig;
+      ctx.beginPath(); ctx.arc(it.x, it.y, gr, 0, Math.PI * 2); ctx.fill();
       drawSprite(ctx, nm, it.type === 'coin' ? animF : 0, it.x, it.y + bob2, it.type === 'chest' ? 1.2 : 0.9, false, 1, null);
-      if (it.type === 'chest') { // 宝箱光晕
-        ctx.globalAlpha = 0.25 + Math.sin(it.t * 5) * 0.15;
+      if (it.type === 'chest') { // 宝箱额外上升光柱
+        ctx.globalAlpha = 0.10 + pulse * 0.10;
         ctx.fillStyle = '#ffd76b';
-        ctx.beginPath(); ctx.arc(it.x, it.y, 24, 0, Math.PI * 2); ctx.fill();
+        ctx.fillRect(it.x - 9, it.y - 60, 18, 60);
         ctx.globalAlpha = 1;
       }
     }

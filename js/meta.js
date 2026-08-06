@@ -2,7 +2,46 @@
 window.Meta = (function () {
   'use strict';
 
+  // ⚠ 测试期配置:新存档直接全解锁 + 商店满级,方便试玩全部内容。
+  // 正式发布前把 TEST_UNLOCK_ALL 改为 false 即恢复从零开始的渐进解锁。
+  var TEST_UNLOCK_ALL = true;
+
+  function allAchv() {
+    var o = {};
+    for (var i = 0; i < CFG.ACHV.length; i++) o[CFG.ACHV[i].id] = true;
+    return o;
+  }
+  function allMetaMax() {
+    var o = {};
+    for (var i = 0; i < CFG.META.length; i++) o[CFG.META[i].id] = CFG.META[i].maxLv;
+    return o;
+  }
+  function allCodex() {
+    var o = {}, k;
+    for (k in CFG.ENEMIES) o[k] = true;
+    for (k in CFG.BOSSES) o[k] = true;
+    for (k in CFG.WEAPONS) { o['w_' + k] = true; o['e_' + CFG.WEAPONS[k].evo] = true; }
+    for (var i = 0; i < CFG.CHARS.length; i++) o[CFG.CHARS[i].sprite] = true;
+    return o;
+  }
+
   var defaults = function () {
+    if (TEST_UNLOCK_ALL) {
+      return {
+        gold: 50000,
+        metaLv: allMetaMax(),
+        achv: allAchv(),
+        codex: allCodex(),
+        settings: { music: 0.7, sfx: 0.8, shake: true, dmgText: true, hpBar: true },
+        stats: {
+          kills: 25000, goldEarned: 60000, deaths: 5, wins: 5, bossKills: 20,
+          evolves: 10, chests: 50, shopBuys: 50, bombs: 20,
+          bestSurvive: 1200, bestLevel: 80, bestWeapons: 6, bestKillsRun: 5000,
+          runs: 10, playTime: 7200,
+          surviveByMap: { graveyard: 1200, wilds: 900, abyss: 600 }
+        }
+      };
+    }
     return {
       gold: 0,
       metaLv: {},          // {m_hp: 2, ...}

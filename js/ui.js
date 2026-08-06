@@ -85,7 +85,7 @@ window.UI = (function () {
     col.appendChild(btn('⚔ 开始远征', 'big primary', function () { refreshChars(); show('chars'); }));
     col.appendChild(btn('🏛 强化圣坛', 'big', function () { refreshShop(); show('shop'); }));
     col.appendChild(btn('🏆 成就', 'big', function () { refreshAchv(); show('achv'); }));
-    col.appendChild(btn('📖 图鉴', 'big', function () { refreshCodex(); show('codex'); }));
+    col.appendChild(btn('📖 百科全书', 'big', function () { codexFrom = 'menu'; refreshCodex(); show('codex'); }));
     col.appendChild(btn('⚙ 设置', 'big', function () { refreshSettings(); show('settings'); }));
     s.appendChild(col);
     menuStats = h('div', 'menu-stats');
@@ -270,50 +270,137 @@ window.UI = (function () {
     achvList.insertBefore(h('div', 'achv-progress', '已达成 ' + got + ' / ' + CFG.ACHV.length), achvList.firstChild);
   }
 
-  // ---------- 图鉴 ----------
-  var codexBody, codexTab = 'w';
+  // ---------- 百科全书 ----------
+  var codexBody, codexTabs, codexTab = 'w', codexFrom = 'menu';
   function buildCodex() {
-    var s = h('div', 'screen panel-col wide');
-    s.appendChild(h('div', 'page-title', '图鉴'));
-    var tabs = h('div', 'btn-row');
-    tabs.appendChild(btn('武器', '', function () { codexTab = 'w'; refreshCodex(); }));
-    tabs.appendChild(btn('敌人', '', function () { codexTab = 'e'; refreshCodex(); }));
-    s.appendChild(tabs);
-    codexBody = h('div', 'codex-grid');
+    var s = h('div', 'screen panel-col wide enc-layer');
+    s.appendChild(h('div', 'page-title', '百科全书'));
+    codexTabs = h('div', 'btn-row');
+    s.appendChild(codexTabs);
+    codexBody = h('div', 'enc-body');
     s.appendChild(codexBody);
-    s.appendChild(btn('← 返回', '', function () { show('menu'); }));
+    s.appendChild(btn('← 返回', '', function () {
+      if (codexFrom === 'pause') { overlay('codex', false); overlay('pause', true); }
+      else show('menu');
+    }));
     screens.codex = s; root.appendChild(s);
   }
+
+  function renderCodexTabs() {
+    codexTabs.innerHTML = '';
+    var tabs = [['w', '⚔ 武器'], ['p', '💠 被动'], ['e', '☠ 敌人'], ['m', '📖 机制']];
+    tabs.forEach(function (t) {
+      codexTabs.appendChild(btn(t[1], codexTab === t[0] ? 'primary small-btn' : 'small-btn',
+        function () { codexTab = t[0]; refreshCodex(); }));
+    });
+  }
+
   function refreshCodex() {
+    renderCodexTabs();
     codexBody.innerHTML = '';
-    var seen = Meta.data().codex;
-    if (codexTab === 'w') {
-      for (var wid in CFG.WEAPONS) {
-        var w = CFG.WEAPONS[wid];
-        var evo = CFG.EVOS[w.evo];
-        var cell = h('div', 'codex-cell');
-        cell.appendChild(iconCanvas(w.icon, 32));
-        cell.appendChild(h('div', 'codex-name', w.name));
-        cell.appendChild(h('div', 'codex-desc', w.desc));
-        var evoSeen = seen['e_' + w.evo];
-        var evoLine = h('div', 'codex-evo');
-        evoLine.appendChild(iconCanvas(evoSeen ? evo.icon : w.icon, 18));
-        evoLine.appendChild(h('span', '', evoSeen ? ' → ' + evo.name : ' → ???(' + CFG.PASSIVES[w.evoNeed].name + ' + 满级 + 宝箱)'));
-        cell.appendChild(evoLine);
-        codexBody.appendChild(cell);
-      }
-    } else {
-      var all = Object.keys(CFG.ENEMIES).concat(Object.keys(CFG.BOSSES));
-      all.forEach(function (id) {
-        var def = CFG.ENEMIES[id] || CFG.BOSSES[id];
-        var s2 = seen[id];
-        var cell = h('div', 'codex-cell' + (s2 ? '' : ' unseen'));
-        cell.appendChild(iconCanvas(id, 32));
-        cell.appendChild(h('div', 'codex-name', s2 ? def.name : '???'));
-        cell.appendChild(h('div', 'codex-desc', s2 ? ('生命 ' + def.hp + ' · 伤害 ' + def.dmg + (CFG.BOSSES[id] ? ' · BOSS' : '')) : '尚未遭遇'));
-        codexBody.appendChild(cell);
+    if (codexTab === 'w') renderEncWeapons();
+    else if (codexTab === 'p') renderEncPassives();
+    else if (codexTab === 'e') renderEncEnemies();
+    else renderEncMechanics();
+  }
+
+  function renderEncWeapons() {
+    Encyclopedia.weapons().forEach(function (w) {
+      var card = h('div', 'enc-card');
+      var head = h('div', 'enc-head');
+      head.appendChild(iconCanvas(w.icon, 34));
+      var ht = h('div', 'enc-headtext');
+      ht.appendChild(h('div', 'enc-name', w.name));
+      ht.appendChild(h('div', 'enc-sub', w.desc));
+      head.appendChild(ht);
+      card.appendChild(head);
+      card.appendChild(h('div', 'enc-base', '基础:' + w.base));
+      var lvBox = h('div', 'enc-levels');
+      lvBox.appendChild(h('div', 'enc-label', '升级成长(满级 Lv.' + w.maxLv + ')'));
+      w.levels.forEach(function (l) {
+        var row = h('div', 'enc-lvrow');
+        row.appendChild(h('span', 'enc-lvnum', 'Lv.' + l.lv));
+        row.appendChild(h('span', 'enc-lvtext', l.text));
+        lvBox.appendChild(row);
       });
-    }
+      card.appendChild(lvBox);
+      var evoBox = h('div', 'enc-evo');
+      var eh = h('div', 'enc-evohead');
+      eh.appendChild(iconCanvas(w.evo.icon, 26));
+      var eht = h('div', '');
+      eht.appendChild(h('div', 'enc-evoname', '🌟 ' + w.evo.name));
+      eht.appendChild(h('div', 'enc-sub', w.evo.desc));
+      eh.appendChild(eht);
+      evoBox.appendChild(eh);
+      evoBox.appendChild(h('div', 'enc-evoneed', '进化条件:' + w.evo.how));
+      if (w.evo.mult) evoBox.appendChild(h('div', 'enc-evomult', '进化加成:' + w.evo.mult));
+      card.appendChild(evoBox);
+      codexBody.appendChild(card);
+    });
+  }
+
+  function renderEncPassives() {
+    Encyclopedia.passives().forEach(function (p) {
+      var card = h('div', 'enc-card');
+      var head = h('div', 'enc-head');
+      head.appendChild(iconCanvas(p.icon, 30));
+      var ht = h('div', 'enc-headtext');
+      ht.appendChild(h('div', 'enc-name', p.name));
+      ht.appendChild(h('div', 'enc-sub', p.desc + ' · 最高 ' + p.maxLv + ' 级'));
+      head.appendChild(ht);
+      card.appendChild(head);
+      var lvBox = h('div', 'enc-levels');
+      p.rows.forEach(function (r) {
+        var row = h('div', 'enc-lvrow');
+        row.appendChild(h('span', 'enc-lvnum', 'Lv.' + r.lv));
+        row.appendChild(h('span', 'enc-lvtext', r.text));
+        lvBox.appendChild(row);
+      });
+      card.appendChild(lvBox);
+      if (p.unlocks.length) {
+        card.appendChild(h('div', 'enc-evoneed', '可触发进化:' + p.unlocks.join('、')));
+      }
+      codexBody.appendChild(card);
+    });
+  }
+
+  function renderEncEnemies() {
+    var list = Encyclopedia.enemies();
+    list.forEach(function (e) {
+      var card = h('div', 'enc-card' + (e.boss ? ' boss' : ''));
+      var head = h('div', 'enc-head');
+      head.appendChild(iconCanvas(e.id, e.boss ? 40 : 30));
+      var ht = h('div', 'enc-headtext');
+      ht.appendChild(h('div', 'enc-name', (e.boss ? '👑 ' : '') + e.name));
+      ht.appendChild(h('div', 'enc-sub', e.ai));
+      head.appendChild(ht);
+      card.appendChild(head);
+      var st = h('div', 'enc-stats');
+      [['生命', e.hp], ['伤害', e.dmg], ['速度', e.spd], ['经验', e.xp]].forEach(function (kv) {
+        var cell = h('div', 'enc-stat');
+        cell.appendChild(h('div', 'enc-statval', String(kv[1])));
+        cell.appendChild(h('div', 'enc-statlabel', kv[0]));
+        st.appendChild(cell);
+      });
+      card.appendChild(st);
+      if (e.traits.length) {
+        var tb = h('div', 'enc-traits');
+        e.traits.forEach(function (t) { tb.appendChild(h('div', 'enc-trait', '· ' + t)); });
+        card.appendChild(tb);
+      }
+      codexBody.appendChild(card);
+    });
+  }
+
+  function renderEncMechanics() {
+    Encyclopedia.mechanics().forEach(function (m) {
+      var card = h('div', 'enc-card');
+      card.appendChild(h('div', 'enc-name', m.title));
+      var box = h('div', 'enc-traits');
+      m.lines.forEach(function (l) { box.appendChild(h('div', 'enc-trait', '· ' + l)); });
+      card.appendChild(box);
+      codexBody.appendChild(card);
+    });
   }
 
   // ---------- 设置 ----------
@@ -414,9 +501,6 @@ window.UI = (function () {
     // 警告文字
     hudRefs.warn = h('div', 'hud-warn hidden', '');
     s.appendChild(hudRefs.warn);
-    // 暂停按钮(触屏)
-    var pauseBtn = btn('❚❚', 'pause-btn', function () { cb.onPauseToggle(); });
-    s.appendChild(pauseBtn);
     screens.hud = s; root.appendChild(s);
   }
 
@@ -571,6 +655,12 @@ window.UI = (function () {
     box.appendChild(pauseBuild);
     var col = h('div', 'menu-col');
     col.appendChild(btn('▶ 继续', 'big primary', function () { cb.onResume(); }));
+    col.appendChild(btn('📖 百科全书', 'big', function () {
+      codexFrom = 'pause';
+      overlay('pause', false);
+      refreshCodex();
+      overlay('codex', true);
+    }));
     col.appendChild(btn('🏳 放弃这局', 'big danger', function () { cb.onGiveUp(); }));
     box.appendChild(col);
     s.appendChild(box);

@@ -181,33 +181,52 @@
     var g = c.getContext('2d');
     var grad = g.createRadialGradient(c.width / 2, c.height / 2, c.height * 0.42, c.width / 2, c.height / 2, c.height * 0.85);
     grad.addColorStop(0, 'rgba(0,0,0,0)');
-    grad.addColorStop(1, 'rgba(0,0,0,0.55)');
+    grad.addColorStop(1, 'rgba(0,0,0,0.38)');
     g.fillStyle = grad;
     g.fillRect(0, 0, c.width, c.height);
     return c;
   }
 
   function drawGround(pal, camX, camY) {
+    var W = CFG.GAME.W, H = CFG.GAME.H;
     ctx.fillStyle = pal.ground;
-    ctx.fillRect(0, 0, CFG.GAME.W, CFG.GAME.H);
-    // 地面碎点(确定性散布)
-    var cell = 48;
-    var x0 = Math.floor((camX - CFG.GAME.W / 2) / cell) - 1;
-    var x1 = Math.floor((camX + CFG.GAME.W / 2) / cell) + 1;
-    var y0 = Math.floor((camY - CFG.GAME.H / 2) / cell) - 1;
-    var y1 = Math.floor((camY + CFG.GAME.H / 2) / cell) + 1;
-    ctx.fillStyle = pal.ground2;
+    ctx.fillRect(0, 0, W, H);
+
+    // 第一层:大块地砖色差,给地面基础层次
+    var big = 160;
+    var bx0 = Math.floor((camX - W / 2) / big) - 1, bx1 = Math.floor((camX + W / 2) / big) + 1;
+    var by0 = Math.floor((camY - H / 2) / big) - 1, by1 = Math.floor((camY + H / 2) / big) + 1;
+    for (var by = by0; by <= by1; by++) {
+      for (var bx = bx0; bx <= bx1; bx++) {
+        var bh = E.hash2(bx * 17 + 5, by * 17 + 5);
+        if (bh < 0.5) continue;
+        ctx.globalAlpha = 0.35 * (bh - 0.5);
+        ctx.fillStyle = pal.ground2;
+        ctx.fillRect(bx * big - camX + W / 2, by * big - camY + H / 2, big, big);
+      }
+    }
+    ctx.globalAlpha = 1;
+
+    // 第二层:细碎石砾(密度提高,尺寸分级)
+    var cell = 32;
+    var x0 = Math.floor((camX - W / 2) / cell) - 1, x1 = Math.floor((camX + W / 2) / cell) + 1;
+    var y0 = Math.floor((camY - H / 2) / cell) - 1, y1 = Math.floor((camY + H / 2) / cell) + 1;
     for (var cy = y0; cy <= y1; cy++) {
       for (var cx = x0; cx <= x1; cx++) {
         var hsh = E.hash2(cx, cy);
-        if (hsh < 0.45) {
-          var px = cx * cell - camX + CFG.GAME.W / 2 + (hsh * 991 % 1) * 30;
-          var py = cy * cell - camY + CFG.GAME.H / 2 + (hsh * 577 % 1) * 30;
-          var s = hsh < 0.12 ? 6 : 3;
-          ctx.fillRect(px | 0, py | 0, s, s);
-        }
+        if (hsh >= 0.62) continue;
+        var px = cx * cell - camX + W / 2 + (hsh * 991 % 1) * 22;
+        var py = cy * cell - camY + H / 2 + (hsh * 577 % 1) * 22;
+        var s, col;
+        if (hsh < 0.08) { s = 5; col = pal.decor; }
+        else if (hsh < 0.26) { s = 3; col = pal.ground2; }
+        else { s = 2; col = pal.ground2; }
+        ctx.globalAlpha = hsh < 0.08 ? 0.5 : 0.85;
+        ctx.fillStyle = col;
+        ctx.fillRect(px | 0, py | 0, s, s);
       }
     }
+    ctx.globalAlpha = 1;
   }
 
   function drawDecor(map, camX, camY) {
@@ -228,11 +247,57 @@
           var wy = cy * cell + h2 * cell;
           var sx = wx - camX + CFG.GAME.W / 2;
           var sy = wy - camY + CFG.GAME.H / 2;
-          ctx.globalAlpha = 0.9;
-          ctx.drawImage(img, (sx - img.width) | 0, (sy - img.height * 2) | 0, img.width * 2, img.height * 2);
+          var dw = img.width * 2, dh = img.height * 2;
+          // 贴地投影:让装饰物落在地面上而不是浮空
+          ctx.globalAlpha = 0.32;
+          ctx.fillStyle = '#000';
+          ctx.beginPath();
+          ctx.ellipse((sx - dw / 2 + dw / 2) | 0, sy | 0, dw * 0.36, dh * 0.10, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.globalAlpha = 0.92;
+          ctx.drawImage(img, (sx - img.width) | 0, (sy - dh) | 0, dw, dh);
           ctx.globalAlpha = 1;
         }
       }
+    }
+  }
+
+  // 暗潮结界:地图边界的流动光墙(世界坐标系内绘制)
+  function drawBoundary(run) {
+    var R = CFG.GAME.MAP_R;
+    var pulse = 0.45 + Math.sin(run.t * 2) * 0.18;
+    // 外侧虚空
+    ctx.fillStyle = 'rgba(4,2,10,0.92)';
+    ctx.fillRect(-R - 2000, -R - 2000, 2000, (R + 2000) * 2);        // 左
+    ctx.fillRect(R, -R - 2000, 2000, (R + 2000) * 2);                 // 右
+    ctx.fillRect(-R, -R - 2000, R * 2, 2000);                          // 上
+    ctx.fillRect(-R, R, R * 2, 2000);                                  // 下
+    // 结界光墙
+    ctx.strokeStyle = 'rgba(150,90,255,' + pulse.toFixed(3) + ')';
+    ctx.lineWidth = 6;
+    ctx.strokeRect(-R, -R, R * 2, R * 2);
+    ctx.strokeStyle = 'rgba(220,190,255,' + (pulse * 0.7).toFixed(3) + ')';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(-R + 5, -R + 5, (R - 5) * 2, (R - 5) * 2);
+    // 沿墙流动的符文点
+    ctx.fillStyle = 'rgba(200,160,255,' + (pulse * 0.9).toFixed(3) + ')';
+    var span = R * 2, step = 160;
+    var drift = (run.t * 40) % step;
+    for (var o = -R + drift; o < R; o += step) {
+      ctx.fillRect(o, -R - 1, 26, 4);
+      ctx.fillRect(o, R - 3, 26, 4);
+      ctx.fillRect(-R - 1, o, 4, 26);
+      ctx.fillRect(R - 3, o, 4, 26);
+    }
+    // 靠近边界时的警示
+    var p = run.player;
+    var near = Math.min(R - Math.abs(p.x), R - Math.abs(p.y));
+    if (near < 180) {
+      ctx.globalAlpha = (1 - near / 180) * 0.5;
+      ctx.strokeStyle = '#ff6688';
+      ctx.lineWidth = 10;
+      ctx.strokeRect(-R, -R, R * 2, R * 2);
+      ctx.globalAlpha = 1;
     }
   }
 
@@ -252,10 +317,21 @@
 
     ctx.save();
     ctx.translate(CFG.GAME.W / 2 - camX, CFG.GAME.H / 2 - camY);
+    drawBoundary(run);
     Entities.draw(ctx, run);
     Weapons.draw(ctx, run);
     FX.draw(ctx);
     ctx.restore();
+
+    // 玩家周围柔光:提升主体可读性
+    var pls = CFG.GAME.W / 2 + (run.player.x - camX);
+    var plt = CFG.GAME.H / 2 + (run.player.y - camY);
+    var lg = ctx.createRadialGradient(pls, plt, 10, pls, plt, 190);
+    lg.addColorStop(0, 'rgba(190,175,255,0.13)');
+    lg.addColorStop(0.55, 'rgba(150,130,230,0.05)');
+    lg.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = lg;
+    ctx.fillRect(0, 0, CFG.GAME.W, CFG.GAME.H);
 
     // 雾色叠层 + 暗角
     ctx.globalAlpha = 0.10 + Math.sin(run.t * 0.4) * 0.03;
@@ -317,6 +393,11 @@
     E.onBlur = function () {
       if (state === 'run') togglePause();
     };
+    E.onToggleMap = function () {
+      if (state !== 'run') return;
+      var m = Minimap.toggle();
+      UI.warn(m === 'full' ? '🗺 小地图:全图' : '🗺 小地图:周围');
+    };
 
     UI.init({
       onStartRun: function (charId, mapId) { newRun(charId, mapId); },
@@ -344,6 +425,11 @@
 
     Engine.start(update, render);
   }
+
+  window.Debug = {
+    run: function () { return run; },
+    state: function () { return state; }
+  };
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();

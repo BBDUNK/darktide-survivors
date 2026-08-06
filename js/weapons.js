@@ -168,7 +168,7 @@ window.Weapons = (function () {
         break;
       }
       case 'frostnova': {
-        b = spawn(run, w, st, 'nova', 'p_nova', p.x, p.y, 0, 0, 0.8);
+        b = spawn(run, w, st, 'nova', '', p.x, p.y, 0, 0, 0.8);
         b.aux = st.speed;  // 扩张速度
         b.aux2 = st.size;  // 最大半径
         b.pierce = 9999;
@@ -538,13 +538,16 @@ window.Weapons = (function () {
       if (b.kind === 'pool') continue; // 已在地面层画过
       if (b.kind === 'nova') {
         var rr = Math.min(b.phase, b.aux2);
+        if (rr < 1) continue;
         ctx.strokeStyle = b.evolved ? 'rgba(190,255,255,0.9)' : 'rgba(140,220,255,0.8)';
         ctx.lineWidth = 8;
         ctx.globalAlpha = E.clamp(b.ttl * 3, 0, 1);
         ctx.beginPath(); ctx.arc(b.x, b.y, rr, 0, Math.PI * 2); ctx.stroke();
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = 'rgba(255,255,255,0.9)';
-        ctx.beginPath(); ctx.arc(b.x, b.y, rr - 5, 0, Math.PI * 2); ctx.stroke();
+        if (rr > 6) {
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+          ctx.beginPath(); ctx.arc(b.x, b.y, rr - 5, 0, Math.PI * 2); ctx.stroke();
+        }
         ctx.globalAlpha = 1;
         continue;
       }

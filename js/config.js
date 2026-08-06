@@ -8,6 +8,7 @@ window.CFG = {
     GEM_CAP: 260,
     SPAWN_R: 620,            // 出生环半径
     DESPAWN_R: 900,          // 超出则搬回出生环
+    MAP_R: 2400,             // 地图半边长(方形边界 ±MAP_R,约 5×5 屏)
     MAX_WEAPONS: 6,
     MAX_PASSIVES: 6,
     SAVE_KEY: 'darktide_save_v1'
@@ -182,7 +183,7 @@ window.CFG = {
   MAPS: [
     { id: 'graveyard', name: '幽暗墓园', desc: '雾锁的古老墓地,亡者在此不得安息',
       unlock: null, hpMul: 1.0, rateMul: 1.0,
-      palette: { ground: '#181423', ground2: '#1d1830', decor: '#3a3153', fog: '#241d3d', vign: '#0a0714' },
+      palette: { ground: '#221c33', ground2: '#2b2445', decor: '#4d4270', fog: '#2b2247', vign: '#0a0714' },
       decors: ['deco_grave', 'deco_deadtree', 'deco_bone', 'deco_fence', 'deco_skullpost'],
       music: 'graveyard',
       waves: [
@@ -218,7 +219,7 @@ window.CFG = {
       ] },
     { id: 'wilds', name: '血月荒野', desc: '猩红之月照耀的猎场,兽群嗅到了你的血',
       unlock: { achv: 'a_survive_10' }, hpMul: 1.35, rateMul: 1.2,
-      palette: { ground: '#1c1410', ground2: '#241a12', decor: '#4a3320', fog: '#3d1a14', vign: '#120705' },
+      palette: { ground: '#2a1e16', ground2: '#35261a', decor: '#63452b', fog: '#4a201a', vign: '#120705' },
       decors: ['deco_tree2', 'deco_rock', 'deco_bush', 'deco_mushroom'],
       music: 'wilds',
       waves: [
@@ -250,7 +251,7 @@ window.CFG = {
       ] },
     { id: 'abyss', name: '深渊回廊', desc: '世界裂缝的最深处,暗潮的源头',
       unlock: { achv: 'a_survive_10_wilds' }, hpMul: 1.8, rateMul: 1.4,
-      palette: { ground: '#0d1020', ground2: '#121530', decor: '#2a3060', fog: '#141a3d', vign: '#05070f' },
+      palette: { ground: '#161c33', ground2: '#1e2447', decor: '#3a4480', fog: '#1e2750', vign: '#05070f' },
       decors: ['deco_pillar', 'deco_crystal', 'deco_rune', 'deco_stalag'],
       music: 'abyss',
       waves: [
