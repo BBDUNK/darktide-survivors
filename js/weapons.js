@@ -115,18 +115,15 @@ window.Weapons = (function () {
     var i, a, e, b;
     switch (w.id) {
       case 'crossblade': {
-        var dirs = [];
-        var f = Math.atan2(E.lastDir.y, E.lastDir.x);
         for (i = 0; i < st.count; i++) {
-          if (i < 4) dirs.push(f + [0, Math.PI, Math.PI / 2, -Math.PI / 2][i]);
-          else dirs.push(f + Math.PI / 4 + (i - 4) * Math.PI / 2);
-        }
-        for (i = 0; i < dirs.length; i++) {
-          a = dirs[i];
-          b = spawn(run, w, st, w.evolved ? 'boomerang' : 'straight',
+          e = nearestEnemy(p.x, p.y, 500);
+          a = e ? Math.atan2(e.y - p.y, e.x - p.x) + (Math.random() - 0.5) * 0.8
+                : Math.atan2(E.lastDir.y, E.lastDir.x) + (Math.random() - 0.5) * 0.8;
+          b = spawn(run, w, st, w.evolved ? 'boomerang' : 'homing',
             w.evolved ? 'p_slash_big' : 'p_slash',
-            p.x, p.y, Math.cos(a) * st.speed, Math.sin(a) * st.speed, 1.6);
-          if (w.evolved) { b.pierce = 9999; b.ox = p.x; b.oy = p.y; b.aux = st.speed; }
+            p.x, p.y, Math.cos(a) * st.speed, Math.sin(a) * st.speed, w.evolved ? 1.6 : 2.5);
+          if (w.evolved) { b.pierce = 9999; b.ox = p.x; b.oy = p.y; }
+          b.aux = st.speed;
           b.spin = 0;
         }
         AudioSys.play('shoot_slash');
@@ -145,12 +142,14 @@ window.Weapons = (function () {
         break;
       }
       case 'windbow': {
-        var base = w.evolved ? 0 : Math.atan2(E.lastDir.y, E.lastDir.x);
         for (i = 0; i < st.count; i++) {
-          a = w.evolved ? (Math.PI * 2 / st.count) * i + run.t
-                        : base + (i - (st.count - 1) / 2) * 0.12;
-          spawn(run, w, st, 'straight', 'p_arrow', p.x, p.y,
-            Math.cos(a) * st.speed, Math.sin(a) * st.speed, 1.4);
+          e = nearestEnemy(p.x, p.y, 500);
+          a = e ? Math.atan2(e.y - p.y, e.x - p.x) + (i - (st.count - 1) / 2) * 0.15
+                : Math.atan2(E.lastDir.y, E.lastDir.x) + (i - (st.count - 1) / 2) * 0.15;
+          if (w.evolved) a = (Math.PI * 2 / st.count) * i + run.t;
+          b = spawn(run, w, st, 'homing', 'p_arrow', p.x, p.y,
+            Math.cos(a) * st.speed, Math.sin(a) * st.speed, 1.8);
+          b.aux = st.speed;
         }
         AudioSys.play('shoot_arrow');
         break;
@@ -171,11 +170,10 @@ window.Weapons = (function () {
         break;
       }
       case 'frostnova': {
-        b = spawn(run, w, st, 'nova', '', p.x, p.y, 0, 0, st.size / st.speed + 0.1);
+        b = spawn(run, w, st, 'nova', 'p_nova', p.x, p.y, 0, 0, 0.8);
         b.aux = st.speed;  // 扩张速度
         b.aux2 = st.size;  // 最大半径
         b.pierce = 9999;
-        if (w.evolved) b.aux2 *= 1; // 面积已在 mult 中
         AudioSys.play('nova');
         break;
       }
@@ -731,10 +729,12 @@ window.Weapons = (function () {
       if (ups.length) {
         var u = ups[Math.floor(Math.random() * ups.length)];
         if (u.t === 'w') {
+          var oldLv = u.o.lv;
           upgradeWeapon(run, u.o);
           var d = CFG.WEAPONS[u.o.id];
-          results.push({ name: d.name + ' Lv.' + u.o.lv, icon: d.icon, desc: deltaDesc(d.lv[u.o.lv - 2]) });
+          results.push({ name: d.name + ' Lv.' + u.o.lv, icon: d.icon, desc: deltaDesc(d.lv[oldLv - 1]) });
         } else {
+          var oldPLv = run.passives[u.o];
           addPassive(run, u.o);
           var pd = CFG.PASSIVES[u.o];
           results.push({ name: pd.name + ' Lv.' + run.passives[u.o], icon: pd.icon, desc: pd.desc });

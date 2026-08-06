@@ -269,6 +269,8 @@
       ctx.lineWidth = 6;
       ctx.strokeRect(3, 3, CFG.GAME.W - 6, CFG.GAME.H - 6);
     }
+    // 小地图
+    Minimap.draw(ctx, run);
     FX.drawUI(ctx);
   }
 

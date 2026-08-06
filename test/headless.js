@@ -147,7 +147,7 @@ windowObj.window = windowObj;
 windowObj.globalThis = windowObj;
 const context = vm.createContext(windowObj);
 
-const files = ['js/config.js', 'js/sprites.js', 'js/audio.js', 'js/fx.js', 'js/engine.js', 'js/meta.js', 'js/entities.js', 'js/weapons.js', 'js/ui.js', 'js/main.js'];
+const files = ['js/config.js', 'js/sprites.js', 'js/audio.js', 'js/fx.js', 'js/engine.js', 'js/meta.js', 'js/entities.js', 'js/weapons.js', 'js/minimap.js', 'js/ui.js', 'js/main.js'];
 let failed = false;
 for (const f of files) {
   const src = fs.readFileSync(path.join(ROOT, f), 'utf8');

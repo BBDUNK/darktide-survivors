@@ -795,6 +795,8 @@ window.Entities = (function () {
     updateEnemies: updateEnemies, updateGems: updateGems, updateItems: updateItems,
     spawnGem: spawnGem, spawnItem: spawnItem, addXp: addXp, bombBlast: bombBlast,
     director: director, draw: draw, reset: reset,
-    pool: enemies, countAlive: countAlive, drawSprite: drawSprite
+    pool: enemies, countAlive: countAlive, drawSprite: drawSprite,
+    getGems: function () { return gems; },
+    getItems: function () { return items; }
   };
 })();
