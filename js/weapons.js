@@ -46,7 +46,7 @@ window.Weapons = (function () {
       dmg: b.dmg, cd: b.cd, count: b.count, speed: b.speed || 0,
       pierce: b.pierce || 0, size: b.size || 16, knock: b.knock || 0,
       chains: b.chains || 0, range: b.range || 0,
-      slow: b.slow || 0, slowDur: b.slowDur || 0,
+      slow: b.slow || 0, slowDur: b.slowDur || 0, stun: b.stun || 0,
       poolDmg: b.poolDmg || 0, poolR: b.poolR || 0, poolDur: b.poolDur || 0,
       dur: b.dur || 0, orbitR: b.orbitR || 0, zapCd: b.zapCd || 0,
       areaMul: 1, durMul: 1
@@ -62,6 +62,11 @@ window.Weapons = (function () {
       if (d.areaM) st.areaMul *= d.areaM;
       if (d.durM) st.durMul *= d.durM;
       if (d.spdM) st.speed *= d.spdM;
+      // 控制类成长
+      if (d.slow) st.slow += d.slow;
+      if (d.slowDur) st.slowDur += d.slowDur;
+      if (d.stun) st.stun += d.stun;
+      if (d.poolDur) st.poolDur += d.poolDur;
     }
     if (w.evolved) {
       var m = CFG.EVOS[w.evoId].mult;
@@ -122,7 +127,8 @@ window.Weapons = (function () {
           b = spawn(run, w, st, w.evolved ? 'boomerang' : 'straight',
             w.evolved ? 'p_slash_big' : 'p_slash',
             p.x, p.y, Math.cos(a) * st.speed, Math.sin(a) * st.speed, w.evolved ? 1.6 : 2.0);
-          if (w.evolved) { b.pierce = 9999; b.ox = p.x; b.oy = p.y; b.aux = st.speed; }
+          if (w.evolved) { b.pierce = 15; b.ox = p.x; b.oy = p.y; b.aux = st.speed; }
+          // 未进化时穿透数量由武器等级决定(基础3,满级5),不是无限穿透
           b.spin = 0;
         }
         AudioSys.play('shoot_slash');
@@ -254,7 +260,7 @@ window.Weapons = (function () {
     var n = st.chains + 1;
     for (var i = 0; i < n && cur; i++) {
       FX.lightning(px, py, cur.x, cur.y, w.evolved ? '#aef' : '#ffe97a');
-      Entities.damageEnemy(run, cur, st.dmg, { stun: w.evolved ? 0.8 : 0 });
+      Entities.damageEnemy(run, cur, st.dmg, { stun: st.stun + (w.evolved ? 0.5 : 0) });
       hit.add(cur.uid);
       px = cur.x; py = cur.y;
       cur = nearestEnemy(px, py, 180, hit);
@@ -508,7 +514,8 @@ window.Weapons = (function () {
   }
 
   // ================= 绘制 =================
-  function draw(ctx, run) {
+  // 地面火焰池/圣光环:画在地面层之上,角色与装饰物之下,避免遮挡
+  function drawGround(ctx, run) {
     var p = run.player;
     // 圣光环
     var wAura = findWeapon(run, 'holyaura');
@@ -523,6 +530,7 @@ window.Weapons = (function () {
       ctx.fillStyle = g;
       ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2); ctx.fill();
     }
+    // 火焰池
     for (var i = 0; i < BMAX; i++) {
       var b = bullets[i];
       if (!b.alive || b.kind !== 'pool') continue;
@@ -532,10 +540,13 @@ window.Weapons = (function () {
       ctx.drawImage(img0, b.x - b.size / 2, b.y - b.size / 2, b.size, b.size);
       ctx.globalAlpha = 1;
     }
+  }
+
+  function draw(ctx, run) {
+    // 普通弹幕与飞行物(火焰池已移到 drawGround)
     for (var i = 0; i < BMAX; i++) {
       var b = bullets[i];
-      if (!b.alive) continue;
-      if (b.kind === 'pool') continue; // 已在地面层画过
+      if (!b.alive || b.kind === 'pool') continue;
       if (b.kind === 'nova') {
         var rr = Math.min(b.phase, b.aux2);
         if (rr < 1) continue;
@@ -758,7 +769,7 @@ window.Weapons = (function () {
   function reset() { initPool(); runRef = null; }
 
   return {
-    update: update, draw: draw, reset: reset,
+    update: update, draw: draw, drawGround: drawGround, reset: reset,
     addWeapon: addWeapon, addPassive: addPassive,
     getLevelUpChoices: getLevelUpChoices, applyChoice: applyChoice,
     chestLoot: chestLoot, canEvolve: canEvolve, findWeapon: findWeapon,

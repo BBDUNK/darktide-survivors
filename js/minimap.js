@@ -1,4 +1,4 @@
-// minimap.js — 小地图:局部视野 / 全图 两种模式(M 键切换)
+// minimap.js — 小地图:局部视野 / 全图 两种模式(点击小地图或按 M 切换)
 window.Minimap = (function () {
   'use strict';
 
@@ -114,7 +114,7 @@ window.Minimap = (function () {
     ctx.font = '8px monospace';
     ctx.fillStyle = 'rgba(230,220,255,0.75)';
     ctx.textAlign = 'right';
-    ctx.fillText(mode === 'full' ? '全图 [M]' : '周围 [M]', x0 + SIZE - 4, y0 + SIZE - 4);
+    ctx.fillText(mode === 'full' ? '全图 ⇄点击' : '周围 ⇄点击', x0 + SIZE - 4, y0 + SIZE - 4);
     ctx.textAlign = 'left';
   }
 

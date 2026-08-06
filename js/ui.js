@@ -464,6 +464,8 @@ window.UI = (function () {
     var hpWrap = h('div', 'hp-wrap');
     hudRefs.hpFill = h('div', 'hp-fill');
     hpWrap.appendChild(hudRefs.hpFill);
+    hudRefs.shieldFill = h('div', 'shield-fill hidden');
+    hpWrap.appendChild(hudRefs.shieldFill);
     hudRefs.hpText = h('div', 'hp-text', '');
     hpWrap.appendChild(hudRefs.hpText);
     tl.appendChild(hpWrap);
@@ -514,6 +516,11 @@ window.UI = (function () {
     hudRefs.hpFill.style.width = hpPct + '%';
     hudRefs.hpFill.className = 'hp-fill' + (hpPct < 30 ? ' low' : '');
     var hpTxt = Math.ceil(p.hp) + '/' + Math.round(p.stats.hp);
+    // 护盾叠加显示
+    var shPct = p.stats.shieldMax > 0 ? Math.max(0, p.shield / p.stats.hp * 100) : 0;
+    hudRefs.shieldFill.style.width = Math.min(100, shPct) + '%';
+    hudRefs.shieldFill.classList.toggle('hidden', p.shield <= 0);
+    if (p.shield > 0) hpTxt += ' +' + Math.ceil(p.shield);
     if (hudCache.hp !== hpTxt) { hudCache.hp = hpTxt; hudRefs.hpText.textContent = hpTxt; }
     var t = Engine.fmtTime(run.t);
     if (hudCache.t !== t) {

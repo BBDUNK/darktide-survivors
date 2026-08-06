@@ -10,7 +10,8 @@ window.Entities = (function () {
       hp: 100, iframe: 0, hurtFlash: 0,
       face: 1, moving: false, animT: 0,
       char: charDef,
-      stats: null // recomputeStats 填充
+      shield: 0, shieldRegenT: 0,  // 护盾当前值 / 下次恢复计时
+      stats: null
     };
   }
 
@@ -61,6 +62,15 @@ window.Entities = (function () {
     if (p.hurtFlash > 0) p.hurtFlash -= dt;
     // 回复
     if (s.regen > 0 && p.hp < s.hp) p.hp = Math.min(s.hp, p.hp + s.regen * dt);
+    // 护盾再生(每 shieldCd 秒恢复一次)
+    if (s.shieldMax > 0 && p.shield < s.shieldMax) {
+      p.shieldRegenT -= dt;
+      if (p.shieldRegenT <= 0) {
+        p.shield = Math.min(s.shieldMax, p.shield + s.shieldMax);
+        p.shieldRegenT = s.shieldCd;
+        FX.ring(p.x, p.y, { r: 30, color: '#7af', life: 0.4, width: 2 });
+      }
+    }
     // 相机跟随(同样夹在边界内,避免镜头越过结界露出空白)
     E.cam.x = E.lerp(E.cam.x, p.x, 1 - Math.pow(0.001, dt));
     E.cam.y = E.lerp(E.cam.y, p.y, 1 - Math.pow(0.001, dt));
@@ -75,6 +85,14 @@ window.Entities = (function () {
     var p = run.player;
     if (p.iframe > 0 || run.over) return;
     var real = Math.max(1, dmg - p.stats.armor);
+    // 护盾优先吸收伤害
+    if (p.shield > 0) {
+      var absorbed = Math.min(p.shield, real);
+      p.shield -= absorbed;
+      real -= absorbed;
+      p.shieldRegenT = p.stats.shieldCd; // 受击重置护盾恢复计时
+      if (real <= 0) { p.hurtFlash = 0.12; AudioSys.play('player_hurt'); return; }
+    }
     p.hp -= real;
     p.iframe = 0.5;
     p.hurtFlash = 0.25;
@@ -121,7 +139,7 @@ window.Entities = (function () {
     gems.length = 0; freeGem.length = 0;
     for (i = 0; i < 320; i++) { gems.push({ alive: false, x: 0, y: 0, v: 0, pull: false, vx: 0, vy: 0, t: 0 }); freeGem.push(319 - i); }
     items.length = 0;
-    for (i = 0; i < 60; i++) items.push({ alive: false, type: '', x: 0, y: 0, v: 0, t: 0 });
+    for (i = 0; i < 60; i++) items.push({ alive: false, type: '', x: 0, y: 0, v: 0, t: 0, pull: false });
   }
 
   function aliveEnemies() { return enemies; }
@@ -201,6 +219,14 @@ window.Entities = (function () {
     freeIdx.push(enemies.indexOf(e));
     run.kills++;
     Meta.track('kill');
+    // 吸血:按生命上限百分比回复,Boss/精英给额外倍数
+    var p = run.player, ls = p.stats.lifesteal;
+    if (ls > 0 && p.hp < p.stats.hp) {
+      var mul = e.boss ? 10 : (e.elite ? 3 : 1);
+      var heal = p.stats.hp * ls * mul;
+      p.hp = Math.min(p.stats.hp, p.hp + heal);
+      if (e.boss || e.elite) FX.heal(p.x, p.y);
+    }
     var col = e.boss ? '#ffd76b' : '#8a1f2d';
     FX.blood(e.x, e.y, col);
     FX.burst(e.x, e.y, { color: '#d8d3e8', n: e.boss ? 40 : 6, speed: e.boss ? 220 : 90, life: 0.5, size: 3 });
@@ -525,7 +551,7 @@ window.Entities = (function () {
     for (var i = 0; i < items.length; i++) {
       if (!items[i].alive) {
         var it = items[i];
-        it.alive = true; it.type = type; it.x = x; it.y = y; it.t = 0;
+        it.alive = true; it.type = type; it.x = x; it.y = y; it.t = 0; it.pull = false;
         it.v = (type === 'coin') ? (CFG.DROPS.goldValue[0] + Math.floor(Math.random() * (CFG.DROPS.goldValue[1] - CFG.DROPS.goldValue[0] + 1))) : 0;
         return it;
       }
@@ -541,10 +567,11 @@ window.Entities = (function () {
       it.t += dt;
       var pr = (it.type === 'coin') ? Math.max(30, p.stats.magnet * 0.7) : 30;
       var d2 = E.dist2(it.x, it.y, p.x, p.y);
-      if (it.type === 'coin' && d2 < pr * pr && d2 > 24 * 24) {
-        var d = Math.sqrt(d2);
-        it.x += (p.x - it.x) / d * 380 * dt;
-        it.y += (p.y - it.y) / d * 380 * dt;
+      if (it.pull || (it.type === 'coin' && d2 < pr * pr && d2 > 24 * 24)) {
+        var d = Math.sqrt(d2) || 1;
+        var isp = it.pull ? 620 : 380;
+        it.x += (p.x - it.x) / d * isp * dt;
+        it.y += (p.y - it.y) / d * isp * dt;
       }
       if (d2 < 26 * 26) {
         it.alive = false;
@@ -571,6 +598,10 @@ window.Entities = (function () {
         break;
       case 'magnet':
         for (var i = 0; i < gems.length; i++) if (gems[i].alive) gems[i].pull = true;
+        // 金币同样被吸取
+        for (var mi = 0; mi < items.length; mi++) {
+          if (items[mi].alive && items[mi].type === 'coin') items[mi].pull = true;
+        }
         FX.ring(p.x, p.y, { r: 200, color: '#59c2ff', life: 0.5, width: 3 });
         AudioSys.play('magnet');
         break;

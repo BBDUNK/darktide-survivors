@@ -76,7 +76,7 @@ window.Encyclopedia = (function () {
       // 逐级累计效果:用一个干净的属性对象试算
       var rows = [];
       for (var lv = 1; lv <= p.maxLv; lv++) {
-        var probe = { might: 0, cd: 0, crit: 0, critDmg: 0, hp: 0, regen: 0, area: 0, speed: 100, projSpd: 0, magnet: 0, luck: 0 };
+        var probe = { might: 0, cd: 0, crit: 0, critDmg: 0, hp: 0, regen: 0, area: 0, speed: 100, projSpd: 0, magnet: 0, luck: 0, lifesteal: 0, shieldMax: 0, shieldCd: 0 };
         p.apply(probe, lv);
         var eff = [];
         if (probe.might) eff.push('伤害 +' + Math.round(probe.might * 100) + '%');
@@ -90,6 +90,8 @@ window.Encyclopedia = (function () {
         if (probe.projSpd) eff.push('弹速 +' + Math.round(probe.projSpd * 100) + '%');
         if (probe.magnet) eff.push('拾取 +' + probe.magnet);
         if (probe.luck) eff.push('幸运 +' + Math.round(probe.luck * 100) + '%');
+        if (probe.lifesteal) eff.push('击杀回复生命上限 ' + (probe.lifesteal * 100).toFixed(0) + '%');
+        if (probe.shieldMax) eff.push('护盾 ' + probe.shieldMax + '(每 ' + probe.shieldCd + 's 恢复)');
         rows.push({ lv: lv, text: eff.join(' · ') });
       }
       // 该被动能触发哪些进化
@@ -196,13 +198,13 @@ window.Encyclopedia = (function () {
         lines: [
           '地图为 ' + (G.MAP_R * 2) + ' × ' + (G.MAP_R * 2) + ' 的有界区域,四周被暗潮结界封锁。',
           '靠近边界时屏幕外缘会泛红警示,无法再前进。',
-          '按 M 键可将小地图切换为全图模式,用于寻找远处的宝箱与道具。'
+          '点击右上角小地图(或按 M)可切换为全图模式,用于寻找远处的宝箱与道具。'
         ] },
       { title: '操作',
         lines: [
           'WASD 或方向键移动(触屏为虚拟摇杆),武器全自动攻击。',
           'ESC / P 暂停,暂停时可查阅本百科。',
-          'M 切换小地图模式(周围 / 全图)。',
+          '鼠标点击右上角小地图,或按 M 键,切换小地图模式(周围 / 全图)。',
           '升级界面可用刷新(重抽选项)与放逐(永久移除某选项),次数在商店购买。'
         ] },
       { title: '无尽模式',

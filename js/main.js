@@ -318,6 +318,7 @@
     ctx.save();
     ctx.translate(CFG.GAME.W / 2 - camX, CFG.GAME.H / 2 - camY);
     drawBoundary(run);
+    Weapons.drawGround(ctx, run);   // 火焰池/圣光环:仅高于地板一层
     Entities.draw(ctx, run);
     Weapons.draw(ctx, run);
     FX.draw(ctx);
@@ -398,6 +399,20 @@
       var m = Minimap.toggle();
       UI.warn(m === 'full' ? '🗺 小地图:全图' : '🗺 小地图:周围');
     };
+
+    // 小地图点击切换(画布坐标需考虑缩放)
+    canvas.addEventListener('click', function (ev) {
+      if (state !== 'run') return;
+      var rect = canvas.getBoundingClientRect();
+      var scaleX = CFG.GAME.W / rect.width, scaleY = CFG.GAME.H / rect.height;
+      var mx = (ev.clientX - rect.left) * scaleX;
+      var my = (ev.clientY - rect.top) * scaleY;
+      var S = 116; // SIZE in minimap.js
+      var x0 = CFG.GAME.W - S, y0 = 16;
+      if (mx >= x0 && mx <= x0 + S && my >= y0 && my <= y0 + S) {
+        E.onToggleMap();
+      }
+    });
 
     UI.init({
       onStartRun: function (charId, mapId) { newRun(charId, mapId); },

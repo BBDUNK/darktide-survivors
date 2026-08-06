@@ -226,9 +226,15 @@ input[type=range] { flex: 1; accent-color: var(--gold); height: 22px; cursor: po
 }
 .hp-fill { height: 100%; width: 100%; background: linear-gradient(180deg, #7ce87c, #2e9e2e); transition: width 0.12s; }
 .hp-fill.low { background: linear-gradient(180deg, #ff7c7c, #c22e2e); animation: blink 0.6s step-end infinite; }
+.shield-fill {
+  position: absolute; top: 0; left: 0; height: 100%;
+  background: linear-gradient(180deg, rgba(150,215,255,0.85), rgba(70,140,225,0.85));
+  transition: width 0.12s; z-index: 1;
+}
 .hp-text {
   position: absolute; inset: 0; text-align: center; line-height: 18px;
   font-size: 11px; font-weight: 700; color: #fff; text-shadow: 1px 1px 0 #000;
+  z-index: 2;
 }
 .slots { display: flex; gap: 4px; flex-wrap: wrap; max-width: 200px; }
 .slot {
