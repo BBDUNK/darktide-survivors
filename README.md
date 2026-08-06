@@ -1,6 +1,6 @@
 # ⚔️ 暗潮幸存者 · Darktide Survivors
 
-[![Online](https://img.shields.io/badge/Online-Vercel-blue)](https://darktide-survivors.vercel.app)
+[![Online](https://img.shields.io/badge/Online-GitHub%20Pages-blue)](https://bbdunk.github.io/darktide-survivors/)
 [![Zero Dependency](https://img.shields.io/badge/Zero%20Dependency-true-brightgreen)]()
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES2020-yellow)]()
 [![Genre](https://img.shields.io/badge/Genre-Bullet%20Heaven-orange)]()
@@ -11,7 +11,7 @@
 
 ## 快速开始
 
-- **在线试玩**:<https://darktide-survivors.vercel.app/>
+- **在线试玩**:<https://bbdunk.github.io/darktide-survivors/>
 - **本地运行**:直接双击 `index.html`,或在项目目录启动任意静态服务器:
 
 ```bash
