@@ -52,8 +52,8 @@ window.CFG = {
   WEAPONS: {
     crossblade: { name: '十字剑气', icon: 'w_crossblade', evo: 'crossjudge', evoNeed: 'ps_power',
       desc: '向面朝方向斩出剑气,升级后四向齐发',
-      base: { dmg: 12, cd: 1.15, count: 1, speed: 300, pierce: 3, size: 16, knock: 90 },
-      lv: [ { count: 1 }, { dmg: 10 }, { count: 1 }, { cdM: 0.85 }, { dmg: 14, pierce: 2 }, { count: 1 }, { dmg: 18, areaM: 1.25 } ] },
+      base: { dmg: 12, cd: 1.15, count: 1, speed: 300, pierce: 2, size: 16, knock: 90 },
+      lv: [ { count: 1 }, { dmg: 10 }, { count: 1 }, { cdM: 0.85 }, { dmg: 14, pierce: 1 }, { count: 1 }, { dmg: 18, pierce: 1, areaM: 1.25 } ] },
     arcanebolt: { name: '奥术飞弹', icon: 'w_arcanebolt', evo: 'arcanestorm', evoNeed: 'ps_core',
       desc: '自动追踪最近敌人的魔力飞弹',
       base: { dmg: 10, cd: 1.30, count: 1, speed: 240, pierce: 0, size: 8, knock: 40 },
