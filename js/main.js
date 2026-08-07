@@ -266,6 +266,7 @@
     Weapons.addWeapon(run, charDef.weapon);
     Meta.track('run');
     Meta.seeCodex(charDef.sprite);
+    Merchant.reset(run);   // 流浪商人摆摊
 
     lastDmg = 0; dpsTimer = 0; achvTimer = 0;
 
@@ -351,6 +352,7 @@
     run.frame++;
     if (run.freezeT > 0) run.freezeT -= dt;
 
+    Merchant.update(run, dt);   // 流浪商人:定时补货 + 走上自动购买
     applyCoopAuras();    // 队友光环互益:圣光环持有者为附近队友回血与加成
 
     // 联机客户端:只上报输入 + 渲染房主快照,不跑本地模拟(避免两端分歧)
@@ -622,6 +624,7 @@
     ctx.translate(CFG.GAME.W / 2 - camX, CFG.GAME.H / 2 - camY);
     drawBoundary(run);
     Weapons.drawGround(ctx, run);
+    Merchant.draw(ctx, run);          // 摊位在地面层之上、角色之下
     Entities.drawLobMarkers(ctx, run);
     // 联机队友:房主画 mates,客户端画从快照解出的 remote
     if (coop.on) {

@@ -2,6 +2,9 @@
 window.CFG = {
 
   GAME: {
+    RANGED_CAP: 12,          // 远程怪同时存活上限,防止满屏弹幕
+    // 本命武器加成:角色用自己的开局武器时更强(不改武器基准值,只在持有者匹配时放大)
+    AFFINITY: { dmg: 1.30, cd: 0.88, area: 1.15, projSpd: 1.12 },
     W: 960, H: 540,
     RUN_TIME: 1200,          // 20 分钟
     ENEMY_CAP: 400,
@@ -97,10 +100,11 @@ window.CFG = {
       desc: '掷出回旋圣书,去而复返',
       base: { dmg: 12, cd: 2.7, count: 1, speed: 340, pierce: 8, size: 16, knock: 60 },
       lv: [ { count: 1 }, { dmg: 5 }, { cdM: 0.85 }, { count: 1 }, { dmg: 6 }, { areaM: 1.25 }, { count: 1, dmg: 7 } ] },
+    // zapCount: 每次放电同时打几个目标(升级提升,增强对群);塔与塔之间会自动连电弧
     teslacoil: { name: '磁暴线圈', icon: 'w_teslacoil', evo: 'skynet', evoNeed: 'ps_magnetstone',
-      desc: '布设自动电击的特斯拉塔',
-      base: { dmg: 13, cd: 5.0, count: 1, speed: 0, pierce: 0, size: 16, dur: 6, zapCd: 0.5, range: 170, knock: 0 },
-      lv: [ { dmg: 4 }, { durM: 1.25 }, { count: 1 }, { dmg: 5 }, { cdM: 0.85 }, { areaM: 1.3 }, { count: 1, dmg: 7 } ] }
+      desc: '布设自动电击的特斯拉塔,升级后多道闪电,塔间连接电弧',
+      base: { dmg: 13, cd: 5.0, count: 1, speed: 0, pierce: 0, size: 16, dur: 6, zapCd: 0.5, range: 170, knock: 0, zapCount: 1 },
+      lv: [ { dmg: 4, zapCount: 1 }, { durM: 1.25 }, { count: 1 }, { dmg: 5, zapCount: 1 }, { cdM: 0.85 }, { areaM: 1.3, zapCount: 1 }, { count: 1, dmg: 7, zapCount: 1 } ] }
   },
 
   // 进化:达到 8 级 + 持有对应被动,开 Boss 宝箱触发
@@ -162,20 +166,21 @@ window.CFG = {
     // burrow: 从地里钻出(生成时播出土动画,期间不动作),可在安全区内破土
     skeleton:       { name: '白骨兵', hp: 36, dmg: 12, spd: 58, r: 11, xp: 2, ai: 'chase', burrow: 1.0 },
     ghost:          { name: '缚地怨灵', hp: 30, dmg: 12, spd: 55, r: 11, xp: 3, ai: 'phase' },
-    // 蛛类:吐减速网,限制走位
+    // 蛛类:吐减速网。刷新量减半(spawnWeight),蛛网弹有射程上限且越远越慢
     spider:         { name: '暗纹蛛', hp: 22, dmg: 10, spd: 96, r: 10, xp: 2, ai: 'spitter',
-                      shotDmg: 6, shotCd: 3.0, shotSpd: 190, keepDist: 170, slowAmt: 0.45, slowDur: 1.6 },
-    cultist:        { name: '深渊信徒', hp: 48, dmg: 10, spd: 48, r: 11, xp: 4, ai: 'shoot', shotDmg: 12, shotCd: 2.6, shotSpd: 150, keepDist: 200 },
+                      shotDmg: 6, shotCd: 4.2, shotSpd: 190, keepDist: 170, slowAmt: 0.45, slowDur: 1.6,
+                      spawnWeight: 0.5, shotRange: 300, ranged: true },
+    cultist:        { name: '深渊信徒', hp: 48, dmg: 10, spd: 48, r: 11, xp: 4, ai: 'shoot', shotDmg: 12, shotCd: 4.0, shotSpd: 150, keepDist: 200, ranged: true },
     orc:            { name: '碎颅兽人', hp: 85, dmg: 16, spd: 54, r: 13, xp: 5, ai: 'chase' },
     imp:            { name: '狱火小鬼', hp: 32, dmg: 12, spd: 86, r: 10, xp: 3, ai: 'chase' },
-    // 重骑:周期性举盾无敌,迫使玩家换目标
+    // 重骑:受击后举盾1.8秒,只触发一次(guardOnHit)
     knight_armored: { name: '堕落重骑', hp: 170, dmg: 18, spd: 40, r: 13, xp: 8, ai: 'shielder', armor: 4,
-                      guardCd: 6.0, guardDur: 1.8 },
+                      guardOnHit: true, guardDur: 1.8 },
     werewolf:       { name: '血月狼人', hp: 95, dmg: 20, spd: 72, r: 12, xp: 6, ai: 'charge', chargeSpd: 240, chargeCd: 3.5 },
     mummy:          { name: '尘缚木乃伊', hp: 130, dmg: 14, spd: 34, r: 12, xp: 6, ai: 'chase' },
-    // 石像鬼:远程抛物线砸击,落点有红圈预警
+    // 石像鬼:远程抛物线砸击,落点有红圈预警 —— 攻击间隔延长
     gargoyle:       { name: '石像鬼', hp: 150, dmg: 18, spd: 64, r: 13, xp: 8, ai: 'lobber', armor: 2,
-                      lobDmg: 22, lobCd: 4.2, lobRange: 420, lobR: 60, lobTravel: 1.5 },
+                      lobDmg: 22, lobCd: 5.2, lobRange: 420, lobR: 60, lobTravel: 1.5, ranged: true },
     bloodbat:       { name: '血蝠', hp: 48, dmg: 12, spd: 112, r: 11, xp: 3, ai: 'chase' },
     wraith:         { name: '暗潮死灵', hp: 210, dmg: 22, spd: 58, r: 13, xp: 10, ai: 'phase' }
   },
@@ -305,6 +310,29 @@ window.CFG = {
   ELITE: { firstT: 120, interval: 90, hpMul: 14, dmgMul: 1.5, xpMul: 8, scale: 1.5,
            auraR: 220, buffSpd: 1.20, buffDmg: 1.25,
            bossBuffSpd: 1.35, bossBuffDmg: 1.45 },
+
+  // ---------------- 流浪商人 ----------------
+  // 地图中心摆摊,走到物品上自动购买。每 refreshInt 秒全部刷新并多一个摊位。
+  MERCHANT: {
+    x: 0, y: 0,              // 地图中心
+    slots: 3,                // 初始摊位数
+    maxSlots: 5,
+    refreshInt: 300,         // 5 分钟刷新一次并 +1 摊位
+    spacing: 62,             // 摊位间距
+    pickR: 26,               // 走到多近算购买
+    // 商品池:武器按当前是否已持有决定是新武器还是升级;道具立即生效
+    goods: [
+      { kind: 'heal',   name: '烤肉',     icon: 'meat',        cost: 40,  desc: '恢复 60 生命' },
+      { kind: 'shield', name: '护盾符',   icon: 'ps_core',     cost: 70,  desc: '立刻获得 30 护盾' },
+      { kind: 'bomb',   name: '炸弹',     icon: 'bomb',        cost: 55,  desc: '清场一次' },
+      { kind: 'magnet', name: '吸铁石',   icon: 'magnet',      cost: 35,  desc: '吸取全场经验' },
+      { kind: 'clock',  name: '怀表',     icon: 'clock',       cost: 80,  desc: '冻结全场 4 秒' },
+      { kind: 'reroll', name: '命运骰子', icon: 'icon_reroll', cost: 90,  desc: '本局刷新次数 +1' },
+      { kind: 'banish', name: '丢弃之印', icon: 'icon_banish', cost: 90,  desc: '本局丢弃次数 +1' },
+      { kind: 'weapon', name: '',         icon: '',            cost: 140, desc: '' },  // 运行时抽武器
+      { kind: 'passive', name: '',        icon: '',            cost: 120, desc: '' }   // 运行时抽被动
+    ]
+  },
 
   // ---------------- 联机 ----------------
   // 人数越多敌人越强但不是线性叠加,避免 2 人时难度暴涨;经验按人数稀释保证升级节奏。

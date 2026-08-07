@@ -47,6 +47,7 @@ window.Weapons = (function () {
       pierce: b.pierce || 0, size: b.size || 16, knock: b.knock || 0,
       chains: b.chains || 0, range: b.range || 0,
       slow: b.slow || 0, slowDur: b.slowDur || 0, stun: b.stun || 0,
+      zapCount: b.zapCount || 1,
       poolDmg: b.poolDmg || 0, poolR: b.poolR || 0, poolDur: b.poolDur || 0,
       dur: b.dur || 0, orbitR: b.orbitR || 0, zapCd: b.zapCd || 0,
       areaMul: 1, durMul: 1
@@ -67,6 +68,7 @@ window.Weapons = (function () {
       if (d.slowDur) st.slowDur += d.slowDur;
       if (d.stun) st.stun += d.stun;
       if (d.poolDur) st.poolDur += d.poolDur;
+      if (d.zapCount) st.zapCount += d.zapCount;
     }
     if (w.evolved) {
       var m = CFG.EVOS[w.evoId].mult;
@@ -74,6 +76,17 @@ window.Weapons = (function () {
       if (m.count) st.count += m.count;
       if (m.area) st.areaMul *= m.area;
       if (m.chains) st.chains += m.chains;
+    }
+    // 本命武器加成:角色使用自己的开局武器时数值更高,
+    // 保证「法师用飞弹」强于「骑士用飞弹」,但不削弱武器本身的基准值。
+    var chr = run.player.char;
+    if (chr && chr.weapon === w.id) {
+      var AF = CFG.GAME.AFFINITY;
+      st.dmg *= AF.dmg;
+      st.cd *= AF.cd;
+      st.areaMul *= AF.area;
+      if (st.speed) st.speed *= AF.projSpd;
+      st.affinity = true;
     }
     // 玩家全局属性
     st.dmg *= s.might;
@@ -299,6 +312,7 @@ window.Weapons = (function () {
           b.aux = st.zapCd * run.player.stats.cd; // 电击间隔
           b.aux2 = 0;
           b.orbitR = st.range;
+          b.zapN = st.zapCount + (w.evolved ? 2 : 0);   // 多道闪电数量
         }
         AudioSys.play('turret_place');
         break;
@@ -474,6 +488,8 @@ window.Weapons = (function () {
           break;
         }
         case 'pool': {
+          // 火池持续净化范围内的蛛网弹与角色缠身
+          if ((run.frame % 20) === 0) Entities.cleanseWebs(run, b.x, b.y, b.size * 0.6);
           if ((run.frame & 3) === 0) FX.trail(b.x + (Math.random() - 0.5) * b.size, b.y + (Math.random() - 0.5) * b.size * 0.7, '#f96', 3);
           hitEnemiesAlong(run, b, b.size * 0.55, 0.45);
           break;
@@ -490,18 +506,46 @@ window.Weapons = (function () {
           b.aux2 -= dt;
           if (b.aux2 <= 0) {
             b.aux2 = b.aux;
-            var te = nearestEnemy(b.x, b.y, b.orbitR);
-            if (te) {
+            // 多道闪电:一次放电同时打 zapCount 个不同目标
+            var nZap = Math.max(1, b.zapN || 1);
+            _zapHit.clear();
+            var zapped = 0;
+            for (var zi = 0; zi < nZap; zi++) {
+              var te = nearestEnemy(b.x, b.y, b.orbitR, _zapHit);
+              if (!te) break;
+              _zapHit.add(te.uid);
               FX.lightning(b.x, b.y - 10, te.x, te.y, '#8ef');
               Entities.damageEnemy(run, te, b.dmg, {});
-              AudioSys.play('zap');
-              if (b.evolved) { // 天网:链到第二个
-                var t2 = nearestEnemy(te.x, te.y, 150, tmpSet(te.uid));
+              zapped++;
+              if (b.evolved) { // 天网:每道再链一跳
+                var t2 = nearestEnemy(te.x, te.y, 150, _zapHit);
                 if (t2) {
+                  _zapHit.add(t2.uid);
                   FX.lightning(te.x, te.y, t2.x, t2.y, '#8ef');
                   Entities.damageEnemy(run, t2, b.dmg * 0.7, {});
                 }
               }
+            }
+            if (zapped) AudioSys.play('zap');
+            // 塔间电弧:与射程内的另一座塔连线,对连线附近敌人造成伤害
+            for (var tj = 0; tj < BMAX; tj++) {
+              var ob = bullets[tj];
+              if (ob === b || !ob.alive || ob.kind !== 'turret') continue;
+              var ad = Math.hypot(ob.x - b.x, ob.y - b.y);
+              if (ad > 260 || ad < 1) continue;
+              FX.lightning(b.x, b.y - 10, ob.x, ob.y - 10, '#bdf');
+              // 沿电弧采样几个点做范围伤害
+              var steps = Math.max(2, Math.round(ad / 40));
+              for (var sk = 1; sk < steps; sk++) {
+                var ax = E.lerp(b.x, ob.x, sk / steps), ay = E.lerp(b.y, ob.y, sk / steps);
+                E.gridQuery(ax, ay, 26, function (en) {
+                  if (_zapHit.has(en.uid)) return false;
+                  _zapHit.add(en.uid);
+                  Entities.damageEnemy(run, en, b.dmg * 0.5, { stun: 0.1 });
+                  return false;
+                });
+              }
+              break;   // 每次只连一条,避免多塔时伤害爆炸
             }
           }
           break;
@@ -510,18 +554,21 @@ window.Weapons = (function () {
     }
   }
 
+  var _zapHit = new Set();   // 一次放电内已命中的目标,避免多道闪电打同一个
   var _tmpSet = new Set();
   function tmpSet(uid) { _tmpSet.clear(); _tmpSet.add(uid); return _tmpSet; }
 
   function landFlask(run, b) {
     FX.explosion(b.x, b.y, 30);
     AudioSys.play('bomb');
-    // 命中直伤
+    // 命中直伤(fire 标记:对蛛类双倍)
     var bb = b;
     E.gridQuery(b.x, b.y, 40, function (e) {
-      Entities.damageEnemy(run, e, bb.dmg, {});
+      Entities.damageEnemy(run, e, bb.dmg, { fire: true });
       return false;
     });
+    // 火焰净化:烧掉角色身上的蛛网,并清掉爆点附近飞行中的蛛网弹
+    Entities.cleanseWebs(run, b.x, b.y, 120);
     // 燃烧地面
     var pool = getBullet();
     pool.alive = true; pool.kind = 'pool'; pool.spr = 'p_firepool'; pool.wid = b.wid;

@@ -14,6 +14,7 @@ window.Entities = (function () {
       lastVx: 0, lastVy: 0,        // 移动矢量,敌人抛击用于预判落点
       slow: 0, slowT: 0,                        // 蛛网减速
       webStacks: 0, webT: 0, rootT: 0,          // 蛛网叠层 / 缠身残留 / 硬控计时
+      webImmune: 0,                             // 被定身后的蛛网免疫计时
       stats: null
     };
   }
@@ -68,6 +69,7 @@ window.Entities = (function () {
     // 蛛网减速 / 硬控:二层叠加后被包裹,原地无法移动
     if (p.slowT > 0) { p.slowT -= dt; if (p.slowT <= 0) { p.slow = 0; p.webStacks = 0; } }
     if (p.webT > 0) { p.webT -= dt; if (p.webT <= 0) p.webStacks = 0; }
+    if (p.webImmune > 0) p.webImmune -= dt;
     if (p.rootT > 0) { p.rootT -= dt; iv.x = 0; iv.y = 0; p.moving = false; }
     var mspd = s.speed * (1 - (p.slow || 0));
     // 记录当前速度矢量,供敌人抛击预判落点
@@ -206,6 +208,8 @@ window.Entities = (function () {
     e.burn = 0; e.burnT = 0; e.guard = 0;
     e.buffSpd = 1; e.buffDmg = 1; e.buffed = false;
     e.chargeSeq = 0; e.chargePhase = 0; e.stiffT = 0; e.atkCount = 0; e.skT = 0;
+    e.guardUsed = false;   // 受击举盾只能触发一次
+    e.hop = 0; e.squash = 1; e.leapMark = null; e.jumpFrom = null;
     e.blinkT = 5 + Math.random() * 3;   // 首次瞬移不要一出场就触发
     // 破土出场:期间静止且免伤,给玩家反应时间
     e.burrowMax = def.burrow || 0;
@@ -280,8 +284,17 @@ window.Entities = (function () {
   // 中心伤害入口(武器调用)
   function damageEnemy(run, e, dmg, opts) {
     if (!e.alive) return 0;
+    // 火焰对蛛类双倍伤害(烈焰瓶/火池)
+    if (opts && opts.fire && e.def && e.def.ai === 'spitter') dmg *= 2;
     // 破土过程中不可被击中(尚未完全出土)
     if (e.burrowT > 0) return 0;
+    // 受击触发举盾:整场只触发一次,触发瞬间这一下伤害仍然生效
+    if (e.def && e.def.guardOnHit && !e.guardUsed && e.guard <= 0) {
+      e.guardUsed = true;
+      e.guard = e.def.guardDur || 1.8;
+      FX.ring(e.x, e.y, { r: e.r + 14, color: '#9cf', life: 0.35, width: 3 });
+      AudioSys.play('hit1');
+    }
     // 举盾期间完全免伤(需要玩家换目标或等待破绽)
     if (e.guard > 0) {
       if ((run.frame & 7) === 0) FX.trail(e.x + (Math.random() * 16 - 8), e.y - 6, '#9cf', 2);
@@ -473,23 +486,19 @@ window.Entities = (function () {
           e.aiT -= dt;
           if (e.aiT <= 0 && dist < 380) {
             e.aiT = e.def.shotCd;
-            // 蛛网弹:白色黏丝,施加叠层减速
+            // 蛛网弹:白色黏丝,施加叠层减速;有射程上限且越远越慢
             fireShot(e.x, e.y, nx, ny, e.def.shotSpd,
-              e.def.shotDmg * (e.elite ? 1.5 : 1), e.def.slowAmt, e.def.slowDur, true);
+              e.def.shotDmg * (e.elite ? 1.5 : 1), e.def.slowAmt, e.def.slowDur, true,
+              null, 16, e.def.shotRange || 300);
           }
           break;
-        case 'shielder': // 重骑:周期举盾,期间完全免伤+霸体
+        case 'shielder': // 重骑:受到攻击后举盾一次,期间完全免伤+霸体(整场只触发一次)
           e.vx = nx * spd; e.vy = ny * spd;
-          e.aiT -= dt;
           if (e.guard > 0) {
             e.guard -= dt;
             e.vx *= 0.35; e.vy *= 0.35;
             // 霸体:举盾期间完全忽略击退
             e.kx = 0; e.ky = 0;
-            if (e.guard <= 0) e.aiT = e.def.guardCd;
-          } else if (e.aiT <= 0 && dist < 320) {
-            e.guard = e.def.guardDur;
-            FX.ring(e.x, e.y, { r: e.r + 14, color: '#9cf', life: 0.35, width: 3 });
           }
           break;
         case 'lobber': // 石像鬼:远程抛物线砸击,落点红圈预警
@@ -562,12 +571,26 @@ window.Entities = (function () {
       if (!sh.alive) continue;
       sh.ttl -= dt;
       if (sh.ttl <= 0) { sh.alive = false; continue; }
+      var dx = sh.vx * dt, dy = sh.vy * dt;
+      var moved = Math.hypot(dx, dy);
+      sh.travelled += moved;
+      // 蛛网弹超出射程自毁,且越远越慢
+      if (sh.maxRange > 0) {
+        if (sh.travelled > sh.maxRange) { sh.alive = false; continue; }
+        var decay = Math.max(0.3, 1 - sh.travelled / sh.maxRange);
+        sh.vx = (sh.vx / Math.hypot(sh.vx, sh.vy) || 0) * sh.spd0 * decay;
+        sh.vy = (sh.vy / Math.hypot(sh.vx, sh.vy) || 0) * sh.spd0 * decay;
+      }
       sh.x += sh.vx * dt; sh.y += sh.vy * dt;
       if (E.dist2(sh.x, sh.y, p.x, p.y) < (p.r + 5) * (p.r + 5)) {
         sh.alive = false;
         damagePlayer(run, sh.dmg);
-        // 蛛网弹:叠层减速,叠满两层则被完全包裹硬控 1 秒
+        // 蛛网弹:叠层减速,叠满两层则被完全包裹硬控 1 秒;触发后角色获得 5 秒蛛网免疫
         if (sh.webType) {
+          if (p.webImmune > 0) {
+            FX.burst(p.x, p.y, { color: '#ffaa22', n: 8, speed: 70, life: 0.3, size: 2 });
+            continue;
+          }
           if (p.webStacks < 2) p.webStacks++;
           p.slow = sh.slow * (p.webStacks === 2 ? 1.6 : 1);
           p.slowT = Math.max(p.slowT, sh.slowDur);
@@ -575,6 +598,7 @@ window.Entities = (function () {
           if (p.webStacks >= 2 && p.rootT <= 0) {
             p.rootT = 1.0;              // 硬控:原地无法移动
             p.webStacks = 0;            // 触发后清空,需重新叠
+            p.webImmune = 5.0;          // 5 秒免疫
             FX.ring(p.x, p.y, { r: 34, color: '#f4f6ff', life: 0.5, width: 4 });
             FX.burst(p.x, p.y, { color: '#e8ecff', n: 14, speed: 90, life: 0.5, size: 2 });
             AudioSys.play('freeze');
@@ -672,7 +696,7 @@ window.Entities = (function () {
   }
 
   var shots = [];
-  function fireShot(x, y, nx, ny, spd, dmg, slow, slowDur, webType, col, size) {
+  function fireShot(x, y, nx, ny, spd, dmg, slow, slowDur, webType, col, size, maxRange) {
     for (var i = 0; i < shots.length; i++) {
       if (!shots[i].alive) {
         var s = shots[i];
@@ -682,6 +706,10 @@ window.Entities = (function () {
         s.webType = webType || false;
         s.col = col || null;          // 自定义配色(Boss 弹幕差异化)
         s.size = size || 16;
+        // 蛛网弹:限制飞行距离,并随飞行距离递减速度
+        s.maxRange = maxRange || 0;
+        s.travelled = 0;
+        s.spd0 = spd;
         return;
       }
     }
@@ -709,10 +737,13 @@ window.Entities = (function () {
       l.t += dt;
       if (l.t >= l.dur) {
         l.alive = false;
-        FX.explosion(l.tx, l.ty, l.r * 1.4);
-        FX.shake(5, 0.25);
-        AudioSys.play('bomb');
-        if (E.dist2(p.x, p.y, l.tx, l.ty) < l.r * l.r) damagePlayer(run, l.dmg);
+        if (l.dmg > 0) {
+          FX.explosion(l.tx, l.ty, l.r * 1.4);
+          FX.shake(5, 0.25);
+          AudioSys.play('bomb');
+        }
+        // dmg 为 0 的是纯预警标记(史莱姆跳跃),伤害由 Boss 自己结算
+        if (l.dmg > 0 && E.dist2(p.x, p.y, l.tx, l.ty) < l.r * l.r) damagePlayer(run, l.dmg);
       }
     }
   }
@@ -725,58 +756,88 @@ window.Entities = (function () {
     var enrage = (e.bossType === 'boss_darklord' && run.t >= CFG.GAME.RUN_TIME);
     var sMul = enrage ? 1.6 : 1, dMul = enrage ? 2 : 1;
     switch (e.bossType) {
-      case 'boss_slimeking': // 跳劈 + 分裂小史莱姆
-        if (e.aiPhase === 0) {
+      case 'boss_slimeking': { // 蓄力跳跃:落点显示危险半径,落地后释放一圈弹幕
+        var scol = bdef.shotCol || '#7fd44f';
+        var LEAP_R = 130;                  // 落地伤害半径
+        if (e.aiPhase === 0) {             // 逼近
           e.vx = nx * spd * 0.6; e.vy = ny * spd * 0.6;
-          if (e.aiT <= 0) { e.aiPhase = 1; e.aiT = 0.7; e.vx = 0; e.vy = 0; }
-        } else if (e.aiPhase === 1) { // 蓄力
+          if (e.aiT <= 0) { e.aiPhase = 1; e.aiT = 0.85; e.vx = 0; e.vy = 0; }
+        } else if (e.aiPhase === 1) {      // 蓄力:锁定落点并亮出危险圈
           e.vx = 0; e.vy = 0;
-          if (e.aiT <= 0) { e.aiPhase = 2; e.aiT = 0.9; e.tgtX = nx; e.tgtY = ny; }
-        } else {
-          e.vx = e.tgtX * 240; e.vy = e.tgtY * 240;
+          if (!e.leapMark) {
+            // 落点预判玩家去向,但预判量有限,持续移动可以躲开
+            var lx = p.x + (p.lastVx || 0) * 0.4, ly = p.y + (p.lastVy || 0) * 0.4;
+            var lR = CFG.GAME.MAP_R;
+            e.leapX = E.clamp(lx, -lR, lR); e.leapY = E.clamp(ly, -lR, lR);
+            e.leapMark = fireLob(e.leapX, e.leapY, e.x, e.y, LEAP_R, 0, 0.85);
+            AudioSys.play('elite_spawn');
+          }
+          // 蓄力时身体压扁的视觉靠 squash 字段
+          e.squash = 1 - E.clamp(1 - e.aiT / 0.85, 0, 1) * 0.35;
           if (e.aiT <= 0) {
-            e.aiPhase = 0; e.aiT = 1.2;
-            FX.ring(e.x, e.y, { r: 90, color: bdef.shotCol || '#7fd44f', life: 0.4, width: 4 });
-            FX.shake(6, 0.3);
+            e.aiPhase = 2; e.aiT = 0.42;
+            e.jumpFrom = { x: e.x, y: e.y };
+            e.leapMark = null;             // 预警圈由 updateLobs 自行结束
+          }
+        } else {                           // 腾空:沿抛物线落到锁定点
+          var t01 = 1 - E.clamp(e.aiT / 0.42, 0, 1);
+          var jf = e.jumpFrom || { x: e.x, y: e.y };
+          e.x = E.lerp(jf.x, e.leapX, t01);
+          e.y = E.lerp(jf.y, e.leapY, t01);
+          e.hop = Math.sin(t01 * Math.PI) * 70;   // 绘制时抬高
+          e.squash = 1 + Math.sin(t01 * Math.PI) * 0.25;
+          e.vx = 0; e.vy = 0;
+          if (e.aiT <= 0) {
+            e.aiPhase = 0; e.aiT = 1.5;
+            e.hop = 0; e.squash = 1;
+            FX.ring(e.x, e.y, { r: LEAP_R, color: scol, life: 0.45, width: 5 });
+            FX.explosion(e.x, e.y, LEAP_R);
+            FX.shake(8, 0.35);
             AudioSys.play('splat');
-            // 落地溅射一圈腐液弹
-            for (var sj = 0; sj < 8; sj++) {
-              var sa = (Math.PI * 2 / 8) * sj + run.t * 0.5;
-              fireShot(e.x, e.y, Math.cos(sa), Math.sin(sa), 120, e.dmg * 0.35 * dMul, 0.25, 1.2, false, bdef.shotCol);
+            // 落地范围伤害
+            if (E.dist2(p.x, p.y, e.x, e.y) < LEAP_R * LEAP_R) {
+              damagePlayer(run, e.dmg * 1.2 * dMul);
             }
-            // Boss 落地分裂:紧贴 Boss 生成,同样豁免
+            // 落地释放一圈腐液弹
+            for (var sj = 0; sj < 12; sj++) {
+              var sa = (Math.PI * 2 / 12) * sj + run.t * 0.5;
+              fireShot(e.x, e.y, Math.cos(sa), Math.sin(sa), 130, e.dmg * 0.35 * dMul, 0.25, 1.2, false, scol);
+            }
             for (var i = 0; i < 2; i++) spawnEnemy(run, 'slime', e.x + (Math.random() * 60 - 30), e.y + (Math.random() * 60 - 30), { allowNear: true });
           }
         }
         break;
-      case 'boss_bonelord': { // 环形骨矢 + 连续蓄力冲撞
+      }
+      case 'boss_bonelord': { // 环形骨矢 + 在玩家周围召唤破土骷髅
         var bcol = bdef.shotCol;
-        // charge 序列:每 3 次弹幕后进入连续三段冲撞
+        // 召唤序列:原地吟唱,然后在玩家四周让骷髅从地里爬出来
         if (e.chargeSeq > 0) {
           e.skT -= dt;
-          if (e.chargePhase === 0) {          // 蓄力(原地闪烁)
+          if (e.chargePhase === 0) {          // 吟唱(原地闪烁,给玩家反应时间)
             e.vx = 0; e.vy = 0; e.flash = 0.05;
+            if ((run.frame & 3) === 0) FX.trail(e.x + (Math.random() * 40 - 20), e.y - 10, bcol, 3);
             if (e.skT <= 0) {
-              e.chargePhase = 1; e.skT = 0.55;
-              e.tgtX = nx; e.tgtY = ny;
-              FX.ring(e.x, e.y, { r: 70, color: bcol, life: 0.3, width: 4 });
+              e.chargePhase = 1; e.skT = 0.25;
+              FX.ring(e.x, e.y, { r: 80, color: bcol, life: 0.4, width: 4 });
               AudioSys.play('elite_spawn');
+              if (run.cb.onWarn) run.cb.onWarn('骸骨领主召唤亡者!');
             }
-          } else {                             // 冲撞
-            e.vx = e.tgtX * 430; e.vy = e.tgtY * 430;
-            e.kx = 0; e.ky = 0;
-            if ((run.frame & 1) === 0) FX.trail(e.x, e.y, bcol, 4);
+          } else {                             // 分批破土,每批 3 只
+            e.vx = 0; e.vy = 0;
             if (e.skT <= 0) {
               e.chargeSeq--;
-              e.chargePhase = 0;
-              e.skT = 0.45;
-              e.aiT = e.chargeSeq > 0 ? 0.45 : 1.4;  // 段间短停,结束后长停
-              FX.shake(5, 0.25);
-              // 撞击落点撒一圈骨矢
-              for (var bj = 0; bj < 6; bj++) {
-                var ba = (Math.PI * 2 / 6) * bj + run.t;
-                fireShot(e.x, e.y, Math.cos(ba), Math.sin(ba), 140, e.dmg * 0.4 * dMul, 0, 0, false, bcol);
+              e.skT = 0.35;
+              for (var bj = 0; bj < 3; bj++) {
+                var ba = Math.random() * Math.PI * 2;
+                var bdst = 110 + Math.random() * 130;
+                var bR = CFG.GAME.MAP_R;
+                // skeleton 自带 burrow,会播出土动画且期间免伤
+                spawnEnemy(run, 'skeleton',
+                  E.clamp(p.x + Math.cos(ba) * bdst, -bR, bR),
+                  E.clamp(p.y + Math.sin(ba) * bdst, -bR, bR));
               }
+              FX.shake(3, 0.2);
+              if (e.chargeSeq <= 0) e.aiT = 1.6;
             }
           }
           break;
@@ -787,9 +848,8 @@ window.Entities = (function () {
           e.aiPhase++;
           // 用独立计数器决定冲撞时机:aiPhase 同时被当作弹幕旋转角,不能兼作节奏计数
           e.atkCount = (e.atkCount || 0) + 1;
-          if (e.atkCount % 3 === 0) {          // 每三轮转入冲撞连段
-            e.chargeSeq = 3; e.chargePhase = 0; e.skT = 0.6;
-            if (run.cb.onWarn) run.cb.onWarn('骸骨领主发起冲撞!');
+          if (e.atkCount % 3 === 0) {          // 每三轮转入召唤(3 批 × 3 只)
+            e.chargeSeq = 3; e.chargePhase = 0; e.skT = 0.9;
             break;
           }
           var n = 14;
@@ -1061,6 +1121,45 @@ window.Entities = (function () {
     }
   }
 
+  // 火焰净化蛛网:烧掉飞行中的蛛网弹,若角色在范围内则清除缠身与定身
+  function cleanseWebs(run, x, y, radius) {
+    var r2 = radius * radius, i, burned = 0;
+    for (i = 0; i < shots.length; i++) {
+      var sh = shots[i];
+      if (!sh.alive || !sh.webType) continue;
+      if (E.dist2(sh.x, sh.y, x, y) > r2) continue;
+      sh.alive = false; burned++;
+      FX.burst(sh.x, sh.y, { color: '#ffaa44', n: 5, speed: 60, life: 0.28, size: 2 });
+    }
+    var p = run.player;
+    if (E.dist2(p.x, p.y, x, y) <= r2 && (p.webStacks > 0 || p.rootT > 0)) {
+      p.webStacks = 0; p.webT = 0; p.rootT = 0;
+      if (p.slow > 0) { p.slow = 0; p.slowT = 0; }
+      FX.burst(p.x, p.y, { color: '#ffbb55', n: 12, speed: 90, life: 0.4, size: 2 });
+      burned++;
+    }
+    return burned;
+  }
+
+  // 当前存活的远程怪数量(用于总量上限)
+  function countRanged() {
+    var n = 0;
+    for (var i = 0; i < POOL; i++) {
+      var e = enemies[i];
+      if (e.alive && !e.boss && e.def && e.def.ranged) n++;
+    }
+    return n;
+  }
+  // 从本波配置里挑一个近战怪作为替补
+  function pickMeleeFrom(ids) {
+    var cand = [];
+    for (var i = 0; i < ids.length; i++) {
+      var d = CFG.ENEMIES[ids[i]];
+      if (d && !d.ranged) cand.push(ids[i]);
+    }
+    return cand.length ? cand[Math.floor(Math.random() * cand.length)] : null;
+  }
+
   // ================= 刷怪导演 =================
   function director(run, dt) {
     var t = run.t;
@@ -1075,10 +1174,19 @@ window.Entities = (function () {
     var aliveCount = POOL - freeIdx.length;
     while (run.spawnAcc >= 1) {
       run.spawnAcc -= 1;
-      if (aliveCount < CFG.GAME.ENEMY_CAP) {
-        spawnAtRing(run, w.ids[Math.floor(Math.random() * w.ids.length)]);
-        aliveCount++;
+      if (aliveCount >= CFG.GAME.ENEMY_CAP) continue;
+      var pickId = w.ids[Math.floor(Math.random() * w.ids.length)];
+      var pdef = CFG.ENEMIES[pickId];
+      // spawnWeight < 1 的怪按概率跳过(蜘蛛刷新量砍半)
+      if (pdef && pdef.spawnWeight !== undefined && Math.random() > pdef.spawnWeight) continue;
+      // 远程怪总量上限:满了就换成近战填充,避免满屏弹幕
+      if (pdef && pdef.ranged && countRanged() >= CFG.GAME.RANGED_CAP) {
+        var melee = pickMeleeFrom(w.ids);
+        if (!melee) continue;
+        pickId = melee;
       }
+      spawnAtRing(run, pickId);
+      aliveCount++;
     }
     // 定点事件
     while (run.eventIdx < run.map.events.length && t >= run.map.events[run.eventIdx].t) {
@@ -1316,7 +1424,10 @@ window.Entities = (function () {
       else if (run.freezeT > 0 || e.frozen > 0) tint = '#5fd0ff';
       else if (e.slowT > 0) tint = '#8ab6ff';
       var wob = e.boss ? 0 : Math.sin(run.t * 8 + e.animo) * 1.5;
-      drawSprite(ctx, e.boss ? e.bossType : e.id, animF + (e.animo | 0), e.x, e.y + wob, sc, e.face < 0, e.alpha, tint);
+      // 史莱姆跳跃:hop 抬高机体,squash 做蓄力压扁/腾空拉伸
+      var hop = e.hop || 0, sq = e.squash || 1;
+      drawSprite(ctx, e.boss ? e.bossType : e.id, animF + (e.animo | 0),
+                 e.x, e.y + wob - hop, sc * sq, e.face < 0, e.alpha, tint);
       if (e.elite) drawSprite(ctx, 'elite_crown', 0, e.x, e.y - e.r - 12, 1, false, 1, null);
       // 被强化的小怪:显示淡色光环表示受精英/Boss 增益
       if (e.buffed && !e.elite && !e.boss) {
@@ -1551,7 +1662,7 @@ window.Entities = (function () {
     updateEnemies: updateEnemies, updateGems: updateGems, updateItems: updateItems,
     spawnGem: spawnGem, spawnItem: spawnItem, addXp: addXp, bombBlast: bombBlast,
     director: director, draw: draw, drawLobMarkers: drawLobMarkers, reset: reset,
-    clearEnemies: clearEnemies,
+    clearEnemies: clearEnemies, cleanseWebs: cleanseWebs,
     pool: enemies, countAlive: countAlive, drawSprite: drawSprite,
     getGems: function () { return gems; },
     getItems: function () { return items; },
