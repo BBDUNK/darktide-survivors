@@ -647,14 +647,24 @@ window.Weapons = (function () {
     var st = wStats(run, w);
     w.cdT = st.cd;
     w.curR = st.size; // 供绘制
+    // 圣光:亡灵类额外减速 50%(鬼魂/骷髅/死灵),普通敌人维持原有减速
     var slowAmt = w.evolved ? 0.3 : 0;
     E.gridQuery(p.x, p.y, st.size, function (e) {
+      var undead = e.id === 'ghost' || e.id === 'skeleton' || e.id === 'wraith' || e.id === 'zombie';
       Entities.damageEnemy(run, e, st.dmg, {
-        noCrit: false, slow: slowAmt, slowDur: 0.6,
+        noCrit: false,
+        slow: undead ? Math.max(slowAmt, 0.5) : slowAmt,
+        slowDur: undead ? 1.0 : 0.6,
         kx: (e.x - p.x) * 0.3, ky: (e.y - p.y) * 0.3
       });
       return false;
     });
+    // 圣光:范围内敌方弹幕减速 20%(存储标记,子弹更新时按比例衰减)
+    if (w.evolved || true) {
+      run.holySlow = run.holySlow || 1.0;
+      // 通过 run 传递光环半径给 entities 的敌弹更新
+      run.holyAuraR = st.size;
+    }
     if (w.evolved) p.hp = Math.min(p.stats.hp, p.hp + 0.5);
   }
 

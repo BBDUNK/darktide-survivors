@@ -15,6 +15,8 @@
     introImg = new Image();
     introImg.src = 'assets/intro.jpg';
     introT = 0; introDone = false; introSkipped = false;
+    // 隐藏所有 DOM 屏(title 屏会盖住 canvas 拦截点击),让开幕 canvas 独占画面
+    UI.hideAllScreens();
     state = 'intro';
   }
   function skipIntro() {
@@ -27,15 +29,13 @@
   }
   function updateIntro(dt) {
     introT += dt;
-    if (introT >= 3 && !introDone) { introT = 3; skipIntro(); }
+    if (introT >= 5 && !introDone) { introT = 5; skipIntro(); }
   }
   function renderIntro() {
     var W = CFG.GAME.W, H = CFG.GAME.H;
-    // 背景图:尽量铺满,保持比例
+    // 背景图:拉伸铺满全屏(不按比例,适应任意屏幕)
     if (introImg && introImg.width) {
-      var s = Math.max(W / introImg.width, H / introImg.height);
-      var iw = introImg.width * s, ih = introImg.height * s;
-      ctx.drawImage(introImg, (W - iw) / 2, (H - ih) / 2, iw, ih);
+      ctx.drawImage(introImg, 0, 0, W, H);
     } else {
       ctx.fillStyle = '#0b0812';
       ctx.fillRect(0, 0, W, H);
@@ -51,23 +51,22 @@
       ctx.drawImage(cimg, cx, cy, 40, 40);
       ctx.globalAlpha = 1;
     }
-    // 中央题字
+    // 中央题字(放大)
     ctx.textAlign = 'center';
-    ctx.font = 'bold 26px "Press Start 2P","Microsoft YaHei",monospace';
-    ctx.lineWidth = 6;
+    ctx.font = 'bold 34px "Press Start 2P","Microsoft YaHei",monospace';
+    ctx.lineWidth = 8;
     ctx.strokeStyle = 'rgba(0,0,0,0.85)';
-    ctx.strokeText('天庭制作组倾心呈现', W / 2, H / 2 - 30);
+    ctx.strokeText('天庭制作组倾心呈现', W / 2, H / 2 - 20);
     ctx.fillStyle = '#ffd76b';
-    ctx.fillText('天庭制作组倾心呈现', W / 2, H / 2 - 30);
-    ctx.font = '14px "Microsoft YaHei",sans-serif';
-    ctx.lineWidth = 4;
-    ctx.strokeText('特别鸣谢:SOTA Model', W / 2, H / 2 + 6);
+    ctx.fillText('天庭制作组倾心呈现', W / 2, H / 2 - 20);
+    ctx.font = '20px "Microsoft YaHei",sans-serif';
+    ctx.lineWidth = 5;
+    ctx.strokeText('特别鸣谢:SOTA Model', W / 2, H / 2 + 34);
     ctx.fillStyle = '#cfe6ff';
-    ctx.fillText('特别鸣谢:SOTA Model', W / 2, H / 2 + 6);
-    // 底部怪物行(和主菜单一样,含精英/Boss)
+    ctx.fillText('特别鸣谢:SOTA Model', W / 2, H / 2 + 34);
+    // 底部怪物行(和主菜单一样,普通怪 32px,Boss 40px 还原比例)
     var parade = ['bat', 'slime', 'zombie', 'skeleton', 'ghost', 'spider', 'orc',
                   'boss_slimeking', 'boss_bonelord', 'boss_abysseye', 'boss_darklord'];
-    var crown = SpriteGen.get('elite_crown');
     for (var i = 0; i < parade.length; i++) {
       var pid = parade[i];
       var x = ((introT * 40 + i * 152 + (i % 3) * 26) % (W + 200)) - 100;
@@ -76,13 +75,7 @@
       var img = frames[Math.floor(introT * 5 + i) % frames.length];
       var isBoss = pid.indexOf('boss_') === 0;
       ctx.globalAlpha = 0.5;
-      ctx.drawImage(img, x, y, 32, 32);
-      if (isBoss) {
-        ctx.globalAlpha = 0.8;
-        ctx.drawImage(img, x - 4, y - 6, 42, 42);
-        ctx.globalAlpha = 0.7;
-        ctx.drawImage(crown, x + 2, y - 14, 16, 10);
-      }
+      ctx.drawImage(img, x, y, isBoss ? 40 : 32, isBoss ? 40 : 32);
       ctx.globalAlpha = 1;
     }
     // 右下角跳过提示
@@ -786,10 +779,10 @@
     drawGround(pal, menuT * 30, Math.sin(menuT * 0.1) * 40);
     drawDecor(CFG.MAPS[0], menuT * 30, Math.sin(menuT * 0.1) * 40, 0, null);
 
-    // 顶部角色行:从右往左跳动,和下面对齐错落
+    // 顶部角色行:从右往左跳动,固定间隔整齐排列
     var chars = ['char_knight', 'char_mage', 'char_ranger', 'char_cleric', 'char_berserker', 'char_chrono'];
     for (var ci = 0; ci < chars.length; ci++) {
-      var cx = ((menuT * 36 + ci * 170) % (CFG.GAME.W + 220)) - 110;
+      var cx = ((menuT * 36 + ci * 165) % (CFG.GAME.W + 220)) - 110;
       var cy = 62 + Math.sin(menuT * 3.2 + ci * 0.8) * 6;
       var cfr = SpriteGen.frames(chars[ci]);
       var cimg = cfr[Math.floor(menuT * 5 + ci) % cfr.length];
@@ -798,7 +791,7 @@
       ctx.globalAlpha = 1;
     }
 
-    // 底部怪物行:普通怪 + 精英(BOSS 上加冠) + Boss,随机错落排列
+    // 底部怪物行:普通怪 + Boss 随机错落排列,普通怪 32px,Boss 40px(还原比例)
     var parade = ['bat', 'slime', 'zombie', 'skeleton', 'ghost', 'spider', 'orc',
                   'boss_slimeking', 'boss_bonelord', 'boss_abysseye', 'boss_darklord'];
     var crown = SpriteGen.get('elite_crown');
@@ -810,13 +803,10 @@
       var img = frames[Math.floor(menuT * 5 + i) % frames.length];
       var isBoss = pid.indexOf('boss_') === 0;
       ctx.globalAlpha = 0.5;
-      ctx.drawImage(img, x, y, 32, 32);
       if (isBoss) {
-        // 精英/ Boss:戴冠 + 稍大 + 半透明高光
-        ctx.globalAlpha = 0.8;
-        ctx.drawImage(img, x - 4, y - 6, 42, 42);
-        ctx.globalAlpha = 0.7;
-        ctx.drawImage(crown, x + 2, y - 14, 16, 10);
+        ctx.drawImage(img, x, y, 40, 40);            // Boss 比例不变,只是比小怪略大
+      } else {
+        ctx.drawImage(img, x, y, 32, 32);
       }
       ctx.globalAlpha = 1;
     }

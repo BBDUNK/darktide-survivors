@@ -367,6 +367,29 @@ window.UI = (function () {
     coopCodeLine.innerHTML = '';
     coopCodeLine.appendChild(h('span', 'coop-label', '房间号'));
     coopCodeLine.appendChild(h('span', 'coop-code', code));
+    // 复制房间号按钮
+    var copyBtn = btn('📋 复制', 'small-btn', function () {
+      var ok = false;
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(code);
+          ok = true;
+        }
+      } catch (e) { ok = false; }
+      // 兼容非 https(file:// 或旧浏览器)走降级方案
+      if (!ok) {
+        var ta = document.createElement('textarea');
+        ta.value = code;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); ok = true; } catch (e2) {}
+        document.body.removeChild(ta);
+      }
+      var label = copyBtn.textContent;
+      copyBtn.textContent = '✅ 已复制';
+      setTimeout(function () { copyBtn.textContent = label; }, 1500);
+    });
+    coopCodeLine.appendChild(copyBtn);
     coopStartBtn.classList.toggle('hidden', !isHost);
     myCharId = null; myReady = false;
     if (!coopMapId) coopMapId = CFG.MAPS[0].id;   // 默认第一张

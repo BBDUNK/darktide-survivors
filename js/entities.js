@@ -578,6 +578,20 @@ window.Entities = (function () {
       if (!sh.alive) continue;
       sh.ttl -= dt;
       if (sh.ttl <= 0) { sh.alive = false; continue; }
+      // 圣光领域:范围内的敌方弹幕速度上限封顶(减速 20%,不逐帧累乘导致停住)
+      if (run.holyAuraR) {
+        var hr = run.holyAuraR;
+        var hd2 = (sh.x - p.x) * (sh.x - p.x) + (sh.y - p.y) * (sh.y - p.y);
+        if (hd2 < hr * hr) {
+          var spdCur = Math.hypot(sh.vx, sh.vy);
+          var cap = Math.max(40, (sh.capSpd || spdCur) * 0.8);
+          if (!sh.capSpd) sh.capSpd = spdCur;
+          if (spdCur > cap) { sh.vx *= cap / spdCur; sh.vy *= cap / spdCur; }
+          if ((run.frame & 7) === 0) FX.trail(sh.x, sh.y, '#fff3c8', 2);
+        } else if (sh.capSpd) {
+          sh.capSpd = 0;   // 离开领域后恢复原速
+        }
+      }
       var dx = sh.vx * dt, dy = sh.vy * dt;
       var moved = Math.hypot(dx, dy);
       sh.travelled += moved;
@@ -765,7 +779,7 @@ window.Entities = (function () {
     switch (e.bossType) {
       case 'boss_slimeking': { // 蓄力跳跃:落点显示危险半径,落地后释放一圈弹幕
         var scol = bdef.shotCol || '#7fd44f';
-        var LEAP_R = 130;                  // 落地伤害半径
+        var LEAP_R = 85;                   // 落地伤害半径(缩小,可躲避)
         if (e.aiPhase === 0) {             // 逼近
           e.vx = nx * spd * 0.6; e.vy = ny * spd * 0.6;
           if (e.aiT <= 0) { e.aiPhase = 1; e.aiT = 0.85; e.vx = 0; e.vy = 0; }
@@ -795,7 +809,7 @@ window.Entities = (function () {
           e.squash = 1 + Math.sin(t01 * Math.PI) * 0.25;
           e.vx = 0; e.vy = 0;
           if (e.aiT <= 0) {
-            e.aiPhase = 0; e.aiT = 1.5;
+            e.aiPhase = 0; e.aiT = 20;    // 20 秒冷却,不会一直跳
             e.hop = 0; e.squash = 1;
             FX.ring(e.x, e.y, { r: LEAP_R, color: scol, life: 0.45, width: 5 });
             FX.explosion(e.x, e.y, LEAP_R);

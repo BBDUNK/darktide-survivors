@@ -242,7 +242,7 @@ window.Net = (function () {
         });
         setTimeout(function () {
           if (!settled) { settled = true; reject(new Error('连接超时,请检查房间号')); }
-        }, 12000);
+        }, 20000);
       });
     });
   }
