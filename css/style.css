@@ -121,9 +121,10 @@ body.touch-device.portrait .rotate-tip {
   display: flex; align-items: center; justify-content: center;
   gap: 64px; padding-top: 110px;
 }
-.menu-mid { display: flex; flex-direction: column; align-items: center; gap: 22px; }
+.menu-mid { display: flex; flex-direction: column; align-items: center; gap: 14px; }
 .menu-col { display: flex; flex-direction: column; gap: 14px; align-items: center; }
-.menu-subrow { display: flex; gap: 16px; }
+/* 成就/百科行:与主按钮列同宽,左右两端对齐 */
+.menu-subrow { display: flex; justify-content: space-between; width: 300px; gap: 10px; }
 /* 左下角版本号 */
 .menu-version {
   position: absolute; left: 12px; bottom: 10px;
@@ -816,7 +817,7 @@ body.touch-device .hud-targetbtn { display: block; }
 }
 /* 成就/百科小按钮:主列约 45% 宽 */
 .btn.sub {
-  width: 132px;
+  width: 142px;
   height: 34px;
   padding: 0;
   font-size: 12px;

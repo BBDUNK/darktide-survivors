@@ -171,9 +171,9 @@ window.Merchant = (function () {
     ctx.drawImage(mimg, M.x - mimg.width, M.y - 56 - mimg.height * 2 + bob,
                   mimg.width * 2, mimg.height * 2);
     // 招牌(无底色,直接描边文字)——上移到商人头顶上方,避免挡住形象
-    ctx.font = 'bold 13px monospace';
+    ctx.font = 'bold 17px "Microsoft YaHei",sans-serif';
     ctx.textAlign = 'center';
-    ctx.lineWidth = 4;
+    ctx.lineWidth = 5;
     ctx.strokeStyle = 'rgba(8,6,18,0.9)';
     ctx.strokeText('行商浪人', M.x, M.y - 108);
     ctx.fillStyle = '#ffd76b';
@@ -220,18 +220,18 @@ window.Merchant = (function () {
         ctx.beginPath(); ctx.arc(sx, M.y, 20, 0, Math.PI * 2); ctx.fill();
         ctx.globalAlpha = 1;
       }
-      // 名称 + 价格:描边文字保证可读,不要黑底
-      ctx.font = 'bold 11px monospace';
+      // 名称 + 价格:加大描边文字保证可读,不要黑底
+      ctx.font = 'bold 15px "Microsoft YaHei",sans-serif';
       ctx.textAlign = 'center';
       var costTxt = '◈ ' + s.good.cost;
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 4;
       ctx.strokeStyle = 'rgba(8,6,18,0.9)';
-      ctx.strokeText(s.good.name.slice(0, 8), sx, M.y + 21);
+      ctx.strokeText(s.good.name.slice(0, 8), sx, M.y + 22);
       ctx.fillStyle = '#e8e2f5';
-      ctx.fillText(s.good.name.slice(0, 8), sx, M.y + 21);
-      ctx.strokeText(costTxt, sx, M.y + 31);
+      ctx.fillText(s.good.name.slice(0, 8), sx, M.y + 22);
+      ctx.strokeText(costTxt, sx, M.y + 33);
       ctx.fillStyle = canAfford ? '#ffd76b' : '#ff8b94';
-      ctx.fillText(costTxt, sx, M.y + 31);
+      ctx.fillText(costTxt, sx, M.y + 33);
     }
     ctx.textAlign = 'left';
   }
@@ -256,8 +256,8 @@ window.Merchant = (function () {
     ctx.stroke();
     // 剩余时间
     ctx.fillStyle = '#fff';
-    ctx.font = 'bold 9px monospace';
-    ctx.fillText(txt, cx, cy + 3);
+    ctx.font = 'bold 12px monospace';
+    ctx.fillText(txt, cx, cy + 4);
   }
 
   return { reset: reset, update: update, draw: draw, roll: roll,
