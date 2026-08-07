@@ -672,13 +672,16 @@ window.UI = (function () {
   function renderEncStory() {
     Encyclopedia.story().forEach(function (ch) {
       var card = h('div', 'enc-card story-card');
-      // 插图 + 标题
+      // 插图 + 标题 + 章节标签
       var head = h('div', 'enc-head story-head');
       var img = iconCanvas(ch.icon, 52);
       img.className = 'story-illu';
       head.appendChild(img);
       var ht = h('div', 'enc-headtext');
-      ht.appendChild(h('div', 'enc-name', ch.title));
+      var titleRow = h('div', 'story-title-row');
+      titleRow.appendChild(h('span', 'story-tag ' + (ch.type || 'main'), ch.tag || ''));
+      titleRow.appendChild(h('div', 'enc-name', ch.title));
+      ht.appendChild(titleRow);
       head.appendChild(ht);
       card.appendChild(head);
       // 段落

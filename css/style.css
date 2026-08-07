@@ -519,6 +519,13 @@ body.touch-device .hud-targetbtn { display: block; }
   border: 2px solid var(--panel-line); border-radius: 4px;
   background: rgba(12, 8, 24, 0.7); padding: 4px;
 }
+.story-title-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.story-tag {
+  font-size: 10px; font-weight: 800; letter-spacing: 1px;
+  padding: 2px 7px; border-radius: 3px; flex-shrink: 0;
+}
+.story-tag.main { color: #ffd76b; background: rgba(120, 90, 20, 0.4); border: 1px solid rgba(255,215,107,0.4); }
+.story-tag.bio { color: #9ad9ff; background: rgba(30, 70, 120, 0.4); border: 1px solid rgba(154,217,255,0.4); }
 .story-body { display: flex; flex-direction: column; gap: 10px; }
 .story-para {
   font-size: 14px; color: var(--text); line-height: 1.8;
@@ -806,7 +813,7 @@ body.touch-device .hud-targetbtn { display: block; }
 .menu-col .btn {
   width: 300px;
   height: 50px;
-  padding: 0;
+  padding: 0 0 4px 0;   /* 文字视觉偏下,用下 padding 把内容区上移约 2px */
   font-size: 17px;
   line-height: 1;
   text-align: center;
@@ -819,7 +826,7 @@ body.touch-device .hud-targetbtn { display: block; }
 .btn.sub {
   width: 142px;
   height: 34px;
-  padding: 0;
+  padding: 0 0 3px 0;
   font-size: 12px;
   line-height: 1;
   text-align: center;

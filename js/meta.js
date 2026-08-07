@@ -28,9 +28,9 @@ window.Meta = (function () {
   var defaults = function () {
     if (TEST_UNLOCK_ALL) {
       return {
-        gold: 50000,
-        metaLv: allMetaMax(),
-        achv: allAchv(),
+        gold: 500,            // 少量金币,模拟新手经济(可买 1~2 个低级强化)
+        metaLv: {},           // 圣坛从零开始,不提供永久加成(模拟全新玩家难度)
+        achv: allAchv(),      // 仍全解锁成就,方便测试所有角色/地图
         codex: allCodex(),
         settings: { music: 0.7, sfx: 0.8, shake: true, dmgText: true, hpBar: true, uiScale: 'contain', lang: 'zh' },
         stats: {
