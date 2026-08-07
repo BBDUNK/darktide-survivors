@@ -143,12 +143,13 @@ window.Entities = (function () {
         elite: false, boss: false, bossType: '',
         ai: 'chase', aiT: 0, aiPhase: 0, tgtX: 0, tgtY: 0,
         burn: 0, burnT: 0, guard: 0,
-        buffSpd: 1, buffDmg: 1, buffed: false
+        buffSpd: 1, buffDmg: 1, buffed: false,
+        chargeSeq: 0, chargePhase: 0, blinkT: 0, stiffT: 0, atkCount: 0, skT: 0
       });
       freeIdx.push(POOL - 1 - i);
     }
     shots.length = 0;
-    for (i = 0; i < 200; i++) shots.push({ alive: false, x: 0, y: 0, vx: 0, vy: 0, dmg: 0, ttl: 0, slow: 0, slowDur: 0, webType: false });
+    for (i = 0; i < 200; i++) shots.push({ alive: false, x: 0, y: 0, vx: 0, vy: 0, dmg: 0, ttl: 0, slow: 0, slowDur: 0, webType: false, col: null, size: 16 });
     lobs.length = 0;
     for (i = 0; i < 40; i++) lobs.push({ alive: false, sx: 0, sy: 0, tx: 0, ty: 0, r: 0, dmg: 0, t: 0, dur: 0 });
     gems.length = 0; freeGem.length = 0;
@@ -180,10 +181,19 @@ window.Entities = (function () {
     e.aiPhase = 0;
     e.burn = 0; e.burnT = 0; e.guard = 0;
     e.buffSpd = 1; e.buffDmg = 1; e.buffed = false;
+    e.chargeSeq = 0; e.chargePhase = 0; e.stiffT = 0; e.atkCount = 0; e.skT = 0;
+    e.blinkT = 5 + Math.random() * 3;   // 首次瞬移不要一出场就触发
     if (opts && opts.elite) {
       e.elite = true;
       e.maxHp *= CFG.ELITE.hpMul; e.hp = e.maxHp;
       e.dmg *= CFG.ELITE.dmgMul; e.r *= 1.3;
+      // 精英按类型获得专属强化行为(近战获得冲撞,远程获得瞬移)
+      if (e.ai === 'chase') { e.eliteSkill = 'charge'; e.blinkT = 3 + Math.random() * 2; }
+      else if (e.ai === 'shoot' || e.ai === 'spitter' || e.ai === 'lobber') { e.eliteSkill = 'blink'; e.blinkT = 5 + Math.random() * 3; }
+      else if (e.ai === 'phase') { e.eliteSkill = 'blink'; e.blinkT = 4 + Math.random() * 2; }
+      else e.eliteSkill = '';
+    } else {
+      e.eliteSkill = '';
     }
     if (!run.seen[id]) { run.seen[id] = true; Meta.seeCodex(id); }
     return e;
@@ -351,6 +361,15 @@ window.Entities = (function () {
       var dx = p.x - e.x, dy = p.y - e.y;
       var dist = Math.hypot(dx, dy) || 1;
       var nx = dx / dist, ny = dy / dist;
+
+      // 精英专属技能:近战连续冲撞 / 远程瞬移(瞬移后僵直)
+      if (e.elite && e.eliteSkill && eliteSkill(run, e, dt, nx, ny, dist)) {
+        e.x += (e.vx + e.kx) * dt;
+        e.y += (e.vy + e.ky) * dt;
+        e.kx *= Math.pow(0.002, dt); e.ky *= Math.pow(0.002, dt);
+        contactCheck(run, e, p);
+        continue;
+      }
       e.face = nx >= 0 ? 1 : -1;
 
       switch (e.ai) {
@@ -380,9 +399,9 @@ window.Entities = (function () {
           e.aiT -= dt;
           if (e.aiT <= 0 && dist < 380) {
             e.aiT = e.def.shotCd;
-          // 蛛网弹:白色黏丝,施加叠层减速
-          fireShot(e.x, e.y, nx, ny, e.def.shotSpd,
-            e.def.shotDmg * (e.elite ? 1.5 : 1), e.def.slowAmt, e.def.slowDur, true);
+            // 蛛网弹:白色黏丝,施加叠层减速
+            fireShot(e.x, e.y, nx, ny, e.def.shotSpd,
+              e.def.shotDmg * (e.elite ? 1.5 : 1), e.def.slowAmt, e.def.slowDur, true);
           }
           break;
         case 'shielder': // 重骑:周期举盾,期间完全免伤+霸体
@@ -511,13 +530,75 @@ window.Entities = (function () {
     return false;
   }
 
+  // 精英专属技能。返回 true 表示本帧已由技能接管移动,跳过常规 AI。
+  var ELITE_COL = '#ff9d5c';
+  function eliteSkill(run, e, dt, nx, ny, dist) {
+    // 瞬移后僵直:输出窗口
+    if (e.stiffT > 0) {
+      e.stiffT -= dt;
+      e.vx = 0; e.vy = 0;
+      if ((run.frame & 3) === 0) FX.trail(e.x + (Math.random() * 22 - 11), e.y + (Math.random() * 22 - 11), ELITE_COL, 2);
+      return true;
+    }
+    // 技能自己的计时器 skT,不能复用 aiT——常规 AI 分支每帧都会重置 aiT
+    if (e.eliteSkill === 'charge') {
+      if (e.chargeSeq > 0) {
+        e.skT -= dt;
+        if (e.chargePhase === 0) {                 // 蓄力
+          e.vx = 0; e.vy = 0; e.flash = 0.05;
+          if (e.skT <= 0) {
+            e.chargePhase = 1; e.skT = 0.42;
+            e.tgtX = nx; e.tgtY = ny;
+            FX.ring(e.x, e.y, { r: e.r + 26, color: ELITE_COL, life: 0.28, width: 3 });
+          }
+        } else {                                    // 冲撞
+          e.vx = e.tgtX * 360; e.vy = e.tgtY * 360;
+          e.kx = 0; e.ky = 0;                       // 冲撞时霸体
+          if ((run.frame & 1) === 0) FX.trail(e.x, e.y, ELITE_COL, 3);
+          if (e.skT <= 0) {
+            e.chargeSeq--; e.chargePhase = 0;
+            e.skT = 0.3;
+            FX.shake(3, 0.18);
+          }
+        }
+        return true;
+      }
+      e.blinkT -= dt;
+      if (e.blinkT <= 0 && dist < 340) {            // 触发两段冲撞
+        e.blinkT = 5 + Math.random() * 3;
+        e.chargeSeq = 2; e.chargePhase = 0; e.skT = 0.45;
+        return true;
+      }
+      return false;
+    }
+    if (e.eliteSkill === 'blink') {
+      e.blinkT -= dt;
+      if (e.blinkT <= 0 && dist < 460) {            // 瞬移到玩家背后
+        e.blinkT = 6 + Math.random() * 3;
+        var p = run.player;
+        FX.burst(e.x, e.y, { color: ELITE_COL, n: 12, speed: 130, life: 0.4, size: 2 });
+        var pa = Math.atan2(p.lastVy || 0, p.lastVx || 1);
+        if (!p.lastVx && !p.lastVy) pa = Math.random() * Math.PI * 2;
+        var R = CFG.GAME.MAP_R;
+        e.x = E.clamp(p.x - Math.cos(pa) * 70, -R, R);
+        e.y = E.clamp(p.y - Math.sin(pa) * 70, -R, R);
+        e.stiffT = 0.85;
+        FX.burst(e.x, e.y, { color: '#fff', n: 10, speed: 110, life: 0.35, size: 2 });
+        AudioSys.play('freeze');
+        return true;
+      }
+      return false;
+    }
+    return false;
+  }
+
   function contactCheck(run, e, p) {
     var rr = e.r + p.r;
     if (E.dist2(e.x, e.y, p.x, p.y) < rr * rr) damagePlayer(run, e.dmg * (e.buffDmg || 1));
   }
 
   var shots = [];
-  function fireShot(x, y, nx, ny, spd, dmg, slow, slowDur, webType) {
+  function fireShot(x, y, nx, ny, spd, dmg, slow, slowDur, webType, col, size) {
     for (var i = 0; i < shots.length; i++) {
       if (!shots[i].alive) {
         var s = shots[i];
@@ -525,6 +606,8 @@ window.Entities = (function () {
         s.vx = nx * spd; s.vy = ny * spd; s.dmg = dmg; s.ttl = 5;
         s.slow = slow || 0; s.slowDur = slowDur || 0;
         s.webType = webType || false;
+        s.col = col || null;          // 自定义配色(Boss 弹幕差异化)
+        s.size = size || 16;
         return;
       }
     }
@@ -563,6 +646,8 @@ window.Entities = (function () {
   // ================= Boss AI =================
   function bossAI(run, e, dt, nx, ny, dist, spd) {
     e.aiT -= dt;
+    var p = run.player;
+    var bdef = CFG.BOSSES[e.bossType] || {};
     var enrage = (e.bossType === 'boss_darklord' && run.t >= CFG.GAME.RUN_TIME);
     var sMul = enrage ? 1.6 : 1, dMul = enrage ? 2 : 1;
     switch (e.bossType) {
@@ -577,34 +662,104 @@ window.Entities = (function () {
           e.vx = e.tgtX * 240; e.vy = e.tgtY * 240;
           if (e.aiT <= 0) {
             e.aiPhase = 0; e.aiT = 1.2;
-            FX.ring(e.x, e.y, { r: 90, color: '#7fd44f', life: 0.4, width: 4 });
+            FX.ring(e.x, e.y, { r: 90, color: bdef.shotCol || '#7fd44f', life: 0.4, width: 4 });
             FX.shake(6, 0.3);
             AudioSys.play('splat');
+            // 落地溅射一圈腐液弹
+            for (var sj = 0; sj < 8; sj++) {
+              var sa = (Math.PI * 2 / 8) * sj + run.t * 0.5;
+              fireShot(e.x, e.y, Math.cos(sa), Math.sin(sa), 120, e.dmg * 0.35 * dMul, 0.25, 1.2, false, bdef.shotCol);
+            }
             for (var i = 0; i < 2; i++) spawnEnemy(run, 'slime', e.x + (Math.random() * 60 - 30), e.y + (Math.random() * 60 - 30));
           }
         }
         break;
-      case 'boss_bonelord': // 环形骨矢
+      case 'boss_bonelord': { // 环形骨矢 + 连续蓄力冲撞
+        var bcol = bdef.shotCol;
+        // charge 序列:每 3 次弹幕后进入连续三段冲撞
+        if (e.chargeSeq > 0) {
+          e.skT -= dt;
+          if (e.chargePhase === 0) {          // 蓄力(原地闪烁)
+            e.vx = 0; e.vy = 0; e.flash = 0.05;
+            if (e.skT <= 0) {
+              e.chargePhase = 1; e.skT = 0.55;
+              e.tgtX = nx; e.tgtY = ny;
+              FX.ring(e.x, e.y, { r: 70, color: bcol, life: 0.3, width: 4 });
+              AudioSys.play('elite_spawn');
+            }
+          } else {                             // 冲撞
+            e.vx = e.tgtX * 430; e.vy = e.tgtY * 430;
+            e.kx = 0; e.ky = 0;
+            if ((run.frame & 1) === 0) FX.trail(e.x, e.y, bcol, 4);
+            if (e.skT <= 0) {
+              e.chargeSeq--;
+              e.chargePhase = 0;
+              e.skT = 0.45;
+              e.aiT = e.chargeSeq > 0 ? 0.45 : 1.4;  // 段间短停,结束后长停
+              FX.shake(5, 0.25);
+              // 撞击落点撒一圈骨矢
+              for (var bj = 0; bj < 6; bj++) {
+                var ba = (Math.PI * 2 / 6) * bj + run.t;
+                fireShot(e.x, e.y, Math.cos(ba), Math.sin(ba), 140, e.dmg * 0.4 * dMul, 0, 0, false, bcol);
+              }
+            }
+          }
+          break;
+        }
         e.vx = nx * spd * 0.8; e.vy = ny * spd * 0.8;
         if (e.aiT <= 0) {
-          e.aiT = 3.6;
+          e.aiT = 3.2;
+          e.aiPhase++;
+          // 用独立计数器决定冲撞时机:aiPhase 同时被当作弹幕旋转角,不能兼作节奏计数
+          e.atkCount = (e.atkCount || 0) + 1;
+          if (e.atkCount % 3 === 0) {          // 每三轮转入冲撞连段
+            e.chargeSeq = 3; e.chargePhase = 0; e.skT = 0.6;
+            if (run.cb.onWarn) run.cb.onWarn('骸骨领主发起冲撞!');
+            break;
+          }
           var n = 14;
           for (var j = 0; j < n; j++) {
             var a = (Math.PI * 2 / n) * j + e.aiPhase * 0.3;
-            fireShot(e.x, e.y, Math.cos(a), Math.sin(a), 130, e.dmg * 0.6 * dMul);
+            fireShot(e.x, e.y, Math.cos(a), Math.sin(a), 130, e.dmg * 0.6 * dMul, 0, 0, false, bcol);
           }
-          e.aiPhase++;
           AudioSys.play('shoot_bolt');
         }
         break;
-      case 'boss_abysseye': // 螺旋弹幕 + 召唤
+      }
+      case 'boss_abysseye': { // 螺旋弹幕 + 瞬移到背后 + 召唤
+        var acol = bdef.shotCol;
+        // 瞬移后僵直:不能移动也不能开火,是玩家的输出窗口
+        if (e.stiffT > 0) {
+          e.stiffT -= dt;
+          e.vx = 0; e.vy = 0;
+          if ((run.frame & 3) === 0) FX.trail(e.x + (Math.random() * 30 - 15), e.y + (Math.random() * 30 - 15), acol, 3);
+          break;
+        }
+        e.blinkT -= dt;
+        if (e.blinkT <= 0) {                   // 瞬移到玩家背后
+          e.blinkT = 7 + Math.random() * 3;
+          FX.burst(e.x, e.y, { color: acol, n: 18, speed: 150, life: 0.45, size: 3 });
+          FX.ring(e.x, e.y, { r: 60, color: acol, life: 0.4, width: 3 });
+          // 落在玩家移动方向的反侧(背后)
+          var pa = Math.atan2(p.lastVy || 0, p.lastVx || 1);
+          if (!p.lastVx && !p.lastVy) pa = Math.random() * Math.PI * 2;
+          var bx = p.x - Math.cos(pa) * 90, by = p.y - Math.sin(pa) * 90;
+          var R2 = CFG.GAME.MAP_R;
+          e.x = E.clamp(bx, -R2, R2); e.y = E.clamp(by, -R2, R2);
+          e.stiffT = 1.1;                      // 僵直窗口
+          FX.burst(e.x, e.y, { color: '#fff', n: 14, speed: 120, life: 0.4, size: 2 });
+          FX.shake(6, 0.3);
+          AudioSys.play('freeze');
+          if (run.cb.onWarn) run.cb.onWarn('深渊之眼消失了……');
+          break;
+        }
         if (dist > 260) { e.vx = nx * spd; e.vy = ny * spd; }
         else { e.vx = -ny * spd * 0.7; e.vy = nx * spd * 0.7; }
         e.aiPhase += dt * 2.2;
         if (e.aiT <= 0) {
           e.aiT = 0.28;
-          fireShot(e.x, e.y, Math.cos(e.aiPhase), Math.sin(e.aiPhase), 150, e.dmg * 0.5 * dMul);
-          fireShot(e.x, e.y, Math.cos(e.aiPhase + Math.PI), Math.sin(e.aiPhase + Math.PI), 150, e.dmg * 0.5 * dMul);
+          fireShot(e.x, e.y, Math.cos(e.aiPhase), Math.sin(e.aiPhase), 150, e.dmg * 0.5 * dMul, 0, 0, false, acol);
+          fireShot(e.x, e.y, Math.cos(e.aiPhase + Math.PI), Math.sin(e.aiPhase + Math.PI), 150, e.dmg * 0.5 * dMul, 0, 0, false, acol);
         }
         e.burnT = 0;
         if ((run.frame % 480) === 0) {
@@ -612,20 +767,75 @@ window.Entities = (function () {
           AudioSys.play('elite_spawn');
         }
         break;
-      case 'boss_darklord': // 综合:追击+径向+螺旋,狂暴加速
+      }
+      case 'boss_darklord': { // 终局:径向弹幕 + 冲撞 + 瞬移,狂暴后全面加速
+        var dcol = bdef.shotCol;
+        if (e.stiffT > 0) {                    // 瞬移后僵直
+          e.stiffT -= dt;
+          e.vx = 0; e.vy = 0;
+          if ((run.frame & 3) === 0) FX.trail(e.x + (Math.random() * 34 - 17), e.y + (Math.random() * 34 - 17), dcol, 3);
+          break;
+        }
+        if (e.chargeSeq > 0) {                 // 冲撞连段(用 skT,aiT 被弹幕节奏占用)
+          e.skT -= dt;
+          if (e.chargePhase === 0) {
+            e.vx = 0; e.vy = 0; e.flash = 0.05;
+            if (e.skT <= 0) {
+              e.chargePhase = 1; e.skT = 0.5;
+              e.tgtX = nx; e.tgtY = ny;
+              FX.ring(e.x, e.y, { r: 80, color: dcol, life: 0.3, width: 4 });
+            }
+          } else {
+            e.vx = e.tgtX * (enrage ? 520 : 450); e.vy = e.tgtY * (enrage ? 520 : 450);
+            e.kx = 0; e.ky = 0;
+            if ((run.frame & 1) === 0) FX.trail(e.x, e.y, dcol, 5);
+            if (e.skT <= 0) {
+              e.chargeSeq--; e.chargePhase = 0;
+              e.skT = 0.4;
+              e.aiT = e.chargeSeq > 0 ? 0.4 : 1.2;
+              FX.shake(6, 0.3);
+              for (var dj = 0; dj < 8; dj++) {
+                var da = (Math.PI * 2 / 8) * dj + run.t;
+                fireShot(e.x, e.y, Math.cos(da), Math.sin(da), 150, e.dmg * 0.4 * dMul, 0, 0, false, dcol);
+              }
+            }
+          }
+          break;
+        }
+        e.blinkT -= dt;
+        if (e.blinkT <= 0) {                   // 瞬移
+          e.blinkT = (enrage ? 6 : 9) + Math.random() * 3;
+          FX.burst(e.x, e.y, { color: dcol, n: 20, speed: 170, life: 0.45, size: 3 });
+          var dpa = Math.atan2(p.lastVy || 0, p.lastVx || 1);
+          if (!p.lastVx && !p.lastVy) dpa = Math.random() * Math.PI * 2;
+          var R3 = CFG.GAME.MAP_R;
+          e.x = E.clamp(p.x - Math.cos(dpa) * 100, -R3, R3);
+          e.y = E.clamp(p.y - Math.sin(dpa) * 100, -R3, R3);
+          e.stiffT = enrage ? 0.75 : 1.0;
+          FX.shake(7, 0.35);
+          AudioSys.play('freeze');
+          break;
+        }
         e.vx = nx * spd * sMul; e.vy = ny * spd * sMul;
         e.aiPhase += dt * 1.8;
         if (e.aiT <= 0) {
           e.aiT = enrage ? 1.6 : 2.6;
+          e.atkCount = (e.atkCount || 0) + 1;
+          if (e.atkCount % 3 === 0) {          // 每三轮弹幕后冲撞
+            e.chargeSeq = enrage ? 3 : 2; e.chargePhase = 0; e.skT = 0.55;
+            if (run.cb.onWarn) run.cb.onWarn('⚠ 暗潮魔王冲锋!');
+            break;
+          }
           var nn = enrage ? 20 : 12;
           for (var q = 0; q < nn; q++) {
             var aa = (Math.PI * 2 / nn) * q + e.aiPhase;
-            fireShot(e.x, e.y, Math.cos(aa), Math.sin(aa), 160, e.dmg * 0.5 * dMul);
+            fireShot(e.x, e.y, Math.cos(aa), Math.sin(aa), 160, e.dmg * 0.5 * dMul, 0, 0, false, dcol);
           }
           AudioSys.play('shoot_bolt');
         }
         if ((run.frame % 22) === 0) FX.trail(e.x + (Math.random() * 40 - 20), e.y + (Math.random() * 40 - 20), '#7a3cff', 4);
         break;
+      }
     }
   }
 
@@ -1041,8 +1251,21 @@ window.Entities = (function () {
     for (i = 0; i < shots.length; i++) {
       var sh = shots[i];
       if (!sh.alive) continue;
-      if (sh.webType) ctx.drawImage(webImg, sh.x - 9, sh.y - 9, 18, 18);
-      else ctx.drawImage(shotImg, sh.x - 8, sh.y - 8, 16, 16);
+      if (sh.webType) { ctx.drawImage(webImg, sh.x - 9, sh.y - 9, 18, 18); continue; }
+      if (sh.col) {
+        // Boss 专属配色弹幕:发光核心 + 外圈,和普通红弹明显区分
+        var sr = (sh.size || 16) * 0.42;
+        ctx.globalAlpha = 0.35;
+        ctx.fillStyle = sh.col;
+        ctx.beginPath(); ctx.arc(sh.x, sh.y, sr * 1.9, 0, Math.PI * 2); ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = sh.col;
+        ctx.beginPath(); ctx.arc(sh.x, sh.y, sr, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath(); ctx.arc(sh.x - sr * 0.25, sh.y - sr * 0.25, sr * 0.42, 0, Math.PI * 2); ctx.fill();
+        continue;
+      }
+      ctx.drawImage(shotImg, sh.x - 8, sh.y - 8, 16, 16);
     }
     // 玩家
     ctx.globalAlpha = 0.4;
@@ -1093,6 +1316,17 @@ window.Entities = (function () {
 
   function reset() { initPools(); }
 
+  // 清空全部敌人并正确归还空位(测试用;直接改 alive 会让池子永久占满)
+  function clearEnemies(run) {
+    for (var i = 0; i < POOL; i++) {
+      if (enemies[i].alive) {
+        enemies[i].alive = false;
+        freeIdx.push(i);
+      }
+    }
+    if (run) run.boss = null;
+  }
+
   function countAlive() { return POOL - freeIdx.length; }
 
   return {
@@ -1103,6 +1337,7 @@ window.Entities = (function () {
     updateEnemies: updateEnemies, updateGems: updateGems, updateItems: updateItems,
     spawnGem: spawnGem, spawnItem: spawnItem, addXp: addXp, bombBlast: bombBlast,
     director: director, draw: draw, drawLobMarkers: drawLobMarkers, reset: reset,
+    clearEnemies: clearEnemies,
     pool: enemies, countAlive: countAlive, drawSprite: drawSprite,
     getGems: function () { return gems; },
     getItems: function () { return items; }

@@ -102,6 +102,48 @@ window.Weapons = (function () {
     return b;
   }
 
+  // 延迟发射队列:连射武器用时间差拉开箭矢间距
+  var QMAX = 24;
+  var queue = [];
+  function initQueue() {
+    queue.length = 0;
+    for (var i = 0; i < QMAX; i++) {
+      queue.push({ alive: false, t: 0, wid: '', angle: 0, dmg: 0, speed: 0, size: 0, pierce: 0, knock: 0 });
+    }
+  }
+  function queueShot(run, wid, delay, angle, st) {
+    for (var i = 0; i < QMAX; i++) {
+      var q = queue[i];
+      if (q.alive) continue;
+      q.alive = true; q.t = delay; q.wid = wid; q.angle = angle;
+      q.dmg = st.dmg; q.speed = st.speed; q.size = st.size;
+      q.pierce = st.pierce; q.knock = st.knock;
+      return;
+    }
+  }
+  function updateQueue(run, dt) {
+    for (var i = 0; i < QMAX; i++) {
+      var q = queue[i];
+      if (!q.alive) continue;
+      q.t -= dt;
+      if (q.t > 0) continue;
+      q.alive = false;
+      var w = findWeapon(run, q.wid);
+      if (!w) continue;            // 武器已进化/移除,丢弃这一发
+      var p = run.player;
+      var b = getBullet();
+      b.alive = true; b.kind = 'straight'; b.spr = 'p_arrow'; b.wid = q.wid;
+      b.x = p.x; b.y = p.y;
+      b.vx = Math.cos(q.angle) * q.speed; b.vy = Math.sin(q.angle) * q.speed;
+      b.ttl = 1.5; b.born = run.t;
+      b.dmg = q.dmg; b.pierce = q.pierce; b.size = q.size; b.knock = q.knock;
+      b.angle = q.angle; b.spin = 0; b.phase = 0;
+      b.slow = 0; b.slowDur = 0; b.stun = 0;
+      b.aux = 0; b.aux2 = 0; b.evolved = false;
+      AudioSys.play('shoot_arrow');
+    }
+  }
+
   var scratch = []; // 复用的候选数组
 
   function nearestEnemy(x, y, r, excludeSet) {
@@ -161,12 +203,12 @@ window.Weapons = (function () {
           AudioSys.play('evolve');
           break;
         }
-        // 未进化:全部箭矢朝同一方向连射(沿轴线前后错开形成箭流,不再散射)
-        for (i = 0; i < st.count; i++) {
-          var back = i * 16;
-          spawn(run, w, st, 'straight', 'p_arrow',
-            p.x - Math.cos(wbBase) * back, p.y - Math.sin(wbBase) * back,
-            Math.cos(wbBase) * st.speed, Math.sin(wbBase) * st.speed, 1.5);
+        // 未进化:同向连射。第一支立即发出,其余排入延迟队列,
+        // 靠时间差拉开间距(同帧生成再做空间偏移会同步飞行,看起来仍是叠在一起)。
+        spawn(run, w, st, 'straight', 'p_arrow', p.x, p.y,
+          Math.cos(wbBase) * st.speed, Math.sin(wbBase) * st.speed, 1.5);
+        for (i = 1; i < st.count; i++) {
+          queueShot(run, w.id, i * 0.11, wbBase, st);
         }
         AudioSys.play('shoot_arrow');
         break;
@@ -514,6 +556,7 @@ window.Weapons = (function () {
         } else fire(run, w);
       }
     }
+    updateQueue(run, dt);
     updateBullets(run, dt);
   }
 
@@ -788,7 +831,7 @@ window.Weapons = (function () {
     return results;
   }
 
-  function reset() { initPool(); runRef = null; }
+  function reset() { initPool(); initQueue(); runRef = null; }
 
   return {
     update: update, draw: draw, drawGround: drawGround, reset: reset,
