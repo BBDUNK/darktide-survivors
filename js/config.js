@@ -306,6 +306,26 @@ window.CFG = {
            auraR: 220, buffSpd: 1.20, buffDmg: 1.25,
            bossBuffSpd: 1.35, bossBuffDmg: 1.45 },
 
+  // ---------------- 联机 ----------------
+  // 人数越多敌人越强但不是线性叠加,避免 2 人时难度暴涨;经验按人数稀释保证升级节奏。
+  COOP: {
+    hpMulByPlayers:   [1.00, 1.00, 1.55, 2.05, 2.50],  // 索引=人数
+    rateMulByPlayers: [1.00, 1.00, 1.35, 1.65, 1.90],
+    dmgMulByPlayers:  [1.00, 1.00, 1.10, 1.18, 1.25],
+    xpMulByPlayers:   [1.00, 1.00, 0.62, 0.46, 0.36],
+    reviveRadius: 90,        // 站在倒地队友旁的救援半径
+    reviveTime: 3.0,         // 持续站立救援所需秒数
+    downedHp: 0.35,          // 被救起后恢复的生命比例
+    // 牧师光环对队友的增益(圣光环武器持有者提供)
+    priestAura: {
+      radius: 150,
+      regen: 1.2,            // 每秒回复
+      statBoost: 0.10,       // 全属性 +10%
+      projSpd: 0.25,         // 队友弹速 +25%
+      dmgBoost: 0.08         // 队友伤害 +8%
+    }
+  },
+
   // 时间成长:敌人生命随分钟增长
   HP_GROWTH: 0.09, // 每分钟 +9%
 

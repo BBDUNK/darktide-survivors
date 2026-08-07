@@ -174,7 +174,9 @@ window.Entities = (function () {
     }
     var e = enemies[freeIdx.pop()];
     var isBoss = !!CFG.BOSSES[id];
-    var mul = run.map.hpMul * (1 + run.t / 60 * CFG.HP_GROWTH);
+    // 联机时按人数放大血量(非线性,避免 2 人难度暴涨)
+    var coopHp = run.coopHpMul || 1;
+    var mul = run.map.hpMul * (1 + run.t / 60 * CFG.HP_GROWTH) * coopHp;
     e.alive = true; e.uid = E.nextUid(); e.id = id; e.def = def;
     e.x = x; e.y = y; e.vx = 0; e.vy = 0;
     e.maxHp = def.hp * (isBoss ? run.map.hpMul : mul);

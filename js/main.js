@@ -9,6 +9,75 @@
   var achvTimer = 0;
   var dpsTimer = 0, lastDmg = 0;
 
+  // ================= 联机 =================
+  // 房主权威:房主跑完整模拟并广播快照;客户端只上报输入、渲染快照。
+  var coop = {
+    on: false,
+    mates: [],        // host: [{peerId,name,charId,player,input}]  client: 远端队友的渲染数据
+    snapAcc: 0,
+    lastSnap: null,
+    myIdx: 0
+  };
+
+  function coopPlayerCount() {
+    return coop.on ? Math.max(1, Net.playerCount()) : 1;
+  }
+
+  // 联机难度:人数越多敌人越强,经验按人数稀释
+  function coopMul(table) {
+    var n = Math.min(coopPlayerCount(), table.length - 1);
+    return table[n] || 1;
+  }
+
+  // 房主为每个远端玩家建一个 player 实体
+  function setupCoopHost(roster, mapId) {
+    coop.on = true;
+    coop.mates = [];
+    for (var i = 0; i < roster.length; i++) {
+      var r = roster[i];
+      if (r.isHost) continue;
+      var cd = null;
+      for (var k = 0; k < CFG.CHARS.length; k++) if (CFG.CHARS[k].id === r.charId) cd = CFG.CHARS[k];
+      if (!cd) cd = CFG.CHARS[0];
+      var pl = Entities.makePlayer(cd);
+      pl.x = (Math.random() * 80 - 40); pl.y = (Math.random() * 80 - 40);
+      coop.mates.push({
+        peerId: r.id, name: r.name, charId: r.charId,
+        player: pl, input: { x: 0, y: 0 }, weapons: [], passives: {},
+        xp: 0, level: 1, xpNeed: CFG.XP_NEED(1), pendingLevels: 0, downed: false, reviveT: 0
+      });
+    }
+  }
+
+  // 队友光环互益:圣光环持有者为半径内队友回血、提升属性与弹幕
+  function applyCoopAuras() {
+    if (!coop.on || !run) return;
+    var A = CFG.COOP.priestAura;
+    var all = [{ player: run.player, weapons: run.weapons }].concat(coop.mates);
+    // 先清空上一帧的增益标记
+    for (var i = 0; i < all.length; i++) {
+      var pi = all[i].player;
+      pi.auraBuff = 0; pi.auraProjSpd = 0; pi.auraDmg = 0;
+    }
+    for (var s = 0; s < all.length; s++) {
+      var src = all[s];
+      var hasAura = false;
+      for (var w = 0; w < src.weapons.length; w++) if (src.weapons[w].id === 'holyaura') hasAura = true;
+      if (!hasAura) continue;
+      for (var t = 0; t < all.length; t++) {
+        if (t === s) continue;                    // 只增益队友
+        var tp = all[t].player;
+        if (E.dist2(tp.x, tp.y, src.player.x, src.player.y) > A.radius * A.radius) continue;
+        tp.auraBuff = A.statBoost;
+        tp.auraProjSpd = A.projSpd;
+        tp.auraDmg = A.dmgBoost;
+        if (tp.hp > 0 && tp.stats && tp.hp < tp.stats.hp) {
+          tp.hp = Math.min(tp.stats.hp, tp.hp + A.regen * (1 / 60));
+        }
+      }
+    }
+  }
+
   // ================= 开局 =================
   function newRun(charId, mapId) {
     var charDef = null, mapDef = null, i;
@@ -33,6 +102,9 @@
       rerolls: 0, banishes: 0,
       seen: {},
       endless: false, nextEndlessBoss: 0,
+      coopHpMul: coopMul(CFG.COOP.hpMulByPlayers),
+      coopRateMul: coopMul(CFG.COOP.rateMulByPlayers),
+      coopXpMul: coopMul(CFG.COOP.xpMulByPlayers),
       cb: {
         onBoss: function (bd) { UI.bossBanner(bd); },
         onWarn: function (msg) { UI.warn(msg); },
@@ -132,6 +204,7 @@
     run.frame++;
     if (run.freezeT > 0) run.freezeT -= dt;
 
+    applyCoopAuras();    // 队友光环互益:圣光环持有者为附近队友回血与加成
     Entities.updatePlayer(run, dt);
     Weapons.update(run, dt);
     Entities.updateEnemies(run, dt);
@@ -508,6 +581,35 @@
         AudioSys.playMusic(run.map.music);
         UI.warn('∞ 无尽模式:活得越久,敌人越强!');
         state = 'run';
+      },
+      // 房主点「开始战斗」:建好队友实体并通知所有人开局
+      onCoopStart: function () {
+        var roster = Net.getRoster();
+        var ok = roster.length >= 2 && roster.every(function (r) { return r.ready && r.charId; });
+        if (!ok) { UI.warn('等待全员准备…'); return; }
+        var mapId = CFG.MAPS[0].id;
+        setupCoopHost(roster, mapId);
+        Net.broadcast({ t: 'start', mapId: mapId, roster: roster });
+        newRun(roster[0].charId, mapId);
+      }
+    });
+
+    // 联机回调:大厅名单更新 / 客户端被拉入战斗 / 房主掉线
+    Net.init({
+      onRoster: function (roster) { UI.renderRoster(roster); },
+      onStart: function (m) {
+        // 客户端跟随房主开局;自己的角色取自大厅选择
+        var mine = UI.myPick() || CFG.CHARS[0].id;
+        coop.on = true;
+        coop.mates = [];
+        newRun(mine, m.mapId);
+      },
+      onHostLost: function () {
+        UI.warn('⚠ 房主已断开');
+        coop.on = false;
+      },
+      onError: function (e) {
+        UI.warn('联机异常: ' + (e && e.type ? e.type : '未知'));
       }
     });
 

@@ -47,7 +47,7 @@ window.UI = (function () {
     cb = callbacks;
     root = document.getElementById('ui');
     buildTitle(); buildMenu(); buildChars(); buildMaps();
-    buildShop(); buildAchv(); buildCodex(); buildSettings();
+    buildShop(); buildAchv(); buildCodex(); buildSettings(); buildCoop();
     buildHUD(); buildLevelUp(); buildChest(); buildPause(); buildResult();
     screens.toasts = h('div', 'toasts');
     root.appendChild(screens.toasts);
@@ -82,7 +82,8 @@ window.UI = (function () {
     menuGold = h('div', 'gold-line');
     s.appendChild(menuGold);
     var col = h('div', 'menu-col');
-    col.appendChild(btn('⚔ 开始远征', 'big primary', function () { refreshChars(); show('chars'); }));
+    col.appendChild(btn('⚔ 开始远征', 'big primary', function () { coopMode = false; refreshChars(); show('chars'); }));
+    col.appendChild(btn('👥 联机远征', 'big', function () { refreshLobbyEntry(); show('coop'); }));
     col.appendChild(btn('🏛 强化圣坛', 'big', function () { refreshShop(); show('shop'); }));
     col.appendChild(btn('🏆 成就', 'big', function () { refreshAchv(); show('achv'); }));
     col.appendChild(btn('📖 百科全书', 'big', function () { codexFrom = 'menu'; refreshCodex(); show('codex'); }));
@@ -268,6 +269,149 @@ window.UI = (function () {
       achvList.appendChild(row);
     });
     achvList.insertBefore(h('div', 'achv-progress', '已达成 ' + got + ' / ' + CFG.ACHV.length), achvList.firstChild);
+  }
+
+  // ---------- 联机:入口 + 大厅 ----------
+  var coopMode = false;          // 当前是否处于联机流程
+  var coopEntry, coopLobby, coopRosterBox, coopCodeLine, coopHint, coopStartBtn, coopCharBox;
+  var myCharId = null, myReady = false;
+
+  function buildCoop() {
+    var s = h('div', 'screen panel-col');
+    s.appendChild(h('div', 'page-title', '联机远征'));
+
+    coopEntry = h('div', 'coop-entry');
+    var nameRow = h('div', 'coop-row');
+    nameRow.appendChild(h('span', 'coop-label', '昵称'));
+    var nameIn = h('input', 'coop-input');
+    nameIn.type = 'text'; nameIn.value = '幸存者' + (100 + Math.floor(Math.random() * 900));
+    nameIn.maxLength = 10;
+    nameRow.appendChild(nameIn);
+    coopEntry.appendChild(nameRow);
+
+    coopEntry.appendChild(btn('🏠 创建房间', 'big primary', function () {
+      coopHint.textContent = '正在创建房间…';
+      Net.host(nameIn.value).then(function (code) {
+        coopMode = true;
+        coopHint.textContent = '';
+        showLobby(true, code);
+      }).catch(function (e) {
+        coopHint.textContent = '创建失败: ' + (e && e.message ? e.message : '未知错误');
+      });
+    }));
+
+    var joinRow = h('div', 'coop-row');
+    joinRow.appendChild(h('span', 'coop-label', '房间号'));
+    var codeIn = h('input', 'coop-input code');
+    codeIn.type = 'text'; codeIn.maxLength = 5; codeIn.placeholder = 'ABCDE';
+    joinRow.appendChild(codeIn);
+    coopEntry.appendChild(joinRow);
+    coopEntry.appendChild(btn('🔗 加入房间', 'big', function () {
+      if (!codeIn.value.trim()) { coopHint.textContent = '请输入房间号'; return; }
+      coopHint.textContent = '正在连接…';
+      Net.join(codeIn.value, nameIn.value).then(function () {
+        coopMode = true;
+        coopHint.textContent = '';
+        showLobby(false, codeIn.value.toUpperCase());
+      }).catch(function (e) {
+        coopHint.textContent = '连接失败: ' + (e && e.message ? e.message : '房间不存在');
+      });
+    }));
+
+    coopHint = h('div', 'coop-hint', '');
+    coopEntry.appendChild(coopHint);
+    coopEntry.appendChild(h('div', 'coop-note',
+      '联机为点对点直连(WebRTC),房主需保持在线。首次使用需联网加载连接库。'));
+    s.appendChild(coopEntry);
+
+    // 大厅
+    coopLobby = h('div', 'coop-lobby hidden');
+    coopCodeLine = h('div', 'coop-code-line', '');
+    coopLobby.appendChild(coopCodeLine);
+    coopLobby.appendChild(h('div', 'coop-sub', '选择角色,全员准备后由房主开始'));
+    coopCharBox = h('div', 'coop-chars');
+    coopLobby.appendChild(coopCharBox);
+    coopRosterBox = h('div', 'coop-roster');
+    coopLobby.appendChild(coopRosterBox);
+    coopStartBtn = btn('▶ 开始战斗', 'big primary', function () {
+      if (cb.onCoopStart) cb.onCoopStart();
+    });
+    coopLobby.appendChild(coopStartBtn);
+    s.appendChild(coopLobby);
+
+    s.appendChild(btn('← 返回', '', function () {
+      Net.close(); coopMode = false;
+      coopLobby.classList.add('hidden');
+      coopEntry.classList.remove('hidden');
+      show('menu');
+    }));
+    screens.coop = s; root.appendChild(s);
+  }
+
+  function refreshLobbyEntry() {
+    coopEntry.classList.remove('hidden');
+    coopLobby.classList.add('hidden');
+    coopHint.textContent = '';
+  }
+
+  function showLobby(isHost, code) {
+    coopEntry.classList.add('hidden');
+    coopLobby.classList.remove('hidden');
+    coopCodeLine.innerHTML = '';
+    coopCodeLine.appendChild(h('span', 'coop-label', '房间号'));
+    coopCodeLine.appendChild(h('span', 'coop-code', code));
+    coopStartBtn.classList.toggle('hidden', !isHost);
+    myCharId = null; myReady = false;
+    renderCoopChars();
+    renderRoster(Net.getRoster());
+  }
+
+  function renderCoopChars() {
+    coopCharBox.innerHTML = '';
+    CFG.CHARS.forEach(function (c) {
+      var unlocked = Meta.isCharUnlocked(c);
+      var card = h('div', 'coop-char' + (myCharId === c.id ? ' sel' : '') + (unlocked ? '' : ' locked'));
+      card.appendChild(iconCanvas(c.sprite, 34));
+      card.appendChild(h('div', 'coop-char-name', unlocked ? c.name.split('·')[0] : '???'));
+      if (unlocked) {
+        card.addEventListener('click', function () {
+          myCharId = c.id;
+          Net.setMyPick(myCharId, myReady);
+          renderCoopChars();
+        });
+      }
+      coopCharBox.appendChild(card);
+    });
+    // 准备按钮
+    var rd = btn(myReady ? '✅ 已准备' : '准备', 'small-btn' + (myReady ? ' primary' : ''), function () {
+      if (!myCharId) { coopHint.textContent = '请先选择角色'; return; }
+      myReady = !myReady;
+      Net.setMyPick(myCharId, myReady);
+      renderCoopChars();
+    });
+    coopCharBox.appendChild(rd);
+  }
+
+  function renderRoster(roster) {
+    if (!coopRosterBox) return;
+    coopRosterBox.innerHTML = '';
+    coopRosterBox.appendChild(h('div', 'coop-label', '房间成员 (' + roster.length + '/' + Net.MAX_PLAYERS + ')'));
+    roster.forEach(function (r) {
+      var row = h('div', 'coop-member');
+      var cdef = null;
+      for (var i = 0; i < CFG.CHARS.length; i++) if (CFG.CHARS[i].id === r.charId) cdef = CFG.CHARS[i];
+      row.appendChild(iconCanvas(cdef ? cdef.sprite : 'icon_hp', 24));
+      row.appendChild(h('span', 'coop-mname', r.name + (r.isHost ? ' (房主)' : '')));
+      row.appendChild(h('span', 'coop-mchar', cdef ? cdef.name.split('·')[0] : '未选择'));
+      row.appendChild(h('span', 'coop-mready' + (r.ready ? ' on' : ''), r.ready ? '已准备' : '等待'));
+      coopRosterBox.appendChild(row);
+    });
+    // 房主:只有全员准备且至少两人才能开始
+    if (Net.isHost()) {
+      var allReady = roster.length >= 2 && roster.every(function (r) { return r.ready && r.charId; });
+      coopStartBtn.classList.toggle('disabled', !allReady);
+      coopStartBtn.textContent = allReady ? '▶ 开始战斗' : '等待全员准备…';
+    }
   }
 
   // ---------- 百科全书 ----------
@@ -820,6 +964,9 @@ window.UI = (function () {
     showLevelUp: showLevelUp, hideLevelUp: hideLevelUp,
     showChest: showChest, showPause: showPause, hidePause: hidePause,
     showResult: showResult, toastAchv: toastAchv, toastText: toastText,
-    isCodexOpen: isCodexOpen, closeCodexOverlay: closeCodexOverlay
+    isCodexOpen: isCodexOpen, closeCodexOverlay: closeCodexOverlay,
+    renderRoster: renderRoster, showLobby: showLobby,
+    isCoop: function () { return coopMode; },
+    myPick: function () { return myCharId; }
   };
 })();

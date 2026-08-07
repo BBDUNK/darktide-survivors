@@ -307,6 +307,48 @@ input[type=range] { flex: 1; accent-color: var(--gold); height: 22px; cursor: po
   80% { opacity: 1; }
   100% { opacity: 0; }
 }
+/* ---------- 联机大厅 ---------- */
+.coop-entry, .coop-lobby { display: flex; flex-direction: column; gap: 12px; align-items: center; width: 100%; max-width: 460px; }
+.coop-row { display: flex; align-items: center; gap: 10px; width: 100%; }
+.coop-label { font-size: 12px; color: var(--text-dim); letter-spacing: 1px; flex-shrink: 0; }
+.coop-input {
+  flex: 1; padding: 9px 12px; font-size: 14px; font-family: var(--font-cn);
+  background: rgba(10, 8, 20, 0.85); color: var(--text);
+  border: 1px solid var(--panel-line); border-radius: 5px; outline: none;
+}
+.coop-input:focus { border-color: var(--gold-dim); }
+.coop-input.code { font-family: var(--font-pix); letter-spacing: 4px; text-transform: uppercase; text-align: center; }
+.coop-hint { font-size: 12px; color: #ffb0c0; min-height: 16px; text-align: center; }
+.coop-note { font-size: 11px; color: var(--text-dim); line-height: 1.6; text-align: center; }
+.coop-code-line { display: flex; align-items: center; gap: 10px; }
+.coop-code {
+  font-family: var(--font-pix); font-size: 24px; letter-spacing: 6px; color: var(--gold);
+  background: rgba(255, 215, 107, 0.10); border: 1px solid var(--gold-dim);
+  border-radius: 6px; padding: 6px 14px;
+}
+.coop-sub { font-size: 12px; color: var(--text-dim); }
+.coop-chars { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center; }
+.coop-char {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 7px 10px; border-radius: 6px; cursor: pointer;
+  background: rgba(20, 15, 34, 0.85); border: 2px solid var(--panel-line);
+  transition: all 0.15s;
+}
+.coop-char:hover { border-color: #6a5a85; }
+.coop-char.sel { border-color: var(--gold); background: rgba(255, 215, 107, 0.12); }
+.coop-char.locked { opacity: 0.35; cursor: not-allowed; }
+.coop-char-name { font-size: 11px; color: var(--text); }
+.coop-roster { display: flex; flex-direction: column; gap: 5px; width: 100%; }
+.coop-member {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 10px; border-radius: 5px;
+  background: rgba(20, 15, 34, 0.8); border: 1px solid var(--panel-line);
+}
+.coop-mname { font-size: 13px; font-weight: 700; color: var(--text); flex: 1; }
+.coop-mchar { font-size: 11px; color: var(--text-dim); }
+.coop-mready { font-size: 11px; color: var(--text-dim); border: 1px solid #4a3f5a; border-radius: 3px; padding: 1px 6px; }
+.coop-mready.on { color: var(--green); border-color: #3e7a3e; background: rgba(110, 232, 110, 0.14); }
+
 /* 升级卡上的进化提示:进化形态 + 所需材料 + 满级指示 */
 .evo-hint {
   display: flex; align-items: center; gap: 4px; margin-top: 5px;
