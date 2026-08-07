@@ -220,8 +220,9 @@ window.Entities = (function () {
       e.elite = true;
       e.maxHp *= CFG.ELITE.hpMul; e.hp = e.maxHp;
       e.dmg *= CFG.ELITE.dmgMul; e.r *= 1.3;
-      // 精英按类型获得专属强化行为(近战获得冲撞,远程获得瞬移)
-      if (e.ai === 'chase') { e.eliteSkill = 'charge'; e.blinkT = 3 + Math.random() * 2; }
+      // 精英按类型获得专属强化行为(近战获得冲撞,远程获得瞬移,骷髅获得弓箭手)
+      if (id === 'skeleton') { e.eliteSkill = 'archer'; }
+      else if (e.ai === 'chase') { e.eliteSkill = 'charge'; e.blinkT = 3 + Math.random() * 2; }
       else if (e.ai === 'shoot' || e.ai === 'spitter' || e.ai === 'lobber') { e.eliteSkill = 'blink'; e.blinkT = 5 + Math.random() * 3; }
       else if (e.ai === 'phase') { e.eliteSkill = 'blink'; e.blinkT = 4 + Math.random() * 2; }
       else e.eliteSkill = '';
@@ -321,6 +322,12 @@ window.Entities = (function () {
     if (crit) AudioSys.play('crit');
     if (e.hp <= 0) killEnemy(run, e, opts);
     return final;
+  }
+
+  // 火焰解除冰霜减速:清掉目标的减速状态
+  function clearSlow(e) {
+    if (!e) return;
+    e.slow = 0; e.slowT = 0;
   }
 
   function killEnemy(run, e, opts) {
@@ -491,12 +498,14 @@ window.Entities = (function () {
           else if (dist < sd - 30) { e.vx = -nx * spd * 0.8; e.vy = -ny * spd * 0.8; }
           else { e.vx = -ny * spd * 0.5; e.vy = nx * spd * 0.5; }
           e.aiT -= dt;
-          if (e.aiT <= 0 && dist < 380) {
+          // 发射距离必须低于蛛网衰减距离(shotRange),否则蛛网飞到一半就消散,永远打不中
+          var fireRange = e.def.shotRange || 220;
+          if (e.aiT <= 0 && dist < fireRange) {
             e.aiT = e.def.shotCd;
             // 蛛网弹:白色黏丝,施加叠层减速;有射程上限且越远越慢
             fireShot(e.x, e.y, nx, ny, e.def.shotSpd,
               e.def.shotDmg * (e.elite ? 1.5 : 1), e.def.slowAmt, e.def.slowDur, true,
-              null, 16, e.def.shotRange || 300);
+              null, 16, fireRange);
           }
           break;
         case 'shielder': // 重骑:受到攻击后举盾一次,期间完全免伤+霸体(整场只触发一次)
@@ -707,6 +716,55 @@ window.Entities = (function () {
         return true;
       }
       return false;
+    }
+    // 骷髅精英弓箭手:蓄力 2 秒射一支快箭,每 5 秒一次;视野是玩家视野 1.5 倍;
+    // 攻击期间不能移动。
+    if (e.eliteSkill === 'archer') {
+      var A = e.archerT !== undefined ? e.archerT : 0;
+      e.archerT = A;
+      // 视野:玩家视野(W/2 横向约 480px 半径)的 1.5 倍 = 720
+      var arcRange = 720;
+      // 状态机:0 空闲 → 1 蓄力 → 2 出手 → 回到 0
+      if (e.archerPhase === undefined) e.archerPhase = 0;
+      if (e.archerPhase === 0) {
+        // 空闲:保持距离,进入视野才准备(移速取自身 spd × 增益)
+        var aspd = e.spd * (e.buffSpd || 1);
+        if (dist < arcRange) {
+          if (dist > 260) { e.vx = nx * aspd; e.vy = ny * aspd; }
+          else if (dist < 200) { e.vx = -nx * aspd * 0.6; e.vy = -ny * aspd * 0.6; }
+          else { e.vx = -ny * aspd * 0.3; e.vy = nx * aspd * 0.3; }
+        } else { e.vx = nx * aspd; e.vy = ny * aspd; }
+        e.archerCd = (e.archerCd || 0) - dt;
+        if (e.archerCd <= 0 && dist < arcRange) {
+          e.archerPhase = 1; e.archerT = 2.0;   // 蓄力 2 秒
+          e.vx = 0; e.vy = 0;
+          FX.ring(e.x, e.y, { r: e.r + 20, color: '#ff9d5c', life: 0.4, width: 3 });
+        }
+        return true;
+      }
+      if (e.archerPhase === 1) {
+        // 蓄力:不能移动,面向玩家,身上闪白光
+        e.vx = 0; e.vy = 0;
+        e.face = nx >= 0 ? 1 : -1;
+        if ((run.frame & 3) === 0) FX.trail(e.x + (Math.random() * 20 - 10), e.y - 6, '#fff', 2);
+        e.archerT -= dt;
+        if (e.archerT <= 0) {
+          e.archerPhase = 2; e.archerT = 0.12;
+        }
+        return true;
+      }
+      // 出手:向玩家射一支快箭,然后进入 5 秒冷却
+      e.archerT -= dt;
+      if (e.archerT <= 0) {
+        e.archerPhase = 0;
+        e.archerCd = 5.0;
+        var adv = e.dmg * (1.5 + (e.elite ? 0.5 : 0)) * (e.buffDmg || 1);
+        // 快箭:高速 320
+        fireShot(e.x, e.y, nx, ny, 320, adv, 0, 0, false, '#ffd76b', 10);
+        FX.burst(e.x, e.y, { color: '#ffd76b', n: 6, speed: 90, life: 0.3, size: 2 });
+        AudioSys.play('shoot_arrow');
+      }
+      return true;
     }
     return false;
   }
@@ -1697,7 +1755,7 @@ window.Entities = (function () {
     updateEnemies: updateEnemies, updateGems: updateGems, updateItems: updateItems,
     spawnGem: spawnGem, spawnItem: spawnItem, addXp: addXp, bombBlast: bombBlast,
     director: director, draw: draw, drawLobMarkers: drawLobMarkers, reset: reset,
-    clearEnemies: clearEnemies, cleanseWebs: cleanseWebs,
+    clearEnemies: clearEnemies, cleanseWebs: cleanseWebs, clearSlow: clearSlow,
     pool: enemies, countAlive: countAlive, drawSprite: drawSprite,
     getGems: function () { return gems; },
     getItems: function () { return items; },

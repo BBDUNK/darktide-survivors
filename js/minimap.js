@@ -115,6 +115,13 @@ window.Minimap = (function () {
     ctx.fillStyle = 'rgba(230,220,255,0.75)';
     ctx.textAlign = 'right';
     ctx.fillText(mode === 'full' ? '全图 ⇄点击' : '周围 ⇄点击', x0 + SIZE - 4, y0 + SIZE - 4);
+    // 索敌模式提示:小地图下方一行小字
+    ctx.font = '9px monospace';
+    ctx.fillStyle = 'rgba(230,220,255,0.85)';
+    ctx.strokeStyle = 'rgba(8,6,18,0.8)';
+    ctx.lineWidth = 3;
+    ctx.strokeText('🎯 ' + Weapons.getTargetModeName(), x0 + SIZE - 4, y0 + SIZE + 12);
+    ctx.fillText('🎯 ' + Weapons.getTargetModeName(), x0 + SIZE - 4, y0 + SIZE + 12);
     ctx.textAlign = 'left';
   }
 

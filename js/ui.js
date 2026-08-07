@@ -721,6 +721,12 @@ window.UI = (function () {
     // 下一事件倒计时
     hudRefs.nextEv = h('div', 'hud-nextev hidden', '');
     s.appendChild(hudRefs.nextEv);
+    // 触屏索敌切换按钮(仅移动端显示)
+    hudRefs.targetBtn = btn('🎯', 'hud-targetbtn', function () {
+      var m = Weapons.cycleTargetMode();
+      cb.onTargetChanged && cb.onTargetChanged(m.name);
+    });
+    s.appendChild(hudRefs.targetBtn);
     // 右上
     var tr = h('div', 'hud-tr');
     var goldRow = h('div', 'hud-stat');

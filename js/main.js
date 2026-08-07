@@ -369,7 +369,7 @@
       ctx.globalAlpha = 0.4;
       ctx.drawImage(SpriteGen.get('vfx_shadow'), sx - 14, sy - 52, 28, 9);
       ctx.globalAlpha = 1;
-      var cimg = SpriteGen.get('chest');
+      var cimg = SpriteGen.get('vault_chest');
       var pulse = 0.5 + Math.sin(run.t * 4 + i) * 0.5;
       var gr = ctx.createRadialGradient(sx, sy, 1, sx, sy, 30);
       gr.addColorStop(0, 'rgba(255,215,107,' + (0.25 + pulse * 0.2).toFixed(2) + ')');
@@ -389,28 +389,8 @@
     }
   }
   // 四角金库边框箭头(屏幕坐标版本,在 translate 块外调用)
-  function drawVaultArrows(ctx, run) {
-    for (var i = 0; i < vaults.length; i++) {
-      var v = vaults[i];
-      // 四角宝箱始终显示方向箭头(不管在不在屏幕内)
-      var sx = v.x - E.cam.x + CFG.GAME.W / 2;
-      var sy = v.y - E.cam.y + CFG.GAME.H / 2;
-      var dx = sx - CFG.GAME.W / 2, dy = sy - CFG.GAME.H / 2;
-      var ang = Math.atan2(dy, dx);
-      var ax = E.clamp(sx, 26, CFG.GAME.W - 26);
-      var ay = E.clamp(sy, 26, CFG.GAME.H - 26);
-      ctx.save();
-      ctx.translate(ax, ay);
-      ctx.rotate(ang);
-      ctx.globalAlpha = 0.85 + Math.sin(run.t * 5 + i) * 0.15;
-      ctx.fillStyle = '#ffd76b';
-      ctx.beginPath();
-      ctx.moveTo(8, 0); ctx.lineTo(-5, -7); ctx.lineTo(-5, 7);
-      ctx.closePath(); ctx.fill();
-      ctx.globalAlpha = 1;
-      ctx.restore();
-    }
-  }
+  // 四角金库边框箭头:已废弃,地图死角宝箱不再显示边框箭头
+  function drawVaultArrows(ctx, run) {}
 
   // ================= 开局 =================
   function newRun(charId, mapId) {
@@ -960,6 +940,13 @@
       var m = Minimap.toggle();
       UI.warn(m === 'full' ? '🗺 小地图:全图' : '🗺 小地图:周围');
     };
+    // 滚轮切换索敌方式
+    E.onScroll = function (dy) {
+      if (state !== 'run') return;
+      if (Math.abs(dy) < 1) return;
+      var m = Weapons.cycleTargetMode();
+      UI.toastText('🎯 索敌:' + m.name);
+    };
 
     // 屏幕坐标是否落在小地图上(鼠标点击与触屏摇杆共用,避免手指按图变成移动)
     function overMinimap(clientX, clientY) {
@@ -1003,6 +990,8 @@
         UI.warn('∞ 无尽模式:活得越久,敌人越强!');
         state = 'run';
       },
+      // 触屏索敌按钮切换后的提示
+      onTargetChanged: function (name) { UI.toastText('🎯 索敌:' + name); },
       // 房主点「开始战斗」:建好队友实体并通知所有人开局
       onCoopStart: function () {
         var roster = Net.getRoster();

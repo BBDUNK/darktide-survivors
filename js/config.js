@@ -171,7 +171,7 @@ window.CFG = {
     // 蛛类:吐减速网。刷新量减半(spawnWeight),蛛网弹有射程上限且越远越慢
     spider:         { name: '暗纹蛛', hp: 22, dmg: 10, spd: 96, r: 10, xp: 2, ai: 'spitter',
                       shotDmg: 6, shotCd: 4.2, shotSpd: 190, keepDist: 170, slowAmt: 0.45, slowDur: 1.6,
-                      spawnWeight: 0.5, shotRange: 300, ranged: true },
+                      spawnWeight: 0.5, shotRange: 220, ranged: true },
     cultist:        { name: '深渊信徒', hp: 48, dmg: 10, spd: 48, r: 11, xp: 4, ai: 'shoot', shotDmg: 12, shotCd: 4.0, shotSpd: 150, keepDist: 200, ranged: true },
     orc:            { name: '碎颅兽人', hp: 85, dmg: 16, spd: 54, r: 13, xp: 5, ai: 'chase' },
     imp:            { name: '狱火小鬼', hp: 32, dmg: 12, spd: 86, r: 10, xp: 3, ai: 'chase' },

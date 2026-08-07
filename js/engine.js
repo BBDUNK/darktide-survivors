@@ -39,9 +39,14 @@ window.Engine = (function () {
       keys[e.code] = true;
       if (e.code === 'Escape' || e.code === 'KeyP') { if (Engine.onPause) Engine.onPause(); }
       if (e.code === 'KeyM') { if (Engine.onToggleMap) Engine.onToggleMap(); }
+      if (e.code === 'Space') e.preventDefault();
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].indexOf(e.code) >= 0) e.preventDefault();
     });
     window.addEventListener('keyup', function (e) { keys[e.code] = false; });
+    // 滚轮:切换索敌方式
+    window.addEventListener('wheel', function (e) {
+      if (Engine.onScroll) Engine.onScroll(e.deltaY);
+    }, { passive: true });
     window.addEventListener('blur', function () { keys = {}; if (Engine.onBlur) Engine.onBlur(); });
     // 触屏虚拟摇杆
     canvas.addEventListener('pointerdown', function (e) {
@@ -213,6 +218,6 @@ window.Engine = (function () {
     viewScale: function () { return viewScale; },
     setTimeScale: function (s) { timeScale = s; },
     nextUid: function () { return uidCounter++; },
-    onPause: null, onBlur: null, onToggleMap: null, isOverMinimap: null
+    onPause: null, onBlur: null, onToggleMap: null, onScroll: null, isOverMinimap: null
   };
 })();

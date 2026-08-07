@@ -165,8 +165,34 @@ window.Weapons = (function () {
 
   var scratch = []; // 复用的候选数组
 
+  // ================= 索敌模式 =================
+  // 0 最近敌人 / 1 最低血量 / 2 最高血量;滚轮或触屏按钮循环切换
+  var TARGET_MODES = [
+    { key: 'nearest', name: '最近敌人' },
+    { key: 'lowhp', name: '最低血量' },
+    { key: 'highhp', name: '最高血量' }
+  ];
+  var targetMode = 0;
+  function cycleTargetMode() {
+    targetMode = (targetMode + 1) % TARGET_MODES.length;
+    return TARGET_MODES[targetMode];
+  }
+  function getTargetModeName() { return TARGET_MODES[targetMode].name; }
+
   function nearestEnemy(x, y, r, excludeSet) {
-    return E.gridNearest(x, y, r, excludeSet || null);
+    // 按当前索敌模式挑选目标
+    var mode = TARGET_MODES[targetMode].key;
+    if (mode === 'nearest') return E.gridNearest(x, y, r, excludeSet || null);
+    var best = null, bestVal = mode === 'lowhp' ? 1e18 : -1;
+    E.gridQuery(x, y, r, function (e) {
+      if (excludeSet && excludeSet.has(e.uid)) return false;
+      var v = e.hp;
+      if ((mode === 'lowhp' && v < bestVal) || (mode === 'highhp' && v > bestVal)) {
+        bestVal = v; best = e;
+      }
+      return false;
+    });
+    return best;
   }
 
   function collectInRange(x, y, r) {
@@ -347,6 +373,7 @@ window.Weapons = (function () {
   // ================= 子弹更新 =================
   // 命中检测:一次性(hitSet)或周期性(hitCd);复用回调避免每帧闭包分配
   var _hitB = null, _hitRun = null, _hitCdSec = 0, _hitAny = false, _hitOpts = { kx: 0, ky: 0, slow: 0, slowDur: 0, stun: 0 };
+  var _hitBurn = 0, _hitBurnDur = 0;
   function hitCb(e) {
     var b = _hitB;
     if (_hitCdSec > 0) {
@@ -378,6 +405,20 @@ window.Weapons = (function () {
     E.gridQuery(b.x, b.y, radius + 14, hitCb);
     return _hitAny;
   }
+
+  // 火池命中:解除冰霜减速 + 施加持续灼烧(与普通弹幕的 hitCb 分开,逻辑不同)
+  var _poolHitCb = function (e) {
+    var b = _hitB;
+    var next = b.hitCd.get(e.uid) || 0;
+    if (_hitRun.t < next) return false;
+    b.hitCd.set(e.uid, _hitRun.t + _hitCdSec);
+    // 火焰解除冰霜减速:清掉减速状态
+    Entities.clearSlow(e);
+    // 灼烧:持续伤害
+    Entities.damageEnemy(_hitRun, e, b.dmg, { burn: _hitBurn, burnDur: _hitBurnDur, fire: true });
+    if ((_hitRun.frame & 3) === 0) FX.trail(e.x, e.y, '#ff8844', 2);
+    return false;
+  };
 
   function updateBullets(run, dt) {
     var p = run.player;
@@ -493,7 +534,10 @@ window.Weapons = (function () {
           // 火池持续净化范围内的蛛网弹与角色缠身
           if ((run.frame % 20) === 0) Entities.cleanseWebs(run, b.x, b.y, b.size * 0.6);
           if ((run.frame & 3) === 0) FX.trail(b.x + (Math.random() - 0.5) * b.size, b.y + (Math.random() - 0.5) * b.size * 0.7, '#f96', 3);
-          hitEnemiesAlong(run, b, b.size * 0.55, 0.45);
+          // 火池命中:解除冰霜减速,并施加持续灼烧(burnDur 随武器等级成长 5→10 秒)
+          _hitB = b; _hitRun = run; _hitCdSec = 0.45; _hitAny = false;
+          _hitBurn = b.poolBurn; _hitBurnDur = b.poolBurnDur;
+          E.gridQuery(b.x, b.y, b.size * 0.55 + 14, _poolHitCb);
           break;
         }
         case 'orbit': {
@@ -584,6 +628,9 @@ window.Weapons = (function () {
     pool.ttl = st ? st.poolDur : 3;
     pool.pierce = 9999; pool.knock = 0; pool.slow = 0; pool.stun = 0;
     pool.evolved = b.evolved;
+    // 灼烧:初始 5 秒,随武器等级成长到 10 秒(每次命中重置,持续伤害)
+    pool.poolBurn = st ? st.dmg * 0.35 : b.dmg * 0.3;
+    pool.poolBurnDur = 5 + Math.min(5, (st ? w.lv : 1) - 1);   // 5 → 10 秒
   }
 
   function findWeapon(run, wid) {
@@ -970,6 +1017,7 @@ window.Weapons = (function () {
 
   return {
     update: update, updateFor: updateFor, draw: draw, drawGround: drawGround, reset: reset,
+    cycleTargetMode: cycleTargetMode, getTargetModeName: getTargetModeName,
     addWeapon: addWeapon, addPassive: addPassive,
     getLevelUpChoices: getLevelUpChoices, applyChoice: applyChoice,
     chestLoot: chestLoot, canEvolve: canEvolve, findWeapon: findWeapon,

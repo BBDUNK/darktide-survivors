@@ -1029,6 +1029,20 @@
     p.outline(OUT);
     return p;
   }));
+  // 金库宝箱:地图四角专用,金色外壳 + 顶部红宝石,与普通宝箱区分
+  def('vault_chest', two(function (f) {
+    var p = new Pix(16, 16), GD = '#c89a2e', GH = '#e8c45e', GL2 = '#8a6a1c';
+    p.rect(2, 7, 12, 7, GD);
+    p.rect(2, 5, 12, 3, GH);
+    p.hline(2, 13, 4, GH);
+    p.vline(3, 4, 13, '#f2d98a'); p.vline(12, 4, 13, '#a87f20');
+    p.hline(2, 13, 8, GL2);
+    p.rect(7, 6, 2, 4, GOLD); p.px(7, 9, GOLD_D);
+    // 顶部宝石
+    p.px(8, 4 - (f ? 1 : 0), '#ff5a6e'); p.px(7, 4 - (f ? 1 : 0), '#c92a44'); p.px(9, 4 - (f ? 1 : 0), '#c92a44');
+    p.outline(OUT);
+    return p;
+  }));
   def('magnet', one(function () {
     var p = new Pix(16, 16);
     p.rect(4, 3, 3, 9, '#d83a3a');
@@ -1560,7 +1574,7 @@
     'boss_slimeking', 'boss_bonelord', 'boss_abysseye', 'boss_darklord',
     'p_slash', 'p_slash_big', 'p_bolt', 'p_arrow', 'p_axe', 'p_dagger', 'p_orbitblade',
     'p_book', 'p_fireflask', 'p_firepool', 'p_spark', 'p_shadow', 'p_turret', 'p_enemy_bolt', 'p_holy',
-    'gem1', 'gem2', 'gem3', 'gem_big', 'coin', 'chest', 'magnet', 'bomb', 'meat', 'clock',
+    'gem1', 'gem2', 'gem3', 'gem_big', 'coin', 'chest', 'vault_chest', 'magnet', 'bomb', 'meat', 'clock',
     'w_crossblade', 'w_arcanebolt', 'w_windbow', 'w_holyaura', 'w_whirlaxe', 'w_chainlight',
     'w_frostnova', 'w_fireflask', 'w_shadowdagger', 'w_orbitblade', 'w_holytome', 'w_teslacoil',
     'we_crossjudge', 'we_arcanestorm', 'we_featherstorm', 'we_sanctuary', 'we_worldender', 'we_thorwrath',
