@@ -124,6 +124,13 @@ body.touch-device.portrait .rotate-tip {
 .menu-mid { display: flex; flex-direction: column; align-items: center; gap: 22px; }
 .menu-col { display: flex; flex-direction: column; gap: 14px; align-items: center; }
 .menu-subrow { display: flex; gap: 16px; }
+/* 左下角版本号 */
+.menu-version {
+  position: absolute; left: 12px; bottom: 10px;
+  font-family: var(--font-pix); font-size: 11px;
+  color: rgba(200, 195, 220, 0.55); letter-spacing: 1px;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.8); pointer-events: none;
+}
 .btn-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 6px; }
 
 /* ---------- 主菜单(Minecraft 风格) ---------- */

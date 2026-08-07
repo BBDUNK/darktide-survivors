@@ -73,7 +73,7 @@ window.UI = (function () {
   }
 
   // ---------- 主菜单 ----------
-  var menuStats, menuBoard, menuAltar;
+  var menuStats, menuBoard, menuAltar, menuVersion;
   function buildMenu() {
     var s = h('div', 'screen menu-screen');
     // 大标题:居中偏上
@@ -106,10 +106,14 @@ window.UI = (function () {
     menuBoard.appendChild(menuStats);
     body.appendChild(menuBoard);
     s.appendChild(body);
+    // 左下角版本号
+    menuVersion = h('div', 'menu-version', '');
+    s.appendChild(menuVersion);
     screens.menu = s; root.appendChild(s);
   }
   function refreshMenu() {
     var d = Meta.data();
+    menuVersion.textContent = CFG.GAME.VERSION;
     // 左侧圣坛快捷入口:显示当前金币,点击跳转
     menuAltar.innerHTML = '';
     menuAltar.appendChild(h('div', 'menu-altar-title', '🏛 强化圣坛'));
