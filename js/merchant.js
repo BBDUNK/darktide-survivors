@@ -202,13 +202,11 @@ window.Merchant = (function () {
       }
       var canAfford = run.gold >= s.good.cost;
       var pulse = 0.5 + Math.sin(run.t * 4 + i) * 0.5;
-      // 可购买时脚下泛光
-      var gr = ctx.createRadialGradient(sx, M.y, 1, sx, M.y, 26);
-      var gc = canAfford ? '255,215,107' : '120,120,140';
-      gr.addColorStop(0, 'rgba(' + gc + ',' + (0.22 + pulse * 0.18).toFixed(2) + ')');
-      gr.addColorStop(1, 'rgba(' + gc + ',0)');
-      ctx.fillStyle = gr;
-      ctx.beginPath(); ctx.arc(sx, M.y, 26, 0, Math.PI * 2); ctx.fill();
+      // 可购买时脚下泛光(缓存贴图)
+      var gc = canAfford ? '#ffd76b' : '#78788c';
+      ctx.globalAlpha = 0.5 + pulse * 0.3;
+      ctx.drawImage(SpriteGen.glow(gc), sx - 26, M.y - 26, 52, 52);
+      ctx.globalAlpha = 1;
       // 商品图标
       var img = SpriteGen.get(s.good.icon);
       var iw = img.width * 1.6, ih = img.height * 1.6;

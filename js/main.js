@@ -97,11 +97,12 @@
     ctx.globalAlpha = 1;
 
     // 右下角跳过提示
+    ctx.textAlign = 'right';
     ctx.font = '12px "Microsoft YaHei",sans-serif';
     ctx.lineWidth = 4;
-    ctx.strokeText('轻触屏幕以跳过...', W - 14, H - 14);
+    ctx.strokeText('轻触屏幕以跳过...', W - 12, H - 12);
     ctx.fillStyle = '#ffffff';
-    ctx.fillText('轻触屏幕以跳过...', W - 14, H - 14);
+    ctx.fillText('轻触屏幕以跳过...', W - 12, H - 12);
     ctx.textAlign = 'left';
   }
 
@@ -371,11 +372,10 @@
       ctx.globalAlpha = 1;
       var cimg = SpriteGen.get('vault_chest');
       var pulse = 0.5 + Math.sin(run.t * 4 + i) * 0.5;
-      var gr = ctx.createRadialGradient(sx, sy, 1, sx, sy, 30);
-      gr.addColorStop(0, 'rgba(255,215,107,' + (0.25 + pulse * 0.2).toFixed(2) + ')');
-      gr.addColorStop(1, 'rgba(255,215,107,0)');
-      ctx.fillStyle = gr;
-      ctx.beginPath(); ctx.arc(sx, sy, 30, 0, Math.PI * 2); ctx.fill();
+      // 金库柔光:缓存贴图
+      ctx.globalAlpha = 0.4 + pulse * 0.2;
+      ctx.drawImage(SpriteGen.glow('#ffd76b'), sx - 30, sy - 30, 60, 60);
+      ctx.globalAlpha = 1;
       ctx.drawImage(cimg, sx - 16, sy - 16 + bob, 32, 32);
       // 金币数字
       ctx.font = 'bold 10px monospace';
@@ -837,15 +837,12 @@
     FX.draw(ctx);
     ctx.restore();
 
-    // 玩家周围柔光:提升主体可读性
+    // 玩家周围柔光:用缓存贴图(不再每帧建径向渐变),双色叠出柔和感
     var pls = CFG.GAME.W / 2 + (run.player.x - camX);
     var plt = CFG.GAME.H / 2 + (run.player.y - camY);
-    var lg = ctx.createRadialGradient(pls, plt, 10, pls, plt, 190);
-    lg.addColorStop(0, 'rgba(190,175,255,0.13)');
-    lg.addColorStop(0.55, 'rgba(150,130,230,0.05)');
-    lg.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = lg;
-    ctx.fillRect(0, 0, CFG.GAME.W, CFG.GAME.H);
+    ctx.globalAlpha = 0.28;
+    ctx.drawImage(SpriteGen.glow('#c0aeff'), pls - 190, plt - 190, 380, 380);
+    ctx.globalAlpha = 1;
 
     // 雾色叠层 + 暗角
     ctx.globalAlpha = 0.10 + Math.sin(run.t * 0.4) * 0.03;
@@ -920,6 +917,7 @@
     Meta.load();
     var st = Meta.settings();
     if (st.uiScale) CFG.GAME.UI_SCALE = st.uiScale;   // 玩家保存的适配档位优先
+    if (st.lang) window.L.setLang(st.lang);           // 玩家保存的语言优先
     FX.setCfg({ shake: st.shake, dmgText: st.dmgText });
     AudioSys.setVolumes(st.music, st.sfx);
 

@@ -61,8 +61,8 @@ window.UI = (function () {
     logo.appendChild(h('div', 'logo-main', '暗潮幸存者'));
     logo.appendChild(h('div', 'logo-sub', 'DARKTIDE SURVIVORS'));
     s.appendChild(logo);
-    s.appendChild(h('div', 'blink hint', '— 点击任意处开始 —'));
-    s.appendChild(h('div', 'credits', '全部素材程序化生成 · 存档保存在本地浏览器'));
+    s.appendChild(h('div', 'blink hint', L.t('title_click')));
+    s.appendChild(h('div', 'credits', L.t('title_credit')));
     s.addEventListener('click', function () {
       AudioSys.unlock();
       AudioSys.play('ui_click');
@@ -82,12 +82,12 @@ window.UI = (function () {
     s.appendChild(logo);
     // 按钮列:缩小
     var col = h('div', 'menu-col');
-    col.appendChild(btn('⚔ 开始远征', 'primary', function () { coopMode = false; refreshChars(); show('chars'); }));
-    col.appendChild(btn('👥 联机远征', '', function () { refreshLobbyEntry(); show('coop'); }));
-    col.appendChild(btn('🏛 强化圣坛', '', function () { refreshShop(); show('shop'); }));
-    col.appendChild(btn('🏆 成就', '', function () { refreshAchv(); show('achv'); }));
-    col.appendChild(btn('📖 百科全书', '', function () { codexFrom = 'menu'; refreshCodex(); show('codex'); }));
-    col.appendChild(btn('⚙ 设置', '', function () { refreshSettings(); show('settings'); }));
+    col.appendChild(btn(L.t('menu_start'), 'primary', function () { coopMode = false; refreshChars(); show('chars'); }));
+    col.appendChild(btn(L.t('menu_coop'), '', function () { refreshLobbyEntry(); show('coop'); }));
+    col.appendChild(btn(L.t('menu_shop'), '', function () { refreshShop(); show('shop'); }));
+    col.appendChild(btn(L.t('menu_achv'), '', function () { refreshAchv(); show('achv'); }));
+    col.appendChild(btn(L.t('menu_codex'), '', function () { codexFrom = 'menu'; refreshCodex(); show('codex'); }));
+    col.appendChild(btn(L.t('menu_settings'), '', function () { refreshSettings(); show('settings'); }));
     s.appendChild(col);
     // 左侧金币山
     menuGoldPile = h('div', 'menu-goldpile');
@@ -109,7 +109,7 @@ window.UI = (function () {
     else if (gold < 500) { pileTxt = '🪙 少许金币'; pileCls = 'few'; }
     else if (gold < 3000) { pileTxt = '🪙 一堆金币'; pileCls = 'heap'; }
     else if (gold < 10000) { pileTxt = '💰 金币小山'; pileCls = 'mountain'; }
-    else { pileTxt = '👑 金山!'; pileCls = 'king'; }
+    else { pileTxt = '🪙 金山!'; pileCls = 'king'; }
     menuGoldPile.innerHTML = '';
     menuGoldPile.appendChild(h('div', 'goldpile-icon ' + pileCls, pileTxt));
     menuGoldPile.appendChild(h('div', 'goldpile-num', gold.toLocaleString()));
@@ -528,7 +528,7 @@ window.UI = (function () {
 
   function renderCodexTabs() {
     codexTabs.innerHTML = '';
-    var tabs = [['w', '⚔ 武器'], ['p', '💠 被动'], ['e', '☠ 敌人'], ['m', '📖 机制']];
+    var tabs = [['w', '⚔ 武器'], ['p', '💠 被动'], ['e', '☠ 敌人'], ['m', '📖 机制'], ['g', '🎮 操作指南']];
     tabs.forEach(function (t) {
       codexTabs.appendChild(btn(t[1], codexTab === t[0] ? 'primary small-btn' : 'small-btn',
         function () { codexTab = t[0]; refreshCodex(); }));
@@ -541,6 +541,7 @@ window.UI = (function () {
     if (codexTab === 'w') renderEncWeapons();
     else if (codexTab === 'p') renderEncPassives();
     else if (codexTab === 'e') renderEncEnemies();
+    else if (codexTab === 'g') renderEncGuide();
     else renderEncMechanics();
   }
 
@@ -643,6 +644,17 @@ window.UI = (function () {
     });
   }
 
+  function renderEncGuide() {
+    Encyclopedia.guide().forEach(function (m) {
+      var card = h('div', 'enc-card');
+      card.appendChild(h('div', 'enc-name', m.title));
+      var box = h('div', 'enc-traits');
+      m.lines.forEach(function (l) { box.appendChild(h('div', 'enc-trait', '· ' + l)); });
+      card.appendChild(box);
+      codexBody.appendChild(card);
+    });
+  }
+
   // ---------- 设置 ----------
   var setBody;
   function buildSettings() {
@@ -650,7 +662,7 @@ window.UI = (function () {
     s.appendChild(h('div', 'page-title', '设置'));
     setBody = h('div', 'settings-body');
     s.appendChild(setBody);
-    s.appendChild(btn('← 返回', '', function () { Meta.persist(); show('menu'); }));
+    s.appendChild(btn(L.t('set_back'), '', function () { Meta.persist(); show('menu'); }));
     screens.settings = s; root.appendChild(s);
   }
   function slider(label, val, onChange) {
@@ -677,19 +689,24 @@ window.UI = (function () {
   function refreshSettings() {
     var st = Meta.settings();
     setBody.innerHTML = '';
-    setBody.appendChild(slider('音乐音量', st.music, function (v) { st.music = v; AudioSys.setVolumes(st.music, st.sfx); }));
-    setBody.appendChild(slider('音效音量', st.sfx, function (v) { st.sfx = v; AudioSys.setVolumes(st.music, st.sfx); AudioSys.play('hit1'); }));
-    setBody.appendChild(toggle('屏幕震动', st.shake, function (v) { st.shake = v; FX.setCfg({ shake: st.shake, dmgText: st.dmgText }); }));
-    setBody.appendChild(toggle('伤害数字', st.dmgText, function (v) { st.dmgText = v; FX.setCfg({ shake: st.shake, dmgText: st.dmgText }); }));
-    setBody.appendChild(toggle('小怪血条', st.hpBar, function (v) { st.hpBar = v; }));
-    setBody.appendChild(cycleToggle('画面适配', ['contain', 'fill', 'native'], st.uiScale, ['等比适配', '拉伸铺满', '原尺寸'], function (v) {
+    setBody.appendChild(slider(L.t('set_music'), st.music, function (v) { st.music = v; AudioSys.setVolumes(st.music, st.sfx); }));
+    setBody.appendChild(slider(L.t('set_sfx'), st.sfx, function (v) { st.sfx = v; AudioSys.setVolumes(st.music, st.sfx); AudioSys.play('hit1'); }));
+    setBody.appendChild(toggle(L.t('set_shake'), st.shake, function (v) { st.shake = v; FX.setCfg({ shake: st.shake, dmgText: st.dmgText }); }));
+    setBody.appendChild(toggle(L.t('set_dmgtext'), st.dmgText, function (v) { st.dmgText = v; FX.setCfg({ shake: st.shake, dmgText: st.dmgText }); }));
+    setBody.appendChild(toggle(L.t('set_hpbar'), st.hpBar, function (v) { st.hpBar = v; }));
+    setBody.appendChild(cycleToggle(L.t('set_fit'), ['contain', 'fill', 'native'], st.uiScale, [L.t('set_fit_contain'), L.t('set_fit_fill'), L.t('set_fit_native')], function (v) {
       st.uiScale = v;
       if (window.CFG) CFG.GAME.UI_SCALE = v;
       if (window.Engine && Engine.refit) Engine.refit();
     }));
+    setBody.appendChild(toggle(L.t('set_lang'), L.getLang() === 'en', function (v) {
+      st.lang = v ? 'en' : 'zh';
+      Meta.persist();
+      location.reload();   // 切换语言需重建界面,重载最可靠
+    }));
     var danger = h('div', 'set-danger');
-    danger.appendChild(btn('清空全部存档', 'danger', function () {
-      if (confirm('确定清空全部进度?此操作不可恢复!')) { Meta.wipe(); location.reload(); }
+    danger.appendChild(btn(L.t('set_wipe'), 'danger', function () {
+      if (confirm(L.t('set_wipe_confirm'))) { Meta.wipe(); location.reload(); }
     }));
     setBody.appendChild(danger);
   }
@@ -1031,19 +1048,19 @@ window.UI = (function () {
   function buildPause() {
     var s = h('div', 'modal hidden');
     var box = h('div', 'modal-box');
-    box.appendChild(h('div', 'modal-title', '⏸ 暂停'));
+    box.appendChild(h('div', 'modal-title', L.t('pause_title')));
     pauseBuild = h('div', 'pause-build');
     box.appendChild(pauseBuild);
     var col = h('div', 'pause-menu');
-    col.appendChild(btn('▶ 继续', 'big primary', function () { cb.onResume(); }));
-    col.appendChild(btn('📖 百科全书', 'big', function () {
+    col.appendChild(btn(L.t('pause_resume'), 'big primary', function () { cb.onResume(); }));
+    col.appendChild(btn(L.t('pause_codex'), 'big', function () {
       // 先渲染再切换可见性,避免中途按 ESC 时出现两层都开/都关的中间态
       codexFrom = 'pause';
       refreshCodex();
       overlay('codex', true);
       overlay('pause', false);
     }));
-    col.appendChild(btn('🏳 放弃这局', 'big danger', function () { cb.onGiveUp(); }));
+    col.appendChild(btn(L.t('pause_giveup'), 'big danger', function () { cb.onGiveUp(); }));
     box.appendChild(col);
     s.appendChild(box);
     screens.pause = s; root.appendChild(s);

@@ -1442,13 +1442,11 @@ window.Entities = (function () {
       if (!g.alive) continue;
       var gname = g.v >= 30 ? 'gem_big' : (g.v >= 10 ? 'gem3' : (g.v >= 3 ? 'gem2' : 'gem1'));
       var bob = Math.sin(g.t * 4 + i) * 2;
-      // 大颗经验加一圈微光
+      // 大颗经验加一圈微光(用缓存贴图,不再每帧建渐变)
       if (g.v >= 10) {
-        var gg = ctx.createRadialGradient(g.x, g.y, 1, g.x, g.y, 16);
-        gg.addColorStop(0, 'rgba(89,194,255,0.30)');
-        gg.addColorStop(1, 'rgba(89,194,255,0)');
-        ctx.fillStyle = gg;
-        ctx.beginPath(); ctx.arc(g.x, g.y, 16, 0, Math.PI * 2); ctx.fill();
+        ctx.globalAlpha = 0.55;
+        ctx.drawImage(SpriteGen.glow('#59c2ff'), g.x - 16, g.y - 16, 32, 32);
+        ctx.globalAlpha = 1;
       }
       drawSprite(ctx, gname, 0, g.x, g.y + bob, 0.75, false, 1, null);
     }
@@ -1459,16 +1457,15 @@ window.Entities = (function () {
       var bob2 = Math.sin(it.t * 3 + i) * 2;
       var nm = it.type === 'coin' ? 'coin' : (it.type === 'chest' ? 'chest' : it.type);
       // 拾取物地面柔光,远处也能看见
-      var glowCol = it.type === 'chest' ? '255,215,107'
-        : (it.type === 'coin' ? '255,235,120'
-        : (it.type === 'meat' ? '255,120,140' : '120,200,255'));
+      var glowCol = it.type === 'chest' ? '#ffd76b'
+        : (it.type === 'coin' ? '#ffeb78'
+        : (it.type === 'meat' ? '#ff788c' : '#78c8ff'));
       var gr = it.type === 'chest' ? 38 : 20;
       var pulse = 0.5 + Math.sin(it.t * 4) * 0.5;
-      var ig = ctx.createRadialGradient(it.x, it.y, 1, it.x, it.y, gr);
-      ig.addColorStop(0, 'rgba(' + glowCol + ',' + (0.30 + pulse * 0.22).toFixed(3) + ')');
-      ig.addColorStop(1, 'rgba(' + glowCol + ',0)');
-      ctx.fillStyle = ig;
-      ctx.beginPath(); ctx.arc(it.x, it.y, gr, 0, Math.PI * 2); ctx.fill();
+      // 拾取物地面柔光:缓存贴图,不再每帧建渐变
+      ctx.globalAlpha = 0.45 + pulse * 0.30;
+      ctx.drawImage(SpriteGen.glow(glowCol), it.x - gr, it.y - gr, gr * 2, gr * 2);
+      ctx.globalAlpha = 1;
       drawSprite(ctx, nm, it.type === 'coin' ? animF : 0, it.x, it.y + bob2, it.type === 'chest' ? 1.2 : 0.9, false, 1, null);
       if (it.type === 'chest') { // 宝箱额外上升光柱
         ctx.globalAlpha = 0.10 + pulse * 0.10;

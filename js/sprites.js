@@ -1565,6 +1565,21 @@
     return p;
   }));
 
+  // 预渲染柔光贴图:64×64 径向渐变,每帧 drawImage 代替 createRadialGradient(后者很贵)
+  // 绘制时按需缩放,白底半透明,调用方用 globalAlpha 控制强度、用合成模式着色
+  function buildGlowTexture() {
+    var cv = document.createElement('canvas');
+    cv.width = 64; cv.height = 64;
+    var g = cv.getContext('2d');
+    var grad = g.createRadialGradient(32, 32, 1, 32, 32, 32);
+    grad.addColorStop(0, 'rgba(255,255,255,0.9)');
+    grad.addColorStop(0.4, 'rgba(255,255,255,0.35)');
+    grad.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = grad;
+    g.fillRect(0, 0, 64, 64);
+    return [cv];
+  }
+
   // ---------- SPEC 模块A 名字清单(覆盖率自检用) ----------
   var NAMES = [
     'char_knight', 'char_mage', 'char_ranger', 'char_cleric', 'char_berserker', 'char_chrono',
@@ -1575,6 +1590,7 @@
     'p_slash', 'p_slash_big', 'p_bolt', 'p_arrow', 'p_axe', 'p_dagger', 'p_orbitblade',
     'p_book', 'p_fireflask', 'p_firepool', 'p_spark', 'p_shadow', 'p_turret', 'p_enemy_bolt', 'p_holy',
     'gem1', 'gem2', 'gem3', 'gem_big', 'coin', 'chest', 'vault_chest', 'magnet', 'bomb', 'meat', 'clock',
+    'vfx_glow',
     'w_crossblade', 'w_arcanebolt', 'w_windbow', 'w_holyaura', 'w_whirlaxe', 'w_chainlight',
     'w_frostnova', 'w_fireflask', 'w_shadowdagger', 'w_orbitblade', 'w_holytome', 'w_teslacoil',
     'we_crossjudge', 'we_arcanestorm', 'we_featherstorm', 'we_sanctuary', 'we_worldender', 'we_thorwrath',
@@ -1615,6 +1631,7 @@
       PLACEHOLDER = buildPlaceholder();
       var name, i;
       for (name in defs) {
+        if (name === 'vfx_glow') { store[name] = buildGlowTexture(); continue; }   // 渐变贴图走真实 canvas
         var pxFrames = defs[name]();
         var cs = [];
         for (i = 0; i < pxFrames.length; i++) cs.push(pxFrames[i].toCanvas());
@@ -1633,6 +1650,24 @@
       var arr = store[name];
       if (!arr) arr = fallback(name);
       return arr[0];
+    },
+    // 按颜色取柔光贴图(首用构建并缓存,后续零分配)。color 格式 '#rrggbb'
+    _glowCache: {},
+    glow: function (color) {
+      if (!store) this.init();
+      if (!this._glowCache[color]) {
+        var base = buildGlowTexture()[0];
+        var cv = document.createElement('canvas');
+        cv.width = 64; cv.height = 64;
+        var g = cv.getContext('2d');
+        g.drawImage(base, 0, 0);
+        g.globalCompositeOperation = 'source-in';
+        g.fillStyle = color;
+        g.fillRect(0, 0, 64, 64);
+        g.globalCompositeOperation = 'source-over';
+        this._glowCache[color] = cv;
+      }
+      return this._glowCache[color];
     },
     // → [canvas,...] 动画帧数组(≥1);单帧素材返回 [同一 canvas]
     frames: function (name) {
