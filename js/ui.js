@@ -73,33 +73,62 @@ window.UI = (function () {
   }
 
   // ---------- 主菜单 ----------
-  var menuGold, menuStats;
+  var menuGold, menuStats, menuBoard, menuGoldPile;
   function buildMenu() {
-    var s = h('div', 'screen center-col');
-    var logo = h('div', 'logo small');
-    logo.appendChild(h('div', 'logo-main', '暗潮幸存者'));
+    var s = h('div', 'screen');
+    // 大标题:居中偏上,足够醒目
+    var logo = h('div', 'logo menu-logo');
+    logo.appendChild(h('div', 'logo-main menu-big', '暗潮幸存者'));
     s.appendChild(logo);
-    menuGold = h('div', 'gold-line');
-    s.appendChild(menuGold);
+    // 按钮列:缩小
     var col = h('div', 'menu-col');
-    col.appendChild(btn('⚔ 开始远征', 'big primary', function () { coopMode = false; refreshChars(); show('chars'); }));
-    col.appendChild(btn('👥 联机远征', 'big', function () { refreshLobbyEntry(); show('coop'); }));
-    col.appendChild(btn('🏛 强化圣坛', 'big', function () { refreshShop(); show('shop'); }));
-    col.appendChild(btn('🏆 成就', 'big', function () { refreshAchv(); show('achv'); }));
-    col.appendChild(btn('📖 百科全书', 'big', function () { codexFrom = 'menu'; refreshCodex(); show('codex'); }));
-    col.appendChild(btn('⚙ 设置', 'big', function () { refreshSettings(); show('settings'); }));
+    col.appendChild(btn('⚔ 开始远征', 'primary', function () { coopMode = false; refreshChars(); show('chars'); }));
+    col.appendChild(btn('👥 联机远征', '', function () { refreshLobbyEntry(); show('coop'); }));
+    col.appendChild(btn('🏛 强化圣坛', '', function () { refreshShop(); show('shop'); }));
+    col.appendChild(btn('🏆 成就', '', function () { refreshAchv(); show('achv'); }));
+    col.appendChild(btn('📖 百科全书', '', function () { codexFrom = 'menu'; refreshCodex(); show('codex'); }));
+    col.appendChild(btn('⚙ 设置', '', function () { refreshSettings(); show('settings'); }));
     s.appendChild(col);
-    menuStats = h('div', 'menu-stats');
-    s.appendChild(menuStats);
+    // 左侧金币山
+    menuGoldPile = h('div', 'menu-goldpile');
+    s.appendChild(menuGoldPile);
+    // 右侧公告栏:纸质底,红字
+    menuBoard = h('div', 'menu-board');
+    menuBoard.appendChild(h('div', 'menu-board-title', '📜 战报'));
+    menuStats = h('div', 'menu-board-body');
+    menuBoard.appendChild(menuStats);
+    s.appendChild(menuBoard);
     screens.menu = s; root.appendChild(s);
   }
   function refreshMenu() {
     var d = Meta.data();
-    menuGold.innerHTML = '';
-    menuGold.appendChild(iconCanvas('icon_gold', 20));
-    menuGold.appendChild(h('span', '', ' ' + d.gold));
+    // 金币山:按数量分档显示金币堆状态
+    var gold = d.gold;
+    var pileTxt, pileCls;
+    if (gold <= 0) { pileTxt = '🪙 空空如也'; pileCls = 'empty'; }
+    else if (gold < 500) { pileTxt = '🪙 少许金币'; pileCls = 'few'; }
+    else if (gold < 3000) { pileTxt = '🪙 一堆金币'; pileCls = 'heap'; }
+    else if (gold < 10000) { pileTxt = '💰 金币小山'; pileCls = 'mountain'; }
+    else { pileTxt = '👑 金山!'; pileCls = 'king'; }
+    menuGoldPile.innerHTML = '';
+    menuGoldPile.appendChild(h('div', 'goldpile-icon ' + pileCls, pileTxt));
+    menuGoldPile.appendChild(h('div', 'goldpile-num', gold.toLocaleString()));
+    // 公告栏:总击杀等,红字
     var st = d.stats;
-    menuStats.textContent = '总击杀 ' + st.kills + ' · 胜场 ' + st.wins + ' · 最长存活 ' + Engine.fmtTime(st.bestSurvive) + ' · 游玩 ' + Math.floor(st.playTime / 60) + ' 分钟';
+    menuStats.innerHTML = '';
+    var rows = [
+      ['总击杀', st.kills.toLocaleString()],
+      ['胜场', st.wins],
+      ['最长存活', Engine.fmtTime(st.bestSurvive)],
+      ['游玩时间', Math.floor(st.playTime / 60) + ' 分钟'],
+      ['累计金币', d.gold.toLocaleString()]
+    ];
+    rows.forEach(function (r) {
+      var row = h('div', 'board-row');
+      row.appendChild(h('span', 'board-label', r[0]));
+      row.appendChild(h('span', 'board-val', r[1]));
+      menuStats.appendChild(row);
+    });
   }
 
   // ---------- 选人 ----------

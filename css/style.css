@@ -91,14 +91,14 @@ body.touch-device.portrait .rotate-tip {
   color: var(--text);
   border: 2px solid var(--panel-line);
   border-radius: 6px;
-  padding: 10px 26px; font-size: 16px;
+  padding: 8px 20px; font-size: 14px;
   cursor: pointer; letter-spacing: 2px;
   transition: transform 0.08s, border-color 0.15s, box-shadow 0.15s;
   box-shadow: 0 3px 0 rgba(0,0,0,0.5);
 }
 .btn:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 5px 0 rgba(0,0,0,0.5), 0 0 18px rgba(255,215,107,0.25); }
 .btn:active { transform: translateY(1px); box-shadow: 0 1px 0 rgba(0,0,0,0.5); }
-.btn.big { font-size: 19px; padding: 13px 42px; min-width: 260px; }
+.btn.big { font-size: 17px; padding: 10px 30px; min-width: 200px; }
 .btn.primary {
   background: linear-gradient(180deg, #6d5518, #4a3608);
   border-color: var(--gold);
@@ -109,8 +109,52 @@ body.touch-device.portrait .rotate-tip {
 .btn.danger:hover { border-color: var(--red); }
 .btn.small-btn { font-size: 13px; padding: 7px 16px; }
 .btn.disabled { opacity: 0.4; pointer-events: none; }
-.menu-col { display: flex; flex-direction: column; gap: 12px; align-items: center; }
+.menu-col { display: flex; flex-direction: column; gap: 10px; align-items: center; position: absolute; left: 50%; top: 58%; transform: translate(-50%, -50%); }
 .btn-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 6px; }
+
+/* ---------- 主菜单(Minecraft 风格) ---------- */
+.screen .menu-logo { position: absolute; top: 6%; left: 0; right: 0; }
+.menu-big {
+  font-size: 84px; letter-spacing: 12px;
+  background: linear-gradient(180deg, #fff3c8 15%, var(--gold) 45%, #8a5a20 85%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 4px 0 #201400) drop-shadow(0 8px 18px rgba(0,0,0,0.9));
+  animation: logoFloat 3s ease-in-out infinite;
+}
+/* 左侧金币山 */
+.menu-goldpile {
+  position: absolute; left: 24px; top: 40%;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 16px 20px;
+  background: rgba(10, 8, 20, 0.65); border: 2px solid var(--panel-line); border-radius: 10px;
+}
+.goldpile-icon { font-size: 34px; }
+.goldpile-icon.empty { filter: grayscale(1); opacity: 0.5; }
+.goldpile-icon.few { filter: none; }
+.goldpile-icon.heap { font-size: 40px; text-shadow: 0 0 12px rgba(255,215,107,0.5); }
+.goldpile-icon.mountain { font-size: 46px; text-shadow: 0 0 18px rgba(255,215,107,0.7); }
+.goldpile-icon.king { font-size: 50px; text-shadow: 0 0 22px rgba(255,215,107,0.9); }
+.goldpile-num { font-family: var(--font-pix); font-size: 16px; color: var(--gold); text-shadow: 2px 2px 0 #000; }
+/* 右侧公告栏:纸质底红字 */
+.menu-board {
+  position: absolute; right: 26px; top: 30%;
+  min-width: 210px;
+  padding: 14px 18px;
+  background: #d8c9a0;
+  border: 3px solid #8a6d3a;
+  border-radius: 6px;
+  box-shadow: 0 4px 0 #6b5226, inset 0 0 24px rgba(120,90,40,0.35);
+  font-family: 'Microsoft YaHei', sans-serif;
+}
+.menu-board-title {
+  text-align: center; font-size: 16px; font-weight: 900;
+  color: #5a1f1f; letter-spacing: 3px; margin-bottom: 8px;
+  border-bottom: 2px dashed #a08a5a; padding-bottom: 6px;
+}
+.menu-board-body { display: flex; flex-direction: column; gap: 5px; }
+.board-row { display: flex; justify-content: space-between; gap: 14px; font-size: 14px; }
+.board-label { color: #7a2a1a; font-weight: 700; }
+.board-val { color: #b00000; font-weight: 900; }
 
 .gold-line {
   display: flex; align-items: center; gap: 6px;

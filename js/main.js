@@ -42,10 +42,10 @@
     }
 
     // ---- 静态美术资源展示:上下两行,随版本同步更新 ----
-    // 上行:全部角色 + 关键武器/被动图标
+    // 上行:全部角色 + 透明底的武器/道具精灵(不用带黑底的 defIcon)
     var heroRow = ['char_knight', 'char_mage', 'char_ranger', 'char_cleric', 'char_berserker', 'char_chrono'];
-    heroRow = heroRow.concat(['w_crossblade', 'w_arcanebolt', 'w_windbow', 'w_holyaura', 'w_whirlaxe', 'w_chainlight',
-                              'w_frostnova', 'w_fireflask', 'w_shadowdagger', 'w_orbitblade', 'w_holytome', 'w_teslacoil']);
+    heroRow = heroRow.concat(['p_slash', 'p_bolt', 'p_arrow', 'p_book', 'p_axe', 'p_shadow',
+                              'p_fireflask', 'p_orbitblade', 'coin', 'meat', 'chest', 'magnet']);
     var hGap = 46;
     var hTotal = heroRow.length * hGap;
     var hStart = (W - hTotal) / 2;
@@ -54,24 +54,29 @@
       var hy = 58 + Math.sin(introT * 2.5 + hi * 0.6) * 3;
       var himg = SpriteGen.get(heroRow[hi]);
       var hw = heroRow[hi].indexOf('char_') === 0 ? 38 : 26;
-      ctx.globalAlpha = 0.75;
+      ctx.globalAlpha = 1;   // 透明度拉到最高,不若隐若现
       ctx.drawImage(himg, hx - hw / 2, hy - hw / 2, hw, hw);
-      ctx.globalAlpha = 1;
     }
+    ctx.globalAlpha = 1;
 
-    // 中央题字(放大)
+    // 中央题字(放大,两行)
     ctx.textAlign = 'center';
-    ctx.font = 'bold 34px "Press Start 2P","Microsoft YaHei",monospace';
-    ctx.lineWidth = 8;
-    ctx.strokeStyle = 'rgba(0,0,0,0.85)';
-    ctx.strokeText('天庭制作组倾心呈现', W / 2, H / 2 - 20);
+    ctx.font = 'bold 56px "Press Start 2P","Microsoft YaHei",monospace';
+    ctx.lineWidth = 10;
+    ctx.strokeStyle = 'rgba(0,0,0,0.9)';
+    ctx.strokeText('天庭制作组', W / 2, H / 2 - 38);
     ctx.fillStyle = '#ffd76b';
-    ctx.fillText('天庭制作组倾心呈现', W / 2, H / 2 - 20);
+    ctx.fillText('天庭制作组', W / 2, H / 2 - 38);
+    ctx.font = 'bold 30px "Press Start 2P","Microsoft YaHei",monospace';
+    ctx.lineWidth = 7;
+    ctx.strokeText('倾心呈现', W / 2, H / 2 + 24);
+    ctx.fillStyle = '#fff3c8';
+    ctx.fillText('倾心呈现', W / 2, H / 2 + 24);
     ctx.font = '20px "Microsoft YaHei",sans-serif';
     ctx.lineWidth = 5;
-    ctx.strokeText('特别鸣谢:SOTA Model', W / 2, H / 2 + 34);
+    ctx.strokeText('特别鸣谢:SOTA Model', W / 2, H / 2 + 68);
     ctx.fillStyle = '#cfe6ff';
-    ctx.fillText('特别鸣谢:SOTA Model', W / 2, H / 2 + 34);
+    ctx.fillText('特别鸣谢:SOTA Model', W / 2, H / 2 + 68);
 
     // 下行:全部敌人 + Boss(静态排列,不滚动)
     var enemyRow = ['bat', 'slime', 'slime_big', 'zombie', 'skeleton', 'ghost', 'spider', 'cultist',
@@ -86,10 +91,10 @@
       var eimg = SpriteGen.get(enemyRow[ei]);
       var isBoss = enemyRow[ei].indexOf('boss_') === 0;
       var ew = isBoss ? 40 : 30;
-      ctx.globalAlpha = isBoss ? 0.75 : 0.55;
+      ctx.globalAlpha = 1;   // 透明度拉到最高
       ctx.drawImage(eimg, ex - ew / 2, ey - ew / 2, ew, ew);
-      ctx.globalAlpha = 1;
     }
+    ctx.globalAlpha = 1;
 
     // 右下角跳过提示
     ctx.font = '12px "Microsoft YaHei",sans-serif';
