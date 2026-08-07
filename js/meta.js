@@ -32,7 +32,7 @@ window.Meta = (function () {
         metaLv: allMetaMax(),
         achv: allAchv(),
         codex: allCodex(),
-        settings: { music: 0.7, sfx: 0.8, shake: true, dmgText: true, hpBar: true },
+        settings: { music: 0.7, sfx: 0.8, shake: true, dmgText: true, hpBar: true, uiScale: 'contain' },
         stats: {
           kills: 25000, goldEarned: 60000, deaths: 5, wins: 5, bossKills: 20,
           evolves: 10, chests: 50, shopBuys: 50, bombs: 20,
@@ -47,7 +47,7 @@ window.Meta = (function () {
       metaLv: {},          // {m_hp: 2, ...}
       achv: {},            // {a_kill_100: true}
       codex: {},           // 见过的敌人/武器 {bat: true}
-      settings: { music: 0.7, sfx: 0.8, shake: true, dmgText: true, hpBar: true },
+      settings: { music: 0.7, sfx: 0.8, shake: true, dmgText: true, hpBar: true, uiScale: 'contain' },
       stats: {
         kills: 0, goldEarned: 0, deaths: 0, wins: 0, bossKills: 0,
         evolves: 0, chests: 0, shopBuys: 0, bombs: 0,

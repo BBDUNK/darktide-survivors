@@ -682,11 +682,30 @@ window.UI = (function () {
     setBody.appendChild(toggle('屏幕震动', st.shake, function (v) { st.shake = v; FX.setCfg({ shake: st.shake, dmgText: st.dmgText }); }));
     setBody.appendChild(toggle('伤害数字', st.dmgText, function (v) { st.dmgText = v; FX.setCfg({ shake: st.shake, dmgText: st.dmgText }); }));
     setBody.appendChild(toggle('小怪血条', st.hpBar, function (v) { st.hpBar = v; }));
+    setBody.appendChild(cycleToggle('画面适配', ['contain', 'fill', 'native'], st.uiScale, ['等比适配', '拉伸铺满', '原尺寸'], function (v) {
+      st.uiScale = v;
+      if (window.CFG) CFG.GAME.UI_SCALE = v;
+      if (window.Engine && Engine.refit) Engine.refit();
+    }));
     var danger = h('div', 'set-danger');
     danger.appendChild(btn('清空全部存档', 'danger', function () {
       if (confirm('确定清空全部进度?此操作不可恢复!')) { Meta.wipe(); location.reload(); }
     }));
     setBody.appendChild(danger);
+  }
+  // 多档循环切换:点按在 options 间循环,labels 为对应显示名
+  function cycleToggle(label, options, val, labels, onChange) {
+    var row = h('div', 'set-row');
+    row.appendChild(h('span', 'set-label', label));
+    var idx = Math.max(0, options.indexOf(val));
+    var b = btn(labels[idx], 'toggle' + (idx > 0 ? ' on' : ''), function () {
+      idx = (idx + 1) % options.length;
+      b.textContent = labels[idx];
+      b.classList.toggle('on', idx > 0);
+      onChange(options[idx]);
+    });
+    row.appendChild(b);
+    return row;
   }
 
   // ---------- HUD ----------
@@ -1015,7 +1034,7 @@ window.UI = (function () {
     box.appendChild(h('div', 'modal-title', '⏸ 暂停'));
     pauseBuild = h('div', 'pause-build');
     box.appendChild(pauseBuild);
-    var col = h('div', 'menu-col');
+    var col = h('div', 'pause-menu');
     col.appendChild(btn('▶ 继续', 'big primary', function () { cb.onResume(); }));
     col.appendChild(btn('📖 百科全书', 'big', function () {
       // 先渲染再切换可见性,避免中途按 ESC 时出现两层都开/都关的中间态

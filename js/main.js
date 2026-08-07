@@ -919,6 +919,7 @@
     SpriteGen.init();
     Meta.load();
     var st = Meta.settings();
+    if (st.uiScale) CFG.GAME.UI_SCALE = st.uiScale;   // 玩家保存的适配档位优先
     FX.setCfg({ shake: st.shake, dmgText: st.dmgText });
     AudioSys.setVolumes(st.music, st.sfx);
 

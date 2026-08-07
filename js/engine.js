@@ -177,14 +177,23 @@ window.Engine = (function () {
   // ---------- 画布缩放 ----------
   // UI 层与画布共用同一缩放系数,保证 HUD 与画面严格对齐;
   // 同时把安全区(刘海/圆角)让出来,避免边框裁掉 HUD。
+  // 适配档位(CFG.GAME.UI_SCALE):
+  //   contain(默认) 等比缩放到完整放进窗口,任一轴富余居中留黑边 —— 永不裁切 HUD。
+  //   fill           拉伸填满整个窗口,超出部分裁掉(超宽屏可选,会裁到 HUD 角)。
+  //   native         不缩放,1:1 逻辑像素(适合很小的窗口)。
   var viewScale = 1;
+  var resizeRef = null;
+  function computeFit(w, h) {
+    var mode = typeof CFG.GAME.UI_SCALE !== 'undefined' ? CFG.GAME.UI_SCALE : 'contain';
+    if (mode === 'fill') return Math.max(w / CFG.GAME.W, h / CFG.GAME.H);
+    if (mode === 'native') return 1;
+    return Math.min(w / CFG.GAME.W, h / CFG.GAME.H);
+  }
   function fitCanvas(canvas) {
     var ui = document.getElementById('ui');
     function resize() {
       var w = window.innerWidth, h = window.innerHeight;
-      // Math.max:拉伸填满整个窗口,不留黑边。画布与 UI 同步拉伸,内容会轻微变形,
-      // 但符合"完全适配边框"的要求。
-      var scale = Math.max(w / CFG.GAME.W, h / CFG.GAME.H);
+      var scale = computeFit(w, h);
       viewScale = scale;
       var cw = Math.round(CFG.GAME.W * scale), ch = Math.round(CFG.GAME.H * scale);
       canvas.style.width = cw + 'px';
@@ -200,10 +209,12 @@ window.Engine = (function () {
       document.body.classList.toggle('touch-device', isTouch);
       document.body.classList.toggle('portrait', h > w);
     }
+    resizeRef = resize;
     window.addEventListener('resize', resize);
     window.addEventListener('orientationchange', function () { setTimeout(resize, 120); });
     resize();
   }
+  function refit() { if (resizeRef) resizeRef(); }
 
   var uidCounter = 1;
 
@@ -213,7 +224,7 @@ window.Engine = (function () {
     initInput: initInput, readInput: readInput, keys: function () { return keys; },
     lastDir: lastDir, touchState: touch,
     gridClear: gridClear, gridInsert: gridInsert, gridQuery: gridQuery, gridNearest: gridNearest,
-    cam: cam, start: start, fitCanvas: fitCanvas,
+    cam: cam, start: start, fitCanvas: fitCanvas, refit: refit,
     isTouch: function () { return isTouch; },
     viewScale: function () { return viewScale; },
     setTimeScale: function (s) { timeScale = s; },

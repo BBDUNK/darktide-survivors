@@ -15,7 +15,9 @@ window.CFG = {
     MAP_R: 2400,             // 地图半边长(方形边界 ±MAP_R,约 5×5 屏)
     MAX_WEAPONS: 6,
     MAX_PASSIVES: 6,
-    SAVE_KEY: 'darktide_save_v1'
+    SAVE_KEY: 'darktide_save_v1',
+    // 画布适配:contain=等比适配永不裁切(默认) / fill=拉伸铺满可裁边 / native=原尺寸不缩放
+    UI_SCALE: 'contain'
   },
 
   // 玩家基础属性(角色/被动/商店在此之上修正)
