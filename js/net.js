@@ -17,7 +17,11 @@
 window.Net = (function () {
   'use strict';
 
-  var PEERJS_CDN = 'https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js';
+  var PEERJS_CDN = [
+    'https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js',
+    'https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',   // 国内可访问的镜像
+    'https://cdn.bootcdn.net/ajax/libs/peerjs/1.5.4/peerjs.min.js'   // 备选镜像
+  ];
   var ROOM_PREFIX = 'darktide-';
   var SNAP_HZ = 15;          // 快照频率:够用且省带宽,客户端做插值
   var MAX_PLAYERS = 4;
@@ -126,11 +130,25 @@ window.Net = (function () {
     if (loaded) return Promise.resolve();
     if (window.Peer) { loaded = true; return Promise.resolve(); }
     return new Promise(function (resolve, reject) {
-      var s = document.createElement('script');
-      s.src = PEERJS_CDN;
-      s.onload = function () { loaded = true; resolve(); };
-      s.onerror = function () { reject(new Error('PeerJS 加载失败(需要联网)')); };
-      document.head.appendChild(s);
+      var idx = 0;
+      function tryNext() {
+        if (idx >= PEERJS_CDN.length) { reject(new Error('PeerJS 加载失败(请检查网络)')); return; }
+        var s = document.createElement('script');
+        var url = PEERJS_CDN[idx++];
+        s.src = url;
+        var done = false;
+        s.onload = function () {
+          if (done) return; done = true;
+          if (window.Peer) { loaded = true; resolve(); }
+          else tryNext();
+        };
+        s.onerror = function () {
+          if (done) return; done = true;
+          tryNext();   // 该 CDN 失败,试下一个镜像
+        };
+        document.head.appendChild(s);
+      }
+      tryNext();
     });
   }
 
