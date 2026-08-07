@@ -75,32 +75,37 @@ window.UI = (function () {
   // ---------- 主菜单 ----------
   var menuStats, menuBoard, menuAltar;
   function buildMenu() {
-    var s = h('div', 'screen');
-    // 大标题:居中偏上,足够醒目
+    var s = h('div', 'screen menu-screen');
+    // 大标题:居中偏上
     var logo = h('div', 'logo menu-logo');
     logo.appendChild(h('div', 'logo-main menu-big', '暗潮幸存者'));
     s.appendChild(logo);
-    // 按钮列:主列(开始/联机/设置),小按钮行(成就/百科)
+    // 三列主体:左右侧栏对称,中间按钮列
+    var body = h('div', 'menu-body');
+    // 左侧:强化圣坛入口
+    menuAltar = h('div', 'menu-altar');
+    menuAltar.appendChild(h('div', 'menu-altar-title', '🏛 强化圣坛'));
+    s.appendChild(menuAltar);
+    // 中间:主按钮列 + 小按钮行
+    var mid = h('div', 'menu-mid');
     var col = h('div', 'menu-col');
     col.appendChild(btn(L.t('menu_start'), 'primary', function () { coopMode = false; refreshChars(); show('chars'); }));
     col.appendChild(btn(L.t('menu_coop'), '', function () { refreshLobbyEntry(); show('coop'); }));
     col.appendChild(btn(L.t('menu_settings'), '', function () { refreshSettings(); show('settings'); }));
-    s.appendChild(col);
-    // 小按钮行:成就 + 百科全书(半尺寸,与主列错开)
+    mid.appendChild(col);
     var subRow = h('div', 'menu-subrow');
     subRow.appendChild(btn(L.t('menu_achv'), 'sub', function () { refreshAchv(); show('achv'); }));
     subRow.appendChild(btn(L.t('menu_codex'), 'sub', function () { codexFrom = 'menu'; refreshCodex(); show('codex'); }));
-    s.appendChild(subRow);
-    // 左侧强化圣坛(替代原金币框):跳转圣坛的快捷入口,显示金币数
-    menuAltar = h('div', 'menu-altar');
-    menuAltar.appendChild(h('div', 'menu-altar-title', '🏛 强化圣坛'));
-    s.appendChild(menuAltar);
-    // 右侧公告栏:纸质底,红字
+    mid.appendChild(subRow);
+    body.appendChild(menuAltar);
+    body.appendChild(mid);
+    // 右侧:公告栏
     menuBoard = h('div', 'menu-board');
     menuBoard.appendChild(h('div', 'menu-board-title', '📜 战报'));
     menuStats = h('div', 'menu-board-body');
     menuBoard.appendChild(menuStats);
-    s.appendChild(menuBoard);
+    body.appendChild(menuBoard);
+    s.appendChild(body);
     screens.menu = s; root.appendChild(s);
   }
   function refreshMenu() {
