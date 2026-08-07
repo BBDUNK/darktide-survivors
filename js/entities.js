@@ -1020,7 +1020,21 @@ window.Entities = (function () {
 
   function addXp(run, v) {
     // 联机时经验按人数稀释,保证升级节奏不因多人分摊而失控
-    run.xp += v * run.player.stats.growth * (run.coopXpMul || 1);
+    var gain = v * run.player.stats.growth * (run.coopXpMul || 1);
+    // 联机共享经验池:加给所有人,升级节奏一致
+    if (run.coopXp) {
+      run.coopXp += gain;
+      while (run.coopXp >= run.xpNeed) {
+        run.coopXp -= run.xpNeed;
+        run.level++;
+        run.xpNeed = CFG.XP_NEED(run.level);
+        run.pendingLevels++;
+        Meta.trackBest('level', run.level);
+        if (run.onCoopLevel) run.onCoopLevel(run.level);
+      }
+      return;
+    }
+    run.xp += gain;
     while (run.xp >= run.xpNeed) {
       run.xp -= run.xpNeed;
       run.level++;

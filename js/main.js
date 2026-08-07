@@ -241,6 +241,7 @@
       map: mapDef,
       weapons: [], passives: {},
       xp: 0, xpNeed: CFG.XP_NEED(1), level: 1, pendingLevels: 0,
+      coopXp: coop.on ? 0 : null,   // 联机共享经验池;单机为 null 走旧路径
       kills: 0, gold: 0, bossesKilled: 0, dmgTotal: 0, maxDps: 0,
       spawnAcc: 0, eventIdx: 0, nextElite: CFG.ELITE.firstT,
       freezeT: 0, boss: null, over: false, victory: false,
@@ -252,6 +253,20 @@
       coopHpMul: coopMul(CFG.COOP.hpMulByPlayers),
       coopRateMul: coopMul(CFG.COOP.rateMulByPlayers),
       coopXpMul: coopMul(CFG.COOP.xpMulByPlayers),
+      onCoopLevel: coop.on ? function (lv) {
+        // 联机非阻塞升级:弹出悬浮卡片,游戏不暂停,选完继续
+        UI.coopLevelUp(run, lv);
+        // 房主把同样的升级选项推给客户端,让大家同步选
+        if (Net.isHost()) {
+          var opts = Weapons.getLevelUpChoices(run);
+          Net.broadcast({ t: 'levelup', choices: opts });
+        }
+      } : null,
+      onCoopPick: coop.on ? function (opt) {
+        // 房主:把自己的选择应用到自己的 run(已应用),无需额外处理;
+        // 但要把"当前共享升级已解决"广播,客户端隐藏悬浮卡。
+        if (Net.isHost()) Net.broadcast({ t: 'pickdone' });
+      } : null,
       cb: {
         onBoss: function (bd) { UI.bossBanner(bd); },
         onWarn: function (msg) { UI.warn(msg); },
@@ -421,6 +436,8 @@
     UI.updateHUD(run);
 
     if (run.over) { finalizeRun(); return; }
+    // 联机:升级用非阻塞悬浮卡,不暂停;pendingLevels 由悬浮卡结算
+    if (coop.on) { if (run.pendingLevels > 0) run.pendingLevels = 0; return; }
     if (run.pendingChest) { enterChest(); return; }
     if (run.pendingLevels > 0) { enterLevelUp(); return; }
   }
@@ -766,7 +783,7 @@
         var roster = Net.getRoster();
         var ok = roster.length >= 2 && roster.every(function (r) { return r.ready && r.charId; });
         if (!ok) { UI.warn('等待全员准备…'); return; }
-        var mapId = CFG.MAPS[0].id;
+        var mapId = Net.getMap() || CFG.MAPS[0].id;   // 房主选定,不再固定第一张
         setupCoopHost(roster, mapId);
         Net.broadcast({ t: 'start', mapId: mapId, roster: roster });
         newRun(roster[0].charId, mapId);
@@ -775,7 +792,10 @@
 
     // 联机回调:大厅名单更新 / 客户端被拉入战斗 / 房主掉线
     Net.init({
-      onRoster: function (roster) { UI.renderRoster(roster); },
+      onRoster: function (roster, mapId) {
+        UI.renderRoster(roster);
+        if (mapId) UI.applyCoopMap(mapId);   // 房主选图后同步给客户端显示
+      },
       onStart: function (m) {
         // 客户端跟随房主开局;自己的角色取自大厅选择
         var mine = UI.myPick() || CFG.CHARS[0].id;
@@ -786,8 +806,7 @@
         newRun(mine, m.mapId);
       },
       // 客户端:收到房主快照,重建世界并解出队友
-      onSnap: function (m) {
-        if (!run || !coop.on) return;
+      onSnap: function (m) {        if (!run || !coop.on) return;
         Entities.applySnapshot(run, { t: m.ti, e: m.e, s: m.s, l: m.l, g: m.g, it: m.it, bh: m.bh });
         run.kills = m.kl || run.kills;
         coop.remote = [];
@@ -819,6 +838,29 @@
       onHostLost: function () {
         UI.warn('⚠ 房主已断开');
         coop.on = false;
+      },
+      // 客户端:收到房主推送的升级选项,弹出非阻塞悬浮卡
+      onRemoteLevelUp: function (m) {
+        UI.remoteLevelUp(m.choices);
+      },
+      // 客户端:房主宣布本档升级已解决,隐藏悬浮卡
+      onPickDone: function () { UI.hideCoopLevelUp(); },
+      // 房主:客户端上报升级选择,代它应用到对应队友
+      onClientPick: function (peerId, optIdx) {
+        for (var i = 0; i < coop.mates.length; i++) {
+          if (coop.mates[i].peerId !== peerId) continue;
+          var mt = coop.mates[i];
+          var opts = Weapons.getLevelUpChoices(run);
+          if (opts[optIdx]) {
+            // 切到该队友的 run 视角应用,再切回
+            var savedP = run.player, savedPs = run.passives;
+            run.player = mt.player; run.passives = mt.passives;
+            Weapons.applyChoice(run, opts[optIdx]);
+            run.player = savedP; run.passives = savedPs;
+          }
+          mt.pendingLevels = 0;
+          return;
+        }
       },
       onError: function (e) {
         UI.warn('联机异常: ' + (e && e.type ? e.type : '未知'));

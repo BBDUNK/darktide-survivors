@@ -33,6 +33,14 @@ window.Net = (function () {
 
   // 大厅成员: { id, name, charId, ready, isHost }
   var roster = [];
+  var mapId = null;      // 房主选定的地图,随 roster 一起同步
+
+  // 房主选图:广播给所有客户端
+  function setMap(mid) {
+    mapId = mid;
+    if (mode === 'host') broadcast({ t: 'roster', roster: roster, map: mapId });
+  }
+  function getMap() { return mapId; }
 
   function log(msg) { if (window.console) console.log('[Net] ' + msg); }
 
@@ -90,7 +98,7 @@ window.Net = (function () {
     c.on('close', function () {
       conns = conns.filter(function (x) { return x !== c; });
       roster = roster.filter(function (r) { return r.id !== c.peer; });
-      broadcast({ t: 'roster', roster: roster });
+      broadcast({ t: 'roster', roster: roster, map: mapId });
       if (cb.onRoster) cb.onRoster(roster);
       log('客户端断开: ' + c.peer);
     });
@@ -102,12 +110,12 @@ window.Net = (function () {
       if (!roster.some(function (r) { return r.id === c.peer; })) {
         roster.push({ id: c.peer, name: (m.name || '玩家').slice(0, 10), charId: null, ready: false, isHost: false });
       }
-      broadcast({ t: 'roster', roster: roster });
+      broadcast({ t: 'roster', roster: roster, map: mapId });
       if (cb.onRoster) cb.onRoster(roster);
     } else if (m.t === 'pick') {
       var r = roster.filter(function (x) { return x.id === c.peer; })[0];
       if (r) { r.charId = m.charId; r.ready = !!m.ready; }
-      broadcast({ t: 'roster', roster: roster });
+      broadcast({ t: 'roster', roster: roster, map: mapId });
       if (cb.onRoster) cb.onRoster(roster);
     } else if (m.t === 'input') {
       if (cb.onClientInput) cb.onClientInput(c.peer, m);
@@ -151,10 +159,11 @@ window.Net = (function () {
 
   function onClientData(m) {
     if (!m || !m.t) return;
-    if (m.t === 'roster') { roster = m.roster; if (cb.onRoster) cb.onRoster(roster); }
+    if (m.t === 'roster') { roster = m.roster; mapId = m.map || mapId; if (cb.onRoster) cb.onRoster(roster, mapId); }
     else if (m.t === 'start' && cb.onStart) cb.onStart(m);
     else if (m.t === 'snap' && cb.onSnap) cb.onSnap(m);
     else if (m.t === 'levelup' && cb.onRemoteLevelUp) cb.onRemoteLevelUp(m);
+    else if (m.t === 'pickdone' && cb.onPickDone) cb.onPickDone(m);
     else if (m.t === 'over' && cb.onOver) cb.onOver(m);
   }
 
@@ -176,7 +185,7 @@ window.Net = (function () {
   function setMyPick(charId, ready) {
     if (mode === 'host') {
       roster[0].charId = charId; roster[0].ready = !!ready;
-      broadcast({ t: 'roster', roster: roster });
+      broadcast({ t: 'roster', roster: roster, map: mapId });
       if (cb.onRoster) cb.onRoster(roster);
     } else if (mode === 'client') {
       toHost({ t: 'pick', charId: charId, ready: !!ready });
@@ -194,7 +203,7 @@ window.Net = (function () {
     init: function (callbacks) { cb = callbacks || {}; },
     host: host, join: join, close: close,
     broadcast: broadcast, sendTo: sendTo, toHost: toHost,
-    setMyPick: setMyPick,
+    setMyPick: setMyPick, setMap: setMap, getMap: getMap,
     mode: function () { return mode; },
     selfId: function () { return peer && peer.id ? peer.id : ''; },
     isHost: function () { return mode === 'host'; },

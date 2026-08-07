@@ -47,7 +47,7 @@ window.UI = (function () {
     cb = callbacks;
     root = document.getElementById('ui');
     buildTitle(); buildMenu(); buildChars(); buildMaps();
-    buildShop(); buildAchv(); buildCodex(); buildSettings(); buildCoop();
+    buildShop(); buildAchv(); buildCodex(); buildSettings(); buildCoop(); buildCoopLevelUp();
     buildHUD(); buildLevelUp(); buildChest(); buildPause(); buildResult();
     screens.toasts = h('div', 'toasts');
     root.appendChild(screens.toasts);
@@ -273,8 +273,9 @@ window.UI = (function () {
 
   // ---------- 联机:入口 + 大厅 ----------
   var coopMode = false;          // 当前是否处于联机流程
-  var coopEntry, coopLobby, coopRosterBox, coopCodeLine, coopHint, coopStartBtn, coopCharBox;
+  var coopEntry, coopLobby, coopRosterBox, coopCodeLine, coopHint, coopStartBtn, coopCharBox, coopMapBox;
   var myCharId = null, myReady = false;
+  var coopMapId = null;   // 当前选定地图;房主选择后广播,客户端只读显示
 
   function buildCoop() {
     var s = h('div', 'screen panel-col');
@@ -329,6 +330,12 @@ window.UI = (function () {
     coopCodeLine = h('div', 'coop-code-line', '');
     coopLobby.appendChild(coopCodeLine);
     coopLobby.appendChild(h('div', 'coop-sub', '选择角色,全员准备后由房主开始'));
+    // 地图选择(仅房主可改;选择广播给全员同步显示)
+    var mapRow = h('div', 'coop-row');
+    mapRow.appendChild(h('span', 'coop-label', '地图'));
+    coopMapBox = h('div', 'coop-maps');
+    mapRow.appendChild(coopMapBox);
+    coopLobby.appendChild(mapRow);
     coopCharBox = h('div', 'coop-chars');
     coopLobby.appendChild(coopCharBox);
     coopRosterBox = h('div', 'coop-roster');
@@ -362,8 +369,36 @@ window.UI = (function () {
     coopCodeLine.appendChild(h('span', 'coop-code', code));
     coopStartBtn.classList.toggle('hidden', !isHost);
     myCharId = null; myReady = false;
+    if (!coopMapId) coopMapId = CFG.MAPS[0].id;   // 默认第一张
+    renderCoopMaps();
     renderCoopChars();
     renderRoster(Net.getRoster());
+  }
+
+  // 客户端收到房主的选图:更新高亮显示
+  function applyCoopMap(mid) {
+    if (!mid) return;
+    coopMapId = mid;
+    if (coopMapBox) renderCoopMaps();
+  }
+
+  // 地图选择:房主可点选,客户端只读显示
+  function renderCoopMaps() {
+    coopMapBox.innerHTML = '';
+    CFG.MAPS.forEach(function (m) {
+      var isHost = Net.isHost();
+      var card = h('div', 'coop-map' + (coopMapId === m.id ? ' sel' : ''));
+      card.appendChild(h('div', 'coop-map-name', m.name));
+      card.appendChild(h('div', 'coop-map-desc', m.desc));
+      if (isHost) {
+        card.addEventListener('click', function () {
+          coopMapId = m.id;
+          Net.setMap(m.id);          // 广播给客户端
+          renderCoopMaps();
+        });
+      }
+      coopMapBox.appendChild(card);
+    });
   }
 
   function renderCoopChars() {
@@ -738,6 +773,75 @@ window.UI = (function () {
 
   // ---------- 升级选择 ----------
   var luBody, luBtns, luChoices = [], luCb = null;
+  // 联机非阻塞升级悬浮卡:游戏不暂停,右下角弹出,选完即消
+  var coopLu = null, coopLuBody = null, coopLuChoices = [], coopLuCb = null, coopLuTimer = 0;
+  function buildCoopLevelUp() {
+    var s = h('div', 'coop-lu hidden');
+    var box = h('div', 'coop-lu-box');
+    var head = h('div', 'coop-lu-title', '⬆ 升级!');
+    box.appendChild(head);
+    coopLuBody = h('div', 'coop-lu-body');
+    box.appendChild(coopLuBody);
+    var note = h('div', 'coop-lu-note', '游戏不暂停,随时选择');
+    box.appendChild(note);
+    s.appendChild(box);
+    screens.cooplu = s; root.appendChild(s);
+    coopLu = s;
+  }
+  // 联机模式下弹出升级选择;选择后立即结算并隐藏,不影响主循环
+  function coopLevelUp(run, level) {
+    if (!coopLu) return;
+    coopLuChoices = Weapons.getLevelUpChoices(run);
+    coopLuBody.innerHTML = '';
+    coopLuChoices.forEach(function (opt, idx) {
+      var card = h('div', 'coop-lu-card');
+      card.appendChild(iconCanvas(opt.icon, 30));
+      var mid = h('div', '');
+      mid.appendChild(h('div', 'coop-lu-name', opt.name));
+      mid.appendChild(h('div', 'coop-lu-desc', opt.desc));
+      card.appendChild(mid);
+      card.addEventListener('click', function () {
+        // 本地立即应用,保证手感;房主再代跑结算
+        Weapons.applyChoice(run, opt);
+        if (run.onCoopPick) run.onCoopPick(opt);
+        overlay('cooplu', false);
+      });
+      coopLuBody.appendChild(card);
+    });
+    overlay('cooplu', true);
+  }
+  // 客户端收到房主推送的升级选项,弹出同样的非阻塞卡
+  function remoteLevelUp(choices) {
+    if (!coopLu) return;
+    coopLuBody.innerHTML = '';
+    choices.forEach(function (opt, idx) {
+      var card = h('div', 'coop-lu-card');
+      card.appendChild(iconCanvas(opt.icon, 30));
+      var mid = h('div', '');
+      mid.appendChild(h('div', 'coop-lu-name', opt.name));
+      mid.appendChild(h('div', 'coop-lu-desc', opt.desc));
+      card.appendChild(mid);
+      card.addEventListener('click', function () {
+        overlay('cooplu', false);
+        Net.toHost({ t: 'pickup', optIdx: idx });
+      });
+      coopLuBody.appendChild(card);
+    });
+    overlay('cooplu', true);
+  }
+  // 客户端收到房主代选结果:本地应用到自己的快照世界
+  function remoteAppliedChoice(opt) {
+    if (!window.Debug || !window.Debug.run) return;
+    var r = window.Debug.run();
+    if (r) Weapons.applyChoice(r, opt);
+    overlay('cooplu', false);
+  }
+
+  // 客户端:房主宣布本档升级已解决,隐藏悬浮卡
+  function hideCoopLevelUp() {
+    overlay('cooplu', false);
+  }
+
   function buildLevelUp() {
     var s = h('div', 'modal hidden');
     var box = h('div', 'modal-box');
@@ -965,7 +1069,9 @@ window.UI = (function () {
     showChest: showChest, showPause: showPause, hidePause: hidePause,
     showResult: showResult, toastAchv: toastAchv, toastText: toastText,
     isCodexOpen: isCodexOpen, closeCodexOverlay: closeCodexOverlay,
-    renderRoster: renderRoster, showLobby: showLobby,
+    renderRoster: renderRoster, showLobby: showLobby, applyCoopMap: applyCoopMap,
+    coopMap: function () { return coopMapId; },
+    coopLevelUp: coopLevelUp, remoteLevelUp: remoteLevelUp, hideCoopLevelUp: hideCoopLevelUp,
     isCoop: function () { return coopMode; },
     myPick: function () { return myCharId; }
   };

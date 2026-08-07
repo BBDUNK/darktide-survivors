@@ -349,6 +349,41 @@ input[type=range] { flex: 1; accent-color: var(--gold); height: 22px; cursor: po
 .coop-mready { font-size: 11px; color: var(--text-dim); border: 1px solid #4a3f5a; border-radius: 3px; padding: 1px 6px; }
 .coop-mready.on { color: var(--green); border-color: #3e7a3e; background: rgba(110, 232, 110, 0.14); }
 
+/* 联机非阻塞升级悬浮卡:右下角,不挡视野,游戏不暂停 */
+.coop-lu {
+  position: absolute; right: 14px; bottom: 14px; z-index: 15;
+  display: flex; flex-direction: column; align-items: flex-end;
+  pointer-events: none;
+}
+.coop-lu-box {
+  pointer-events: auto;
+  background: var(--panel); border: 2px solid var(--gold-dim); border-radius: 10px;
+  padding: 12px 14px; width: 300px; box-shadow: 0 0 30px rgba(255, 215, 107, 0.15);
+}
+.coop-lu-title { font-size: 14px; font-weight: 800; color: var(--gold); margin-bottom: 8px; }
+.coop-lu-body { display: flex; flex-direction: column; gap: 6px; }
+.coop-lu-card {
+  display: flex; align-items: center; gap: 8px; padding: 7px 9px;
+  border-radius: 6px; cursor: pointer; background: rgba(30, 22, 50, 0.9);
+  border: 1px solid var(--panel-line); transition: all 0.15s;
+}
+.coop-lu-card:hover { border-color: var(--gold-dim); background: rgba(40, 30, 64, 0.95); }
+.coop-lu-name { font-size: 13px; font-weight: 700; color: var(--text); }
+.coop-lu-desc { font-size: 11px; color: var(--text-dim); }
+.coop-lu-note { font-size: 10px; color: var(--text-dim); text-align: right; margin-top: 6px; }
+
+/* 联机大厅地图选择 */
+.coop-maps { display: flex; gap: 8px; flex: 1; }
+.coop-map {
+  flex: 1; padding: 8px 10px; border-radius: 6px; cursor: pointer;
+  background: rgba(20, 15, 34, 0.85); border: 2px solid var(--panel-line);
+  transition: all 0.15s;
+}
+.coop-map:hover { border-color: #6a5a85; }
+.coop-map.sel { border-color: var(--gold); background: rgba(255, 215, 107, 0.12); }
+.coop-map-name { font-size: 12px; font-weight: 700; color: var(--text); }
+.coop-map-desc { font-size: 9px; color: var(--text-dim); line-height: 1.4; }
+
 /* 升级卡上的进化提示:进化形态 + 所需材料 + 满级指示 */
 .evo-hint {
   display: flex; align-items: center; gap: 4px; margin-top: 5px;
