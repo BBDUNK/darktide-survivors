@@ -115,6 +115,9 @@
       state = 'pause';
       UI.showPause(run);
     } else if (state === 'pause') {
+      // 局内百科是盖在暂停之上的覆盖层。此时按 ESC 应该只退回暂停菜单,
+      // 否则会关掉暂停层却留下百科层,表现为卡在百科界面出不来。
+      if (UI.isCodexOpen()) { UI.closeCodexOverlay(); return; }
       state = 'run';
       UI.hidePause();
     }

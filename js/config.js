@@ -7,6 +7,7 @@ window.CFG = {
     ENEMY_CAP: 400,
     GEM_CAP: 260,
     SPAWN_R: 620,            // 出生环半径
+    SAFE_R: 460,             // 安全区:此半径内严禁刷怪(略大于半屏对角,保证不在视野内冒出)
     DESPAWN_R: 900,          // 超出则搬回出生环
     MAP_R: 2400,             // 地图半边长(方形边界 ±MAP_R,约 5×5 屏)
     MAX_WEAPONS: 6,
@@ -158,7 +159,8 @@ window.CFG = {
     slime:          { name: '腐液史莱姆', hp: 13, dmg: 8, spd: 40, r: 11, xp: 1, ai: 'chase' },
     slime_big:      { name: '巨腐史莱姆', hp: 60, dmg: 12, spd: 34, r: 15, xp: 4, ai: 'chase', split: 'slime' },
     zombie:         { name: '烂泥行者', hp: 26, dmg: 10, spd: 44, r: 11, xp: 2, ai: 'chase' },
-    skeleton:       { name: '白骨兵', hp: 36, dmg: 12, spd: 58, r: 11, xp: 2, ai: 'chase' },
+    // burrow: 从地里钻出(生成时播出土动画,期间不动作),可在安全区内破土
+    skeleton:       { name: '白骨兵', hp: 36, dmg: 12, spd: 58, r: 11, xp: 2, ai: 'chase', burrow: 1.0 },
     ghost:          { name: '缚地怨灵', hp: 30, dmg: 12, spd: 55, r: 11, xp: 3, ai: 'phase' },
     // 蛛类:吐减速网,限制走位
     spider:         { name: '暗纹蛛', hp: 22, dmg: 10, spd: 96, r: 10, xp: 2, ai: 'spitter',
@@ -334,7 +336,7 @@ window.CFG = {
     { id: 'm_greed',  name: '贪婪王冠', icon: 'icon_gold',   maxLv: 3, desc: '金币获取 +8%/级',    cost: [200, 500, 1200],          apply: function (s, lv) { s.greed += 0.08 * lv; } },
     { id: 'm_revive', name: '不灭凤羽', icon: 'icon_revive', maxLv: 1, desc: '复活次数 +1',        cost: [2000],                    apply: function (s, lv) { s.revive += 1; } },
     { id: 'm_reroll', name: '命运骰子', icon: 'icon_reroll', maxLv: 3, desc: '每局刷新次数 +1/级', cost: [300, 700, 1500],          apply: function (s, lv) { s.reroll = (s.reroll || 0) + lv; } },
-    { id: 'm_banish', name: '放逐之印', icon: 'icon_banish', maxLv: 3, desc: '每局放逐次数 +1/级', cost: [300, 700, 1500],          apply: function (s, lv) { s.banish = (s.banish || 0) + lv; } }
+    { id: 'm_banish', name: '丢弃之印', icon: 'icon_banish', maxLv: 3, desc: '每局丢弃次数 +1/级', cost: [300, 700, 1500],          apply: function (s, lv) { s.banish = (s.banish || 0) + lv; } }
   ],
 
   // ---------------- 成就 ----------------

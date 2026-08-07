@@ -693,6 +693,36 @@ window.Weapons = (function () {
     return parts.join(',') || '威力提升';
   }
 
+  // 武器的进化提示:告诉玩家还缺什么。用于升级卡片上的小图标。
+  function evoHint(run, wid) {
+    var def = CFG.WEAPONS[wid];
+    if (!def) return null;
+    var w = findWeapon(run, wid);
+    var need = CFG.PASSIVES[def.evoNeed];
+    var evo = CFG.EVOS[def.evo];
+    if (!need || !evo) return null;
+    var maxLv = def.lv.length + 1;
+    return {
+      evoName: evo.name, evoIcon: evo.icon,
+      needId: def.evoNeed, needName: need.name, needIcon: need.icon,
+      hasNeed: (run.passives[def.evoNeed] || 0) > 0,
+      atMax: !!w && w.lv >= maxLv,
+      evolved: !!w && w.evolved
+    };
+  }
+
+  // 某个被动能触发哪些武器的进化(只列玩家已持有的武器)
+  function passiveEvoHint(run, pid) {
+    var out = [];
+    for (var wid in CFG.WEAPONS) {
+      var def = CFG.WEAPONS[wid];
+      if (def.evoNeed !== pid) continue;
+      if (!findWeapon(run, wid)) continue;      // 没这把武器就没意义
+      out.push({ evoName: CFG.EVOS[def.evo].name, evoIcon: CFG.EVOS[def.evo].icon, wIcon: def.icon });
+    }
+    return out.length ? out : null;
+  }
+
   function getLevelUpChoices(run) {
     var pool = [];
     var i, w, def;
@@ -704,7 +734,8 @@ window.Weapons = (function () {
       if (run.banished.has(w.id)) continue;
       pool.push({ type: 'weapon', id: w.id, isNew: false, weight: 10,
         name: def.name + ' Lv.' + (w.lv + 1), icon: def.icon,
-        desc: deltaDesc(def.lv[w.lv - 1]), curLv: w.lv, maxLv: def.lv.length + 1 });
+        desc: deltaDesc(def.lv[w.lv - 1]), curLv: w.lv, maxLv: def.lv.length + 1,
+        evo: evoHint(run, w.id) });
     }
     // 已有被动升级
     for (var pid in run.passives) {
@@ -713,7 +744,8 @@ window.Weapons = (function () {
       if (plv >= pdef.maxLv || run.banished.has(pid)) continue;
       pool.push({ type: 'passive', id: pid, isNew: false, weight: 8,
         name: pdef.name + ' Lv.' + (plv + 1), icon: pdef.icon,
-        desc: pdef.desc, curLv: plv, maxLv: pdef.maxLv });
+        desc: pdef.desc, curLv: plv, maxLv: pdef.maxLv,
+        pEvo: passiveEvoHint(run, pid) });
     }
     // 新武器
     if (run.weapons.length < CFG.GAME.MAX_WEAPONS) {
@@ -721,7 +753,8 @@ window.Weapons = (function () {
         if (findWeapon(run, wid) || run.banished.has(wid)) continue;
         def = CFG.WEAPONS[wid];
         pool.push({ type: 'weapon', id: wid, isNew: true, weight: 6,
-          name: def.name, icon: def.icon, desc: def.desc, curLv: 0, maxLv: def.lv.length + 1 });
+          name: def.name, icon: def.icon, desc: def.desc, curLv: 0, maxLv: def.lv.length + 1,
+          evo: evoHint(run, wid) });
       }
     }
     // 新被动
@@ -732,7 +765,8 @@ window.Weapons = (function () {
         if (run.passives[pid2] !== undefined || run.banished.has(pid2)) continue;
         pool.push({ type: 'passive', id: pid2, isNew: true, weight: 5,
           name: CFG.PASSIVES[pid2].name, icon: CFG.PASSIVES[pid2].icon,
-          desc: CFG.PASSIVES[pid2].desc, curLv: 0, maxLv: CFG.PASSIVES[pid2].maxLv });
+          desc: CFG.PASSIVES[pid2].desc, curLv: 0, maxLv: CFG.PASSIVES[pid2].maxLv,
+          pEvo: passiveEvoHint(run, pid2) });
       }
     }
     // 全满:保底选项
@@ -797,12 +831,15 @@ window.Weapons = (function () {
     var count = roll < 0.04 * luck ? 5 : (roll < 0.18 * luck ? 3 : 1);
     for (var j = 0; j < count; j++) {
       // 随机升一件未满的武器/被动
+      // 宝箱同样要尊重「丢弃」名单,否则丢掉的东西还会从宝箱刷回来
       var ups = [];
       for (i = 0; i < run.weapons.length; i++) {
         var w2 = run.weapons[i];
+        if (run.banished.has(w2.id)) continue;
         if (!w2.evolved && w2.lv < CFG.WEAPONS[w2.id].lv.length + 1) ups.push({ t: 'w', o: w2 });
       }
       for (var pid in run.passives) {
+        if (run.banished.has(pid)) continue;
         if (run.passives[pid] < CFG.PASSIVES[pid].maxLv) ups.push({ t: 'p', o: pid });
       }
       if (ups.length) {

@@ -144,7 +144,8 @@ window.Entities = (function () {
         ai: 'chase', aiT: 0, aiPhase: 0, tgtX: 0, tgtY: 0,
         burn: 0, burnT: 0, guard: 0,
         buffSpd: 1, buffDmg: 1, buffed: false,
-        chargeSeq: 0, chargePhase: 0, blinkT: 0, stiffT: 0, atkCount: 0, skT: 0
+        chargeSeq: 0, chargePhase: 0, blinkT: 0, stiffT: 0, atkCount: 0, skT: 0,
+        burrowT: 0, burrowMax: 0
       });
       freeIdx.push(POOL - 1 - i);
     }
@@ -164,6 +165,13 @@ window.Entities = (function () {
     if (!freeIdx.length) return null;
     var def = CFG.ENEMIES[id] || CFG.BOSSES[id];
     if (!def) return null;
+    // 统一闸门:不许生在安全区内。豁免两种情况——
+    //   allowNear: 分裂子体紧贴母体
+    //   def.burrow: 破土怪允许近身冒出(有出土前摇作为反应窗口)
+    if (!(opts && opts.allowNear) && !def.burrow) {
+      var sp = pushOutOfSafeZone(run, x, y);
+      x = sp.x; y = sp.y;
+    }
     var e = enemies[freeIdx.pop()];
     var isBoss = !!CFG.BOSSES[id];
     var mul = run.map.hpMul * (1 + run.t / 60 * CFG.HP_GROWTH);
@@ -183,6 +191,9 @@ window.Entities = (function () {
     e.buffSpd = 1; e.buffDmg = 1; e.buffed = false;
     e.chargeSeq = 0; e.chargePhase = 0; e.stiffT = 0; e.atkCount = 0; e.skT = 0;
     e.blinkT = 5 + Math.random() * 3;   // 首次瞬移不要一出场就触发
+    // 破土出场:期间静止且免伤,给玩家反应时间
+    e.burrowMax = def.burrow || 0;
+    e.burrowT = e.burrowMax;
     if (opts && opts.elite) {
       e.elite = true;
       e.maxHp *= CFG.ELITE.hpMul; e.hp = e.maxHp;
@@ -199,18 +210,52 @@ window.Entities = (function () {
     return e;
   }
 
-  // 在玩家周围环上取一个位于地图边界内的点
+  // 在玩家周围环上取点。硬约束:结果必须在地图内,且离玩家不近于 SAFE_R。
+  // 靠墙时沿环遍历角度找可行位置;真的无解就把点推到安全半径之外(绝不落在玩家身上)。
   function ringPoint(run, radius) {
     var R = CFG.GAME.MAP_R, p = run.player;
-    for (var tries = 0; tries < 8; tries++) {
-      var a = Math.random() * Math.PI * 2;
-      var x = p.x + Math.cos(a) * radius, y = p.y + Math.sin(a) * radius;
+    var safe = CFG.GAME.SAFE_R;
+    var rad = Math.max(radius, safe + 40);
+    var a0 = Math.random() * Math.PI * 2;
+    // 沿环等分扫 16 个角度,优先随机起点,保证靠墙时也能找到界内点
+    for (var k = 0; k < 16; k++) {
+      var a = a0 + (Math.PI * 2 / 16) * k;
+      var x = p.x + Math.cos(a) * rad, y = p.y + Math.sin(a) * rad;
       if (x >= -R && x <= R && y >= -R && y <= R) return { x: x, y: y };
     }
-    return { x: E.clamp(p.x, -R, R), y: E.clamp(p.y, -R, R) };
+    // 退化情形:朝地图中心的反方向推出安全距离,再夹进边界
+    var cx = p.x === 0 && p.y === 0 ? 1 : -p.x, cy = p.x === 0 && p.y === 0 ? 0 : -p.y;
+    var cl = Math.hypot(cx, cy) || 1;
+    return {
+      x: E.clamp(p.x + (cx / cl) * rad, -R, R),
+      y: E.clamp(p.y + (cy / cl) * rad, -R, R)
+    };
+  }
+
+  // 生成前的最后一道闸:任何落在安全区内的坐标都推到安全半径之外
+  function pushOutOfSafeZone(run, x, y) {
+    var p = run.player, safe = CFG.GAME.SAFE_R, R = CFG.GAME.MAP_R;
+    var dx = x - p.x, dy = y - p.y;
+    var d = Math.hypot(dx, dy);
+    if (d >= safe) return { x: x, y: y };
+    var a = d > 0.01 ? Math.atan2(dy, dx) : Math.random() * Math.PI * 2;
+    return {
+      x: E.clamp(p.x + Math.cos(a) * (safe + 30), -R, R),
+      y: E.clamp(p.y + Math.sin(a) * (safe + 30), -R, R)
+    };
   }
 
   function spawnAtRing(run, id, opts) {
+    var def = CFG.ENEMIES[id] || CFG.BOSSES[id];
+    // 破土怪不走出生环:直接在玩家周围较近处冒出,用出土前摇代替距离作为公平性保证
+    if (def && def.burrow) {
+      var R = CFG.GAME.MAP_R, p = run.player;
+      var ba = Math.random() * Math.PI * 2;
+      var bd = 150 + Math.random() * 190;
+      return spawnEnemy(run, id,
+        E.clamp(p.x + Math.cos(ba) * bd, -R, R),
+        E.clamp(p.y + Math.sin(ba) * bd, -R, R), opts);
+    }
     var r = CFG.GAME.SPAWN_R + Math.random() * 80;
     var pt = ringPoint(run, r);
     return spawnEnemy(run, id, pt.x, pt.y, opts);
@@ -219,6 +264,8 @@ window.Entities = (function () {
   // 中心伤害入口(武器调用)
   function damageEnemy(run, e, dmg, opts) {
     if (!e.alive) return 0;
+    // 破土过程中不可被击中(尚未完全出土)
+    if (e.burrowT > 0) return 0;
     // 举盾期间完全免伤(需要玩家换目标或等待破绽)
     if (e.guard > 0) {
       if ((run.frame & 7) === 0) FX.trail(e.x + (Math.random() * 16 - 8), e.y - 6, '#9cf', 2);
@@ -258,7 +305,8 @@ window.Entities = (function () {
     // 分裂
     if (e.def.split && !(opts && opts.noSplit)) {
       for (var i = 0; i < 2; i++) {
-        var c = spawnEnemy(run, e.def.split, e.x + (Math.random() * 30 - 15), e.y + (Math.random() * 30 - 15));
+        // 分裂子体紧贴母体是预期行为,豁免安全区约束
+        var c = spawnEnemy(run, e.def.split, e.x + (Math.random() * 30 - 15), e.y + (Math.random() * 30 - 15), { allowNear: true });
         if (c) c.hp = c.maxHp *= 0.8;
       }
     }
@@ -342,6 +390,16 @@ window.Entities = (function () {
       e = enemies[i];
       if (!e.alive) continue;
       if (e.flash > 0) e.flash -= dt;
+      // 破土出场:静止且不参与碰撞/受伤,出土完成后才正常行动
+      if (e.burrowT > 0) {
+        e.burrowT -= dt;
+        e.vx = 0; e.vy = 0;
+        if (e.burrowT <= 0) {
+          FX.burst(e.x, e.y, { color: '#6b5a42', n: 10, speed: 70, life: 0.35, size: 2 });
+          AudioSys.play('splat');
+        }
+        continue;
+      }
       // 全局冰冻
       if (run.freezeT > 0 || e.frozen > 0 || e.stun > 0) {
         e.frozen = Math.max(0, e.frozen - dt);
@@ -670,7 +728,8 @@ window.Entities = (function () {
               var sa = (Math.PI * 2 / 8) * sj + run.t * 0.5;
               fireShot(e.x, e.y, Math.cos(sa), Math.sin(sa), 120, e.dmg * 0.35 * dMul, 0.25, 1.2, false, bdef.shotCol);
             }
-            for (var i = 0; i < 2; i++) spawnEnemy(run, 'slime', e.x + (Math.random() * 60 - 30), e.y + (Math.random() * 60 - 30));
+            // Boss 落地分裂:紧贴 Boss 生成,同样豁免
+            for (var i = 0; i < 2; i++) spawnEnemy(run, 'slime', e.x + (Math.random() * 60 - 30), e.y + (Math.random() * 60 - 30), { allowNear: true });
           }
         }
         break;
@@ -1204,6 +1263,32 @@ window.Entities = (function () {
       e = enemies[i];
       if (!e.alive) continue;
       var sc = (e.boss ? 2 : 1) * (e.elite ? CFG.ELITE.scale : 1);
+      // 破土动画:翻起的土堆 + 从地下逐渐升起的怪(用裁剪实现"半截在土里")
+      if (e.burrowT > 0) {
+        var prog = 1 - e.burrowT / (e.burrowMax || 1);   // 0→1
+        var moundW = 26 + prog * 10;
+        ctx.globalAlpha = 0.85;
+        ctx.fillStyle = '#4a3a28';
+        ctx.beginPath();
+        ctx.ellipse(e.x, e.y + 4, moundW * 0.5, 6 + prog * 3, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#6b5a42';
+        ctx.beginPath();
+        ctx.ellipse(e.x, e.y + 2, moundW * 0.38, 4 + prog * 2, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        // 只显示地面以上的部分
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(e.x - 24, e.y - 40, 48, 40 + 4);
+        ctx.clip();
+        var rise = (1 - prog) * 26;   // 未出土时整体下沉
+        drawSprite(ctx, e.id, animF + (e.animo | 0), e.x, e.y + rise, sc, e.face < 0, 1, '#8a7a5a');
+        ctx.restore();
+        // 飞溅的土屑
+        if ((run.frame & 7) === 0) FX.trail(e.x + (Math.random() * 20 - 10), e.y, '#6b5a42', 2);
+        continue;
+      }
       ctx.globalAlpha = 0.4;
       ctx.drawImage(shadow, e.x - 12 * sc, e.y + e.r * 0.7, 24 * sc, 8 * sc);
       ctx.globalAlpha = 1;

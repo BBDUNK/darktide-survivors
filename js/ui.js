@@ -272,6 +272,15 @@ window.UI = (function () {
 
   // ---------- 百科全书 ----------
   var codexBody, codexTabs, codexTab = 'w', codexFrom = 'menu';
+
+  // 局内百科是覆盖层:是否打开 / 关闭并退回暂停菜单
+  function isCodexOpen() {
+    return codexFrom === 'pause' && !!screens.codex && !screens.codex.classList.contains('hidden');
+  }
+  function closeCodexOverlay() {
+    overlay('codex', false);
+    overlay('pause', true);
+  }
   function buildCodex() {
     var s = h('div', 'screen panel-col wide enc-layer');
     s.appendChild(h('div', 'page-title', '百科全书'));
@@ -280,7 +289,7 @@ window.UI = (function () {
     codexBody = h('div', 'enc-body');
     s.appendChild(codexBody);
     s.appendChild(btn('← 返回', '', function () {
-      if (codexFrom === 'pause') { overlay('codex', false); overlay('pause', true); }
+      if (codexFrom === 'pause') closeCodexOverlay();
       else show('menu');
     }));
     screens.codex = s; root.appendChild(s);
@@ -616,6 +625,32 @@ window.UI = (function () {
         for (var i = 0; i < opt.maxLv; i++) pips.appendChild(h('span', 'pip' + (i < opt.curLv ? ' on' : (i === opt.curLv ? ' next' : ''))));
         mid.appendChild(pips);
       }
+      // 进化提示:右侧小图标提示升到哪个形态/还缺什么
+      if (opt.evo && !opt.evo.evolved) {
+        var ev = opt.evo;
+        var hint = h('div', 'evo-hint');
+        hint.title = '进化形态: ' + ev.evoName + (ev.evolved ? '' : ' (需要: ' + ev.needName + ' + 满级 + 宝箱)');
+        // 进化武器图标
+        hint.appendChild(iconCanvas(ev.evoIcon, 22));
+        // 进化材料图标(已拥有时高亮,未拥有时半透明)
+        var needIc = iconCanvas(ev.needIcon, 18);
+        needIc.style.opacity = ev.hasNeed ? '1' : '0.35';
+        needIc.title = ev.hasNeed ? '✅ 已持有 ' + ev.needName : '❌ 还缺 ' + ev.needName;
+        hint.appendChild(needIc);
+        // 满级指示
+        var maxDot = h('span', 'evo-dot' + (ev.atMax ? ' ready' : ''), ev.atMax ? '✓' : 'LV');
+        maxDot.title = ev.atMax ? '已满级' : '需满级';
+        hint.appendChild(maxDot);
+        mid.appendChild(hint);
+      }
+      if (opt.pEvo && opt.pEvo.length) {
+        var ph = h('div', 'evo-hint');
+        ph.title = '可解锁进化: ' + opt.pEvo.map(function (x) { return x.evoName; }).join(', ');
+        opt.pEvo.forEach(function (x) {
+          ph.appendChild(iconCanvas(x.evoIcon, 20));
+        });
+        mid.appendChild(ph);
+      }
       top.appendChild(mid);
       card.appendChild(top);
       card.appendChild(h('div', 'lu-desc', opt.desc));
@@ -628,7 +663,7 @@ window.UI = (function () {
     });
     luBtns.innerHTML = '';
     if (counters.rerolls > 0) luBtns.appendChild(btn('🎲 刷新 (' + counters.rerolls + ')', 'small-btn', function () { luCb('reroll'); }));
-    if (counters.banishes > 0) luBtns.appendChild(btn(banishMode ? '取消放逐' : '🚫 放逐 (' + counters.banishes + ')', 'small-btn' + (banishMode ? ' danger' : ''), function () {
+    if (counters.banishes > 0) luBtns.appendChild(btn(banishMode ? '取消丢弃' : '🚫 丢弃 (' + counters.banishes + ')', 'small-btn' + (banishMode ? ' danger' : ''), function () {
       banishMode = !banishMode; renderLU(counters);
     }));
   }
@@ -677,10 +712,11 @@ window.UI = (function () {
     var col = h('div', 'menu-col');
     col.appendChild(btn('▶ 继续', 'big primary', function () { cb.onResume(); }));
     col.appendChild(btn('📖 百科全书', 'big', function () {
+      // 先渲染再切换可见性,避免中途按 ESC 时出现两层都开/都关的中间态
       codexFrom = 'pause';
-      overlay('pause', false);
       refreshCodex();
       overlay('codex', true);
+      overlay('pause', false);
     }));
     col.appendChild(btn('🏳 放弃这局', 'big danger', function () { cb.onGiveUp(); }));
     box.appendChild(col);
@@ -783,6 +819,7 @@ window.UI = (function () {
     updateHUD: updateHUD, warn: warn, bossBanner: bossBanner,
     showLevelUp: showLevelUp, hideLevelUp: hideLevelUp,
     showChest: showChest, showPause: showPause, hidePause: hidePause,
-    showResult: showResult, toastAchv: toastAchv, toastText: toastText
+    showResult: showResult, toastAchv: toastAchv, toastText: toastText,
+    isCodexOpen: isCodexOpen, closeCodexOverlay: closeCodexOverlay
   };
 })();

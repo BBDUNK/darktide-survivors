@@ -307,6 +307,19 @@ input[type=range] { flex: 1; accent-color: var(--gold); height: 22px; cursor: po
   80% { opacity: 1; }
   100% { opacity: 0; }
 }
+/* 升级卡上的进化提示:进化形态 + 所需材料 + 满级指示 */
+.evo-hint {
+  display: flex; align-items: center; gap: 4px; margin-top: 5px;
+  padding: 3px 6px; border-radius: 4px;
+  background: rgba(255, 215, 107, 0.10); border: 1px solid rgba(255, 215, 107, 0.28);
+}
+.evo-dot {
+  font-size: 8px; font-weight: 800; letter-spacing: 0;
+  color: #9a8fb8; border: 1px solid #4a3f5a; border-radius: 3px;
+  padding: 1px 3px; line-height: 1;
+}
+.evo-dot.ready { color: #7ce87c; border-color: #3e7a3e; background: rgba(110, 232, 110, 0.15); }
+
 /* ---------- 百科全书 ---------- */
 #ui > .screen.enc-layer { z-index: 20; background: rgba(6, 4, 14, 0.94); }
 .enc-body {
