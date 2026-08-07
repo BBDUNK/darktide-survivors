@@ -58,7 +58,7 @@ window.UI = (function () {
   function buildTitle() {
     var s = h('div', 'screen center-col');
     var logo = h('div', 'logo');
-    logo.appendChild(h('div', 'logo-main', '破晓镇魂'));
+    logo.appendChild(h('div', 'logo-main', '暗黑逃跑神'));
     logo.appendChild(h('div', 'logo-sub', 'DARKTIDE SURVIVORS'));
     s.appendChild(logo);
     s.appendChild(h('div', 'blink hint', L.t('title_click')));
@@ -78,7 +78,7 @@ window.UI = (function () {
     var s = h('div', 'screen menu-screen');
     // 大标题:居中偏上
     var logo = h('div', 'logo menu-logo');
-    logo.appendChild(h('div', 'logo-main menu-big', '破晓镇魂'));
+    logo.appendChild(h('div', 'logo-main menu-big', '暗黑逃跑神'));
     s.appendChild(logo);
     // 三列主体:左右侧栏对称,中间按钮列
     var body = h('div', 'menu-body');
