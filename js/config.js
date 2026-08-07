@@ -18,7 +18,7 @@ window.CFG = {
     SAVE_KEY: 'darktide_save_v2',
     // 画布适配:contain=等比适配永不裁切(默认) / fill=拉伸铺满可裁边 / native=原尺寸不缩放
     UI_SCALE: 'contain',
-    VERSION: 'v0.13.0'
+    VERSION: 'v0.14.0'
   },
 
   // 玩家基础属性(角色/被动/商店在此之上修正)
@@ -40,8 +40,8 @@ window.CFG = {
     { id: 'knight', name: '骑士·蓝斯洛', sprite: 'char_knight', weapon: 'crossblade',
       desc: '亚瑟王麾下第一骑士,如今只剩他还醒着。武器:誓约圣剑', bonusText: '护甲 +2,生命 +20',
       mods: { armor: 2, hp: 20 }, unlock: null },
-    { id: 'mage', name: '法师·梅琳', sprite: 'char_mage', weapon: 'arcanebolt',
-      desc: '宫廷首席大法师,预言从来没准过。武器:贤者光弹', bonusText: '冷却 -12%',
+    { id: 'mage', name: '法师·丽莎', sprite: 'char_mage', weapon: 'arcanebolt',
+      desc: '西风骑士团图书管理员,雷元素魔导师,总是一副睡不醒的样子。武器:贤者光弹', bonusText: '冷却 -12%',
       mods: { cd: -0.12 }, unlock: null },
     { id: 'ranger', name: '游侠·罗宾', sprite: 'char_ranger', weapon: 'windbow',
       desc: '绿林好汉出身,劫富济贫,如今只劫怪物。武器:侠盗神箭', bonusText: '移速 +12%,暴击率 +5%',
@@ -328,16 +328,17 @@ window.CFG = {
     spacing: 62,             // 摊位间距
     pickR: 26,               // 走到多近算购买
     // 商品池:武器按当前是否已持有决定是新武器还是升级;道具立即生效
+    // 价格:道具统一 10,武器/被动统一 20
     goods: [
-      { kind: 'heal',   name: '烤肉',     icon: 'meat',        cost: 15,  desc: '恢复 60 生命' },
-      { kind: 'shield', name: '护盾符',   icon: 'ps_core',     cost: 25,  desc: '立刻获得 30 护盾' },
-      { kind: 'bomb',   name: '炸弹',     icon: 'bomb',        cost: 20,  desc: '清场一次' },
-      { kind: 'magnet', name: '吸铁石',   icon: 'magnet',      cost: 12,  desc: '吸取全场经验' },
-      { kind: 'clock',  name: '怀表',     icon: 'clock',       cost: 30,  desc: '冻结全场 4 秒' },
-      { kind: 'reroll', name: '命运骰子', icon: 'icon_reroll', cost: 35,  desc: '本局刷新次数 +1' },
-      { kind: 'banish', name: '丢弃之印', icon: 'icon_banish', cost: 35,  desc: '本局丢弃次数 +1' },
-      { kind: 'weapon', name: '',         icon: '',            cost: 50,  desc: '' },  // 运行时抽武器
-      { kind: 'passive', name: '',        icon: '',            cost: 45,  desc: '' }   // 运行时抽被动
+      { kind: 'heal',   name: '烤肉',     icon: 'meat',        cost: 10,  desc: '恢复 60 生命' },
+      { kind: 'shield', name: '护盾符',   icon: 'ps_core',     cost: 10,  desc: '立刻获得 30 护盾' },
+      { kind: 'bomb',   name: '炸弹',     icon: 'bomb',        cost: 10,  desc: '清场一次' },
+      { kind: 'magnet', name: '吸铁石',   icon: 'magnet',      cost: 10,  desc: '吸取全场经验' },
+      { kind: 'clock',  name: '怀表',     icon: 'clock',       cost: 10,  desc: '冻结全场 4 秒' },
+      { kind: 'reroll', name: '命运骰子', icon: 'icon_reroll', cost: 10,  desc: '本局刷新次数 +1' },
+      { kind: 'banish', name: '丢弃之印', icon: 'icon_banish', cost: 10,  desc: '本局丢弃次数 +1' },
+      { kind: 'weapon', name: '',         icon: '',            cost: 20,  desc: '' },  // 运行时抽武器
+      { kind: 'passive', name: '',        icon: '',            cost: 20,  desc: '' }   // 运行时抽被动
     ]
   },
 

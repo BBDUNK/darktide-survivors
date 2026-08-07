@@ -3,6 +3,7 @@ window.Minimap = (function () {
   'use strict';
 
   var SIZE = 116;        // 小地图边长
+  var EDGE = 6;          // 距右边缘留白,避免贴边被裁
   var LOCAL_RANGE = 420; // 局部模式显示半径
   var mode = 'local';    // local | full
 
@@ -30,7 +31,7 @@ window.Minimap = (function () {
 
   function draw(ctx, run) {
     var p = run.player;
-    var x0 = CFG.GAME.W - SIZE;   // 贴右边
+    var x0 = CFG.GAME.W - SIZE - EDGE;   // 贴右边,留少量边距
     var y0 = 16;                  // 贴经验条下沿
     var half = SIZE / 2 - 3;
     var cx = x0 + SIZE / 2;
@@ -127,7 +128,7 @@ window.Minimap = (function () {
 
   // 命中区域(逻辑像素),供点击/触摸判定复用,避免与绘制位置脱节
   function hitBox() {
-    return { x: CFG.GAME.W - SIZE, y: 16, w: SIZE, h: SIZE };
+    return { x: CFG.GAME.W - SIZE - EDGE, y: 16, w: SIZE, h: SIZE };
   }
 
   return { draw: draw, toggle: toggle, getMode: getMode, hitBox: hitBox };

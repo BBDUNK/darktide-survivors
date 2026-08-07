@@ -64,6 +64,8 @@ body.touch-device.portrait .rotate-tip {
   background: linear-gradient(180deg, rgba(8, 5, 16, 0.55), rgba(8, 5, 16, 0.82));
   animation: fadeIn 0.3s ease;
 }
+/* 主菜单背景不要太暗,与游戏内亮度一致 */
+.menu-screen { background: rgba(8, 5, 16, 0.18); }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 .center-col { gap: 18px; }
 .panel-col { gap: 14px; padding: 30px 16px; justify-content: flex-start; overflow-y: auto; }
@@ -351,15 +353,19 @@ input[type=range] { flex: 1; accent-color: var(--gold); height: 22px; cursor: po
   white-space: nowrap;
 }
 .hud-nextev.urgent { color: #fff; background: rgba(180,20,40,0.8); animation: blink 0.5s step-end infinite; }
-/* 触屏索敌切换按钮:半透明,仅 touch-device 显示。
-   定位在小地图正下方,不与小地图重叠(小地图 y16~132,按钮从 152 起)。 */
-.hud-targetbtn {
-  position: absolute; top: 152px; right: 6px;
-  width: 36px; height: 36px; font-size: 16px; padding: 0; min-width: 0;
-  opacity: 0.5;
+/* 触屏暂停/索敌按钮:仅 touch-device 显示。
+   暂停键在小地图左侧贴顶部边缘,索敌键在它下方、底部与小地图底部(y=132)对齐。
+   必须显式 pointer-events:auto,否则被 #ui>.hud 的 pointer-events:none 继承,点不到。 */
+.hud-pausebtn, .hud-targetbtn {
+  position: absolute; right: 128px;
+  width: 44px; height: 44px; font-size: 18px; padding: 0; min-width: 0;
+  opacity: 0.55;
+  pointer-events: auto;
   display: none;
 }
-body.touch-device .hud-targetbtn { display: block; }
+.hud-pausebtn { top: 16px; }
+.hud-targetbtn { top: 88px; }
+body.touch-device .hud-pausebtn, body.touch-device .hud-targetbtn { display: block; }
 /* 金币/击杀:移到左下角贴边,右上角留给小地图 */
 .hud-tr { position: absolute; bottom: 8px; left: 0; padding-left: 6px; display: flex; flex-direction: row; gap: 6px; align-items: flex-start; }
 .hud-stat {

@@ -221,43 +221,58 @@ window.Merchant = (function () {
         ctx.globalAlpha = 1;
       }
       // 名称 + 价格:加大描边文字保证可读,不要黑底
-      ctx.font = 'bold 15px "Microsoft YaHei",sans-serif';
+      ctx.font = 'bold 13px "Microsoft YaHei",sans-serif';
       ctx.textAlign = 'center';
       var costTxt = '◈ ' + s.good.cost;
       ctx.lineWidth = 4;
       ctx.strokeStyle = 'rgba(8,6,18,0.9)';
-      ctx.strokeText(s.good.name.slice(0, 8), sx, M.y + 22);
+      ctx.strokeText(s.good.name.slice(0, 8), sx, M.y + 21);
       ctx.fillStyle = '#e8e2f5';
-      ctx.fillText(s.good.name.slice(0, 8), sx, M.y + 22);
-      ctx.strokeText(costTxt, sx, M.y + 33);
+      ctx.fillText(s.good.name.slice(0, 8), sx, M.y + 21);
+      ctx.strokeText(costTxt, sx, M.y + 37);
       ctx.fillStyle = canAfford ? '#ffd76b' : '#ff8b94';
-      ctx.fillText(costTxt, sx, M.y + 33);
+      ctx.fillText(costTxt, sx, M.y + 37);
     }
     ctx.textAlign = 'left';
   }
 
-  // 补货倒计时小闹钟:商人头顶右侧显示下次刷新剩余时间
+  // 补货倒计时单针钟:一根指针表示剩余比例,转过区域红、未转区域蓝
   function drawClock(ctx, run) {
     var M = CFG.MERCHANT;
     var remain = Math.max(0, nextRefresh - run.t);
-    var mm = Math.floor(remain / 60), ss = Math.floor(remain % 60);
-    var txt = (mm < 10 ? '0' : '') + mm + ':' + (ss < 10 ? '0' : '') + ss;
+    var total = M.refreshInt || 300;
+    var frac = Math.max(0, Math.min(1, remain / total));   // 剩余比例 1→0
     var cx = M.x + 46, cy = M.y - 86;
-    // 钟面
-    ctx.fillStyle = 'rgba(8,6,18,0.8)';
-    ctx.beginPath(); ctx.arc(cx, cy, 13, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = '#ffd76b'; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.arc(cx, cy, 13, 0, Math.PI * 2); ctx.stroke();
-    // 钟摆
-    ctx.strokeStyle = '#ffd76b'; ctx.lineWidth = 1.5;
+    var R = 12;
+    // 蓝:未转过的剩余区域(从指针当前位置顺时针回到 12 点)
+    ctx.fillStyle = 'rgba(80,150,255,0.75)';
     ctx.beginPath();
     ctx.moveTo(cx, cy);
-    ctx.lineTo(cx + Math.sin(run.t * 2) * 6, cy + 10);
+    ctx.arc(cx, cy, R, (1 - frac) * Math.PI * 2, Math.PI * 2);
+    ctx.closePath();
+    ctx.fill();
+    // 红:已转过的区域(从 12 点顺时针到指针当前位置)
+    ctx.fillStyle = 'rgba(230,60,70,0.85)';
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, R, 0, (1 - frac) * Math.PI * 2);
+    ctx.closePath();
+    ctx.fill();
+    // 表盘描边
+    ctx.strokeStyle = 'rgba(255,220,150,0.9)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
+    // 指针:指向剩余区域的边界(已转过的末端)
+    var ang = (1 - frac) * Math.PI * 2 - Math.PI / 2;
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + Math.cos(ang) * (R - 1), cy + Math.sin(ang) * (R - 1));
     ctx.stroke();
-    // 剩余时间
+    // 中心点
     ctx.fillStyle = '#fff';
-    ctx.font = 'bold 12px monospace';
-    ctx.fillText(txt, cx, cy + 4);
+    ctx.beginPath(); ctx.arc(cx, cy, 1.6, 0, Math.PI * 2); ctx.fill();
   }
 
   return { reset: reset, update: update, draw: draw, roll: roll,

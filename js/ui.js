@@ -794,7 +794,12 @@ window.UI = (function () {
     // 下一事件倒计时
     hudRefs.nextEv = h('div', 'hud-nextev hidden', '');
     s.appendChild(hudRefs.nextEv);
-    // 触屏索敌切换按钮(仅移动端显示)
+    // 触屏暂停按钮(仅移动端显示):小地图左侧,贴顶部边缘
+    hudRefs.pauseBtn = btn('⏸', 'hud-pausebtn', function () {
+      cb.onPauseToggle && cb.onPauseToggle();
+    });
+    s.appendChild(hudRefs.pauseBtn);
+    // 触屏索敌切换按钮(仅移动端显示):暂停键下方,底部与小地图对齐
     hudRefs.targetBtn = btn('🎯', 'hud-targetbtn', function () {
       var m = Weapons.cycleTargetMode();
       cb.onTargetChanged && cb.onTargetChanged(m.name);
