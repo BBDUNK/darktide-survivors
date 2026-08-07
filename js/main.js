@@ -541,6 +541,9 @@
           var h2 = E.hash2(cx * 11 + k * 17, cy * 11 + k * 41);
           var wx = cx * cell + h1 * cell;
           var wy = cy * cell + h2 * cell;
+          // 行商浪人摊位清空区:摊位横跨约 ±160,避免装饰物与商人和商品贴图重合
+          var MC = CFG.MERCHANT, clearance = 185;
+          if (Math.abs(wx - MC.x) < clearance && Math.abs(wy - MC.y) < clearance) continue;
           if (pass === 'back' && wy > refY) continue;
           if (pass === 'front' && wy <= refY) continue;
           var name = map.decors[Math.floor(h1 * map.decors.length)];

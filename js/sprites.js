@@ -293,6 +293,30 @@
     });
   });
 
+  // 行商浪人:宽檐帽 + 深褐斗篷 + 拄拐,背着货物包裹
+  def('merchant', function () {
+    return humanoid({
+      skin: '#d8a878', eye: '#2a1e14', torso: '#6b4a2f', torsoHi: '#8a6540', torsoLo: '#46301e',
+      leg: '#3a2a1a', boot: '#241a10', sleeve: '#7a5a38',
+      hair: '#8a8a96',
+      pre: function (p, f, dy) { // 背后货包
+        p.rect(2, 6 + dy, 2, 5, '#5a4026');
+        p.rect(2, 7 + dy, 2, 3, '#6b4a2f');
+        p.px(2, 5 + dy, '#7a5a38'); p.px(1, 7 + dy, '#46301e');
+      },
+      post: function (p, f, dy) { // 宽檐帽 + 拄拐
+        p.hline(3, 12, 0 + dy, '#3a2a1a');           // 帽檐
+        p.rect(5, 1 + dy, 6, 3, '#4a3520');          // 帽身
+        p.px(8, 2 + dy, '#6b4a2f'); p.px(7, 2 + dy, '#5a4026');
+        p.px(8, 0 + dy, '#8a6540');                  // 帽顶亮
+        p.hline(4, 11, 12, GOLD_D);                  // 腰带扣
+        p.vline(13, 5 + dy, 12 + dy, '#7a5a38');     // 拐杖
+        p.px(13, 4 + dy, '#5a4026');
+        p.px(10, 4 + dy, GOLD); p.px(11, 4 + dy, GOLD_D);  // 胸饰铜币
+      }
+    });
+  });
+
   // ---------- 敌人(16×16,2 帧) ----------
   def('bat', two(function (f) {
     var p = new Pix(16, 16), W = '#3a2c50', M = '#4e3c6a';
@@ -1519,6 +1543,7 @@
   // ---------- SPEC 模块A 名字清单(覆盖率自检用) ----------
   var NAMES = [
     'char_knight', 'char_mage', 'char_ranger', 'char_cleric', 'char_berserker', 'char_chrono',
+    'merchant',
     'bat', 'slime', 'slime_big', 'zombie', 'skeleton', 'ghost', 'spider', 'cultist',
     'orc', 'imp', 'knight_armored', 'werewolf', 'mummy', 'gargoyle', 'bloodbat', 'wraith',
     'boss_slimeking', 'boss_bonelord', 'boss_abysseye', 'boss_darklord',

@@ -162,21 +162,22 @@ window.Merchant = (function () {
   // 摊位与商人:画在地面层之上、角色之下
   function draw(ctx, run) {
     var M = CFG.MERCHANT;
-    // 商人本体(用法师精灵充当摊主)+ 摊位底座
-    var mimg = SpriteGen.get('char_mage');
+    // 商人本体(行商浪人专属形象)+ 摊位底座
+    var mimg = SpriteGen.get('merchant');
     var bob = Math.sin(run.t * 2) * 2;
     ctx.globalAlpha = 0.4;
     ctx.drawImage(SpriteGen.get('vfx_shadow'), M.x - 14, M.y - 52, 28, 9);
     ctx.globalAlpha = 1;
     ctx.drawImage(mimg, M.x - mimg.width, M.y - 56 - mimg.height * 2 + bob,
                   mimg.width * 2, mimg.height * 2);
-    // 招牌
+    // 招牌(无底色,直接描边文字)
     ctx.font = 'bold 11px monospace';
     ctx.textAlign = 'center';
-    ctx.fillStyle = 'rgba(8,6,18,0.75)';
-    ctx.fillRect(M.x - 40, M.y - 96, 80, 15);
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = 'rgba(8,6,18,0.9)';
+    ctx.strokeText('行商浪人', M.x, M.y - 85);
     ctx.fillStyle = '#ffd76b';
-    ctx.fillText('流浪商人', M.x, M.y - 85);
+    ctx.fillText('行商浪人', M.x, M.y - 85);
 
     for (var i = 0; i < slots.length; i++) {
       var s = slots[i];
@@ -219,12 +220,14 @@ window.Merchant = (function () {
         ctx.beginPath(); ctx.arc(sx, M.y, 20, 0, Math.PI * 2); ctx.fill();
         ctx.globalAlpha = 1;
       }
-      // 名称 + 价格
+      // 名称 + 价格(无底色,描边文字保证在任何背景上都可读)
       ctx.font = '9px monospace';
-      ctx.fillStyle = 'rgba(8,6,18,0.8)';
-      ctx.fillRect(sx - 30, M.y + 12, 60, 22);
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = 'rgba(8,6,18,0.9)';
+      ctx.strokeText(s.good.name.slice(0, 8), sx, M.y + 21);
       ctx.fillStyle = '#e8e2f5';
       ctx.fillText(s.good.name.slice(0, 8), sx, M.y + 21);
+      ctx.strokeText('◈ ' + s.good.cost, sx, M.y + 31);
       ctx.fillStyle = canAfford ? '#ffd76b' : '#ff8b94';
       ctx.fillText('◈ ' + s.good.cost, sx, M.y + 31);
     }

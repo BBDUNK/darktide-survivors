@@ -27,7 +27,9 @@ window.CFG = {
     shieldMax: 0, shieldCd: 12
   },
 
-  XP_NEED: function (lv) { return Math.floor(6 + (lv - 1) * 7 + Math.pow(lv, 1.75)); },
+  // 经验曲线:前期平缓(升级快),后期陡峭(升级慢)。
+  // 用二次增长代替原来的 1.75 次方:低等级需求更低,高等级更高。
+  XP_NEED: function (lv) { return Math.floor(4 + (lv - 1) * 5 + Math.pow(lv, 2) * 0.9); },
 
   // ---------------- 角色 ----------------
   CHARS: [
