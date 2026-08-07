@@ -13,10 +13,11 @@
   // 房主权威:房主跑完整模拟并广播快照;客户端只上报输入、渲染快照。
   var coop = {
     on: false,
-    mates: [],        // host: [{peerId,name,charId,player,input}]  client: 远端队友的渲染数据
-    snapAcc: 0,
-    lastSnap: null,
-    myIdx: 0
+    mates: [],        // host: [{peerId,name,charId,player,input,...}]
+    remote: [],       // client: 从快照解出的其他玩家渲染数据
+    snapAcc: 0,       // host: 广播计时
+    inputAcc: 0,      // client: 上报计时
+    myId: ''          // client: 自己的 peer id,用于从快照里剔除自己
   };
 
   function coopPlayerCount() {
@@ -47,6 +48,152 @@
         xp: 0, level: 1, xpNeed: CFG.XP_NEED(1), pendingLevels: 0, downed: false, reviveT: 0
       });
     }
+  }
+
+  // ---- 房主:打快照并广播(15Hz) ----
+  // 字段名压到 1~2 字符,15Hz × 4 人下带宽才够用。
+  function buildSnapshot() {
+    var pool = Entities.pool, i, e;
+    var es = [];
+    for (i = 0; i < pool.length; i++) {
+      e = pool[i];
+      if (!e.alive) continue;
+      es.push({
+        u: e.uid, i: e.id, x: Math.round(e.x), y: Math.round(e.y),
+        h: Math.round(e.hp), m: Math.round(e.maxHp),
+        el: e.elite ? 1 : 0, f: e.face,
+        g: e.guard > 0 ? +e.guard.toFixed(2) : 0,
+        b: e.burrowT > 0 ? +e.burrowT.toFixed(2) : 0,
+        bf: e.buffed ? 1 : 0
+      });
+    }
+    var shots = Entities.getShots(), ss = [];
+    for (i = 0; i < shots.length; i++) {
+      if (!shots[i].alive) continue;
+      ss.push({
+        x: Math.round(shots[i].x), y: Math.round(shots[i].y),
+        vx: Math.round(shots[i].vx), vy: Math.round(shots[i].vy),
+        w: shots[i].webType ? 1 : 0, c: shots[i].col || 0, z: shots[i].size || 16
+      });
+    }
+    var lobs = Entities.getLobs(), ls = [];
+    for (i = 0; i < lobs.length; i++) {
+      if (!lobs[i].alive) continue;
+      ls.push({ x: Math.round(lobs[i].tx), y: Math.round(lobs[i].ty),
+                r: lobs[i].r, t: +lobs[i].t.toFixed(2), d: lobs[i].dur });
+    }
+    var gems = Entities.getGems(), gs = [];
+    for (i = 0; i < gems.length; i++) {
+      if (!gems[i].alive) continue;
+      gs.push({ x: Math.round(gems[i].x), y: Math.round(gems[i].y), v: gems[i].v });
+    }
+    var items = Entities.getItems(), its = [];
+    for (i = 0; i < items.length; i++) {
+      if (!items[i].alive) continue;
+      its.push({ k: items[i].type, x: Math.round(items[i].x), y: Math.round(items[i].y) });
+    }
+    // 全体玩家状态(房主自己 + 各客户端),客户端用它渲染队友
+    var ps = [{
+      id: 'host', name: '房主', charId: run.player.char.id,
+      x: Math.round(run.player.x), y: Math.round(run.player.y),
+      f: run.player.face, mv: run.player.moving ? 1 : 0,
+      hp: +(run.player.hp / run.player.stats.hp).toFixed(2),
+      dn: run.player.downed ? 1 : 0, rv: +(run.player.reviveT || 0).toFixed(2),
+      bf: run.player.auraBuff ? 1 : 0
+    }];
+    for (i = 0; i < coop.mates.length; i++) {
+      var mt = coop.mates[i], mp = mt.player;
+      ps.push({
+        id: mt.peerId, name: mt.name, charId: mt.charId,
+        x: Math.round(mp.x), y: Math.round(mp.y),
+        f: mp.face, mv: mp.moving ? 1 : 0,
+        hp: mp.stats ? +(mp.hp / mp.stats.hp).toFixed(2) : 1,
+        dn: mt.downed ? 1 : 0, rv: +(mt.reviveT || 0).toFixed(2),
+        bf: mp.auraBuff ? 1 : 0
+      });
+    }
+    return {
+      t: 'snap', ti: +run.t.toFixed(2),
+      e: es, s: ss, l: ls, g: gs, it: its, p: ps,
+      bh: run.boss && run.boss.alive ? +(run.boss.hp / run.boss.maxHp).toFixed(3) : -1,
+      kl: run.kills
+    };
+  }
+
+  // ---- 房主:把客户端输入写进对应队友,并跑他们的移动与武器 ----
+  function updateMates(dt) {
+    if (!coop.on || !Net.isHost()) return;
+    var A = CFG.COOP;
+    for (var i = 0; i < coop.mates.length; i++) {
+      var m = coop.mates[i], p = m.player;
+      if (!p.stats) { Entities.recomputeStatsFor(run, p, m.passives); p.hp = p.stats.hp; }
+      if (m.downed) {
+        // 倒地:检查是否有活着的队友在旁边救援
+        var rescuer = nearestAlivePlayer(p, A.reviveRadius, m);
+        if (rescuer) {
+          m.reviveT = (m.reviveT || 0) + dt;
+          if (m.reviveT >= A.reviveTime) {
+            m.downed = false; m.reviveT = 0;
+            p.hp = p.stats.hp * A.downedHp;
+            p.iframe = 2.0;
+            FX.ring(p.x, p.y, { r: 60, color: '#7ce87c', life: 0.5, width: 3 });
+          }
+        } else {
+          m.reviveT = Math.max(0, (m.reviveT || 0) - dt * 0.5);
+        }
+        continue;
+      }
+      // 应用输入移动
+      var iv = m.input, s = p.stats;
+      var spd = s.speed * (1 - (p.slow || 0)) * (1 + (p.auraBuff || 0));
+      p.moving = (iv.x !== 0 || iv.y !== 0);
+      if (p.moving) {
+        var l = Math.hypot(iv.x, iv.y) || 1;
+        p.x += (iv.x / l) * spd * dt;
+        p.y += (iv.y / l) * spd * dt;
+        if (iv.x > 0.01) p.face = 1; else if (iv.x < -0.01) p.face = -1;
+        p.animT += dt;
+      }
+      var R = CFG.GAME.MAP_R;
+      p.x = E.clamp(p.x, -R, R); p.y = E.clamp(p.y, -R, R);
+      if (p.iframe > 0) p.iframe -= dt;
+      if (s.regen > 0 && p.hp < s.hp) p.hp = Math.min(s.hp, p.hp + s.regen * dt);
+      // 队友的武器由房主代跑
+      Weapons.updateFor(run, p, m.weapons, dt);
+      // 队友倒地判定
+      if (p.hp <= 0 && !m.downed) {
+        m.downed = true; m.reviveT = 0; p.hp = 0;
+        FX.ring(p.x, p.y, { r: 50, color: '#ff5964', life: 0.6, width: 3 });
+        UI.warn('⚠ ' + m.name + ' 倒下了!');
+      }
+    }
+  }
+
+  // 房主视角下队友的渲染数据(drawMates 只认扁平字段)
+  function hostMateView() {
+    var out = [];
+    for (var i = 0; i < coop.mates.length; i++) {
+      var m = coop.mates[i], p = m.player;
+      out.push({
+        name: m.name, charId: m.charId, x: p.x, y: p.y,
+        face: p.face, moving: p.moving,
+        hpPct: p.stats ? p.hp / p.stats.hp : 1,
+        downed: m.downed, reviveT: m.reviveT || 0, buffed: !!p.auraBuff
+      });
+    }
+    return out;
+  }
+
+  // 找一个能救援目标的存活玩家(房主自己或其他队友)
+  function nearestAlivePlayer(target, radius, exclude) {
+    var r2 = radius * radius;
+    if (!run.player.downed && E.dist2(run.player.x, run.player.y, target.x, target.y) < r2) return run.player;
+    for (var i = 0; i < coop.mates.length; i++) {
+      var m = coop.mates[i];
+      if (m === exclude || m.downed) continue;
+      if (E.dist2(m.player.x, m.player.y, target.x, target.y) < r2) return m.player;
+    }
+    return null;
   }
 
   // 队友光环互益:圣光环持有者为半径内队友回血、提升属性与弹幕
@@ -205,12 +352,37 @@
     if (run.freezeT > 0) run.freezeT -= dt;
 
     applyCoopAuras();    // 队友光环互益:圣光环持有者为附近队友回血与加成
+
+    // 联机客户端:只上报输入 + 渲染房主快照,不跑本地模拟(避免两端分歧)
+    if (coop.on && Net.isClient()) {
+      Entities.updatePlayer(run, dt);        // 本地预测,手感不卡
+      var iv = E.readInput();
+      coop.inputAcc += dt;
+      if (coop.inputAcc >= 1 / 30) {         // 30Hz 上报足够
+        coop.inputAcc = 0;
+        Net.toHost({ t: 'input', x: +iv.x.toFixed(2), y: +iv.y.toFixed(2) });
+      }
+      Weapons.update(run, dt);               // 本地弹幕仅作视觉,伤害由房主结算
+      UI.updateHUD(run);
+      return;
+    }
+
     Entities.updatePlayer(run, dt);
+    updateMates(dt);                         // 房主代跑队友移动与武器
     Weapons.update(run, dt);
     Entities.updateEnemies(run, dt);
     Entities.updateGems(run, dt);
     Entities.updateItems(run, dt);
     Entities.director(run, dt);
+
+    // 房主:定频广播世界快照
+    if (coop.on && Net.isHost()) {
+      coop.snapAcc += dt;
+      if (coop.snapAcc >= 1 / Net.SNAP_HZ) {
+        coop.snapAcc = 0;
+        Net.broadcast(buildSnapshot());
+      }
+    }
 
     // 音乐强度
     if (run.boss && run.boss.alive) AudioSys.setIntensity(3);
@@ -451,6 +623,10 @@
     drawBoundary(run);
     Weapons.drawGround(ctx, run);
     Entities.drawLobMarkers(ctx, run);
+    // 联机队友:房主画 mates,客户端画从快照解出的 remote
+    if (coop.on) {
+      Entities.drawMates(ctx, run, Net.isHost() ? hostMateView() : coop.remote);
+    }
     Entities.draw(ctx, run);
     ctx.restore();
 
@@ -602,7 +778,40 @@
         var mine = UI.myPick() || CFG.CHARS[0].id;
         coop.on = true;
         coop.mates = [];
+        coop.remote = [];
+        coop.myId = Net.selfId();
         newRun(mine, m.mapId);
+      },
+      // 客户端:收到房主快照,重建世界并解出队友
+      onSnap: function (m) {
+        if (!run || !coop.on) return;
+        Entities.applySnapshot(run, { t: m.ti, e: m.e, s: m.s, l: m.l, g: m.g, it: m.it, bh: m.bh });
+        run.kills = m.kl || run.kills;
+        coop.remote = [];
+        for (var i = 0; i < m.p.length; i++) {
+          var ps = m.p[i];
+          if (ps.id === coop.myId) {
+            // 房主对我的权威状态:血量与倒地由它说了算,位置保留本地预测
+            if (run.player.stats) run.player.hp = ps.hp * run.player.stats.hp;
+            run.player.downed = !!ps.dn;
+            run.player.reviveT = ps.rv;
+            continue;
+          }
+          coop.remote.push({
+            name: ps.name, charId: ps.charId, x: ps.x, y: ps.y,
+            face: ps.f, moving: !!ps.mv, hpPct: ps.hp,
+            downed: !!ps.dn, reviveT: ps.rv, buffed: !!ps.bf
+          });
+        }
+      },
+      // 房主:收到客户端输入
+      onClientInput: function (peerId, m) {
+        for (var i = 0; i < coop.mates.length; i++) {
+          if (coop.mates[i].peerId === peerId) {
+            coop.mates[i].input.x = m.x; coop.mates[i].input.y = m.y;
+            return;
+          }
+        }
       },
       onHostLost: function () {
         UI.warn('⚠ 房主已断开');

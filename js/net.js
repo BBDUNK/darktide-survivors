@@ -196,6 +196,7 @@ window.Net = (function () {
     broadcast: broadcast, sendTo: sendTo, toHost: toHost,
     setMyPick: setMyPick,
     mode: function () { return mode; },
+    selfId: function () { return peer && peer.id ? peer.id : ''; },
     isHost: function () { return mode === 'host'; },
     isClient: function () { return mode === 'client'; },
     isOnline: function () { return mode !== 'off'; },

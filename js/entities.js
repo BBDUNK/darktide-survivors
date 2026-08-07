@@ -18,6 +18,14 @@ window.Entities = (function () {
     };
   }
 
+  // 联机:为任意 player 对象算属性(房主要给每个队友各算一份)
+  function recomputeStatsFor(run, p, passives) {
+    var saved = run.player, savedP = run.passives;
+    run.player = p; run.passives = passives || {};
+    try { recomputeStats(run); }
+    finally { run.player = saved; run.passives = savedP; }
+  }
+
   function recomputeStats(run) {
     var s = {}, base = CFG.BASE_STATS, k;
     for (k in base) s[k] = base[k];
@@ -38,6 +46,12 @@ window.Entities = (function () {
     for (k in run.passives) {
       var lv = run.passives[k];
       if (lv > 0 && CFG.PASSIVES[k]) CFG.PASSIVES[k].apply(s, lv);
+    }
+    // 联机队友光环:全属性小幅提升(每帧由 applyCoopAuras 写入 p.auraBuff)
+    var ab = run.player.auraBuff || 0;
+    if (ab > 0) {
+      s.might *= (1 + ab); s.hp *= (1 + ab); s.armor += ab * 10;
+      s.speed *= (1 + ab * 0.5); s.area *= (1 + ab); s.crit += ab * 0.1;
     }
     s.cd = E.clamp(s.cd, 0.35, 2);
     var oldMax = run.player.stats ? run.player.stats.hp : s.hp;
@@ -945,7 +959,8 @@ window.Entities = (function () {
   }
 
   function addXp(run, v) {
-    run.xp += v * run.player.stats.growth;
+    // 联机时经验按人数稀释,保证升级节奏不因多人分摊而失控
+    run.xp += v * run.player.stats.growth * (run.coopXpMul || 1);
     while (run.xp >= run.xpNeed) {
       run.xp -= run.xpNeed;
       run.level++;
@@ -1055,7 +1070,8 @@ window.Entities = (function () {
       if (t >= waves[i].t) { w = waves[i]; break; }
     }
     // 常规刷怪
-    run.spawnAcc += dt * w.rate * run.map.rateMul * (run.endless ? 1 + (t - CFG.GAME.RUN_TIME) / 300 : 1);
+    run.spawnAcc += dt * w.rate * run.map.rateMul * (run.coopRateMul || 1) *
+                    (run.endless ? 1 + (t - CFG.GAME.RUN_TIME) / 300 : 1);
     var aliveCount = POOL - freeIdx.length;
     while (run.spawnAcc >= 1) {
       run.spawnAcc -= 1;
@@ -1401,6 +1417,117 @@ window.Entities = (function () {
     ctx.globalAlpha = 1;
   }
 
+  // ================= 联机:快照应用与队友渲染 =================
+  // 客户端不跑敌人 AI,直接用房主快照重建世界。位置做插值以掩盖 15Hz 的快照间隔。
+  function applySnapshot(run, snap) {
+    var i, s, e;
+    // 敌人:按快照重建(超出快照数量的槽位回收)
+    for (i = 0; i < POOL; i++) {
+      if (enemies[i].alive) { enemies[i].alive = false; freeIdx.push(i); }
+    }
+    for (i = 0; i < snap.e.length && freeIdx.length; i++) {
+      s = snap.e[i];
+      e = enemies[freeIdx.pop()];
+      var def = CFG.ENEMIES[s.i] || CFG.BOSSES[s.i];
+      if (!def) continue;
+      e.alive = true; e.uid = s.u; e.id = s.i; e.def = def;
+      e.x = s.x; e.y = s.y;
+      e.hp = s.h; e.maxHp = s.m;
+      e.r = def.r; e.dmg = def.dmg; e.spd = def.spd;
+      e.boss = !!CFG.BOSSES[s.i]; e.bossType = e.boss ? s.i : '';
+      e.elite = !!s.el; e.face = s.f || 1;
+      e.flash = 0; e.alpha = 1; e.animo = (s.u % 10);
+      e.guard = s.g || 0; e.burrowT = s.b || 0; e.burrowMax = def.burrow || 0;
+      e.buffed = !!s.bf; e.buffSpd = 1; e.buffDmg = 1;
+      e.slow = 0; e.slowT = 0; e.stun = 0; e.frozen = 0; e.kx = 0; e.ky = 0;
+    }
+    // 敌方弹幕
+    for (i = 0; i < shots.length; i++) shots[i].alive = false;
+    for (i = 0; i < snap.s.length && i < shots.length; i++) {
+      s = snap.s[i];
+      shots[i].alive = true;
+      shots[i].x = s.x; shots[i].y = s.y; shots[i].vx = s.vx; shots[i].vy = s.vy;
+      shots[i].webType = !!s.w; shots[i].col = s.c || null; shots[i].size = s.z || 16;
+      shots[i].dmg = 0; shots[i].ttl = 5;   // 客户端不做伤害判定
+    }
+    // 抛击落点预警
+    for (i = 0; i < lobs.length; i++) lobs[i].alive = false;
+    for (i = 0; i < snap.l.length && i < lobs.length; i++) {
+      s = snap.l[i];
+      lobs[i].alive = true;
+      lobs[i].tx = s.x; lobs[i].ty = s.y; lobs[i].r = s.r;
+      lobs[i].t = s.t; lobs[i].dur = s.d; lobs[i].dmg = 0;
+    }
+    // 经验宝石与掉落物
+    for (i = 0; i < gems.length; i++) { if (gems[i].alive) { gems[i].alive = false; freeGem.push(i); } }
+    for (i = 0; i < snap.g.length && freeGem.length; i++) {
+      s = snap.g[i];
+      var g = gems[freeGem.pop()];
+      g.alive = true; g.x = s.x; g.y = s.y; g.v = s.v; g.pull = false; g.t = 0;
+    }
+    for (i = 0; i < items.length; i++) items[i].alive = false;
+    for (i = 0; i < snap.it.length && i < items.length; i++) {
+      s = snap.it[i];
+      items[i].alive = true; items[i].type = s.k;
+      items[i].x = s.x; items[i].y = s.y; items[i].t = 0; items[i].pull = false;
+    }
+    run.t = snap.t;
+    if (snap.bh !== undefined) run.bossHpPct = snap.bh;
+  }
+
+  // 渲染远端队友(名字牌 + 倒地状态)
+  function drawMates(ctx, run, mates) {
+    if (!mates || !mates.length) return;
+    var animF = Math.floor(run.t * 6);
+    var shadow = SpriteGen.get('vfx_shadow');
+    for (var i = 0; i < mates.length; i++) {
+      var m = mates[i];
+      if (!m.charId) continue;
+      var cd = null;
+      for (var k = 0; k < CFG.CHARS.length; k++) if (CFG.CHARS[k].id === m.charId) cd = CFG.CHARS[k];
+      if (!cd) continue;
+      ctx.globalAlpha = 0.4;
+      ctx.drawImage(shadow, m.x - 12, m.y + 8, 24, 8);
+      ctx.globalAlpha = 1;
+      if (m.downed) {
+        // 倒地:横躺 + 救援进度环
+        ctx.save();
+        ctx.translate(m.x, m.y);
+        ctx.rotate(Math.PI / 2);
+        drawSprite(ctx, cd.sprite, 0, 0, 0, 1, false, 0.55, '#ff6688');
+        ctx.restore();
+        if (m.reviveT > 0) {
+          var pr = E.clamp(m.reviveT / CFG.COOP.reviveTime, 0, 1);
+          ctx.strokeStyle = '#7ce87c'; ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(m.x, m.y - 18, 14, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * pr);
+          ctx.stroke();
+        }
+      } else {
+        drawSprite(ctx, cd.sprite, m.moving ? animF : 0, m.x, m.y, 1, m.face < 0, 1, null);
+        // 队友身上的光环增益提示
+        if (m.buffed) {
+          ctx.globalAlpha = 0.35 + Math.sin(run.t * 5) * 0.15;
+          ctx.strokeStyle = '#ffe9a8'; ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.arc(m.x, m.y, 20, 0, Math.PI * 2); ctx.stroke();
+          ctx.globalAlpha = 1;
+        }
+      }
+      // 名字 + 血条
+      ctx.font = '9px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillStyle = m.downed ? '#ff8b94' : '#cfe6ff';
+      ctx.fillText(m.name || '队友', m.x, m.y - 26);
+      ctx.textAlign = 'left';
+      if (m.hpPct !== undefined && m.hpPct < 1) {
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.fillRect(m.x - 14, m.y - 23, 28, 3);
+        ctx.fillStyle = m.hpPct < 0.3 ? '#ff5964' : '#6ee86e';
+        ctx.fillRect(m.x - 14, m.y - 23, 28 * Math.max(0, m.hpPct), 3);
+      }
+    }
+  }
+
   function reset() { initPools(); }
 
   // 清空全部敌人并正确归还空位(测试用;直接改 alive 会让池子永久占满)
@@ -1417,7 +1544,7 @@ window.Entities = (function () {
   function countAlive() { return POOL - freeIdx.length; }
 
   return {
-    makePlayer: makePlayer, recomputeStats: recomputeStats,
+    makePlayer: makePlayer, recomputeStats: recomputeStats, recomputeStatsFor: recomputeStatsFor,
     updatePlayer: updatePlayer, damagePlayer: damagePlayer,
     spawnEnemy: spawnEnemy, spawnAtRing: spawnAtRing,
     damageEnemy: damageEnemy, killEnemy: killEnemy,
@@ -1427,6 +1554,11 @@ window.Entities = (function () {
     clearEnemies: clearEnemies,
     pool: enemies, countAlive: countAlive, drawSprite: drawSprite,
     getGems: function () { return gems; },
-    getItems: function () { return items; }
+    getItems: function () { return items; },
+    getShots: function () { return shots; },
+    getLobs: function () { return lobs; },
+    // 联机:客户端用房主快照覆盖本地世界
+    applySnapshot: applySnapshot,
+    drawMates: drawMates
   };
 })();

@@ -79,6 +79,11 @@ window.Weapons = (function () {
     st.dmg *= s.might;
     st.cd = Math.max(0.12, st.cd * s.cd);
     st.speed *= s.projSpd;
+    // 联机队友光环:给弹幕加弹速与少量伤害(视觉上还会带一层金色描边)
+    var p0 = run.player;
+    if (p0.auraProjSpd) st.speed *= (1 + p0.auraProjSpd);
+    if (p0.auraDmg) st.dmg *= (1 + p0.auraDmg);
+    st.blessed = !!p0.auraProjSpd;
     st.areaMul *= s.area;
     st.size *= st.areaMul;
     st.orbitR *= st.areaMul;
@@ -99,6 +104,7 @@ window.Weapons = (function () {
     b.angle = Math.atan2(vy, vx); b.spin = 0; b.phase = 0;
     b.slow = st.slow; b.slowDur = st.slowDur; b.stun = 0;
     b.aux = 0; b.aux2 = 0; b.evolved = w.evolved;
+    b.blessed = !!st.blessed;     // 受队友光环加持:绘制时加一层金光
     return b;
   }
 
@@ -539,6 +545,31 @@ window.Weapons = (function () {
 
   var runRef = null;
 
+  // 联机:房主代跑某个队友的武器。共用同一子弹池,弹幕归属只影响视觉光环。
+  // owner 是队友的 player 对象,list 是他的武器数组。
+  function updateFor(run, owner, list, dt) {
+    runRef = run;
+    var saved = run.player;
+    run.player = owner;                 // 临时把武器计算的"玩家"切到队友
+    try {
+      for (var i = 0; i < list.length; i++) {
+        var w = list[i];
+        if (w.id === 'holyaura') { updateAura(run, w, dt); continue; }
+        w.cdT -= dt;
+        if (w.cdT <= 0) {
+          var st = wStats(run, w);
+          w.cdT = st.cd;
+          if (w.id === 'orbitblade') {
+            if (countKind('orbitblade') === 0) fire(run, w);
+            else w.cdT = 0.5;
+          } else fire(run, w);
+        }
+      }
+    } finally {
+      run.player = saved;               // 无论如何都要还回去
+    }
+  }
+
   // ================= 每帧主更新 =================
   function update(run, dt) {
     runRef = run;
@@ -635,6 +666,14 @@ window.Weapons = (function () {
         ctx.drawImage(img, b.x - 16, b.y - 16, 32, 32);
         if (b.ttl < 1) ctx.globalAlpha = 1; // 淡出可省
         continue;
+      }
+      // 受队友光环加持的弹幕:先铺一层金色光晕
+      if (b.blessed) {
+        var bg = ctx.createRadialGradient(b.x, b.y, 1, b.x, b.y, b.size * 0.9);
+        bg.addColorStop(0, 'rgba(255,233,168,0.45)');
+        bg.addColorStop(1, 'rgba(255,233,168,0)');
+        ctx.fillStyle = bg;
+        ctx.beginPath(); ctx.arc(b.x, b.y, b.size * 0.9, 0, Math.PI * 2); ctx.fill();
       }
       ctx.save();
       ctx.translate(b.x, b.y);
@@ -871,7 +910,7 @@ window.Weapons = (function () {
   function reset() { initPool(); initQueue(); runRef = null; }
 
   return {
-    update: update, draw: draw, drawGround: drawGround, reset: reset,
+    update: update, updateFor: updateFor, draw: draw, drawGround: drawGround, reset: reset,
     addWeapon: addWeapon, addPassive: addPassive,
     getLevelUpChoices: getLevelUpChoices, applyChoice: applyChoice,
     chestLoot: chestLoot, canEvolve: canEvolve, findWeapon: findWeapon,
