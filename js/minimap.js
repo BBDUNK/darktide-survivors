@@ -118,5 +118,10 @@ window.Minimap = (function () {
     ctx.textAlign = 'left';
   }
 
-  return { draw: draw, toggle: toggle, getMode: getMode };
+  // 命中区域(逻辑像素),供点击/触摸判定复用,避免与绘制位置脱节
+  function hitBox() {
+    return { x: CFG.GAME.W - SIZE, y: 16, w: SIZE, h: SIZE };
+  }
+
+  return { draw: draw, toggle: toggle, getMode: getMode, hitBox: hitBox };
 })();

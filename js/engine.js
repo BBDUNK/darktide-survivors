@@ -46,6 +46,8 @@ window.Engine = (function () {
     // 触屏虚拟摇杆
     canvas.addEventListener('pointerdown', function (e) {
       if (e.pointerType === 'touch' && !touch.active) {
+        // 落点在小地图上时交给点击切换处理,不启动摇杆
+        if (Engine.isOverMinimap && Engine.isOverMinimap(e.clientX, e.clientY)) return;
         touch.active = true; touch.id = e.pointerId;
         touch.sx = e.clientX; touch.sy = e.clientY; touch.dx = 0; touch.dy = 0;
       }
@@ -158,15 +160,42 @@ window.Engine = (function () {
     }
   }
 
+  // ---------- 设备判定 ----------
+  // 触屏优先:有触点且无精确指针(排除带触摸屏的笔记本被误判为手机)
+  var isTouch = (function () {
+    if (typeof navigator === 'undefined' || typeof window === 'undefined') return false;
+    var pts = navigator.maxTouchPoints || 0;
+    var coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+    return pts > 0 && !!coarse;
+  })();
+
   // ---------- 画布缩放 ----------
+  // UI 层与画布共用同一缩放系数,保证 HUD 与画面严格对齐;
+  // 同时把安全区(刘海/圆角)让出来,避免边框裁掉 HUD。
+  var viewScale = 1;
   function fitCanvas(canvas) {
+    var ui = document.getElementById('ui');
     function resize() {
       var w = window.innerWidth, h = window.innerHeight;
       var scale = Math.min(w / CFG.GAME.W, h / CFG.GAME.H);
-      canvas.style.width = Math.round(CFG.GAME.W * scale) + 'px';
-      canvas.style.height = Math.round(CFG.GAME.H * scale) + 'px';
+      viewScale = scale;
+      var cw = Math.round(CFG.GAME.W * scale), ch = Math.round(CFG.GAME.H * scale);
+      canvas.style.width = cw + 'px';
+      canvas.style.height = ch + 'px';
+      // UI 用 transform 缩放到与画布同尺寸,内部仍按 960×540 逻辑像素布局
+      if (ui) {
+        ui.style.width = CFG.GAME.W + 'px';
+        ui.style.height = CFG.GAME.H + 'px';
+        ui.style.left = '50%';
+        ui.style.top = '50%';
+        ui.style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
+        ui.style.transformOrigin = 'center center';
+      }
+      document.body.classList.toggle('touch-device', isTouch);
+      document.body.classList.toggle('portrait', h > w);
     }
     window.addEventListener('resize', resize);
+    window.addEventListener('orientationchange', function () { setTimeout(resize, 120); });
     resize();
   }
 
@@ -179,8 +208,10 @@ window.Engine = (function () {
     lastDir: lastDir, touchState: touch,
     gridClear: gridClear, gridInsert: gridInsert, gridQuery: gridQuery, gridNearest: gridNearest,
     cam: cam, start: start, fitCanvas: fitCanvas,
+    isTouch: function () { return isTouch; },
+    viewScale: function () { return viewScale; },
     setTimeScale: function (s) { timeScale = s; },
     nextUid: function () { return uidCounter++; },
-    onPause: null, onBlur: null, onToggleMap: null
+    onPause: null, onBlur: null, onToggleMap: null, isOverMinimap: null
   };
 })();

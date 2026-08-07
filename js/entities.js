@@ -11,6 +11,8 @@ window.Entities = (function () {
       face: 1, moving: false, animT: 0,
       char: charDef,
       shield: 0, shieldRegenT: 0,  // 护盾当前值 / 下次恢复计时
+      lastVx: 0, lastVy: 0,        // 移动矢量,敌人抛击用于预判落点
+      slow: 0, slowT: 0,           // 蛛网减速
       stats: null
     };
   }
@@ -48,9 +50,15 @@ window.Entities = (function () {
     var p = run.player, s = p.stats;
     var iv = E.readInput();
     p.moving = (iv.x !== 0 || iv.y !== 0);
+    // 中蛛网减速
+    if (p.slowT > 0) { p.slowT -= dt; if (p.slowT <= 0) p.slow = 0; }
+    var mspd = s.speed * (1 - (p.slow || 0));
+    // 记录当前速度矢量,供敌人抛击预判落点
+    p.lastVx = iv.x * mspd;
+    p.lastVy = iv.y * mspd;
     if (p.moving) {
-      p.x += iv.x * s.speed * dt;
-      p.y += iv.y * s.speed * dt;
+      p.x += iv.x * mspd * dt;
+      p.y += iv.y * mspd * dt;
       if (iv.x > 0.01) p.face = 1; else if (iv.x < -0.01) p.face = -1;
       p.animT += dt;
     }
@@ -91,10 +99,11 @@ window.Entities = (function () {
       p.shield -= absorbed;
       real -= absorbed;
       p.shieldRegenT = p.stats.shieldCd; // 受击重置护盾恢复计时
-      if (real <= 0) { p.hurtFlash = 0.12; AudioSys.play('player_hurt'); return; }
+      // 纯护盾挡下:只给很短的硬直保护,避免护盾等同于白送无敌
+      if (real <= 0) { p.iframe = 0.12; p.hurtFlash = 0.12; AudioSys.play('player_hurt'); return; }
     }
     p.hp -= real;
-    p.iframe = 0.5;
+    p.iframe = 0.3;
     p.hurtFlash = 0.25;
     AudioSys.play('player_hurt');
     FX.shake(5, 0.25);
@@ -130,12 +139,14 @@ window.Entities = (function () {
         face: 1, animo: 0, alpha: 1,
         elite: false, boss: false, bossType: '',
         ai: 'chase', aiT: 0, aiPhase: 0, tgtX: 0, tgtY: 0,
-        burn: 0, burnT: 0
+        burn: 0, burnT: 0, guard: 0
       });
       freeIdx.push(POOL - 1 - i);
     }
     shots.length = 0;
-    for (i = 0; i < 200; i++) shots.push({ alive: false, x: 0, y: 0, vx: 0, vy: 0, dmg: 0, ttl: 0 });
+    for (i = 0; i < 200; i++) shots.push({ alive: false, x: 0, y: 0, vx: 0, vy: 0, dmg: 0, ttl: 0, slow: 0, slowDur: 0 });
+    lobs.length = 0;
+    for (i = 0; i < 40; i++) lobs.push({ alive: false, sx: 0, sy: 0, tx: 0, ty: 0, r: 0, dmg: 0, t: 0, dur: 0 });
     gems.length = 0; freeGem.length = 0;
     for (i = 0; i < 320; i++) { gems.push({ alive: false, x: 0, y: 0, v: 0, pull: false, vx: 0, vy: 0, t: 0 }); freeGem.push(319 - i); }
     items.length = 0;
@@ -161,8 +172,9 @@ window.Entities = (function () {
     e.face = 1; e.animo = Math.random() * 10; e.alpha = 1;
     e.elite = false; e.boss = isBoss; e.bossType = isBoss ? id : '';
     e.ai = isBoss ? 'boss' : (def.ai || 'chase');
-    e.aiT = 0; e.aiPhase = 0;
-    e.burn = 0; e.burnT = 0;
+    e.aiT = def.lobCd ? Math.random() * def.lobCd : 0; // 错开抛击节奏,避免齐射
+    e.aiPhase = 0;
+    e.burn = 0; e.burnT = 0; e.guard = 0;
     if (opts && opts.elite) {
       e.elite = true;
       e.maxHp *= CFG.ELITE.hpMul; e.hp = e.maxHp;
@@ -192,6 +204,11 @@ window.Entities = (function () {
   // 中心伤害入口(武器调用)
   function damageEnemy(run, e, dmg, opts) {
     if (!e.alive) return 0;
+    // 举盾期间完全免伤(需要玩家换目标或等待破绽)
+    if (e.guard > 0) {
+      if ((run.frame & 7) === 0) FX.trail(e.x + (Math.random() * 16 - 8), e.y - 6, '#9cf', 2);
+      return 0;
+    }
     opts = opts || {};
     var s = run.player.stats;
     var crit = opts.noCrit ? false : (Math.random() < s.crit);
@@ -219,14 +236,6 @@ window.Entities = (function () {
     freeIdx.push(enemies.indexOf(e));
     run.kills++;
     Meta.track('kill');
-    // 吸血:按生命上限百分比回复,Boss/精英给额外倍数
-    var p = run.player, ls = p.stats.lifesteal;
-    if (ls > 0 && p.hp < p.stats.hp) {
-      var mul = e.boss ? 10 : (e.elite ? 3 : 1);
-      var heal = p.stats.hp * ls * mul;
-      p.hp = Math.min(p.stats.hp, p.hp + heal);
-      if (e.boss || e.elite) FX.heal(p.x, p.y);
-    }
     var col = e.boss ? '#ffd76b' : '#8a1f2d';
     FX.blood(e.x, e.y, col);
     FX.burst(e.x, e.y, { color: '#d8d3e8', n: e.boss ? 40 : 6, speed: e.boss ? 220 : 90, life: 0.5, size: 3 });
@@ -326,6 +335,44 @@ window.Entities = (function () {
             fireShot(e.x, e.y, nx, ny, e.def.shotSpd, e.def.shotDmg * (e.elite ? 1.5 : 1));
           }
           break;
+        case 'spitter': // 蛛类:边保持距离边吐减速网
+          var sd = e.def.keepDist || 170;
+          if (dist > sd + 30) { e.vx = nx * spd; e.vy = ny * spd; }
+          else if (dist < sd - 30) { e.vx = -nx * spd * 0.8; e.vy = -ny * spd * 0.8; }
+          else { e.vx = -ny * spd * 0.5; e.vy = nx * spd * 0.5; }
+          e.aiT -= dt;
+          if (e.aiT <= 0 && dist < 380) {
+            e.aiT = e.def.shotCd;
+            fireShot(e.x, e.y, nx, ny, e.def.shotSpd,
+              e.def.shotDmg * (e.elite ? 1.5 : 1), e.def.slowAmt, e.def.slowDur);
+          }
+          break;
+        case 'shielder': // 重骑:周期举盾,期间免伤
+          e.vx = nx * spd; e.vy = ny * spd;
+          e.aiT -= dt;
+          if (e.guard > 0) {
+            e.guard -= dt;
+            e.vx *= 0.35; e.vy *= 0.35;   // 举盾时减速前进
+            if (e.guard <= 0) e.aiT = e.def.guardCd;
+          } else if (e.aiT <= 0 && dist < 320) {
+            e.guard = e.def.guardDur;
+            FX.ring(e.x, e.y, { r: e.r + 14, color: '#9cf', life: 0.35, width: 3 });
+          }
+          break;
+        case 'lobber': // 石像鬼:远程抛物线砸击,落点红圈预警
+          var ld = e.def.lobRange || 420;
+          if (dist > ld) { e.vx = nx * spd; e.vy = ny * spd; }
+          else if (dist < 150) { e.vx = -nx * spd * 0.6; e.vy = -ny * spd * 0.6; }
+          else { e.vx = -ny * spd * 0.3; e.vy = nx * spd * 0.3; }
+          e.aiT -= dt;
+          if (e.aiT <= 0 && dist < ld) {
+            e.aiT = e.def.lobCd;
+            // 预判玩家去向,给出可躲避的落点
+            fireLob(p.x + p.lastVx * 0.35, p.y + p.lastVy * 0.35, e.x, e.y,
+              e.def.lobR, e.def.lobDmg * (e.elite ? 1.5 : 1), e.def.lobTravel);
+            AudioSys.play('shoot_flask');
+          }
+          break;
         case 'charge': // 狼人:蓄力冲锋
           e.aiT -= dt;
           if (e.aiPhase === 0) { // 追击
@@ -386,8 +433,15 @@ window.Entities = (function () {
       if (E.dist2(sh.x, sh.y, p.x, p.y) < (p.r + 5) * (p.r + 5)) {
         sh.alive = false;
         damagePlayer(run, sh.dmg);
+        // 蛛网:命中后减速玩家
+        if (sh.slow > 0) {
+          p.slow = Math.max(p.slow, sh.slow);
+          p.slowT = Math.max(p.slowT, sh.slowDur);
+          FX.ring(p.x, p.y, { r: 22, color: '#8f8', life: 0.3, width: 2 });
+        }
       }
     }
+    updateLobs(run, dt);
   }
 
   var _sepSelf = null;
@@ -410,13 +464,44 @@ window.Entities = (function () {
   }
 
   var shots = [];
-  function fireShot(x, y, nx, ny, spd, dmg) {
+  function fireShot(x, y, nx, ny, spd, dmg, slow, slowDur) {
     for (var i = 0; i < shots.length; i++) {
       if (!shots[i].alive) {
         var s = shots[i];
         s.alive = true; s.x = x; s.y = y;
         s.vx = nx * spd; s.vy = ny * spd; s.dmg = dmg; s.ttl = 5;
+        s.slow = slow || 0; s.slowDur = slowDur || 0;
         return;
+      }
+    }
+  }
+
+  // 抛物线砸击:落点先亮红圈,到时结算范围伤害
+  var lobs = [];
+  function fireLob(tx, ty, sx, sy, r, dmg, travel) {
+    for (var i = 0; i < lobs.length; i++) {
+      if (!lobs[i].alive) {
+        var l = lobs[i];
+        l.alive = true; l.sx = sx; l.sy = sy; l.tx = tx; l.ty = ty;
+        l.r = r; l.dmg = dmg; l.t = 0; l.dur = travel;
+        return l;
+      }
+    }
+    return null;
+  }
+
+  function updateLobs(run, dt) {
+    var p = run.player;
+    for (var i = 0; i < lobs.length; i++) {
+      var l = lobs[i];
+      if (!l.alive) continue;
+      l.t += dt;
+      if (l.t >= l.dur) {
+        l.alive = false;
+        FX.explosion(l.tx, l.ty, l.r * 1.4);
+        FX.shake(5, 0.25);
+        AudioSys.play('bomb');
+        if (E.dist2(p.x, p.y, l.tx, l.ty) < l.r * l.r) damagePlayer(run, l.dmg);
       }
     }
   }
@@ -773,6 +858,34 @@ window.Entities = (function () {
     if (alpha !== 1 || tint) ctx.globalAlpha = 1;
   }
 
+  // 抛击落点红圈:画在地面层,避免遮挡角色
+  function drawLobMarkers(ctx, run) {
+    for (var i = 0; i < lobs.length; i++) {
+      var l = lobs[i];
+      if (!l.alive) continue;
+      var prog = E.clamp(l.t / l.dur, 0, 1);
+      // 外圈固定,内圈收缩表示剩余时间
+      ctx.globalAlpha = 0.30 + prog * 0.35;
+      ctx.strokeStyle = '#ff4455';
+      ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(l.tx, l.ty, l.r, 0, Math.PI * 2); ctx.stroke();
+      var ir = l.r * (1 - prog);
+      if (ir > 1) {
+        ctx.globalAlpha = 0.45 + prog * 0.4;
+        ctx.fillStyle = 'rgba(255,70,90,0.22)';
+        ctx.beginPath(); ctx.arc(l.tx, l.ty, ir, 0, Math.PI * 2); ctx.fill();
+      }
+      // 即将落地时闪烁警示
+      if (prog > 0.8) {
+        ctx.globalAlpha = (Math.floor(run.t * 20) & 1) ? 0.7 : 0.2;
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(l.tx, l.ty, l.r - 3, 0, Math.PI * 2); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    }
+  }
+
   function draw(ctx, run) {
     var i, e, g, it, p = run.player;
     var animF = Math.floor(run.t * 6);
@@ -828,12 +941,21 @@ window.Entities = (function () {
       ctx.drawImage(shadow, e.x - 12 * sc, e.y + e.r * 0.7, 24 * sc, 8 * sc);
       ctx.globalAlpha = 1;
       var tint = null;
-      if (e.flash > 0) tint = '#ffffff';
+      if (e.guard > 0) tint = '#9cf';
+      else if (e.flash > 0) tint = '#ffffff';
       else if (run.freezeT > 0 || e.frozen > 0) tint = '#5fd0ff';
       else if (e.slowT > 0) tint = '#8ab6ff';
       var wob = e.boss ? 0 : Math.sin(run.t * 8 + e.animo) * 1.5;
       drawSprite(ctx, e.boss ? e.bossType : e.id, animF + (e.animo | 0), e.x, e.y + wob, sc, e.face < 0, e.alpha, tint);
       if (e.elite) drawSprite(ctx, 'elite_crown', 0, e.x, e.y - e.r - 12, 1, false, 1, null);
+      // 举盾:画一圈护罩表示当前免伤
+      if (e.guard > 0) {
+        ctx.globalAlpha = 0.5 + Math.sin(run.t * 12) * 0.2;
+        ctx.strokeStyle = '#9cf';
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(e.x, e.y, e.r * sc + 8, 0, Math.PI * 2); ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
       // 精英/Boss 血条
       if ((e.elite || e.boss) && e.hp < e.maxHp) {
         var bw = e.boss ? 56 : 34;
@@ -877,7 +999,7 @@ window.Entities = (function () {
     damageEnemy: damageEnemy, killEnemy: killEnemy,
     updateEnemies: updateEnemies, updateGems: updateGems, updateItems: updateItems,
     spawnGem: spawnGem, spawnItem: spawnItem, addXp: addXp, bombBlast: bombBlast,
-    director: director, draw: draw, reset: reset,
+    director: director, draw: draw, drawLobMarkers: drawLobMarkers, reset: reset,
     pool: enemies, countAlive: countAlive, drawSprite: drawSprite,
     getGems: function () { return gems; },
     getItems: function () { return items; }

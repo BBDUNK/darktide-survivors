@@ -167,11 +167,40 @@
       FX.flash('#ff3355', 0.35, 0.8);
     }
 
+    run.nextEvent = computeNextEvent(run);
     UI.updateHUD(run);
 
     if (run.over) { finalizeRun(); return; }
     if (run.pendingChest) { enterChest(); return; }
     if (run.pendingLevels > 0) { enterLevelUp(); return; }
+  }
+
+  // 计算下一个将要发生的事件(定点事件 / 精英 / 无尽Boss),供 HUD 倒计时
+  var EVENT_LABEL = {
+    boss: '☠ BOSS',
+    ring: '⭕ 包围圈',
+    swarm: '🐾 兽潮'
+  };
+  function computeNextEvent(run) {
+    var best = null;
+    // 地图定点事件
+    var evs = run.map.events;
+    for (var i = run.eventIdx; i < evs.length; i++) {
+      if (evs[i].t > run.t) {
+        best = { t: evs[i].t, label: EVENT_LABEL[evs[i].type] || '事件' };
+        break;
+      }
+    }
+    // 精英刷新
+    if (run.nextElite > run.t && (!best || run.nextElite < best.t)) {
+      best = { t: run.nextElite, label: '👑 精英' };
+    }
+    // 无尽模式的循环 Boss
+    if (run.endless && run.nextEndlessBoss > run.t && (!best || run.nextEndlessBoss < best.t)) {
+      best = { t: run.nextEndlessBoss, label: '☠ BOSS' };
+    }
+    if (!best) return null;
+    return { label: best.label, left: Math.max(0, best.t - run.t) };
   }
 
   // ================= 渲染 =================
@@ -262,6 +291,27 @@
     }
   }
 
+  // 隐形摇杆:仅在触摸按下时淡淡显现,松手即隐(屏幕坐标系)
+  function drawJoystick() {
+    var t = E.touchState;
+    if (!t.active) return;
+    var rect = canvas.getBoundingClientRect();
+    var sc = E.viewScale() || 1;
+    var ox = (t.sx - rect.left) / sc, oy = (t.sy - rect.top) / sc;
+    var len = Math.hypot(t.dx, t.dy);
+    var maxR = 46;
+    var kx = ox + (len > 0 ? t.dx / len : 0) * Math.min(len / sc, maxR);
+    var ky = oy + (len > 0 ? t.dy / len : 0) * Math.min(len / sc, maxR);
+    ctx.globalAlpha = 0.22;
+    ctx.strokeStyle = '#cfc6ff';
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(ox, oy, maxR, 0, Math.PI * 2); ctx.stroke();
+    ctx.globalAlpha = 0.30;
+    ctx.fillStyle = '#e6e0ff';
+    ctx.beginPath(); ctx.arc(kx, ky, 16, 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+
   // 暗潮结界:地图边界的流动光墙(世界坐标系内绘制)
   function drawBoundary(run) {
     var R = CFG.GAME.MAP_R;
@@ -318,7 +368,8 @@
     ctx.save();
     ctx.translate(CFG.GAME.W / 2 - camX, CFG.GAME.H / 2 - camY);
     drawBoundary(run);
-    Weapons.drawGround(ctx, run);   // 火焰池/圣光环:仅高于地板一层
+    Weapons.drawGround(ctx, run);      // 火焰池/圣光环:仅高于地板一层
+    Entities.drawLobMarkers(ctx, run); // 抛击落点红圈:同样在地面层
     Entities.draw(ctx, run);
     Weapons.draw(ctx, run);
     FX.draw(ctx);
@@ -348,6 +399,7 @@
     }
     // 小地图
     Minimap.draw(ctx, run);
+    drawJoystick();
     FX.drawUI(ctx);
   }
 
@@ -400,18 +452,27 @@
       UI.warn(m === 'full' ? '🗺 小地图:全图' : '🗺 小地图:周围');
     };
 
-    // 小地图点击切换(画布坐标需考虑缩放)
+    // 屏幕坐标是否落在小地图上(鼠标点击与触屏摇杆共用,避免手指按图变成移动)
+    function overMinimap(clientX, clientY) {
+      var rect = canvas.getBoundingClientRect();
+      if (!rect.width || !rect.height) return false;
+      var mx = (clientX - rect.left) * (CFG.GAME.W / rect.width);
+      var my = (clientY - rect.top) * (CFG.GAME.H / rect.height);
+      var box = Minimap.hitBox();
+      return mx >= box.x && mx <= box.x + box.w && my >= box.y && my <= box.y + box.h;
+    }
+    E.isOverMinimap = function (cx, cy) {
+      return state === 'run' && overMinimap(cx, cy);
+    };
+
+    // 小地图点击/触摸切换
     canvas.addEventListener('click', function (ev) {
       if (state !== 'run') return;
-      var rect = canvas.getBoundingClientRect();
-      var scaleX = CFG.GAME.W / rect.width, scaleY = CFG.GAME.H / rect.height;
-      var mx = (ev.clientX - rect.left) * scaleX;
-      var my = (ev.clientY - rect.top) * scaleY;
-      var S = 116; // SIZE in minimap.js
-      var x0 = CFG.GAME.W - S, y0 = 16;
-      if (mx >= x0 && mx <= x0 + S && my >= y0 && my <= y0 + S) {
-        E.onToggleMap();
-      }
+      if (overMinimap(ev.clientX, ev.clientY)) E.onToggleMap();
+    });
+    canvas.addEventListener('pointerdown', function (ev) {
+      if (ev.pointerType !== 'touch' || state !== 'run') return;
+      if (overMinimap(ev.clientX, ev.clientY)) E.onToggleMap();
     });
 
     UI.init({

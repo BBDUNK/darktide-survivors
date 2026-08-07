@@ -478,6 +478,9 @@ window.UI = (function () {
     // 顶部中央计时
     hudRefs.timer = h('div', 'hud-timer', '00:00');
     s.appendChild(hudRefs.timer);
+    // 下一事件倒计时
+    hudRefs.nextEv = h('div', 'hud-nextev hidden', '');
+    s.appendChild(hudRefs.nextEv);
     // 右上
     var tr = h('div', 'hud-tr');
     var goldRow = h('div', 'hud-stat');
@@ -526,6 +529,17 @@ window.UI = (function () {
     if (hudCache.t !== t) {
       hudCache.t = t; hudRefs.timer.textContent = t;
       hudRefs.timer.classList.toggle('endless', !!run.endless);
+    }
+    // 下一事件倒计时(≤10s 转红闪烁)
+    var ne = run.nextEvent;
+    if (ne) {
+      var nsec = Math.ceil(ne.left);
+      var neTxt = ne.label + ' ' + (nsec >= 60 ? Engine.fmtTime(nsec) : nsec + 's');
+      if (hudCache.ne !== neTxt) { hudCache.ne = neTxt; hudRefs.nextEv.textContent = neTxt; }
+      hudRefs.nextEv.classList.remove('hidden');
+      hudRefs.nextEv.classList.toggle('urgent', nsec <= 10);
+    } else if (!hudRefs.nextEv.classList.contains('hidden')) {
+      hudRefs.nextEv.classList.add('hidden');
     }
     if (hudCache.gold !== run.gold) { hudCache.gold = run.gold; hudRefs.gold.textContent = ' ' + run.gold; }
     if (hudCache.kills !== run.kills) { hudCache.kills = run.kills; hudRefs.kills.textContent = ' ' + run.kills; }

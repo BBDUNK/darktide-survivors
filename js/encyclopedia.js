@@ -76,7 +76,7 @@ window.Encyclopedia = (function () {
       // 逐级累计效果:用一个干净的属性对象试算
       var rows = [];
       for (var lv = 1; lv <= p.maxLv; lv++) {
-        var probe = { might: 0, cd: 0, crit: 0, critDmg: 0, hp: 0, regen: 0, area: 0, speed: 100, projSpd: 0, magnet: 0, luck: 0, lifesteal: 0, shieldMax: 0, shieldCd: 0 };
+        var probe = { might: 0, cd: 0, crit: 0, critDmg: 0, hp: 0, regen: 0, area: 0, speed: 100, projSpd: 0, magnet: 0, luck: 0, shieldMax: 0, shieldCd: 0 };
         p.apply(probe, lv);
         var eff = [];
         if (probe.might) eff.push('伤害 +' + Math.round(probe.might * 100) + '%');
@@ -90,7 +90,6 @@ window.Encyclopedia = (function () {
         if (probe.projSpd) eff.push('弹速 +' + Math.round(probe.projSpd * 100) + '%');
         if (probe.magnet) eff.push('拾取 +' + probe.magnet);
         if (probe.luck) eff.push('幸运 +' + Math.round(probe.luck * 100) + '%');
-        if (probe.lifesteal) eff.push('击杀回复生命上限 ' + (probe.lifesteal * 100).toFixed(0) + '%');
         if (probe.shieldMax) eff.push('护盾 ' + probe.shieldMax + '(每 ' + probe.shieldCd + 's 恢复)');
         rows.push({ lv: lv, text: eff.join(' · ') });
       }
