@@ -940,12 +940,11 @@
       var m = Minimap.toggle();
       UI.warn(m === 'full' ? '🗺 小地图:全图' : '🗺 小地图:周围');
     };
-    // 滚轮切换索敌方式
+    // 滚轮切换索敌方式(小地图下方小字实时显示,不弹提示)
     E.onScroll = function (dy) {
       if (state !== 'run') return;
       if (Math.abs(dy) < 1) return;
-      var m = Weapons.cycleTargetMode();
-      UI.toastText('🎯 索敌:' + m.name);
+      Weapons.cycleTargetMode();
     };
 
     // 屏幕坐标是否落在小地图上(鼠标点击与触屏摇杆共用,避免手指按图变成移动)
@@ -990,8 +989,8 @@
         UI.warn('∞ 无尽模式:活得越久,敌人越强!');
         state = 'run';
       },
-      // 触屏索敌按钮切换后的提示
-      onTargetChanged: function (name) { UI.toastText('🎯 索敌:' + name); },
+      // 触屏索敌按钮切换(小地图下方小字实时显示,不弹提示)
+      onTargetChanged: function () {},
       // 房主点「开始战斗」:建好队友实体并通知所有人开局
       onCoopStart: function () {
         var roster = Net.getRoster();
