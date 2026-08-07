@@ -3,11 +3,96 @@
   'use strict';
   var E = Engine;
   var canvas, ctx;
-  var state = 'menu'; // menu | run | levelup | chest | pause | result
+  var state = 'intro'; // intro | menu | run | levelup | chest | pause | result
   var run = null;
   var vignette = null;
   var achvTimer = 0;
   var dpsTimer = 0, lastDmg = 0;
+
+  // ================= 开幕过渡 =================
+  var introImg = null, introT = 0, introDone = false, introSkipped = false;
+  function bootIntro() {
+    introImg = new Image();
+    introImg.src = 'assets/intro.jpg';
+    introT = 0; introDone = false; introSkipped = false;
+    state = 'intro';
+  }
+  function skipIntro() {
+    if (introDone) return;
+    introDone = true;
+    state = 'menu';
+    UI.show('menu');     // 显示主菜单 DOM 层(标题屏也隐藏)
+    AudioSys.unlock();
+    AudioSys.playMusic('menu');
+  }
+  function updateIntro(dt) {
+    introT += dt;
+    if (introT >= 3 && !introDone) { introT = 3; skipIntro(); }
+  }
+  function renderIntro() {
+    var W = CFG.GAME.W, H = CFG.GAME.H;
+    // 背景图:尽量铺满,保持比例
+    if (introImg && introImg.width) {
+      var s = Math.max(W / introImg.width, H / introImg.height);
+      var iw = introImg.width * s, ih = introImg.height * s;
+      ctx.drawImage(introImg, (W - iw) / 2, (H - ih) / 2, iw, ih);
+    } else {
+      ctx.fillStyle = '#0b0812';
+      ctx.fillRect(0, 0, W, H);
+    }
+    // 顶部角色行(从右往左跳动,和主菜单对齐)
+    var chars = ['char_knight', 'char_mage', 'char_ranger', 'char_cleric', 'char_berserker', 'char_chrono'];
+    for (var ci = 0; ci < chars.length; ci++) {
+      var cx = ((introT * 36 + ci * 170) % (W + 220)) - 110;
+      var cy = 52 + Math.sin(introT * 3.2 + ci * 0.8) * 6;
+      var cfr = SpriteGen.frames(chars[ci]);
+      var cimg = cfr[Math.floor(introT * 5 + ci) % cfr.length];
+      ctx.globalAlpha = 0.6;
+      ctx.drawImage(cimg, cx, cy, 40, 40);
+      ctx.globalAlpha = 1;
+    }
+    // 中央题字
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 26px "Press Start 2P","Microsoft YaHei",monospace';
+    ctx.lineWidth = 6;
+    ctx.strokeStyle = 'rgba(0,0,0,0.85)';
+    ctx.strokeText('天庭制作组倾心呈现', W / 2, H / 2 - 30);
+    ctx.fillStyle = '#ffd76b';
+    ctx.fillText('天庭制作组倾心呈现', W / 2, H / 2 - 30);
+    ctx.font = '14px "Microsoft YaHei",sans-serif';
+    ctx.lineWidth = 4;
+    ctx.strokeText('特别鸣谢:SOTA Model', W / 2, H / 2 + 6);
+    ctx.fillStyle = '#cfe6ff';
+    ctx.fillText('特别鸣谢:SOTA Model', W / 2, H / 2 + 6);
+    // 底部怪物行(和主菜单一样,含精英/Boss)
+    var parade = ['bat', 'slime', 'zombie', 'skeleton', 'ghost', 'spider', 'orc',
+                  'boss_slimeking', 'boss_bonelord', 'boss_abysseye', 'boss_darklord'];
+    var crown = SpriteGen.get('elite_crown');
+    for (var i = 0; i < parade.length; i++) {
+      var pid = parade[i];
+      var x = ((introT * 40 + i * 152 + (i % 3) * 26) % (W + 200)) - 100;
+      var y = H - 70 + Math.sin(introT * 4 + i * 1.3) * 4;
+      var frames = SpriteGen.frames(pid);
+      var img = frames[Math.floor(introT * 5 + i) % frames.length];
+      var isBoss = pid.indexOf('boss_') === 0;
+      ctx.globalAlpha = 0.5;
+      ctx.drawImage(img, x, y, 32, 32);
+      if (isBoss) {
+        ctx.globalAlpha = 0.8;
+        ctx.drawImage(img, x - 4, y - 6, 42, 42);
+        ctx.globalAlpha = 0.7;
+        ctx.drawImage(crown, x + 2, y - 14, 16, 10);
+      }
+      ctx.globalAlpha = 1;
+    }
+    // 右下角跳过提示
+    ctx.font = '12px "Microsoft YaHei",sans-serif';
+    ctx.lineWidth = 4;
+    ctx.strokeText('轻触屏幕以跳过...', W - 14, H - 14);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText('轻触屏幕以跳过...', W - 14, H - 14);
+    ctx.textAlign = 'left';
+  }
 
   // ================= 联机 =================
   // 房主权威:房主跑完整模拟并广播快照;客户端只上报输入、渲染快照。
@@ -361,6 +446,7 @@
   // ================= 每帧更新 =================
   function update(dt) {
     FX.update(dt);
+    if (state === 'intro') { updateIntro(dt); return; }
     if (state !== 'run' || !run) return;
 
     run.t += dt;
@@ -631,6 +717,7 @@
   var menuT = 0;
   function render() {
     ctx.imageSmoothingEnabled = false;
+    if (state === 'intro') { renderIntro(); return; }
     if (state === 'menu' || state === 'result' || !run) {
       renderMenuBg();
       return;
@@ -698,15 +785,39 @@
     var pal = CFG.MAPS[0].palette;
     drawGround(pal, menuT * 30, Math.sin(menuT * 0.1) * 40);
     drawDecor(CFG.MAPS[0], menuT * 30, Math.sin(menuT * 0.1) * 40, 0, null);
-    // 游行的怪物剪影
-    var parade = ['bat', 'slime', 'zombie', 'skeleton', 'ghost', 'spider', 'orc'];
+
+    // 顶部角色行:从右往左跳动,和下面对齐错落
+    var chars = ['char_knight', 'char_mage', 'char_ranger', 'char_cleric', 'char_berserker', 'char_chrono'];
+    for (var ci = 0; ci < chars.length; ci++) {
+      var cx = ((menuT * 36 + ci * 170) % (CFG.GAME.W + 220)) - 110;
+      var cy = 62 + Math.sin(menuT * 3.2 + ci * 0.8) * 6;
+      var cfr = SpriteGen.frames(chars[ci]);
+      var cimg = cfr[Math.floor(menuT * 5 + ci) % cfr.length];
+      ctx.globalAlpha = 0.55;
+      ctx.drawImage(cimg, cx, cy, 40, 40);
+      ctx.globalAlpha = 1;
+    }
+
+    // 底部怪物行:普通怪 + 精英(BOSS 上加冠) + Boss,随机错落排列
+    var parade = ['bat', 'slime', 'zombie', 'skeleton', 'ghost', 'spider', 'orc',
+                  'boss_slimeking', 'boss_bonelord', 'boss_abysseye', 'boss_darklord'];
+    var crown = SpriteGen.get('elite_crown');
     for (var i = 0; i < parade.length; i++) {
-      var x = ((menuT * 40 + i * 150) % (CFG.GAME.W + 200)) - 100;
-      var y = CFG.GAME.H - 90 + Math.sin(menuT * 4 + i) * 4;
-      var frames = SpriteGen.frames(parade[i]);
+      var pid = parade[i];
+      var x = ((menuT * 40 + i * 152 + (i % 3) * 26) % (CFG.GAME.W + 200)) - 100;
+      var y = CFG.GAME.H - 90 + Math.sin(menuT * 4 + i * 1.3) * 4;
+      var frames = SpriteGen.frames(pid);
       var img = frames[Math.floor(menuT * 5 + i) % frames.length];
+      var isBoss = pid.indexOf('boss_') === 0;
       ctx.globalAlpha = 0.5;
       ctx.drawImage(img, x, y, 32, 32);
+      if (isBoss) {
+        // 精英/ Boss:戴冠 + 稍大 + 半透明高光
+        ctx.globalAlpha = 0.8;
+        ctx.drawImage(img, x - 4, y - 6, 42, 42);
+        ctx.globalAlpha = 0.7;
+        ctx.drawImage(crown, x + 2, y - 14, 16, 10);
+      }
       ctx.globalAlpha = 1;
     }
     ctx.drawImage(vignette, 0, 0);
@@ -730,6 +841,10 @@
     vignette = makeVignette();
     E.initInput(canvas);
     E.fitCanvas(canvas);
+    // 开幕过渡:点击跳过,进入主菜单
+    canvas.addEventListener('click', function () {
+      if (state === 'intro') skipIntro();
+    });
     E.onPause = function () {
       if (state === 'run' || state === 'pause') togglePause();
     };
@@ -885,6 +1000,9 @@
 
     // 全局兜底:文档级手势解锁音频
     document.addEventListener('pointerdown', function () { AudioSys.unlock(); }, { once: true });
+
+    // 以开幕过渡开场(3 秒,点击跳过)
+    bootIntro();
 
     Engine.start(update, render);
   }

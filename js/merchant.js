@@ -170,14 +170,16 @@ window.Merchant = (function () {
     ctx.globalAlpha = 1;
     ctx.drawImage(mimg, M.x - mimg.width, M.y - 56 - mimg.height * 2 + bob,
                   mimg.width * 2, mimg.height * 2);
-    // 招牌(无底色,直接描边文字)
-    ctx.font = 'bold 11px monospace';
+    // 招牌(无底色,直接描边文字)——上移到商人头顶上方,避免挡住形象
+    ctx.font = 'bold 13px monospace';
     ctx.textAlign = 'center';
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 4;
     ctx.strokeStyle = 'rgba(8,6,18,0.9)';
-    ctx.strokeText('行商浪人', M.x, M.y - 85);
+    ctx.strokeText('行商浪人', M.x, M.y - 108);
     ctx.fillStyle = '#ffd76b';
-    ctx.fillText('行商浪人', M.x, M.y - 85);
+    ctx.fillText('行商浪人', M.x, M.y - 108);
+    // 补货倒计时小闹钟
+    drawClock(ctx, run);
 
     for (var i = 0; i < slots.length; i++) {
       var s = slots[i];
@@ -220,18 +222,42 @@ window.Merchant = (function () {
         ctx.beginPath(); ctx.arc(sx, M.y, 20, 0, Math.PI * 2); ctx.fill();
         ctx.globalAlpha = 1;
       }
-      // 名称 + 价格(无底色,描边文字保证在任何背景上都可读)
-      ctx.font = '9px monospace';
-      ctx.lineWidth = 3;
-      ctx.strokeStyle = 'rgba(8,6,18,0.9)';
-      ctx.strokeText(s.good.name.slice(0, 8), sx, M.y + 21);
+      // 名称 + 价格:加大字号 + 半透明底片,清晰可读
+      ctx.font = 'bold 11px monospace';
+      ctx.textAlign = 'center';
+      var costTxt = '◈ ' + s.good.cost;
+      ctx.fillStyle = 'rgba(8,6,18,0.72)';
+      ctx.fillRect(sx - 34, M.y + 12, 68, 22);
       ctx.fillStyle = '#e8e2f5';
       ctx.fillText(s.good.name.slice(0, 8), sx, M.y + 21);
-      ctx.strokeText('◈ ' + s.good.cost, sx, M.y + 31);
       ctx.fillStyle = canAfford ? '#ffd76b' : '#ff8b94';
-      ctx.fillText('◈ ' + s.good.cost, sx, M.y + 31);
+      ctx.fillText(costTxt, sx, M.y + 31);
     }
     ctx.textAlign = 'left';
+  }
+
+  // 补货倒计时小闹钟:商人头顶右侧显示下次刷新剩余时间
+  function drawClock(ctx, run) {
+    var M = CFG.MERCHANT;
+    var remain = Math.max(0, nextRefresh - run.t);
+    var mm = Math.floor(remain / 60), ss = Math.floor(remain % 60);
+    var txt = (mm < 10 ? '0' : '') + mm + ':' + (ss < 10 ? '0' : '') + ss;
+    var cx = M.x + 46, cy = M.y - 86;
+    // 钟面
+    ctx.fillStyle = 'rgba(8,6,18,0.8)';
+    ctx.beginPath(); ctx.arc(cx, cy, 13, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = '#ffd76b'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(cx, cy, 13, 0, Math.PI * 2); ctx.stroke();
+    // 钟摆
+    ctx.strokeStyle = '#ffd76b'; ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + Math.sin(run.t * 2) * 6, cy + 10);
+    ctx.stroke();
+    // 剩余时间
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 9px monospace';
+    ctx.fillText(txt, cx, cy + 3);
   }
 
   return { reset: reset, update: update, draw: draw, roll: roll,
