@@ -864,11 +864,44 @@
     drawVaultArrows(ctx, run);
   }
 
+  // 主菜单飘落粒子:灰烬 + 零星血滴,营造黑暗血腥氛围
+  var menuAsh = [];
+  (function () {
+    for (var i = 0; i < 42; i++) {
+      menuAsh.push({
+        x: Math.random() * CFG.GAME.W,
+        y: Math.random() * CFG.GAME.H,
+        v: 8 + Math.random() * 22,          // 下落速度
+        drift: (Math.random() - 0.5) * 14,  // 横向飘
+        s: 1 + Math.random() * 2.4,
+        blood: Math.random() < 0.16,        // 少数是血滴
+        a: 0.18 + Math.random() * 0.35,
+        wob: Math.random() * 6.28
+      });
+    }
+  })();
+  function drawMenuAsh() {
+    for (var i = 0; i < menuAsh.length; i++) {
+      var a = menuAsh[i];
+      a.y += a.v / 60;
+      a.x += (a.drift + Math.sin(menuT * 1.3 + a.wob) * 8) / 60;
+      a.wob += 0.03;
+      if (a.y > CFG.GAME.H + 8) { a.y = -8; a.x = Math.random() * CFG.GAME.W; }
+      if (a.x < -8) a.x = CFG.GAME.W + 8;
+      if (a.x > CFG.GAME.W + 8) a.x = -8;
+      ctx.globalAlpha = a.a;
+      ctx.fillStyle = a.blood ? '#8a1420' : '#5a5650';
+      ctx.fillRect(a.x | 0, a.y | 0, a.s, a.s);
+    }
+    ctx.globalAlpha = 1;
+  }
+
   function renderMenuBg() {
     menuT += 1 / 60;
     var pal = CFG.MAPS[0].palette;
     drawGround(pal, menuT * 30, Math.sin(menuT * 0.1) * 40);
     drawDecor(CFG.MAPS[0], menuT * 30, Math.sin(menuT * 0.1) * 40, 0, null);
+    drawMenuAsh();
 
     // 顶部角色行:从右往左跳动,固定间隔整齐排列
     var chars = ['char_knight', 'char_mage', 'char_ranger', 'char_cleric', 'char_berserker', 'char_chrono'];

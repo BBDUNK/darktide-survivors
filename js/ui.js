@@ -73,25 +73,28 @@ window.UI = (function () {
   }
 
   // ---------- 主菜单 ----------
-  var menuGold, menuStats, menuBoard, menuGoldPile;
+  var menuStats, menuBoard, menuAltar;
   function buildMenu() {
     var s = h('div', 'screen');
     // 大标题:居中偏上,足够醒目
     var logo = h('div', 'logo menu-logo');
     logo.appendChild(h('div', 'logo-main menu-big', '暗潮幸存者'));
     s.appendChild(logo);
-    // 按钮列:缩小
+    // 按钮列:主列(开始/联机/设置),小按钮行(成就/百科)
     var col = h('div', 'menu-col');
     col.appendChild(btn(L.t('menu_start'), 'primary', function () { coopMode = false; refreshChars(); show('chars'); }));
     col.appendChild(btn(L.t('menu_coop'), '', function () { refreshLobbyEntry(); show('coop'); }));
-    col.appendChild(btn(L.t('menu_shop'), '', function () { refreshShop(); show('shop'); }));
-    col.appendChild(btn(L.t('menu_achv'), '', function () { refreshAchv(); show('achv'); }));
-    col.appendChild(btn(L.t('menu_codex'), '', function () { codexFrom = 'menu'; refreshCodex(); show('codex'); }));
     col.appendChild(btn(L.t('menu_settings'), '', function () { refreshSettings(); show('settings'); }));
     s.appendChild(col);
-    // 左侧金币山
-    menuGoldPile = h('div', 'menu-goldpile');
-    s.appendChild(menuGoldPile);
+    // 小按钮行:成就 + 百科全书(半尺寸,与主列错开)
+    var subRow = h('div', 'menu-subrow');
+    subRow.appendChild(btn(L.t('menu_achv'), 'sub', function () { refreshAchv(); show('achv'); }));
+    subRow.appendChild(btn(L.t('menu_codex'), 'sub', function () { codexFrom = 'menu'; refreshCodex(); show('codex'); }));
+    s.appendChild(subRow);
+    // 左侧强化圣坛(替代原金币框):跳转圣坛的快捷入口,显示金币数
+    menuAltar = h('div', 'menu-altar');
+    menuAltar.appendChild(h('div', 'menu-altar-title', '🏛 强化圣坛'));
+    s.appendChild(menuAltar);
     // 右侧公告栏:纸质底,红字
     menuBoard = h('div', 'menu-board');
     menuBoard.appendChild(h('div', 'menu-board-title', '📜 战报'));
@@ -102,17 +105,15 @@ window.UI = (function () {
   }
   function refreshMenu() {
     var d = Meta.data();
-    // 金币山:按数量分档显示金币堆状态
-    var gold = d.gold;
-    var pileTxt, pileCls;
-    if (gold <= 0) { pileTxt = '🪙 空空如也'; pileCls = 'empty'; }
-    else if (gold < 500) { pileTxt = '🪙 少许金币'; pileCls = 'few'; }
-    else if (gold < 3000) { pileTxt = '🪙 一堆金币'; pileCls = 'heap'; }
-    else if (gold < 10000) { pileTxt = '💰 金币小山'; pileCls = 'mountain'; }
-    else { pileTxt = '🪙 金山!'; pileCls = 'king'; }
-    menuGoldPile.innerHTML = '';
-    menuGoldPile.appendChild(h('div', 'goldpile-icon ' + pileCls, pileTxt));
-    menuGoldPile.appendChild(h('div', 'goldpile-num', gold.toLocaleString()));
+    // 左侧圣坛快捷入口:显示当前金币,点击跳转
+    menuAltar.innerHTML = '';
+    menuAltar.appendChild(h('div', 'menu-altar-title', '🏛 强化圣坛'));
+    var goldLine = h('div', 'menu-altar-gold');
+    goldLine.appendChild(iconCanvas('icon_gold', 16));
+    goldLine.appendChild(h('span', '', ' ' + d.gold.toLocaleString()));
+    menuAltar.appendChild(goldLine);
+    var goBtn = btn('进入', 'sub', function () { refreshShop(); show('shop'); });
+    menuAltar.appendChild(goBtn);
     // 公告栏:总击杀等,红字
     var st = d.stats;
     menuStats.innerHTML = '';

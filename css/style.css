@@ -114,11 +114,13 @@ body.touch-device.portrait .rotate-tip {
 .btn.danger:hover { border-color: var(--red); }
 .btn.small-btn { font-size: 13px; padding: 7px 16px; }
 .btn.disabled { opacity: 0.4; pointer-events: none; }
-.menu-col { display: flex; flex-direction: column; gap: 10px; align-items: center; position: absolute; left: 50%; top: 58%; transform: translate(-50%, -50%); }
+.menu-col { display: flex; flex-direction: column; gap: 12px; align-items: center; position: absolute; left: 50%; top: 62%; transform: translate(-50%, -50%); }
+/* 成就/百科小按钮行:与主列同宽,错开在下方 */
+.menu-subrow { position: absolute; left: 50%; top: calc(62% + 96px); transform: translateX(-50%); display: flex; gap: 14px; }
 .btn-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 6px; }
 
 /* ---------- 主菜单(Minecraft 风格) ---------- */
-.screen .menu-logo { position: absolute; top: 6%; left: 0; right: 0; }
+.screen .menu-logo { position: absolute; top: 4%; left: 0; right: 0; }
 .menu-big {
   font-size: 84px; letter-spacing: 12px;
   background: linear-gradient(180deg, #fff3c8 15%, var(--gold) 45%, #8a5a20 85%);
@@ -126,20 +128,15 @@ body.touch-device.portrait .rotate-tip {
   filter: drop-shadow(0 4px 0 #201400) drop-shadow(0 8px 18px rgba(0,0,0,0.9));
   animation: logoFloat 3s ease-in-out infinite;
 }
-/* 左侧金币山 */
-.menu-goldpile {
+/* 左侧强化圣坛快捷入口(原金币山位置) */
+.menu-altar {
   position: absolute; left: 24px; top: 40%;
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
-  padding: 16px 20px;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  padding: 16px 20px; min-width: 150px;
   background: rgba(10, 8, 20, 0.65); border: 2px solid var(--panel-line); border-radius: 10px;
 }
-.goldpile-icon { font-size: 34px; }
-.goldpile-icon.empty { filter: grayscale(1); opacity: 0.5; }
-.goldpile-icon.few { filter: none; }
-.goldpile-icon.heap { font-size: 40px; text-shadow: 0 0 12px rgba(255,215,107,0.5); }
-.goldpile-icon.mountain { font-size: 46px; text-shadow: 0 0 18px rgba(255,215,107,0.7); }
-.goldpile-icon.king { font-size: 50px; text-shadow: 0 0 22px rgba(255,215,107,0.9); }
-.goldpile-num { font-family: var(--font-pix); font-size: 16px; color: var(--gold); text-shadow: 2px 2px 0 #000; }
+.menu-altar-title { font-size: 15px; font-weight: 900; color: var(--gold); letter-spacing: 2px; text-shadow: 2px 2px 0 rgba(0,0,0,0.8); }
+.menu-altar-gold { display: flex; align-items: center; gap: 5px; font-size: 16px; color: var(--gold); font-family: var(--font-pix); }
 /* 右侧公告栏:纸质底红字 */
 .menu-board {
   position: absolute; right: 26px; top: 30%;
@@ -613,46 +610,47 @@ body.touch-device .hud-targetbtn { display: block; }
 .btn, .card, .map-card, .map-swatch, .info-box, .shop-item,
 .codex-cell, .enc-card, .achv-row, .modal-box, .lu-card, .chest-item,
 .coop-char, .coop-member, .coop-map, .coop-lu-box, .coop-input,
-.hp-wrap, .slot, .boss-bar, .menu-board, .menu-goldpile, .toast,
+.hp-wrap, .slot, .boss-bar, .menu-board, .menu-altar, .toast,
 .coop-code, .enc-stat, .menu-board {
   border-radius: 0;
 }
 
-/* 按钮:石砖浮雕,像素字体 */
+/* 按钮:石砖浮雕,像素字体。3px 粗描边 + 双层斜角,立体感更强 */
 .btn {
   font-family: var(--font-pix);
   font-size: 14px;
   background: linear-gradient(180deg, #909098 0%, #7b7b84 45%, #5c5c66 100%);
   color: #fff;
-  border: 2px solid #1e1e25;
+  border: 3px solid #14141a;
+  outline: 1px solid rgba(255,255,255,0.08);
   letter-spacing: 1px;
   font-weight: 700;
   text-shadow: 2px 2px 0 rgba(0,0,0,0.75);
-  box-shadow: var(--mc-bevel), 0 3px 0 #1a1a20;
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.28), inset 0 -4px 0 rgba(0,0,0,0.5), 0 4px 0 #121216;
 }
 .btn:hover {
   border-color: #000;
-  box-shadow: var(--mc-bevel), 0 3px 0 #1a1a20, 0 0 14px rgba(255,255,255,0.18);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.28), inset 0 -4px 0 rgba(0,0,0,0.5), 0 4px 0 #121216, 0 0 14px rgba(255,255,255,0.18);
   transform: translateY(-1px);
 }
 .btn:active {
   transform: translateY(2px);
-  box-shadow: inset 0 3px 0 rgba(0,0,0,0.5);
+  box-shadow: inset 0 3px 0 rgba(0,0,0,0.5), inset 0 -2px 0 rgba(0,0,0,0.3);
 }
 .btn.big { font-size: 15px; }
 .btn.primary {
   background: linear-gradient(180deg, #d8b14c 0%, #b2872d 45%, #8a671c 100%);
   color: #fff;
-  border-color: #4a3508;
+  border-color: #3a2a08;
 }
-.btn.primary:hover { box-shadow: var(--mc-bevel), 0 3px 0 #4a3508, 0 0 18px rgba(255,215,107,0.35); }
+.btn.primary:hover { box-shadow: inset 0 2px 0 rgba(255,255,255,0.28), inset 0 -4px 0 rgba(0,0,0,0.5), 0 4px 0 #3a2a08, 0 0 18px rgba(255,215,107,0.35); }
 .btn.danger {
   background: linear-gradient(180deg, #b04c3f 0%, #8a352c 45%, #66201a 100%);
-  border-color: #2e0d08;
+  border-color: #260c06;
 }
-.btn.danger:hover { box-shadow: var(--mc-bevel), 0 3px 0 #2e0d08, 0 0 16px rgba(255,89,100,0.35); }
+.btn.danger:hover { box-shadow: inset 0 2px 0 rgba(255,255,255,0.28), inset 0 -4px 0 rgba(0,0,0,0.5), 0 4px 0 #260c06, 0 0 16px rgba(255,89,100,0.35); }
 .btn.toggle { background: linear-gradient(180deg, #67676f, #50505a 45%, #3a3a44); }
-.btn.toggle.on { background: linear-gradient(180deg, #4f9444, #3a7230 45%, #285322); border-color: #14330f; color: #fff; }
+.btn.toggle.on { background: linear-gradient(180deg, #4f9444, #3a7230 45%, #285322); border-color: #10280a; color: #fff; }
 .btn.small-btn { font-size: 12px; }
 
 /* 面板/卡片:深色背包底 + 浮雕描边 */
@@ -700,6 +698,33 @@ body.touch-device .hud-targetbtn { display: block; }
   text-shadow: 4px 4px 0 #2b2b2b, 8px 8px 0 rgba(0,0,0,0.55);
   animation: none;
 }
+/* 主菜单标题:加粗加大 + 黑暗血腥破损质感 */
+.menu-big {
+  font-size: 108px;
+  font-weight: 900;
+  letter-spacing: 16px;
+  color: #d8dde6;
+  text-shadow:
+    0 -1px 0 #6b5a4a, 0 1px 0 #3a2a1a,
+    3px 3px 0 #2a1a12, 5px 5px 0 #1a0f08,
+    0 0 24px rgba(180, 20, 20, 0.55), 0 0 60px rgba(120, 10, 10, 0.4),
+    inset 0 0 0 0 rgba(200, 30, 30, 0.3);
+  animation: titleBreath 3.5s ease-in-out infinite;
+}
+/* 破损:底部撕裂感——用 text-shadow 制造锈蚀暗斑 */
+.menu-big::after {
+  content: '';
+  position: absolute; left: 50%; transform: translateX(-50%);
+  bottom: -6px; width: 62%; height: 24px;
+  background:
+    linear-gradient(180deg, rgba(10, 5, 5, 0), rgba(10, 5, 5, 0.9)),
+    repeating-linear-gradient(90deg, rgba(120, 20, 20, 0.5) 0 8px, transparent 8px 13px, rgba(90, 15, 15, 0.4) 13px 17px);
+  pointer-events: none;
+}
+@keyframes titleBreath {
+  0%, 100% { transform: translateY(0) scale(1); text-shadow: 0 -1px 0 #6b5a4a, 0 1px 0 #3a2a1a, 3px 3px 0 #2a1a12, 5px 5px 0 #1a0f08, 0 0 24px rgba(180,20,20,0.55), 0 0 60px rgba(120,10,10,0.4); }
+  50% { transform: translateY(-2px) scale(1.012); text-shadow: 0 -1px 0 #6b5a4a, 0 1px 0 #3a2a1a, 3px 3px 0 #2a1a12, 5px 5px 0 #1a0f08, 0 0 34px rgba(220,30,30,0.8), 0 0 80px rgba(160,15,15,0.55); }
+}
 .logo.small .logo-main { letter-spacing: 5px; }
 .logo-sub { color: #c9c9d6; text-shadow: 2px 2px 0 rgba(0,0,0,0.8); }
 .result-title { font-family: var(--font-pix); letter-spacing: 6px; text-shadow: 4px 4px 0 rgba(0,0,0,0.85); }
@@ -720,13 +745,6 @@ body.touch-device .hud-targetbtn { display: block; }
 .board-label { color: #e8d8b0; }
 .board-val { color: #ffd76b; text-shadow: 1px 1px 0 rgba(0,0,0,0.5); }
 
-/* 金币山容器:石质底座 */
-.menu-goldpile {
-  background: rgba(0,0,0,0.55);
-  border: 2px solid #000;
-  box-shadow: var(--mc-frame), 0 3px 0 rgba(0,0,0,0.4);
-}
-
 /* 血条/能量条/槽位:方块化 */
 .hp-wrap, .boss-bar, .slot {
   border-radius: 0;
@@ -746,15 +764,37 @@ body.touch-device .hud-targetbtn { display: block; }
 .menu-col { gap: 14px; }
 .menu-col .btn {
   width: 260px;
-  height: 52px;
+  height: 44px;
   padding: 0;
   font-size: 16px;
-  line-height: 50px;
+  line-height: 42px;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
+  letter-spacing: 3px;
 }
+/* 成就/百科小按钮:主列一半尺寸 */
+.btn.sub {
+  width: 120px;
+  height: 30px;
+  padding: 0;
+  font-size: 12px;
+  line-height: 28px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 1px;
+}
+/* 左侧圣坛框:MC 石质底座 */
+.menu-altar {
+  background: rgba(0,0,0,0.55);
+  border: 2px solid #000;
+  border-radius: 0;
+  box-shadow: var(--mc-frame), 0 3px 0 rgba(0,0,0,0.4);
+}
+.menu-altar .btn.sub { width: 110px; }
 
 /* 窄屏适配 */
 @media (max-width: 700px) {
