@@ -222,14 +222,16 @@ window.Merchant = (function () {
         ctx.beginPath(); ctx.arc(sx, M.y, 20, 0, Math.PI * 2); ctx.fill();
         ctx.globalAlpha = 1;
       }
-      // 名称 + 价格:加大字号 + 半透明底片,清晰可读
+      // 名称 + 价格:描边文字保证可读,不要黑底
       ctx.font = 'bold 11px monospace';
       ctx.textAlign = 'center';
       var costTxt = '◈ ' + s.good.cost;
-      ctx.fillStyle = 'rgba(8,6,18,0.72)';
-      ctx.fillRect(sx - 34, M.y + 12, 68, 22);
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = 'rgba(8,6,18,0.9)';
+      ctx.strokeText(s.good.name.slice(0, 8), sx, M.y + 21);
       ctx.fillStyle = '#e8e2f5';
       ctx.fillText(s.good.name.slice(0, 8), sx, M.y + 21);
+      ctx.strokeText(costTxt, sx, M.y + 31);
       ctx.fillStyle = canAfford ? '#ffd76b' : '#ff8b94';
       ctx.fillText(costTxt, sx, M.y + 31);
     }

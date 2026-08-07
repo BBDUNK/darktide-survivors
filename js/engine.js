@@ -177,12 +177,13 @@ window.Engine = (function () {
     var ui = document.getElementById('ui');
     function resize() {
       var w = window.innerWidth, h = window.innerHeight;
-      var scale = Math.min(w / CFG.GAME.W, h / CFG.GAME.H);
+      // Math.max:拉伸填满整个窗口,不留黑边。画布与 UI 同步拉伸,内容会轻微变形,
+      // 但符合"完全适配边框"的要求。
+      var scale = Math.max(w / CFG.GAME.W, h / CFG.GAME.H);
       viewScale = scale;
       var cw = Math.round(CFG.GAME.W * scale), ch = Math.round(CFG.GAME.H * scale);
       canvas.style.width = cw + 'px';
       canvas.style.height = ch + 'px';
-      // UI 用 transform 缩放到与画布同尺寸,内部仍按 960×540 逻辑像素布局
       if (ui) {
         ui.style.width = CFG.GAME.W + 'px';
         ui.style.height = CFG.GAME.H + 'px';

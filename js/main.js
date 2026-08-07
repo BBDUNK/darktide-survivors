@@ -303,6 +303,97 @@
     }
   }
 
+  // ================= 四角金库 =================
+  // 地图四个角落各一个宝箱,金币随时间增长:默认 20,每分钟 +20,上限 100。
+  // 走到宝箱附近自动拾取全部金币,然后宝箱重置为 20 重新累积。
+  var vaults = [];
+  function initVaults(run) {
+    var R = CFG.GAME.MAP_R - 120;   // 略缩进,别贴边界
+    vaults = [
+      { x: -R, y: -R, gold: 20, t: 0, picked: 0 },
+      { x:  R, y: -R, gold: 20, t: 0, picked: 0 },
+      { x: -R, y:  R, gold: 20, t: 0, picked: 0 },
+      { x:  R, y:  R, gold: 20, t: 0, picked: 0 }
+    ];
+  }
+  function updateVaults(run, dt) {
+    for (var i = 0; i < vaults.length; i++) {
+      var v = vaults[i];
+      v.t += dt;
+      // 金币随时间增长:每 60 秒 +20,上限 100
+      var add = Math.floor(v.t / 60);
+      if (add > v.picked) {
+        v.gold = Math.min(100, v.gold + 20 * (add - v.picked));
+        v.picked = add;
+      }
+      // 走到宝箱旁自动拾取
+      var p = run.player;
+      if (E.dist2(p.x, p.y, v.x, v.y) < 40 * 40) {
+        if (v.gold > 0) {
+          var g = v.gold;
+          run.gold += g;
+          Meta.track('gold', g);
+          FX.burst(v.x, v.y, { color: '#ffd76b', n: 14, speed: 110, life: 0.5, size: 2 });
+          FX.ring(v.x, v.y, { r: 34, color: '#ffd76b', life: 0.4, width: 3 });
+          AudioSys.play('coin');
+          // 重置累积
+          v.gold = 20; v.t = 0; v.picked = 0;
+        }
+      }
+    }
+  }
+  // 四角金库绘制(世界坐标版本,在 translate 块内调用;宝箱本身)
+  function drawVaults(ctx, run) {
+    for (var i = 0; i < vaults.length; i++) {
+      var v = vaults[i];
+      var sx = v.x, sy = v.y;   // 世界坐标,translate 已处理好
+      var bob = Math.sin(run.t * 2.5 + i * 1.2) * 3;
+      ctx.globalAlpha = 0.4;
+      ctx.drawImage(SpriteGen.get('vfx_shadow'), sx - 14, sy - 52, 28, 9);
+      ctx.globalAlpha = 1;
+      var cimg = SpriteGen.get('chest');
+      var pulse = 0.5 + Math.sin(run.t * 4 + i) * 0.5;
+      var gr = ctx.createRadialGradient(sx, sy, 1, sx, sy, 30);
+      gr.addColorStop(0, 'rgba(255,215,107,' + (0.25 + pulse * 0.2).toFixed(2) + ')');
+      gr.addColorStop(1, 'rgba(255,215,107,0)');
+      ctx.fillStyle = gr;
+      ctx.beginPath(); ctx.arc(sx, sy, 30, 0, Math.PI * 2); ctx.fill();
+      ctx.drawImage(cimg, sx - 16, sy - 16 + bob, 32, 32);
+      // 金币数字
+      ctx.font = 'bold 10px monospace';
+      ctx.textAlign = 'center';
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = 'rgba(8,6,18,0.9)';
+      ctx.strokeText('◈' + v.gold, sx, sy + 26);
+      ctx.fillStyle = '#ffd76b';
+      ctx.fillText('◈' + v.gold, sx, sy + 26);
+      ctx.textAlign = 'left';
+    }
+  }
+  // 四角金库边框箭头(屏幕坐标版本,在 translate 块外调用)
+  function drawVaultArrows(ctx, run) {
+    for (var i = 0; i < vaults.length; i++) {
+      var v = vaults[i];
+      var sx = v.x - E.cam.x + CFG.GAME.W / 2;
+      var sy = v.y - E.cam.y + CFG.GAME.H / 2;
+      if (sx >= -20 && sx <= CFG.GAME.W + 20 && sy >= -20 && sy <= CFG.GAME.H + 20) continue;
+      var dx = sx - CFG.GAME.W / 2, dy = sy - CFG.GAME.H / 2;
+      var ang = Math.atan2(dy, dx);
+      var ax = E.clamp(sx, 26, CFG.GAME.W - 26);
+      var ay = E.clamp(sy, 26, CFG.GAME.H - 26);
+      ctx.save();
+      ctx.translate(ax, ay);
+      ctx.rotate(ang);
+      ctx.globalAlpha = 0.85 + Math.sin(run.t * 5 + i) * 0.15;
+      ctx.fillStyle = '#ffd76b';
+      ctx.beginPath();
+      ctx.moveTo(8, 0); ctx.lineTo(-5, -7); ctx.lineTo(-5, 7);
+      ctx.closePath(); ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.restore();
+    }
+  }
+
   // ================= 开局 =================
   function newRun(charId, mapId) {
     var charDef = null, mapDef = null, i;
@@ -360,6 +451,7 @@
     Meta.track('run');
     Meta.seeCodex(charDef.sprite);
     Merchant.reset(run);   // 流浪商人摆摊
+    initVaults(run);       // 四角金库
 
     lastDmg = 0; dpsTimer = 0; achvTimer = 0;
 
@@ -447,6 +539,7 @@
     if (run.freezeT > 0) run.freezeT -= dt;
 
     Merchant.update(run, dt);   // 流浪商人:定时补货 + 走上自动购买
+    updateVaults(run, dt);      // 四角金库:金币随时间增长 + 走到自动拾取
     applyCoopAuras();    // 队友光环互益:圣光环持有者为附近队友回血与加成
 
     // 联机客户端:只上报输入 + 渲染房主快照,不跑本地模拟(避免两端分歧)
@@ -728,6 +821,7 @@
     drawBoundary(run);
     Weapons.drawGround(ctx, run);
     Merchant.draw(ctx, run);          // 摊位在地面层之上、角色之下
+    drawVaults(ctx, run);             // 四角金库(含屏幕外箭头指示)
     Entities.drawLobMarkers(ctx, run);
     // 联机队友:房主画 mates,客户端画从快照解出的 remote
     if (coop.on) {
@@ -744,6 +838,9 @@
     Weapons.draw(ctx, run);
     FX.draw(ctx);
     ctx.restore();
+
+    // 屏幕边框箭头:指示屏幕外的金库宝箱方向
+    drawVaultArrows(ctx, run);
 
     // 玩家周围柔光:提升主体可读性
     var pls = CFG.GAME.W / 2 + (run.player.x - camX);
