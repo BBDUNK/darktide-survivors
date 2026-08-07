@@ -1,4 +1,4 @@
-/* 暗潮幸存者 — 全局样式 */
+/* 破晓镇魂 — 全局样式 */
 @font-face {
   font-family: 'Press Start 2P';
   src: url('../fonts/press-start-2p.woff2') format('woff2');
@@ -142,15 +142,26 @@ body.touch-device.portrait .rotate-tip {
   filter: drop-shadow(0 4px 0 #201400) drop-shadow(0 8px 18px rgba(0,0,0,0.9));
   animation: logoFloat 3s ease-in-out infinite;
 }
-/* 左侧强化圣坛快捷入口 */
+/* 左侧强化圣坛快捷入口:白色大理石质感 */
 .menu-altar {
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
   width: 200px; height: 300px;
   padding: 18px;
-  background: rgba(10, 8, 20, 0.72); border: 2px solid var(--panel-line); border-radius: 10px;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(255,255,255,0.9), rgba(230,225,215,0.75) 40%, rgba(190,182,165,0.6) 100%),
+    repeating-linear-gradient(115deg, rgba(210,204,188,0.5) 0 2px, transparent 2px 7px);
+  border: 3px solid #8a8578;
+  border-radius: 10px;
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.9), inset 0 -4px 0 rgba(120,110,90,0.5), 0 4px 0 rgba(0,0,0,0.5);
 }
-.menu-altar-title { font-size: 16px; font-weight: 900; color: var(--gold); letter-spacing: 2px; text-shadow: 2px 2px 0 rgba(0,0,0,0.8); text-align: center; }
-.menu-altar-gold { display: flex; align-items: center; gap: 5px; font-size: 18px; color: var(--gold); font-family: var(--font-pix); }
+.menu-altar-icon {
+  width: 56px; height: 56px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.45); border: 2px solid #a89f8c; border-radius: 50%;
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.8), 0 2px 6px rgba(90,80,60,0.35);
+}
+.menu-altar-title { font-size: 16px; font-weight: 900; color: #5a2b0a; letter-spacing: 2px; text-shadow: 0 1px 0 rgba(255,255,255,0.6); text-align: center; }
+.menu-altar-gold { display: flex; align-items: center; gap: 5px; font-size: 18px; color: #8a6a00; font-family: var(--font-pix); text-shadow: 0 1px 0 rgba(255,255,255,0.5); }
 /* 右侧公告栏:纸质底红字 */
 .menu-board {
   display: flex; flex-direction: column; gap: 8px;
@@ -497,6 +508,21 @@ body.touch-device .hud-targetbtn { display: block; }
   display: flex; flex-direction: column; gap: 6px;
 }
 .enc-evohead { display: flex; align-items: center; gap: 10px; }
+
+/* 故事背景卡:插图 + 段落 */
+.story-card { gap: 14px; }
+.story-head { gap: 14px; }
+.story-illu {
+  width: 52px !important; height: 52px !important;
+  image-rendering: pixelated;
+  border: 2px solid var(--panel-line); border-radius: 4px;
+  background: rgba(12, 8, 24, 0.7); padding: 4px;
+}
+.story-body { display: flex; flex-direction: column; gap: 10px; }
+.story-para {
+  font-size: 14px; color: var(--text); line-height: 1.8;
+  text-indent: 2em;
+}
 .enc-evoname { font-size: 15px; font-weight: 800; color: #ffe9a8; }
 .enc-evoneed { font-size: 12px; color: #9ad9a0; line-height: 1.6; }
 .enc-evomult { font-size: 12px; color: #ffb0c0; }
@@ -801,14 +827,19 @@ body.touch-device .hud-targetbtn { display: block; }
   justify-content: center;
   letter-spacing: 1px;
 }
-/* 左侧圣坛框:MC 石质底座 */
-.menu-altar {
-  background: rgba(0,0,0,0.55);
-  border: 2px solid #000;
-  border-radius: 0;
-  box-shadow: var(--mc-frame), 0 3px 0 rgba(0,0,0,0.4);
-}
+/* 圣坛大理石底色由上方 .menu-altar 定义,MC 主题不再覆盖 */
 .menu-altar .btn.sub { width: 130px; }
+/* 圣坛进入按钮:宝石红 */
+.btn.ruby {
+  background: linear-gradient(180deg, #e34a5c 0%, #b32038 50%, #7a1424 100%);
+  color: #ffe9ec;
+  border-color: #4a0a12;
+  text-shadow: 1px 1px 0 rgba(60,0,10,0.8);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.35), inset 0 -4px 0 rgba(0,0,0,0.45), 0 4px 0 #4a0a12, 0 0 14px rgba(227,74,92,0.35);
+}
+.btn.ruby:hover {
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.35), inset 0 -4px 0 rgba(0,0,0,0.45), 0 4px 0 #4a0a12, 0 0 22px rgba(255,90,110,0.6);
+}
 
 /* 窄屏适配 */
 @media (max-width: 700px) {

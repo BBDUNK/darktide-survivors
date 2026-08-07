@@ -58,7 +58,7 @@ window.UI = (function () {
   function buildTitle() {
     var s = h('div', 'screen center-col');
     var logo = h('div', 'logo');
-    logo.appendChild(h('div', 'logo-main', '暗潮幸存者'));
+    logo.appendChild(h('div', 'logo-main', '破晓镇魂'));
     logo.appendChild(h('div', 'logo-sub', 'DARKTIDE SURVIVORS'));
     s.appendChild(logo);
     s.appendChild(h('div', 'blink hint', L.t('title_click')));
@@ -78,7 +78,7 @@ window.UI = (function () {
     var s = h('div', 'screen menu-screen');
     // 大标题:居中偏上
     var logo = h('div', 'logo menu-logo');
-    logo.appendChild(h('div', 'logo-main menu-big', '暗潮幸存者'));
+    logo.appendChild(h('div', 'logo-main menu-big', '破晓镇魂'));
     s.appendChild(logo);
     // 三列主体:左右侧栏对称,中间按钮列
     var body = h('div', 'menu-body');
@@ -114,14 +114,17 @@ window.UI = (function () {
   function refreshMenu() {
     var d = Meta.data();
     menuVersion.textContent = CFG.GAME.VERSION;
-    // 左侧圣坛快捷入口:显示当前金币,点击跳转
+    // 左侧圣坛快捷入口:大图标置顶 + 标题 + 金币 + 宝石红进入按钮
     menuAltar.innerHTML = '';
+    var iconBox = h('div', 'menu-altar-icon');
+    iconBox.appendChild(iconCanvas('icon_gold', 44));
+    menuAltar.appendChild(iconBox);
     menuAltar.appendChild(h('div', 'menu-altar-title', '🏛 强化圣坛'));
     var goldLine = h('div', 'menu-altar-gold');
     goldLine.appendChild(iconCanvas('icon_gold', 16));
     goldLine.appendChild(h('span', '', ' ' + d.gold.toLocaleString()));
     menuAltar.appendChild(goldLine);
-    var goBtn = btn('进入', 'sub', function () { refreshShop(); show('shop'); });
+    var goBtn = btn(L.t('altar_enter'), 'sub ruby', function () { refreshShop(); show('shop'); });
     menuAltar.appendChild(goBtn);
     // 公告栏:总击杀等,红字
     var st = d.stats;
@@ -145,14 +148,14 @@ window.UI = (function () {
   var charGrid, charInfo;
   function buildChars() {
     var s = h('div', 'screen panel-col');
-    s.appendChild(h('div', 'page-title', '选择角色'));
+    s.appendChild(h('div', 'page-title', L.t('pick_char')));
     charGrid = h('div', 'card-grid');
     s.appendChild(charGrid);
     charInfo = h('div', 'info-box');
     s.appendChild(charInfo);
     var row = h('div', 'btn-row');
-    row.appendChild(btn('← 返回', '', function () { show('menu'); }));
-    row.appendChild(btn('下一步 →', 'primary', function () { refreshMaps(); show('maps'); }));
+    row.appendChild(btn(L.t('back'), '', function () { show('menu'); }));
+    row.appendChild(btn(L.t('next') + ' →', 'primary', function () { refreshMaps(); show('maps'); }));
     s.appendChild(row);
     screens.chars = s; root.appendChild(s);
   }
@@ -188,12 +191,12 @@ window.UI = (function () {
   var mapGrid;
   function buildMaps() {
     var s = h('div', 'screen panel-col');
-    s.appendChild(h('div', 'page-title', '选择地图'));
+    s.appendChild(h('div', 'page-title', L.t('pick_map')));
     mapGrid = h('div', 'card-grid maps');
     s.appendChild(mapGrid);
     var row = h('div', 'btn-row');
-    row.appendChild(btn('← 返回', '', function () { show('chars'); }));
-    row.appendChild(btn('⚔ 出发!', 'primary big', function () {
+    row.appendChild(btn(L.t('back'), '', function () { show('chars'); }));
+    row.appendChild(btn(L.t('start_run'), 'primary big', function () {
       AudioSys.play('run_start');
       cb.onStartRun(sel.charId, sel.mapId);
     }));
@@ -229,16 +232,16 @@ window.UI = (function () {
   var shopGrid, shopGold;
   function buildShop() {
     var s = h('div', 'screen panel-col wide');
-    s.appendChild(h('div', 'page-title', '强化圣坛'));
+    s.appendChild(h('div', 'page-title', L.t('shop_title')));
     shopGold = h('div', 'gold-line');
     s.appendChild(shopGold);
     shopGrid = h('div', 'shop-grid');
     s.appendChild(shopGrid);
     var row = h('div', 'btn-row');
-    row.appendChild(btn('← 返回', '', function () { show('menu'); }));
-    row.appendChild(btn('重置返还全部金币', 'danger small-btn', function () {
+    row.appendChild(btn(L.t('back'), '', function () { show('menu'); }));
+    row.appendChild(btn(L.t('shop_reset'), 'danger small-btn', function () {
       var back = Meta.refundAll();
-      toastText('已重置,返还 ' + back + ' 金币');
+      toastText(L.t('shop_reset_done') + back + L.t('shop_gold'));
       refreshShop();
     }));
     s.appendChild(row);
@@ -265,9 +268,9 @@ window.UI = (function () {
       for (var i = 0; i < m.maxLv; i++) pips.appendChild(h('span', 'pip' + (i < lv ? ' on' : '')));
       item.appendChild(pips);
       if (cost < 0) {
-        item.appendChild(h('div', 'shop-max', 'MAX'));
+        item.appendChild(h('div', 'shop-max', L.t('shop_max')));
       } else {
-        var b = btn(cost + ' 金币', 'buy' + (d.gold < cost ? ' disabled' : ''), function () {
+        var b = btn(cost + L.t('shop_gold'), 'buy' + (d.gold < cost ? ' disabled' : ''), function () {
           if (Meta.buyMeta(m.id)) {
             AudioSys.play('coin');
             var fresh = Meta.checkAchv();
@@ -285,10 +288,10 @@ window.UI = (function () {
   var achvList;
   function buildAchv() {
     var s = h('div', 'screen panel-col wide');
-    s.appendChild(h('div', 'page-title', '成就'));
+    s.appendChild(h('div', 'page-title', L.t('achv_title')));
     achvList = h('div', 'achv-list');
     s.appendChild(achvList);
-    s.appendChild(btn('← 返回', '', function () { show('menu'); }));
+    s.appendChild(btn(L.t('back'), '', function () { show('menu'); }));
     screens.achv = s; root.appendChild(s);
   }
   function refreshAchv() {
@@ -304,10 +307,10 @@ window.UI = (function () {
       mid.appendChild(h('div', 'achv-name', a.name));
       mid.appendChild(h('div', 'achv-desc', a.desc));
       row.appendChild(mid);
-      row.appendChild(h('div', 'achv-reward', '+' + a.reward + ' 金'));
+      row.appendChild(h('div', 'achv-reward', '+' + a.reward + L.t('achv_reward')));
       achvList.appendChild(row);
     });
-    achvList.insertBefore(h('div', 'achv-progress', '已达成 ' + got + ' / ' + CFG.ACHV.length), achvList.firstChild);
+    achvList.insertBefore(h('div', 'achv-progress', L.t('achv_progress') + got + ' / ' + CFG.ACHV.length), achvList.firstChild);
   }
 
   // ---------- 联机:入口 + 大厅 ----------
@@ -318,19 +321,19 @@ window.UI = (function () {
 
   function buildCoop() {
     var s = h('div', 'screen panel-col');
-    s.appendChild(h('div', 'page-title', '联机远征'));
+    s.appendChild(h('div', 'page-title', L.t('coop_title')));
 
     coopEntry = h('div', 'coop-entry');
     var nameRow = h('div', 'coop-row');
-    nameRow.appendChild(h('span', 'coop-label', '昵称'));
+    nameRow.appendChild(h('span', 'coop-label', L.t('coop_nick')));
     var nameIn = h('input', 'coop-input');
-    nameIn.type = 'text'; nameIn.value = '幸存者' + (100 + Math.floor(Math.random() * 900));
+    nameIn.type = 'text'; nameIn.value = L.t('coop_default_nick') + (100 + Math.floor(Math.random() * 900));
     nameIn.maxLength = 10;
     nameRow.appendChild(nameIn);
     coopEntry.appendChild(nameRow);
 
-    coopEntry.appendChild(btn('🏠 创建房间', 'big primary', function () {
-      coopHint.textContent = '正在创建房间…';
+    coopEntry.appendChild(btn(L.t('coop_create'), 'big primary', function () {
+      coopHint.textContent = L.t('coop_creating');
       Net.host(nameIn.value).then(function (code) {
         coopMode = true;
         coopHint.textContent = '';
@@ -341,12 +344,12 @@ window.UI = (function () {
     }));
 
     var joinRow = h('div', 'coop-row');
-    joinRow.appendChild(h('span', 'coop-label', '房间号'));
+    joinRow.appendChild(h('span', 'coop-label', L.t('coop_room_code')));
     var codeIn = h('input', 'coop-input code');
     codeIn.type = 'text'; codeIn.maxLength = 5; codeIn.placeholder = 'ABCDE';
     joinRow.appendChild(codeIn);
     coopEntry.appendChild(joinRow);
-    coopEntry.appendChild(btn('🔗 加入房间', 'big', function () {
+    coopEntry.appendChild(btn(L.t('coop_join'), 'big', function () {
       if (!codeIn.value.trim()) { coopHint.textContent = '请输入房间号'; return; }
       coopHint.textContent = '正在连接…';
       Net.join(codeIn.value, nameIn.value).then(function () {
@@ -361,17 +364,17 @@ window.UI = (function () {
     coopHint = h('div', 'coop-hint', '');
     coopEntry.appendChild(coopHint);
     coopEntry.appendChild(h('div', 'coop-note',
-      '联机为点对点直连(WebRTC),房主需保持在线。首次使用需联网加载连接库。'));
+      L.t('coop_note')));
     s.appendChild(coopEntry);
 
     // 大厅
     coopLobby = h('div', 'coop-lobby hidden');
     coopCodeLine = h('div', 'coop-code-line', '');
     coopLobby.appendChild(coopCodeLine);
-    coopLobby.appendChild(h('div', 'coop-sub', '选择角色,全员准备后由房主开始'));
+    coopLobby.appendChild(h('div', 'coop-sub', L.t('coop_sub')));
     // 地图选择(仅房主可改;选择广播给全员同步显示)
     var mapRow = h('div', 'coop-row');
-    mapRow.appendChild(h('span', 'coop-label', '地图'));
+    mapRow.appendChild(h('span', 'coop-label', L.t('coop_map')));
     coopMapBox = h('div', 'coop-maps');
     mapRow.appendChild(coopMapBox);
     coopLobby.appendChild(mapRow);
@@ -379,13 +382,13 @@ window.UI = (function () {
     coopLobby.appendChild(coopCharBox);
     coopRosterBox = h('div', 'coop-roster');
     coopLobby.appendChild(coopRosterBox);
-    coopStartBtn = btn('▶ 开始战斗', 'big primary', function () {
+    coopStartBtn = btn(L.t('coop_start'), 'big primary', function () {
       if (cb.onCoopStart) cb.onCoopStart();
     });
     coopLobby.appendChild(coopStartBtn);
     s.appendChild(coopLobby);
 
-    s.appendChild(btn('← 返回', '', function () {
+    s.appendChild(btn(L.t('back'), '', function () {
       Net.close(); coopMode = false;
       coopLobby.classList.add('hidden');
       coopEntry.classList.remove('hidden');
@@ -404,10 +407,10 @@ window.UI = (function () {
     coopEntry.classList.add('hidden');
     coopLobby.classList.remove('hidden');
     coopCodeLine.innerHTML = '';
-    coopCodeLine.appendChild(h('span', 'coop-label', '房间号'));
+    coopCodeLine.appendChild(h('span', 'coop-label', L.t('coop_room_code')));
     coopCodeLine.appendChild(h('span', 'coop-code', code));
     // 复制房间号按钮
-    var copyBtn = btn('📋 复制', 'small-btn', function () {
+    var copyBtn = btn('📋 ' + L.t('coop_copy'), 'small-btn', function () {
       var ok = false;
       try {
         if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -538,7 +541,7 @@ window.UI = (function () {
 
   function renderCodexTabs() {
     codexTabs.innerHTML = '';
-    var tabs = [['w', '⚔ 武器'], ['p', '💠 被动'], ['e', '☠ 敌人'], ['m', '📖 机制'], ['g', '🎮 操作指南']];
+    var tabs = [['w', '⚔ 武器'], ['p', '💠 被动'], ['e', '☠ 敌人'], ['m', '📖 机制'], ['g', '🎮 操作指南'], ['s', '📜 故事']];
     tabs.forEach(function (t) {
       codexTabs.appendChild(btn(t[1], codexTab === t[0] ? 'primary small-btn' : 'small-btn',
         function () { codexTab = t[0]; refreshCodex(); }));
@@ -552,6 +555,7 @@ window.UI = (function () {
     else if (codexTab === 'p') renderEncPassives();
     else if (codexTab === 'e') renderEncEnemies();
     else if (codexTab === 'g') renderEncGuide();
+    else if (codexTab === 's') renderEncStory();
     else renderEncMechanics();
   }
 
@@ -665,6 +669,26 @@ window.UI = (function () {
     });
   }
 
+  function renderEncStory() {
+    Encyclopedia.story().forEach(function (ch) {
+      var card = h('div', 'enc-card story-card');
+      // 插图 + 标题
+      var head = h('div', 'enc-head story-head');
+      var img = iconCanvas(ch.icon, 52);
+      img.className = 'story-illu';
+      head.appendChild(img);
+      var ht = h('div', 'enc-headtext');
+      ht.appendChild(h('div', 'enc-name', ch.title));
+      head.appendChild(ht);
+      card.appendChild(head);
+      // 段落
+      var body = h('div', 'story-body');
+      ch.paras.forEach(function (p) { body.appendChild(h('div', 'story-para', p)); });
+      card.appendChild(body);
+      codexBody.appendChild(card);
+    });
+  }
+
   // ---------- 设置 ----------
   var setBody;
   function buildSettings() {
@@ -709,8 +733,8 @@ window.UI = (function () {
       if (window.CFG) CFG.GAME.UI_SCALE = v;
       if (window.Engine && Engine.refit) Engine.refit();
     }));
-    setBody.appendChild(toggle(L.t('set_lang'), L.getLang() === 'en', function (v) {
-      st.lang = v ? 'en' : 'zh';
+    setBody.appendChild(cycleToggle(L.t('set_lang'), ['zh', 'en'], st.lang, [L.t('set_lang_zh'), L.t('set_lang_en')], function (v) {
+      st.lang = v;
       Meta.persist();
       location.reload();   // 切换语言需重建界面,重载最可靠
     }));
@@ -1111,12 +1135,12 @@ window.UI = (function () {
       d.appendChild(h('div', 'rs-label', label));
       grid.appendChild(d);
     }
-    stat('存活时间', Engine.fmtTime(run.t));
-    stat('等级', run.level);
-    stat('击杀', run.kills);
-    stat('金币收获', run.gold);
-    stat('击败Boss', run.bossesKilled);
-    stat('DPS峰值', Math.round(run.maxDps || 0));
+    stat(L.t('rs_time'), Engine.fmtTime(run.t));
+    stat(L.t('rs_level'), run.level);
+    stat(L.t('rs_kills'), run.kills);
+    stat(L.t('rs_gold'), run.gold);
+    stat(L.t('rs_boss'), run.bossesKilled);
+    stat(L.t('rs_dps'), Math.round(run.maxDps || 0));
     resBody.appendChild(grid);
     // 最终 Build
     var bRow = h('div', 'pause-row');
@@ -1128,14 +1152,14 @@ window.UI = (function () {
     if (newAchvs.length) {
       var aBox = h('div', 'result-achvs');
       newAchvs.forEach(function (a) {
-        aBox.appendChild(h('div', 'result-achv', '🏆 ' + a.name + ' (+' + a.reward + ' 金)'));
+        aBox.appendChild(h('div', 'result-achv', '🏆 ' + a.name + ' (+' + a.reward + L.t('achv_reward') + ')'));
       });
       resBody.appendChild(aBox);
     }
     var row = h('div', 'btn-row');
-    if (canEndless) row.appendChild(btn('∞ 无尽模式', 'big', function () { cb.onEndless(); }));
-    row.appendChild(btn('再来一局', 'big primary', function () { refreshChars(); show('chars'); }));
-    row.appendChild(btn('回到主菜单', 'big', function () { show('menu'); AudioSys.playMusic('menu'); }));
+    if (canEndless) row.appendChild(btn('∞ ' + L.t('result_continue'), 'big', function () { cb.onEndless(); }));
+    row.appendChild(btn(L.t('result_again'), 'big primary', function () { refreshChars(); show('chars'); }));
+    row.appendChild(btn(L.t('result_menu'), 'big', function () { show('menu'); AudioSys.playMusic('menu'); }));
     resBody.appendChild(row);
     show('result');
   }
