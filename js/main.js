@@ -839,6 +839,16 @@
         UI.warn('⚠ 房主已断开');
         coop.on = false;
       },
+      // 网络状态反馈:掉线自动重连时给出提示,避免玩家以为游戏卡死
+      onNetStatus: function (status, tries) {
+        if (status === 'reconnecting') {
+          UI.warn('⚠ 连接中断,正在重连(' + tries + '/5)…');
+        } else if (status === 'connected') {
+          UI.toastText('已重新连接');
+        } else if (status === 'dropped') {
+          UI.warn('⚠ 连接中断,正在重连…');
+        }
+      },
       // 客户端:收到房主推送的升级选项,弹出非阻塞悬浮卡
       onRemoteLevelUp: function (m) {
         UI.remoteLevelUp(m.choices);

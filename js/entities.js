@@ -381,29 +381,31 @@ window.Entities = (function () {
   // 精英/Boss 光环:精英只强化同类小怪,Boss 强化全部小怪。
   // 每 6 帧重算一次即可,buff 以倍率形式缓存在 e.buffSpd / e.buffDmg。
   function applyAuras(run) {
-    var i, j, e, src;
+    var i, e;
     for (i = 0; i < POOL; i++) {
       e = enemies[i];
       if (e.alive) { e.buffSpd = 1; e.buffDmg = 1; e.buffed = false; }
     }
-    for (j = 0; j < POOL; j++) {
-      src = enemies[j];
+    // 网格已由 updateEnemies 每帧重建。只对每个精英/Boss 查询其光环半径内的小怪,
+    // 避免 520×520 全扫描。精英/Boss 数量远小于总敌人数。
+    for (i = 0; i < POOL; i++) {
+      var src = enemies[i];
       if (!src.alive || (!src.elite && !src.boss)) continue;
       var bd = src.boss ? CFG.BOSSES[src.bossType] : null;
       var r = src.boss ? (bd && bd.auraR ? bd.auraR : 300) : CFG.ELITE.auraR;
       var bs = src.boss ? CFG.ELITE.bossBuffSpd : CFG.ELITE.buffSpd;
       var bdm = src.boss ? CFG.ELITE.bossBuffDmg : CFG.ELITE.buffDmg;
-      var r2 = r * r;
-      for (i = 0; i < POOL; i++) {
-        e = enemies[i];
-        if (!e.alive || e === src || e.elite || e.boss) continue;
+      var srcId = src.id;
+      var isBoss = src.boss;
+      E.gridQuery(src.x, src.y, r, function (e2) {
+        if (e2 === src || e2.elite || e2.boss) return false;
         // 精英只增强同类型小怪,Boss 增强所有类型
-        if (!src.boss && e.id !== src.id) continue;
-        if (E.dist2(e.x, e.y, src.x, src.y) > r2) continue;
-        if (bs > e.buffSpd) e.buffSpd = bs;
-        if (bdm > e.buffDmg) e.buffDmg = bdm;
-        e.buffed = true;
-      }
+        if (!isBoss && e2.id !== srcId) return false;
+        if (bs > e2.buffSpd) e2.buffSpd = bs;
+        if (bdm > e2.buffDmg) e2.buffDmg = bdm;
+        e2.buffed = true;
+        return false;
+      });
     }
   }
 

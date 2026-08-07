@@ -31,6 +31,83 @@ window.Net = (function () {
   var loaded = false;
   var cb = {};               // 回调集合,由 main.js 注入
 
+  // 心跳保活:每 2 秒双向 ping/pong,连续 3 次无响应判定掉线并尝试重连
+  var PING_MS = 2000, PING_TIMEOUT = 3;
+  var pingTimer = 0;
+  var missCount = 0;
+  var lastPong = 0;
+  var reconnectTries = 0;
+  var autoReconnect = true;
+  var joinName = '';         // 客户端重连时复用昵称
+
+  function startHeartbeat() {
+    stopHeartbeat();
+    pingTimer = setInterval(function () {
+      var now = Date.now();
+      if (mode === 'host') {
+        broadcast({ t: 'ping', ts: now });
+      } else if (mode === 'client' && hostConn && hostConn.open) {
+        hostConn.send({ t: 'ping', ts: now });
+      }
+      // 超时判定:上次收到 pong 距今超过 PING_MS×PING_TIMEOUT
+      if (now - lastPong > PING_MS * PING_TIMEOUT && lastPong > 0) {
+        missCount++;
+        if (missCount >= 2) {
+          if (mode === 'client') handleHostDrop();
+          missCount = 0;
+        }
+      } else {
+        missCount = 0;
+      }
+    }, PING_MS);
+  }
+  function stopHeartbeat() {
+    if (pingTimer) { clearInterval(pingTimer); pingTimer = 0; }
+    missCount = 0; lastPong = 0;
+  }
+
+  // 客户端掉线:自动重连,最多 5 次
+  function handleHostDrop() {
+    if (!autoReconnect || reconnectTries >= 5) {
+      if (cb.onHostLost) cb.onHostLost();
+      return;
+    }
+    reconnectTries++;
+    if (cb.onNetStatus) cb.onNetStatus('reconnecting', reconnectTries);
+    try { if (hostConn) hostConn.close(); } catch (e) {}
+    try { if (peer) peer.destroy(); } catch (e) {}
+    peer = null;
+    hostConn = null;
+    var backoff = Math.min(3000, 800 * reconnectTries);
+    setTimeout(function () {
+      join(roomCode, joinName).then(function () {
+        reconnectTries = 0;
+        if (cb.onNetStatus) cb.onNetStatus('connected');
+      }).catch(function () {
+        handleHostDrop();   // 重连失败继续尝试
+      });
+    }, backoff);
+  }
+
+  // 网络就绪检查:不依赖 WebRTC,做纯延迟测量
+  function measureLatency() {
+    return new Promise(function (resolve) {
+      if (mode === 'client' && hostConn && hostConn.open) {
+        var t0 = Date.now();
+        var wait = setTimeout(function () { resolve(-1); }, 2000);
+        var onData = function (m) {
+          if (m && m.t === 'pong' && m.ts === t0) {
+            clearTimeout(wait);
+            resolve(Date.now() - t0);
+            hostConn.off('data', onData);
+          }
+        };
+        hostConn.on('data', onData);
+        hostConn.send({ t: 'ping', ts: t0 });
+      } else resolve(-1);
+    });
+  }
+
   // 大厅成员: { id, name, charId, ready, isHost }
   var roster = [];
   var mapId = null;      // 房主选定的地图,随 roster 一起同步
@@ -78,6 +155,7 @@ window.Net = (function () {
           mode = 'host';
           roster = [{ id: 'host', name: selfName, charId: null, ready: false, isHost: true }];
           log('房间已创建: ' + roomCode);
+          startHeartbeat();
           if (cb.onRoster) cb.onRoster(roster);
           resolve(roomCode);
         });
@@ -106,6 +184,8 @@ window.Net = (function () {
 
   function onHostData(c, m) {
     if (!m || !m.t) return;
+    if (m.t === 'pong') { c._pong = Date.now(); return; }
+    if (m.t === 'ping') { try { c.send({ t: 'pong', ts: m.ts }); } catch (e) {} return; }
     if (m.t === 'hello') {
       if (!roster.some(function (r) { return r.id === c.peer; })) {
         roster.push({ id: c.peer, name: (m.name || '玩家').slice(0, 10), charId: null, ready: false, isHost: false });
@@ -127,23 +207,33 @@ window.Net = (function () {
   // ---------- 加入房间 ----------
   function join(code, name) {
     selfName = name || '玩家';
+    joinName = selfName;                     // 供自动重连复用
     roomCode = (code || '').toUpperCase().trim();
     return ensureLib().then(function () {
       return new Promise(function (resolve, reject) {
         peer = new window.Peer(null, { debug: 0 });
         var settled = false;
         peer.on('open', function () {
-          hostConn = peer.connect(ROOM_PREFIX + roomCode, { reliable: true });
+          // 快照/输入用无序通道(丢帧可接受,重传旧数据反而卡顿);握手用 reliable
+          hostConn = peer.connect(ROOM_PREFIX + roomCode, { reliable: false, serialization: 'json' });
           hostConn.on('open', function () {
             if (settled) return;
             settled = true;
             mode = 'client';
             hostConn.send({ t: 'hello', name: selfName });
+            lastPong = Date.now();
+            startHeartbeat();
             log('已连接房间 ' + roomCode);
+            if (cb.onNetStatus) cb.onNetStatus('connected');
             resolve();
           });
           hostConn.on('data', function (m) { onClientData(m); });
-          hostConn.on('close', function () { if (cb.onHostLost) cb.onHostLost(); });
+          // 掉线触发自动重连(连接被对端关闭时 close 事件早于心跳判定)
+          hostConn.on('close', function () {
+            if (!settled) return;
+            if (cb.onNetStatus) cb.onNetStatus('dropped');
+            handleHostDrop();
+          });
           hostConn.on('error', function (e) { if (!settled) { settled = true; reject(e); } });
         });
         peer.on('error', function (e) {
@@ -159,6 +249,8 @@ window.Net = (function () {
 
   function onClientData(m) {
     if (!m || !m.t) return;
+    lastPong = Date.now();   // 任何数据到达都视为连接存活
+    if (m.t === 'pong') return;
     if (m.t === 'roster') { roster = m.roster; mapId = m.map || mapId; if (cb.onRoster) cb.onRoster(roster, mapId); }
     else if (m.t === 'start' && cb.onStart) cb.onStart(m);
     else if (m.t === 'snap' && cb.onSnap) cb.onSnap(m);
@@ -193,10 +285,13 @@ window.Net = (function () {
   }
 
   function close() {
+    autoReconnect = false;
+    stopHeartbeat();
     try { conns.forEach(function (c) { c.close(); }); } catch (e) {}
     try { if (hostConn) hostConn.close(); } catch (e) {}
     try { if (peer) peer.destroy(); } catch (e) {}
     peer = null; conns = []; hostConn = null; mode = 'off'; roster = []; roomCode = '';
+    reconnectTries = 0;
   }
 
   return {
@@ -205,6 +300,7 @@ window.Net = (function () {
     broadcast: broadcast, sendTo: sendTo, toHost: toHost,
     setMyPick: setMyPick, setMap: setMap, getMap: getMap,
     mode: function () { return mode; },
+    measureLatency: measureLatency,
     selfId: function () { return peer && peer.id ? peer.id : ''; },
     isHost: function () { return mode === 'host'; },
     isClient: function () { return mode === 'client'; },
