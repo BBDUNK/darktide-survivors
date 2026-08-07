@@ -12,7 +12,8 @@ window.Entities = (function () {
       char: charDef,
       shield: 0, shieldRegenT: 0,  // 护盾当前值 / 下次恢复计时
       lastVx: 0, lastVy: 0,        // 移动矢量,敌人抛击用于预判落点
-      slow: 0, slowT: 0,           // 蛛网减速
+      slow: 0, slowT: 0,                        // 蛛网减速
+      webStacks: 0, webT: 0, rootT: 0,          // 蛛网叠层 / 缠身残留 / 硬控计时
       stats: null
     };
   }
@@ -50,8 +51,10 @@ window.Entities = (function () {
     var p = run.player, s = p.stats;
     var iv = E.readInput();
     p.moving = (iv.x !== 0 || iv.y !== 0);
-    // 中蛛网减速
-    if (p.slowT > 0) { p.slowT -= dt; if (p.slowT <= 0) p.slow = 0; }
+    // 蛛网减速 / 硬控:二层叠加后被包裹,原地无法移动
+    if (p.slowT > 0) { p.slowT -= dt; if (p.slowT <= 0) { p.slow = 0; p.webStacks = 0; } }
+    if (p.webT > 0) { p.webT -= dt; if (p.webT <= 0) p.webStacks = 0; }
+    if (p.rootT > 0) { p.rootT -= dt; iv.x = 0; iv.y = 0; p.moving = false; }
     var mspd = s.speed * (1 - (p.slow || 0));
     // 记录当前速度矢量,供敌人抛击预判落点
     p.lastVx = iv.x * mspd;
@@ -139,12 +142,13 @@ window.Entities = (function () {
         face: 1, animo: 0, alpha: 1,
         elite: false, boss: false, bossType: '',
         ai: 'chase', aiT: 0, aiPhase: 0, tgtX: 0, tgtY: 0,
-        burn: 0, burnT: 0, guard: 0
+        burn: 0, burnT: 0, guard: 0,
+        buffSpd: 1, buffDmg: 1, buffed: false
       });
       freeIdx.push(POOL - 1 - i);
     }
     shots.length = 0;
-    for (i = 0; i < 200; i++) shots.push({ alive: false, x: 0, y: 0, vx: 0, vy: 0, dmg: 0, ttl: 0, slow: 0, slowDur: 0 });
+    for (i = 0; i < 200; i++) shots.push({ alive: false, x: 0, y: 0, vx: 0, vy: 0, dmg: 0, ttl: 0, slow: 0, slowDur: 0, webType: false });
     lobs.length = 0;
     for (i = 0; i < 40; i++) lobs.push({ alive: false, sx: 0, sy: 0, tx: 0, ty: 0, r: 0, dmg: 0, t: 0, dur: 0 });
     gems.length = 0; freeGem.length = 0;
@@ -175,6 +179,7 @@ window.Entities = (function () {
     e.aiT = def.lobCd ? Math.random() * def.lobCd : 0; // 错开抛击节奏,避免齐射
     e.aiPhase = 0;
     e.burn = 0; e.burnT = 0; e.guard = 0;
+    e.buffSpd = 1; e.buffDmg = 1; e.buffed = false;
     if (opts && opts.elite) {
       e.elite = true;
       e.maxHp *= CFG.ELITE.hpMul; e.hp = e.maxHp;
@@ -252,6 +257,8 @@ window.Entities = (function () {
       Meta.track('bossKill');
       run.bossesKilled++;
       if (run.boss === e) run.boss = null;
+      // Boss 死亡:淡出战斗曲,恢复地图背景曲
+      AudioSys.playMusic(run.map.music);
       FX.shake(14, 0.8);
       FX.explosion(e.x, e.y, 120);
       AudioSys.play('boss_die');
@@ -284,11 +291,41 @@ window.Entities = (function () {
   }
 
   // ================= 敌人 AI =================
+  // 精英/Boss 光环:精英只强化同类小怪,Boss 强化全部小怪。
+  // 每 6 帧重算一次即可,buff 以倍率形式缓存在 e.buffSpd / e.buffDmg。
+  function applyAuras(run) {
+    var i, j, e, src;
+    for (i = 0; i < POOL; i++) {
+      e = enemies[i];
+      if (e.alive) { e.buffSpd = 1; e.buffDmg = 1; e.buffed = false; }
+    }
+    for (j = 0; j < POOL; j++) {
+      src = enemies[j];
+      if (!src.alive || (!src.elite && !src.boss)) continue;
+      var bd = src.boss ? CFG.BOSSES[src.bossType] : null;
+      var r = src.boss ? (bd && bd.auraR ? bd.auraR : 300) : CFG.ELITE.auraR;
+      var bs = src.boss ? CFG.ELITE.bossBuffSpd : CFG.ELITE.buffSpd;
+      var bdm = src.boss ? CFG.ELITE.bossBuffDmg : CFG.ELITE.buffDmg;
+      var r2 = r * r;
+      for (i = 0; i < POOL; i++) {
+        e = enemies[i];
+        if (!e.alive || e === src || e.elite || e.boss) continue;
+        // 精英只增强同类型小怪,Boss 增强所有类型
+        if (!src.boss && e.id !== src.id) continue;
+        if (E.dist2(e.x, e.y, src.x, src.y) > r2) continue;
+        if (bs > e.buffSpd) e.buffSpd = bs;
+        if (bdm > e.buffDmg) e.buffDmg = bdm;
+        e.buffed = true;
+      }
+    }
+  }
+
   function updateEnemies(run, dt) {
     var p = run.player;
     E.gridClear();
     var i, e;
     for (i = 0; i < POOL; i++) { e = enemies[i]; if (e.alive) E.gridInsert(e); }
+    if ((run.frame % 6) === 0) applyAuras(run);
     var frameParity = (run.frame & 1);
 
     for (i = 0; i < POOL; i++) {
@@ -310,7 +347,7 @@ window.Entities = (function () {
         if ((run.frame % 30) === 0) damageEnemy(run, e, e.burn, { noCrit: true });
         if (!e.alive) continue;
       }
-      var spd = e.spd * (1 - e.slow);
+      var spd = e.spd * (1 - e.slow) * (e.buffSpd || 1);
       var dx = p.x - e.x, dy = p.y - e.y;
       var dist = Math.hypot(dx, dy) || 1;
       var nx = dx / dist, ny = dy / dist;
@@ -343,16 +380,19 @@ window.Entities = (function () {
           e.aiT -= dt;
           if (e.aiT <= 0 && dist < 380) {
             e.aiT = e.def.shotCd;
-            fireShot(e.x, e.y, nx, ny, e.def.shotSpd,
-              e.def.shotDmg * (e.elite ? 1.5 : 1), e.def.slowAmt, e.def.slowDur);
+          // 蛛网弹:白色黏丝,施加叠层减速
+          fireShot(e.x, e.y, nx, ny, e.def.shotSpd,
+            e.def.shotDmg * (e.elite ? 1.5 : 1), e.def.slowAmt, e.def.slowDur, true);
           }
           break;
-        case 'shielder': // 重骑:周期举盾,期间免伤
+        case 'shielder': // 重骑:周期举盾,期间完全免伤+霸体
           e.vx = nx * spd; e.vy = ny * spd;
           e.aiT -= dt;
           if (e.guard > 0) {
             e.guard -= dt;
-            e.vx *= 0.35; e.vy *= 0.35;   // 举盾时减速前进
+            e.vx *= 0.35; e.vy *= 0.35;
+            // 霸体:举盾期间完全忽略击退
+            e.kx = 0; e.ky = 0;
             if (e.guard <= 0) e.aiT = e.def.guardCd;
           } else if (e.aiT <= 0 && dist < 320) {
             e.guard = e.def.guardDur;
@@ -433,11 +473,24 @@ window.Entities = (function () {
       if (E.dist2(sh.x, sh.y, p.x, p.y) < (p.r + 5) * (p.r + 5)) {
         sh.alive = false;
         damagePlayer(run, sh.dmg);
-        // 蛛网:命中后减速玩家
-        if (sh.slow > 0) {
+        // 蛛网弹:叠层减速,叠满两层则被完全包裹硬控 1 秒
+        if (sh.webType) {
+          if (p.webStacks < 2) p.webStacks++;
+          p.slow = sh.slow * (p.webStacks === 2 ? 1.6 : 1);
+          p.slowT = Math.max(p.slowT, sh.slowDur);
+          p.webT = p.slowT;
+          if (p.webStacks >= 2 && p.rootT <= 0) {
+            p.rootT = 1.0;              // 硬控:原地无法移动
+            p.webStacks = 0;            // 触发后清空,需重新叠
+            FX.ring(p.x, p.y, { r: 34, color: '#f4f6ff', life: 0.5, width: 4 });
+            FX.burst(p.x, p.y, { color: '#e8ecff', n: 14, speed: 90, life: 0.5, size: 2 });
+            AudioSys.play('freeze');
+          } else {
+            FX.ring(p.x, p.y, { r: 22, color: '#dfe4ff', life: 0.3, width: 2 });
+          }
+        } else if (sh.slow > 0) {
           p.slow = Math.max(p.slow, sh.slow);
           p.slowT = Math.max(p.slowT, sh.slowDur);
-          FX.ring(p.x, p.y, { r: 22, color: '#8f8', life: 0.3, width: 2 });
         }
       }
     }
@@ -460,17 +513,18 @@ window.Entities = (function () {
 
   function contactCheck(run, e, p) {
     var rr = e.r + p.r;
-    if (E.dist2(e.x, e.y, p.x, p.y) < rr * rr) damagePlayer(run, e.dmg);
+    if (E.dist2(e.x, e.y, p.x, p.y) < rr * rr) damagePlayer(run, e.dmg * (e.buffDmg || 1));
   }
 
   var shots = [];
-  function fireShot(x, y, nx, ny, spd, dmg, slow, slowDur) {
+  function fireShot(x, y, nx, ny, spd, dmg, slow, slowDur, webType) {
     for (var i = 0; i < shots.length; i++) {
       if (!shots[i].alive) {
         var s = shots[i];
         s.alive = true; s.x = x; s.y = y;
         s.vx = nx * spd; s.vy = ny * spd; s.dmg = dmg; s.ttl = 5;
         s.slow = slow || 0; s.slowDur = slowDur || 0;
+        s.webType = webType || false;
         return;
       }
     }
@@ -794,9 +848,12 @@ window.Entities = (function () {
   function announceBoss(run, b) {
     run.boss = b;
     AudioSys.play('boss_spawn');
+    // 切到该 Boss 的专属战斗曲
+    var bd = CFG.BOSSES[b.bossType];
+    if (bd && bd.music) AudioSys.playMusic(bd.music);
     AudioSys.setIntensity(3);
     FX.shake(8, 0.6);
-    if (run.cb.onBoss) run.cb.onBoss(CFG.BOSSES[b.bossType]);
+    if (run.cb.onBoss) run.cb.onBoss(bd);
   }
 
   // ================= 绘制 =================
@@ -948,7 +1005,15 @@ window.Entities = (function () {
       var wob = e.boss ? 0 : Math.sin(run.t * 8 + e.animo) * 1.5;
       drawSprite(ctx, e.boss ? e.bossType : e.id, animF + (e.animo | 0), e.x, e.y + wob, sc, e.face < 0, e.alpha, tint);
       if (e.elite) drawSprite(ctx, 'elite_crown', 0, e.x, e.y - e.r - 12, 1, false, 1, null);
-      // 举盾:画一圈护罩表示当前免伤
+      // 被强化的小怪:显示淡色光环表示受精英/Boss 增益
+      if (e.buffed && !e.elite && !e.boss) {
+        ctx.globalAlpha = 0.28 + Math.sin(run.t * 5 + e.animo) * 0.12;
+        ctx.strokeStyle = '#ffdd66';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.arc(e.x, e.y, e.r * sc + 6, 0, Math.PI * 2); ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+      // 举盾:画护罩表示当前免伤
       if (e.guard > 0) {
         ctx.globalAlpha = 0.5 + Math.sin(run.t * 12) * 0.2;
         ctx.strokeStyle = '#9cf';
@@ -972,10 +1037,12 @@ window.Entities = (function () {
     }
     // 敌方子弹
     var shotImg = SpriteGen.get('p_enemy_bolt');
+    var webImg = SpriteGen.get('p_web');
     for (i = 0; i < shots.length; i++) {
       var sh = shots[i];
       if (!sh.alive) continue;
-      ctx.drawImage(shotImg, sh.x - 8, sh.y - 8, 16, 16);
+      if (sh.webType) ctx.drawImage(webImg, sh.x - 9, sh.y - 9, 18, 18);
+      else ctx.drawImage(shotImg, sh.x - 8, sh.y - 8, 16, 16);
     }
     // 玩家
     ctx.globalAlpha = 0.4;
@@ -986,6 +1053,42 @@ window.Entities = (function () {
       var pf = p.moving ? Math.floor(p.animT * 8) : 0;
       drawSprite(ctx, p.char.sprite, pf, p.x, p.y, 1, p.face < 0, 1, p.hurtFlash > 0 ? '#ff4444' : null);
     }
+    // 蛛网缠身:白色丝痕附着在角色身上,随减速结束而消失;硬控时整体被网包裹
+    if (p.webStacks > 0 || p.rootT > 0) drawWebOnPlayer(ctx, run, p);
+  }
+
+  // 角色身上的蛛网痕迹:一层为几道丝,二层/硬控为完整网罩
+  function drawWebOnPlayer(ctx, run, p) {
+    var full = p.rootT > 0;
+    var a = full ? 0.85 : (p.webStacks >= 2 ? 0.7 : 0.45);
+    ctx.globalAlpha = a;
+    ctx.strokeStyle = '#f4f6ff';
+    ctx.lineWidth = full ? 1.6 : 1.2;
+    var r = full ? 15 : 12;
+    // 放射丝
+    var spokes = full ? 8 : 4;
+    for (var k = 0; k < spokes; k++) {
+      var ang = (Math.PI * 2 / spokes) * k + (full ? 0 : 0.4);
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y - 2);
+      ctx.lineTo(p.x + Math.cos(ang) * r, p.y - 2 + Math.sin(ang) * r);
+      ctx.stroke();
+    }
+    // 同心环(只有完全包裹时画满)
+    var rings = full ? 3 : 1;
+    for (var q = 1; q <= rings; q++) {
+      ctx.globalAlpha = a * (0.8 - q * 0.12);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y - 2, r * (q / (rings + 0.4)), 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    // 硬控时额外闪一层高光,表示无法移动
+    if (full) {
+      ctx.globalAlpha = 0.35 + Math.sin(run.t * 18) * 0.25;
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath(); ctx.arc(p.x, p.y - 2, r * 0.85, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
   }
 
   function reset() { initPools(); }

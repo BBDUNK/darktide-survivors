@@ -258,7 +258,9 @@
     ctx.globalAlpha = 1;
   }
 
-  function drawDecor(map, camX, camY) {
+  // 装饰物按基座 y 排序绘制:pass='back' 画角色身后的,pass='front' 画角色身前的,
+  // 这样墓碑/枯树能正确遮挡走到它后面的角色。refY 传玩家世界 y。
+  function drawDecor(map, camX, camY, refY, pass) {
     var cell = 220;
     var x0 = Math.floor((camX - CFG.GAME.W / 2 - 60) / cell);
     var x1 = Math.floor((camX + CFG.GAME.W / 2 + 60) / cell);
@@ -270,10 +272,12 @@
         for (var k = 0; k < n; k++) {
           var h1 = E.hash2(cx * 7 + k * 13, cy * 7 + k * 31);
           var h2 = E.hash2(cx * 11 + k * 17, cy * 11 + k * 41);
-          var name = map.decors[Math.floor(h1 * map.decors.length)];
-          var img = SpriteGen.get(name);
           var wx = cx * cell + h1 * cell;
           var wy = cy * cell + h2 * cell;
+          if (pass === 'back' && wy > refY) continue;
+          if (pass === 'front' && wy <= refY) continue;
+          var name = map.decors[Math.floor(h1 * map.decors.length)];
+          var img = SpriteGen.get(name);
           var sx = wx - camX + CFG.GAME.W / 2;
           var sy = wy - camY + CFG.GAME.H / 2;
           var dw = img.width * 2, dh = img.height * 2;
@@ -281,7 +285,7 @@
           ctx.globalAlpha = 0.32;
           ctx.fillStyle = '#000';
           ctx.beginPath();
-          ctx.ellipse((sx - dw / 2 + dw / 2) | 0, sy | 0, dw * 0.36, dh * 0.10, 0, 0, Math.PI * 2);
+          ctx.ellipse(sx | 0, sy | 0, dw * 0.36, dh * 0.10, 0, 0, Math.PI * 2);
           ctx.fill();
           ctx.globalAlpha = 0.92;
           ctx.drawImage(img, (sx - img.width) | 0, (sy - dh) | 0, dw, dh);
@@ -363,14 +367,22 @@
     var pal = run.map.palette;
 
     drawGround(pal, camX, camY);
-    drawDecor(run.map, camX, camY);
+    // 角色背后的装饰物(y 小于玩家)
+    drawDecor(run.map, camX, camY, run.player.y, 'back');
 
     ctx.save();
     ctx.translate(CFG.GAME.W / 2 - camX, CFG.GAME.H / 2 - camY);
     drawBoundary(run);
-    Weapons.drawGround(ctx, run);      // 火焰池/圣光环:仅高于地板一层
-    Entities.drawLobMarkers(ctx, run); // 抛击落点红圈:同样在地面层
+    Weapons.drawGround(ctx, run);
+    Entities.drawLobMarkers(ctx, run);
     Entities.draw(ctx, run);
+    ctx.restore();
+
+    // 角色前方的装饰物:自带屏幕坐标换算,必须在 translate 之外调用
+    drawDecor(run.map, camX, camY, run.player.y, 'front');
+
+    ctx.save();
+    ctx.translate(CFG.GAME.W / 2 - camX, CFG.GAME.H / 2 - camY);
     Weapons.draw(ctx, run);
     FX.draw(ctx);
     ctx.restore();
@@ -407,7 +419,7 @@
     menuT += 1 / 60;
     var pal = CFG.MAPS[0].palette;
     drawGround(pal, menuT * 30, Math.sin(menuT * 0.1) * 40);
-    drawDecor(CFG.MAPS[0], menuT * 30, Math.sin(menuT * 0.1) * 40);
+    drawDecor(CFG.MAPS[0], menuT * 30, Math.sin(menuT * 0.1) * 40, 0, null);
     // 游行的怪物剪影
     var parade = ['bat', 'slime', 'zombie', 'skeleton', 'ghost', 'spider', 'orc'];
     for (var i = 0; i < parade.length; i++) {

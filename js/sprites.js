@@ -762,6 +762,29 @@
     p.outline(OUT);
     return p;
   }));
+  // 绿龙:进化箭矢的贯穿弹丸,横向扁平龙形
+  def('p_dragon', one(function () {
+    var p = new Pix(32, 14);
+    var G1 = '#44ff88', G2 = '#22cc66', G3 = '#116644', G4 = '#00ff55', OUT2 = '#003322';
+    // 龙身:渐变绿色
+    p.hline(4, 24, 7, G2);  p.hline(4, 24, 6, G2);
+    p.hline(3, 25, 8, G3);  p.hline(3, 25, 5, G3);
+    p.hline(6, 22, 9, G3);  p.hline(6, 22, 4, G3);
+    // 龙头(右侧)
+    p.rect(25, 4, 6, 6, G1);
+    p.px(30, 5, G4); p.px(31, 5, G4); p.px(30, 7, G4); p.px(31, 7, G4);  // 口
+    p.px(27, 4, '#ffffff'); p.px(28, 4, '#aaffcc'); // 眼
+    // 龙脊
+    for (var i = 8; i < 24; i += 4) {
+      p.px(i, 3, G4); p.px(i + 1, 2, G1); p.px(i + 2, 3, G4);
+      p.px(i, 10, G4); p.px(i + 1, 11, G1); p.px(i + 2, 10, G4);
+    }
+    // 龙尾
+    p.px(3, 7, G2); p.px(2, 7, G3); p.px(1, 6, G3); p.px(0, 5, G1);
+    p.px(1, 8, G3); p.px(0, 9, G1);
+    p.outline(OUT2);
+    return p;
+  }));
   def('p_axe', one(function () {
     var p = new Pix(16, 16);
     p.line(4, 13, 10, 7, '#6b4a2f');
@@ -892,6 +915,23 @@
     p.vline(6, 0, 1, GOLD); p.vline(6, 10, 11, GOLD);
     p.hline(0, 1, 6, GOLD); p.hline(10, 11, 6, GOLD);
     p.outline('#8a6a20');
+    return p;
+  }));
+  // 蛛网弹:白色黏丝团,与红色普通弹幕明确区分
+  def('p_web', one(function () {
+    var p = new Pix(12, 12);
+    var W = '#f4f6ff', W2 = '#c8cee6', W3 = '#9aa2c0';
+    // 放射蛛丝
+    p.line(6, 1, 6, 10, W2);
+    p.line(1, 6, 10, 6, W2);
+    p.line(2, 2, 9, 9, W3);
+    p.line(9, 2, 2, 9, W3);
+    // 内圈网格
+    p.disc(6, 6, 2.2, W);
+    p.px(6, 6, '#ffffff');
+    p.px(3, 6, W2); p.px(9, 6, W2);
+    p.px(6, 3, W2); p.px(6, 9, W2);
+    p.outline('#6a7090');
     return p;
   }));
 

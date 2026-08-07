@@ -75,14 +75,15 @@ window.CFG = {
       desc: '雷击随机敌人并在敌群间跳跃,附带眩晕',
       base: { dmg: 11, cd: 1.9, count: 1, speed: 0, pierce: 0, size: 8, chains: 3, range: 250, stun: 0.15, knock: 0 },
       lv: [ { chains: 1 }, { stun: 0.1 }, { count: 1 }, { chains: 2, stun: 0.1 }, { cdM: 0.82 }, { dmg: 5, stun: 0.15 }, { chains: 2, dmg: 6, stun: 0.2 } ] },
+    // 范围越大伤害越低:寒冰新星(半径135)与烈焰瓶(持续火池)是纯控制,单发伤害压到输出类的 1/3
     frostnova: { name: '寒冰新星', icon: 'w_frostnova', evo: 'absolutezero', evoNeed: 'ps_clover',
-      desc: '周期性冻结冲击波,大范围减速',
-      base: { dmg: 7, cd: 3.2, count: 1, speed: 260, pierce: -1, size: 135, slow: 0.35, slowDur: 1.5, knock: 30 },
-      lv: [ { dmg: 3 }, { slowDur: 0.3 }, { cdM: 0.85 }, { slow: 0.05, slowDur: 0.3 }, { areaM: 1.2 }, { slowDur: 0.4 }, { dmg: 5, slow: 0.05, slowDur: 0.4 } ] },
+      desc: '周期性冻结冲击波,大范围减速(控制型,伤害极低)',
+      base: { dmg: 4, cd: 3.2, count: 1, speed: 260, pierce: -1, size: 135, slow: 0.35, slowDur: 1.5, knock: 30 },
+      lv: [ { slowDur: 0.3 }, { slowDur: 0.3 }, { cdM: 0.85 }, { slow: 0.05, slowDur: 0.3 }, { areaM: 1.2 }, { slowDur: 0.4 }, { dmg: 3, slow: 0.05, slowDur: 0.4 } ] },
     fireflask: { name: '烈焰瓶', icon: 'w_fireflask', evo: 'infernosea', evoNeed: 'ps_belt',
-      desc: '投掷火瓶,留下持续灼烧的地面',
-      base: { dmg: 6, cd: 2.3, count: 1, speed: 220, pierce: 0, size: 12, poolDmg: 6, poolR: 48, poolDur: 3, knock: 0 },
-      lv: [ { count: 1 }, { poolDmg: 3, poolDur: 0.5 }, { areaM: 1.2 }, { count: 1, poolDur: 0.5 }, { poolDmg: 4, durM: 1.3 }, { cdM: 0.85 }, { count: 1, poolDmg: 5, poolDur: 0.8 } ] },
+      desc: '投掷火瓶,留下持续灼烧的地面(控制型,伤害极低)',
+      base: { dmg: 4, cd: 2.3, count: 1, speed: 220, pierce: 0, size: 12, poolDmg: 3, poolR: 48, poolDur: 3, knock: 0 },
+      lv: [ { count: 1 }, { poolDmg: 1, poolDur: 0.5 }, { areaM: 1.2 }, { count: 1, poolDur: 0.6 }, { poolDmg: 2, durM: 1.3 }, { cdM: 0.85 }, { count: 1, poolDmg: 2, poolDur: 0.8 } ] },
     shadowdagger: { name: '暗影匕首', icon: 'w_shadowdagger', evo: 'thousandcuts', evoNeed: 'ps_eagle',
       desc: '高频掷出追命匕首,射向附近敌人',
       base: { dmg: 5, cd: 0.38, count: 1, speed: 460, pierce: 0, size: 10, knock: 20 },
@@ -177,15 +178,20 @@ window.CFG = {
     wraith:         { name: '暗潮死灵', hp: 210, dmg: 22, spd: 58, r: 13, xp: 10, ai: 'phase' }
   },
 
+  // music: 专属战斗曲;shotCol: 弹幕配色(区分各 Boss);auraR: 强化小怪的光环半径
   BOSSES: {
     boss_slimeking: { name: '腐液之王', hp: 3200, dmg: 20, spd: 46, r: 26, xp: 60,
+      music: 'boss_slime', shotCol: '#7fd44f', auraR: 260,
       desc: '第 5 分钟:巨型史莱姆,跳劈并分裂出小史莱姆' },
     boss_bonelord:  { name: '骸骨领主', hp: 10000, dmg: 26, spd: 50, r: 26, xp: 120,
-      desc: '第 10 分钟:环形骨矢弹幕' },
+      music: 'boss_bone', shotCol: '#e8e0c8', auraR: 280,
+      desc: '第 10 分钟:环形骨矢弹幕,连续蓄力冲撞' },
     boss_abysseye:  { name: '深渊之眼', hp: 24000, dmg: 30, spd: 42, r: 28, xp: 220,
-      desc: '第 15 分钟:螺旋弹幕并召唤怨灵' },
+      music: 'boss_abyss', shotCol: '#c46bff', auraR: 300,
+      desc: '第 15 分钟:螺旋弹幕,瞬移到背后并召唤怨灵' },
     boss_darklord:  { name: '暗潮魔王', hp: 52000, dmg: 36, spd: 55, r: 30, xp: 500,
-      desc: '第 18 分钟:最终决战。20 分钟后狂暴!' }
+      music: 'boss_dark', shotCol: '#ff4d7a', auraR: 340,
+      desc: '第 18 分钟:最终决战,兼具冲撞与瞬移。20 分钟后狂暴!' }
   },
 
   // ---------------- 地图 ----------------
@@ -293,7 +299,10 @@ window.CFG = {
   ],
 
   // 精英:每 90 秒(自 120s 起)从当前波挑一种,属性放大并掉宝箱
-  ELITE: { firstT: 120, interval: 90, hpMul: 14, dmgMul: 1.5, xpMul: 8, scale: 1.5 },
+  // auraR: 精英光环半径(强化同类小怪);buffSpd/buffDmg: 被强化小怪的加成
+  ELITE: { firstT: 120, interval: 90, hpMul: 14, dmgMul: 1.5, xpMul: 8, scale: 1.5,
+           auraR: 220, buffSpd: 1.20, buffDmg: 1.25,
+           bossBuffSpd: 1.35, bossBuffDmg: 1.45 },
 
   // 时间成长:敌人生命随分钟增长
   HP_GROWTH: 0.09, // 每分钟 +9%

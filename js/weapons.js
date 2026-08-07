@@ -149,11 +149,24 @@ window.Weapons = (function () {
       case 'windbow': {
         e = nearestEnemy(p.x, p.y, 300);
         var wbBase = e ? Math.atan2(e.y - p.y, e.x - p.x) : Math.atan2(E.lastDir.y, E.lastDir.x);
+        if (w.evolved) {
+          // 千羽风暴:凝聚成一条绿龙,沿单一方向贯穿路径上所有敌人
+          b = spawn(run, w, st, 'dragon', 'p_dragon', p.x, p.y,
+            Math.cos(wbBase) * st.speed * 0.75, Math.sin(wbBase) * st.speed * 0.75, 2.2);
+          b.dmg = st.dmg * 3.2;      // 单体高额伤害
+          b.pierce = 9999;           // 贯穿一切
+          b.size = st.size * 2.4;
+          b.aux = wbBase;            // 朝向,绘制龙身用
+          AudioSys.play('shoot_arrow');
+          AudioSys.play('evolve');
+          break;
+        }
+        // 未进化:全部箭矢朝同一方向连射(沿轴线前后错开形成箭流,不再散射)
         for (i = 0; i < st.count; i++) {
-          a = w.evolved ? (Math.PI * 2 / st.count) * i + run.t
-                        : wbBase + (i - (st.count - 1) / 2) * 0.15;
-          spawn(run, w, st, 'straight', 'p_arrow', p.x, p.y,
-            Math.cos(a) * st.speed, Math.sin(a) * st.speed, 1.5);
+          var back = i * 16;
+          spawn(run, w, st, 'straight', 'p_arrow',
+            p.x - Math.cos(wbBase) * back, p.y - Math.sin(wbBase) * back,
+            Math.cos(wbBase) * st.speed, Math.sin(wbBase) * st.speed, 1.5);
         }
         AudioSys.play('shoot_arrow');
         break;
@@ -316,15 +329,24 @@ window.Weapons = (function () {
       switch (b.kind) {
         case 'straight':
         case 'ricochet':
+        case 'dragon':
           b.x += b.vx * dt; b.y += b.vy * dt;
           b.angle = Math.atan2(b.vy, b.vx);
-          if (hitEnemiesAlong(run, b, b.size * 0.5, 0) && b.kind === 'ricochet' && b.alive) {
-            var nx = nearestEnemy(b.x, b.y, 260, b.hitSet);
-            if (nx) {
-              var d = Math.hypot(b.vx, b.vy);
-              var a = Math.atan2(nx.y - b.y, nx.x - b.x);
-              b.vx = Math.cos(a) * d; b.vy = Math.sin(a) * d;
+          if (b.kind === 'dragon') {
+            // 绿龙:全路径粒子尾迹 + 大范围命中
+            if ((run.frame & 1) === 0) FX.trail(b.x, b.y, '#44ff88', 4);
+            hitEnemiesAlong(run, b, b.size * 0.7, 0.25);
+          } else if (b.kind === 'ricochet') {
+            if (hitEnemiesAlong(run, b, b.size * 0.5, 0) && b.alive) {
+              var nx = nearestEnemy(b.x, b.y, 260, b.hitSet);
+              if (nx) {
+                var d = Math.hypot(b.vx, b.vy);
+                var a = Math.atan2(nx.y - b.x, nx.x - b.x);
+                b.vx = Math.cos(a) * d; b.vy = Math.sin(a) * d;
+              }
             }
+          } else {
+            hitEnemiesAlong(run, b, b.size * 0.5, 0);
           }
           break;
         case 'homing': {
