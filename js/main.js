@@ -40,17 +40,25 @@
       ctx.fillStyle = '#0b0812';
       ctx.fillRect(0, 0, W, H);
     }
-    // 顶部角色行(从右往左跳动,和主菜单对齐)
-    var chars = ['char_knight', 'char_mage', 'char_ranger', 'char_cleric', 'char_berserker', 'char_chrono'];
-    for (var ci = 0; ci < chars.length; ci++) {
-      var cx = ((introT * 36 + ci * 170) % (W + 220)) - 110;
-      var cy = 52 + Math.sin(introT * 3.2 + ci * 0.8) * 6;
-      var cfr = SpriteGen.frames(chars[ci]);
-      var cimg = cfr[Math.floor(introT * 5 + ci) % cfr.length];
-      ctx.globalAlpha = 0.6;
-      ctx.drawImage(cimg, cx, cy, 40, 40);
+
+    // ---- 静态美术资源展示:上下两行,随版本同步更新 ----
+    // 上行:全部角色 + 关键武器/被动图标
+    var heroRow = ['char_knight', 'char_mage', 'char_ranger', 'char_cleric', 'char_berserker', 'char_chrono'];
+    heroRow = heroRow.concat(['w_crossblade', 'w_arcanebolt', 'w_windbow', 'w_holyaura', 'w_whirlaxe', 'w_chainlight',
+                              'w_frostnova', 'w_fireflask', 'w_shadowdagger', 'w_orbitblade', 'w_holytome', 'w_teslacoil']);
+    var hGap = 46;
+    var hTotal = heroRow.length * hGap;
+    var hStart = (W - hTotal) / 2;
+    for (var hi = 0; hi < heroRow.length; hi++) {
+      var hx = hStart + hi * hGap + hGap / 2;
+      var hy = 58 + Math.sin(introT * 2.5 + hi * 0.6) * 3;
+      var himg = SpriteGen.get(heroRow[hi]);
+      var hw = heroRow[hi].indexOf('char_') === 0 ? 38 : 26;
+      ctx.globalAlpha = 0.75;
+      ctx.drawImage(himg, hx - hw / 2, hy - hw / 2, hw, hw);
       ctx.globalAlpha = 1;
     }
+
     // 中央题字(放大)
     ctx.textAlign = 'center';
     ctx.font = 'bold 34px "Press Start 2P","Microsoft YaHei",monospace';
@@ -64,20 +72,25 @@
     ctx.strokeText('特别鸣谢:SOTA Model', W / 2, H / 2 + 34);
     ctx.fillStyle = '#cfe6ff';
     ctx.fillText('特别鸣谢:SOTA Model', W / 2, H / 2 + 34);
-    // 底部怪物行(和主菜单一样,普通怪 32px,Boss 40px 还原比例)
-    var parade = ['bat', 'slime', 'zombie', 'skeleton', 'ghost', 'spider', 'orc',
-                  'boss_slimeking', 'boss_bonelord', 'boss_abysseye', 'boss_darklord'];
-    for (var i = 0; i < parade.length; i++) {
-      var pid = parade[i];
-      var x = ((introT * 40 + i * 152 + (i % 3) * 26) % (W + 200)) - 100;
-      var y = H - 70 + Math.sin(introT * 4 + i * 1.3) * 4;
-      var frames = SpriteGen.frames(pid);
-      var img = frames[Math.floor(introT * 5 + i) % frames.length];
-      var isBoss = pid.indexOf('boss_') === 0;
-      ctx.globalAlpha = 0.5;
-      ctx.drawImage(img, x, y, isBoss ? 40 : 32, isBoss ? 40 : 32);
+
+    // 下行:全部敌人 + Boss(静态排列,不滚动)
+    var enemyRow = ['bat', 'slime', 'slime_big', 'zombie', 'skeleton', 'ghost', 'spider', 'cultist',
+                    'orc', 'imp', 'knight_armored', 'werewolf', 'mummy', 'gargoyle', 'bloodbat', 'wraith',
+                    'boss_slimeking', 'boss_bonelord', 'boss_abysseye', 'boss_darklord'];
+    var eGap = 44;
+    var eTotal = enemyRow.length * eGap;
+    var eStart = (W - eTotal) / 2;
+    for (var ei = 0; ei < enemyRow.length; ei++) {
+      var ex = eStart + ei * eGap + eGap / 2;
+      var ey = H - 62 + Math.sin(introT * 2.5 + ei * 0.7) * 3;
+      var eimg = SpriteGen.get(enemyRow[ei]);
+      var isBoss = enemyRow[ei].indexOf('boss_') === 0;
+      var ew = isBoss ? 40 : 30;
+      ctx.globalAlpha = isBoss ? 0.75 : 0.55;
+      ctx.drawImage(eimg, ex - ew / 2, ey - ew / 2, ew, ew);
       ctx.globalAlpha = 1;
     }
+
     // 右下角跳过提示
     ctx.font = '12px "Microsoft YaHei",sans-serif';
     ctx.lineWidth = 4;
@@ -374,9 +387,9 @@
   function drawVaultArrows(ctx, run) {
     for (var i = 0; i < vaults.length; i++) {
       var v = vaults[i];
+      // 四角宝箱始终显示方向箭头(不管在不在屏幕内)
       var sx = v.x - E.cam.x + CFG.GAME.W / 2;
       var sy = v.y - E.cam.y + CFG.GAME.H / 2;
-      if (sx >= -20 && sx <= CFG.GAME.W + 20 && sy >= -20 && sy <= CFG.GAME.H + 20) continue;
       var dx = sx - CFG.GAME.W / 2, dy = sy - CFG.GAME.H / 2;
       var ang = Math.atan2(dy, dx);
       var ax = E.clamp(sx, 26, CFG.GAME.W - 26);
@@ -839,9 +852,6 @@
     FX.draw(ctx);
     ctx.restore();
 
-    // 屏幕边框箭头:指示屏幕外的金库宝箱方向
-    drawVaultArrows(ctx, run);
-
     // 玩家周围柔光:提升主体可读性
     var pls = CFG.GAME.W / 2 + (run.player.x - camX);
     var plt = CFG.GAME.H / 2 + (run.player.y - camY);
@@ -868,6 +878,8 @@
     Minimap.draw(ctx, run);
     drawJoystick();
     FX.drawUI(ctx);
+    // 金库方向箭头:放在最上层,不被任何 UI 遮挡
+    drawVaultArrows(ctx, run);
   }
 
   function renderMenuBg() {
@@ -879,7 +891,7 @@
     // 顶部角色行:从右往左跳动,固定间隔整齐排列
     var chars = ['char_knight', 'char_mage', 'char_ranger', 'char_cleric', 'char_berserker', 'char_chrono'];
     for (var ci = 0; ci < chars.length; ci++) {
-      var cx = ((menuT * 36 + ci * 165) % (CFG.GAME.W + 220)) - 110;
+      var cx = (CFG.GAME.W + 220 - (menuT * 36 + ci * 165) % (CFG.GAME.W + 220)) - 110;
       var cy = 62 + Math.sin(menuT * 3.2 + ci * 0.8) * 6;
       var cfr = SpriteGen.frames(chars[ci]);
       var cimg = cfr[Math.floor(menuT * 5 + ci) % cfr.length];
