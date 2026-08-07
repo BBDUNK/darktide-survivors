@@ -317,23 +317,34 @@
     });
   });
 
-  // ---------- 敌人(16×16,2 帧) ----------
-  def('bat', two(function (f) {
-    var p = new Pix(16, 16), W = '#3a2c50', M = '#4e3c6a';
-    if (f === 0) { // 翅展开
-      p.hline(1, 4, 6, W); p.hline(2, 5, 7, M); p.hline(3, 5, 8, W); p.px(1, 7, W);
-    } else {       // 翅上挥
-      p.px(3, 3, W); p.rect(3, 4, 2, 2, W); p.rect(4, 6, 2, 2, M);
+  // ---------- 敌人(16×16,蝙蝠 3 帧扇翅) ----------
+  def('bat', function () {
+    // 三帧:翅展开 → 半收 → 上挥,扇翅更流畅
+    var frames = [];
+    var body = function (p) {
+      p.disc(7, 8, 2.2, '#584668');
+      p.px(6, 5, '#584668'); p.px(6, 4, '#584668');
+      p.hmirror();
+      p.rect(7, 6, 2, 3, '#6a5680');
+      p.px(6, 8, '#ff5a4a'); p.px(9, 8, '#ff5a4a');
+      p.px(7, 10, '#e8e4d8');
+    };
+    var W = '#3a2c50', M = '#4e3c6a';
+    for (var f = 0; f < 3; f++) {
+      var p = new Pix(16, 16);
+      if (f === 0) {       // 展开
+        p.hline(1, 4, 6, W); p.hline(2, 5, 7, M); p.hline(3, 5, 8, W); p.px(1, 7, W);
+      } else if (f === 1) { // 半收
+        p.hline(2, 4, 6, W); p.hline(3, 5, 7, M); p.px(2, 7, W);
+      } else {              // 上挥
+        p.px(3, 3, W); p.rect(3, 4, 2, 2, W); p.rect(4, 6, 2, 2, M);
+      }
+      body(p);
+      p.outline(OUT);
+      frames.push(p);
     }
-    p.disc(7, 8, 2.2, '#584668');       // 身体(画左半+中线后镜像)
-    p.px(6, 5, '#584668'); p.px(6, 4, '#584668'); // 耳
-    p.hmirror();
-    p.rect(7, 6, 2, 3, '#6a5680');
-    p.px(6, 8, '#ff5a4a'); p.px(9, 8, '#ff5a4a'); // 红眼
-    p.px(7, 10, '#e8e4d8');                        // 獠牙
-    p.outline(OUT);
-    return p;
-  }));
+    return frames;
+  });
 
   def('slime', two(function (f) {
     var p = new Pix(16, 16), G = '#4ab83e', GH = '#8ce46a', GL = '#2a7a2c';

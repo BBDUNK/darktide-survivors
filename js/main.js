@@ -386,6 +386,9 @@
 
     Entities.updatePlayer(run, dt);
     updateMates(dt);                         // 房主代跑队友移动与武器
+    // 环境氛围粒子:贴合相机视野的浮游尘埃/萤火
+    FX.ambient(E.cam.x - CFG.GAME.W / 2, E.cam.y - CFG.GAME.H / 2, CFG.GAME.W, CFG.GAME.H,
+      { color: run.map.palette.ambient || '#ffe9a3', glow: true, rate: 46, dt: dt });
     Weapons.update(run, dt);
     Entities.updateEnemies(run, dt);
     Entities.updateGems(run, dt);

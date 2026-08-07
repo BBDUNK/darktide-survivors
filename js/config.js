@@ -208,7 +208,7 @@ window.CFG = {
   MAPS: [
     { id: 'graveyard', name: '幽暗墓园', desc: '雾锁的古老墓地,亡者在此不得安息',
       unlock: null, hpMul: 1.0, rateMul: 1.0,
-      palette: { ground: '#221c33', ground2: '#2b2445', decor: '#4d4270', fog: '#2b2247', vign: '#0a0714' },
+      palette: { ground: '#221c33', ground2: '#2b2445', decor: '#4d4270', fog: '#2b2247', vign: '#0a0714', ambient: '#b9a5ff' },
       decors: ['deco_grave', 'deco_deadtree', 'deco_bone', 'deco_fence', 'deco_skullpost'],
       music: 'graveyard',
       waves: [
@@ -244,7 +244,7 @@ window.CFG = {
       ] },
     { id: 'wilds', name: '血月荒野', desc: '猩红之月照耀的猎场,兽群嗅到了你的血',
       unlock: { achv: 'a_survive_10' }, hpMul: 1.35, rateMul: 1.2,
-      palette: { ground: '#2a1e16', ground2: '#35261a', decor: '#63452b', fog: '#4a201a', vign: '#120705' },
+      palette: { ground: '#2a1e16', ground2: '#35261a', decor: '#63452b', fog: '#4a201a', vign: '#120705', ambient: '#ff9d5c' },
       decors: ['deco_tree2', 'deco_rock', 'deco_bush', 'deco_mushroom'],
       music: 'wilds',
       waves: [
@@ -276,7 +276,7 @@ window.CFG = {
       ] },
     { id: 'abyss', name: '深渊回廊', desc: '世界裂缝的最深处,暗潮的源头',
       unlock: { achv: 'a_survive_10_wilds' }, hpMul: 1.8, rateMul: 1.4,
-      palette: { ground: '#161c33', ground2: '#1e2447', decor: '#3a4480', fog: '#1e2750', vign: '#05070f' },
+      palette: { ground: '#161c33', ground2: '#1e2447', decor: '#3a4480', fog: '#1e2750', vign: '#05070f', ambient: '#8ef' },
       decors: ['deco_pillar', 'deco_crystal', 'deco_rune', 'deco_stalag'],
       music: 'abyss',
       waves: [

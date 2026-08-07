@@ -364,6 +364,8 @@ window.Weapons = (function () {
     Entities.damageEnemy(_hitRun, e, b.dmg, _hitOpts);
     AudioSys.play(Math.random() < 0.5 ? 'hit1' : 'hit2');
     FX.trail(e.x, e.y, '#fff', 2);
+    // 命中火花(低配:四分之一概率,避免高频武器把粒子池打满)
+    if ((_hitRun.frame & 3) === 0) FX.burst(e.x, e.y, { color: '#ffe9a3', n: 2, speed: 40, life: 0.2, size: 1.5 });
     if (_hitCdSec === 0) {
       b.pierce--;
       if (b.pierce < 0) { b.alive = false; return true; }

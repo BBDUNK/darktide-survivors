@@ -78,6 +78,8 @@ window.Entities = (function () {
     if (p.moving) {
       p.x += iv.x * mspd * dt;
       p.y += iv.y * mspd * dt;
+      // 脚步尘土(隔帧少量,避免粒子池被占满)
+      if ((run.frame & 3) === 0) FX.step(p.x, p.y + 8, '#b9b0c8');
       if (iv.x > 0.01) p.face = 1; else if (iv.x < -0.01) p.face = -1;
       p.animT += dt;
     }
@@ -330,6 +332,9 @@ window.Entities = (function () {
     var col = e.boss ? '#ffd76b' : '#8a1f2d';
     FX.blood(e.x, e.y, col);
     FX.burst(e.x, e.y, { color: '#d8d3e8', n: e.boss ? 40 : 6, speed: e.boss ? 220 : 90, life: 0.5, size: 3 });
+    if (e.elite) FX.ring(e.x, e.y, { r: 46, color: '#ff9d5c', life: 0.4, width: 3 });
+    else if (e.boss) FX.ring(e.x, e.y, { r: 90, color: '#ffd76b', life: 0.5, width: 4 });
+    if (!e.boss) FX.soul(e.x, e.y);   // 普通敌人飘一缕魂光
     AudioSys.play(Math.random() < 0.5 ? 'enemy_die' : 'splat');
     // 分裂
     if (e.def.split && !(opts && opts.noSplit)) {

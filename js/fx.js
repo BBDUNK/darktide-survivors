@@ -126,6 +126,49 @@
   // ---------- 公共接口 ----------
   var FX = {};
 
+  // ---------- 环境氛围粒子(浮游尘埃/萤火) ----------
+  // 由游戏循环按地图配色每帧少量调用;粒子便宜,但给画面增加深度感。
+  var ambAcc = 0;
+  FX.ambient = function (x, y, w, h, opts) {
+    if (!cfg || cfg.ambient === false) return;
+    opts = opts || {};
+    var rate = opts.rate || 60;      // 每秒生成数
+    var life = opts.life || 3.5;
+    ambAcc += (rate * (opts.dt || 0.016));
+    while (ambAcc >= 1) {
+      ambAcc -= 1;
+      var px = x + rand() * w;
+      var py = y + rand() * h;
+      spawnP(px, py,
+        (rand() - 0.5) * 12, -(6 + rand() * 16),
+        life * (0.6 + rand() * 0.7),
+        1.5 + rand() * 1.5, 0.2,
+        0.25 + rand() * 0.3, 0,
+        opts.color || '#ffe9a3', !!opts.glow, 0, 0.8, SH_RECT, 0);
+    }
+  };
+
+  // 击杀灵魂飘升:几缕白色魂光上升消散
+  FX.soul = function (x, y, color) {
+    var c = color || '#e8e4ff';
+    for (var i = 0; i < 3; i++) {
+      var ax = x + (rand() - 0.5) * 14;
+      spawnP(ax, y - 2, (rand() - 0.5) * 10, -(26 + rand() * 26),
+        0.9 + rand() * 0.6, 2.2 + rand() * 1.5, 0.4,
+        0.55, 0, c, true, -8, 0.7, SH_RECT, 0);
+    }
+  };
+
+  // 脚步尘土:移动时从脚下扬起小土粒
+  FX.step = function (x, y, color) {
+    for (var i = 0; i < 1; i++) {
+      spawnP(x + (rand() - 0.5) * 6, y + (rand() - 0.5) * 2,
+        (rand() - 0.5) * 26, -(14 + rand() * 20),
+        0.35 + rand() * 0.25, 1.2 + rand() * 1.2, 0.2,
+        0.5, 0, color || '#b9b0c8', false, 60, 1.4, SH_RECT, 0);
+    }
+  };
+
   FX.reset = function () {
     for (var i = 0; i < P_MAX; i++) { P[i].life = 0; }
     for (var j = 0; j < T_MAX; j++) { T[j].life = 0; }
