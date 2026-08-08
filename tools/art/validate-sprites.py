@@ -18,6 +18,10 @@ def pixel_data(image: Image.Image):
 def validate(manifest_path: Path) -> int:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     root = manifest_path.parents[2]
+    if manifest.get("externalManifest"):
+        external = json.loads((root / manifest["externalManifest"]).read_text(encoding="utf-8"))
+        defaults = external.get("defaults", {})
+        manifest["assets"].extend([{**defaults, **asset} for asset in external["assets"]])
     out_dir = root / "assets" / "sprites"
     meta = json.loads((out_dir / "atlas.json").read_text(encoding="utf-8"))
     atlas = Image.open(out_dir / "atlas.png").convert("RGBA")
@@ -49,12 +53,13 @@ def validate(manifest_path: Path) -> int:
             opaque = [(r, g, b) for r, g, b, a in pixel_data(crop) if a]
             coverage = len(opaque) / (w * h)
             colors = len(set(opaque))
-            if coverage < 0.08:
+            if coverage < spec.get("minCoverage", 0.08):
                 errors.append(f"{name}[{index}]: suspiciously empty ({coverage:.1%})")
             if coverage > 0.92:
                 warnings.append(f"{name}[{index}]: little transparent padding ({coverage:.1%})")
-            if colors > len(spec["colors"]):
-                errors.append(f"{name}[{index}]: {colors} colors exceed palette limit {len(spec['colors'])}")
+            max_colors = spec.get("maxColors", len(spec.get("colors", [])) or 256)
+            if colors > max_colors:
+                errors.append(f"{name}[{index}]: {colors} colors exceed palette limit {max_colors}")
             alpha = crop.getchannel("A")
             bbox = alpha.getbbox()
             if bbox and (bbox[0] == 0 or bbox[1] == 0 or bbox[2] == w or bbox[3] == h):
@@ -74,10 +79,11 @@ def validate(manifest_path: Path) -> int:
             })
         if len(stats) > 1:
             bottoms = [s["bbox"][3] for s in stats if s["bbox"]]
-            if bottoms and max(bottoms) - min(bottoms) > 1:
-                errors.append(f"{name}: animation baselines differ by more than 1 pixel")
+            max_baseline_drift = spec.get("maxBaselineDrift", 1)
+            if bottoms and max(bottoms) - min(bottoms) > max_baseline_drift:
+                errors.append(f"{name}: animation baselines differ by more than {max_baseline_drift} pixels")
             signatures = [s["signature"] for s in stats]
-            if len(set(signatures)) != len(signatures):
+            if not spec.get("allowDuplicateFrames") and len(set(signatures)) != len(signatures):
                 errors.append(f"{name}: animation contains duplicate frames")
             centers = [s["centroid"][0] for s in stats if s["centroid"]]
             max_drift = spec.get("maxCentroidDrift", 4)

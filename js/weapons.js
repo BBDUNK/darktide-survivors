@@ -809,19 +809,31 @@ window.Weapons = (function () {
       if (b.kind === 'nova') {
         var rr = Math.min(b.phase, b.aux2);
         if (rr < 1) continue;
-        ctx.strokeStyle = b.evolved ? 'rgba(190,255,255,0.9)' : 'rgba(140,220,255,0.8)';
-        ctx.lineWidth = 8;
+        ctx.strokeStyle = b.evolved ? 'rgba(135,235,255,0.88)' : 'rgba(95,195,235,0.78)';
+        ctx.lineWidth = 5;
         ctx.globalAlpha = E.clamp(b.ttl * 3, 0, 1);
         ctx.beginPath(); ctx.arc(b.x, b.y, rr, 0, Math.PI * 2); ctx.stroke();
         if (rr > 6) {
-          ctx.lineWidth = 2;
-          ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+          ctx.lineWidth = 1.5;
+          ctx.strokeStyle = 'rgba(215,250,255,0.72)';
           ctx.beginPath(); ctx.arc(b.x, b.y, rr - 5, 0, Math.PI * 2); ctx.stroke();
+          var iceFrames = SpriteGen.frames('vfx_ice');
+          var iceImg = iceFrames[Math.floor(run.t * 16) % iceFrames.length];
+          var iceCount = b.evolved ? 8 : 5;
+          for (var ni = 0; ni < iceCount; ni++) {
+            var na = ni * Math.PI * 2 / iceCount + run.t * 0.35;
+            var ns = b.evolved ? 24 : 18;
+            ctx.drawImage(iceImg, b.x + Math.cos(na) * rr - ns / 2,
+              b.y + Math.sin(na) * rr - ns / 2, ns, ns);
+          }
         }
         ctx.globalAlpha = 1;
         continue;
       }
-      var img = SpriteGen.get(b.spr);
+      var projectileFrames = SpriteGen.frames(b.spr);
+      var projectileFps = SpriteGen.animationFps(b.spr, 10);
+      var projectileAge = Math.max(0, run.t - (b.born || 0));
+      var img = projectileFrames[Math.floor(projectileAge * projectileFps) % projectileFrames.length];
       var sc = 2 * (b.size / 16);
       if (b.kind === 'turret') {
         var frT = SpriteGen.frames(b.spr);

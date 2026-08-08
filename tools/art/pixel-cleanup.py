@@ -44,6 +44,14 @@ def remove_key(image: Image.Image, key: tuple[int, int, int]) -> Image.Image:
     return out
 
 
+def hard_alpha(image: Image.Image) -> Image.Image:
+    """Keep authored RGB pixels while enforcing nearest-neighbour alpha edges."""
+    out = image.convert("RGBA")
+    alpha = out.getchannel("A").point(lambda a: 255 if a >= 128 else 0)
+    out.putalpha(alpha)
+    return out
+
+
 def crop_region(image: Image.Image, region: list[float] | None) -> Image.Image:
     if not region:
         return image
@@ -57,6 +65,54 @@ def split_frames(image: Image.Image, count: int) -> list[Image.Image]:
         return [image]
     w, h = image.size
     return [image.crop((round(i * w / count), 0, round((i + 1) * w / count), h)) for i in range(count)]
+
+
+def extract_frames(image: Image.Image, spec: dict) -> list[Image.Image]:
+    """Extract explicit rectangles or a row from a regular sprite grid."""
+    if spec.get("frameRects"):
+        return [image.crop((x, y, x + w, y + h)) for x, y, w, h in spec["frameRects"]]
+    if spec.get("cropPx"):
+        x, y, w, h = spec["cropPx"]
+        return [image.crop((x, y, x + w, y + h))]
+    if spec.get("frameSize"):
+        fw, fh = spec["frameSize"]
+        count = spec.get("frames", 1)
+        start = spec.get("frameStart", 0)
+        row = spec.get("frameRow", 0)
+        return [image.crop(((start + i) * fw, row * fh, (start + i + 1) * fw, (row + 1) * fh))
+                for i in range(count)]
+    return split_frames(image, spec.get("frames", 1))
+
+
+def fit_pixel_art(frame: Image.Image, size: tuple[int, int], anchor: tuple[int, int],
+                  pixel_scale: float | None = None) -> Image.Image:
+    """Fit a transparent authored sprite without resampling away its pixel character."""
+    frame = hard_alpha(frame)
+    bbox = frame.getchannel("A").getbbox()
+    if not bbox:
+        raise ValueError("source frame is empty")
+    frame = frame.crop(bbox)
+    target_w, target_h = size
+    max_w, max_h = max(1, target_w - 2), max(1, target_h - 2)
+    if pixel_scale is None:
+        scale = min(max_w / frame.width, max_h / frame.height)
+        if scale >= 1:
+            scale = max(1, math.floor(scale))
+    else:
+        scale = pixel_scale
+    if scale != 1:
+        frame = frame.resize((max(1, round(frame.width * scale)), max(1, round(frame.height * scale))),
+                             Image.Resampling.NEAREST)
+    if frame.width > max_w or frame.height > max_h:
+        scale = min(max_w / frame.width, max_h / frame.height)
+        frame = frame.resize((max(1, round(frame.width * scale)), max(1, round(frame.height * scale))),
+                             Image.Resampling.NEAREST)
+    canvas = Image.new("RGBA", size)
+    x = round(anchor[0] - frame.width / 2)
+    x = max(0, min(target_w - frame.width, x))
+    y = max(0, min(target_h - frame.height, anchor[1] - frame.height + 1))
+    canvas.alpha_composite(frame, (x, y))
+    return hard_alpha(canvas)
 
 
 def largest_components(image: Image.Image) -> Image.Image:
@@ -242,6 +298,10 @@ def process_backgrounds(manifest: dict, root: Path) -> None:
 def build(manifest_path: Path) -> None:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     root = manifest_path.parents[2]
+    if manifest.get("externalManifest"):
+        external = json.loads((root / manifest["externalManifest"]).read_text(encoding="utf-8"))
+        defaults = external.get("defaults", {})
+        manifest["assets"].extend([{**defaults, **asset} for asset in external["assets"]])
     out_dir = root / "assets" / "sprites"
     preview_dir = out_dir / "previews"
     preview_dir.mkdir(parents=True, exist_ok=True)
@@ -250,11 +310,21 @@ def build(manifest_path: Path) -> None:
     for spec in manifest["assets"]:
         source = Image.open(root / spec["source"]).convert("RGBA")
         source = crop_region(source, spec.get("region"))
-        source = remove_key(source, rgb(spec["key"]))
+        if spec.get("key"):
+            source = remove_key(source, rgb(spec["key"]))
+        else:
+            source = hard_alpha(source)
         processed = []
-        for index, raw_frame in enumerate(split_frames(source, spec.get("frames", 1))):
-            frame = fit_and_quantize(raw_frame, tuple(spec["size"]), tuple(spec["anchor"]),
-                                     spec["colors"], spec.get("outline"))
+        for index, raw_frame in enumerate(extract_frames(source, spec)):
+            try:
+                if spec.get("preservePixels"):
+                    frame = fit_pixel_art(raw_frame, tuple(spec["size"]), tuple(spec["anchor"]),
+                                          spec.get("pixelScale"))
+                else:
+                    frame = fit_and_quantize(raw_frame, tuple(spec["size"]), tuple(spec["anchor"]),
+                                             spec["colors"], spec.get("outline"))
+            except ValueError as error:
+                raise ValueError(f"{spec['name']}[{index}]: {error}") from error
             processed.append(frame)
             checker_preview(frame, manifest.get("previewScale", 8)).save(preview_dir / f"{spec['name']}-{index}.png", optimize=True)
         frames[spec["name"]] = processed

@@ -3,6 +3,7 @@
   "atlasWidth": 256,
   "atlasPadding": 2,
   "previewScale": 8,
+  "externalManifest": "tools/art/open-assets-manifest.json",
   "backgroundPalette": [
     "#080711", "#100d18", "#171329", "#211a3b", "#2d2450", "#382d61",
     "#111d2e", "#172b3e", "#203d50", "#2d5668", "#477889", "#78a4ad",

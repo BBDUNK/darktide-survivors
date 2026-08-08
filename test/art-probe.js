@@ -41,12 +41,14 @@ function assert(ok, message) {
       })),
     skeleton: SpriteGen.frames('skeleton').map(c => [c.width, c.height]),
     slimeKing: SpriteGen.frames('boss_slimeking').map(c => [c.width, c.height]),
+    explosion: SpriteGen.frames('vfx_explosion').map(c => [c.width, c.height]),
+    terrain: SpriteGen.frames('tile_graveyard').map(c => [c.width, c.height]),
     skeletonFps: SpriteGen.animationFps('skeleton', 0),
     slimeKingFps: SpriteGen.animationFps('boss_slimeking', 0),
     knightScale: SpriteGen.renderScale('char_knight'),
     bossScale: SpriteGen.renderScale('boss_slimeking')
   }));
-  assert(atlas.status.count === 13, 'expected 13 atlas assets, got ' + atlas.status.count);
+  assert(atlas.status.count === 131, 'expected 131 atlas assets, got ' + atlas.status.count);
   for (const hero of atlas.heroes) {
     assert(JSON.stringify(hero.frames) === '[[32,32],[32,32],[32,32],[32,32]]',
       hero.name + ' atlas frames are incorrect');
@@ -57,7 +59,10 @@ function assert(ok, message) {
   assert(atlas.skeletonFps === 7 && atlas.slimeKingFps === 5, 'enemy animation fps values are incorrect');
   assert(atlas.knightScale === 0.75 && Math.abs(atlas.bossScale - 0.666667) < 0.00001,
     'atlas art scales are incorrect');
-  console.log('ATLAS OK  13 assets, 37 frames, per-sprite timing and art scales');
+  assert(JSON.stringify(atlas.explosion) === '[[32,32],[32,32],[32,32],[32,32],[32,32]]',
+    'explosion VFX atlas frames are incorrect');
+  assert(JSON.stringify(atlas.terrain) === '[[16,16]]', 'graveyard terrain tile is incorrect');
+  console.log('ATLAS OK  131 assets, 288 frames, animated VFX, terrain, timing and art scales');
 
   // Skip intro and start the default knight/graveyard run through the real UI.
   await page.mouse.click(640, 360);
@@ -70,15 +75,17 @@ function assert(ok, message) {
       font: getComputedStyle(document.body).fontFamily,
       buttonSkin: getComputedStyle(button).borderImageSource,
       panelSkin: getComputedStyle(panel).borderImageSource,
+      titleFont: getComputedStyle(document.querySelector('.gothic-title')).fontFamily,
       menuBackground: Debug.menuBackground()
     };
   });
   assert(theme.font.includes('Fusion Pixel'), 'Fusion Pixel font is not active');
   assert(theme.buttonSkin.includes('button-neutral-0.png'), 'Dark Dwellers button skin is not active');
   assert(theme.panelSkin.includes('panel-base.png'), 'Dark Dwellers panel skin is not active');
+  assert(theme.titleFont.includes('Darktide Gothic'), 'gothic title font is not active');
   assert(theme.menuBackground.loaded && theme.menuBackground.src.includes('menu-monolith.png'),
     'menu background asset was not loaded');
-  console.log('THEME OK  local OFL font, CC0 controls, panels and menu background');
+  console.log('THEME OK  local OFL body/gothic fonts, CC0 controls, panels and menu background');
   await page.getByText('开始远征').click();
   await page.getByText('下一步').click();
   await page.getByText('出发').click();

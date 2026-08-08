@@ -971,10 +971,36 @@
     return c;
   }
 
-  function drawGround(pal, camX, camY) {
+  var groundPatterns = {};
+  function groundPattern(mapId) {
+    if (groundPatterns[mapId]) return groundPatterns[mapId];
+    var tile = SpriteGen.get('tile_' + mapId);
+    if (!tile || tile.width < 2) return null;
+    var patternTile = document.createElement('canvas');
+    patternTile.width = 32; patternTile.height = 32;
+    var pg = patternTile.getContext('2d');
+    pg.imageSmoothingEnabled = false;
+    pg.drawImage(tile, 0, 0, 32, 32);
+    groundPatterns[mapId] = ctx.createPattern(patternTile, 'repeat');
+    return groundPatterns[mapId];
+  }
+
+  function drawGround(map, camX, camY) {
+    var pal = map.palette;
     var W = CFG.GAME.W, H = CFG.GAME.H;
     ctx.fillStyle = pal.ground;
     ctx.fillRect(0, 0, W, H);
+
+    // CC0 地表纹理以低对比度重复铺设,保留地图配色同时增加真实像素细节。
+    var pattern = groundPattern(map.id);
+    if (pattern) {
+      ctx.save();
+      ctx.globalAlpha = 0.16;
+      ctx.translate((-camX % 32) - 32, (-camY % 32) - 32);
+      ctx.fillStyle = pattern;
+      ctx.fillRect(0, 0, W + 64, H + 64);
+      ctx.restore();
+    }
 
     // 第一层:大块地砖色差,给地面基础层次
     var big = 160;
@@ -1128,7 +1154,7 @@
     var camX = E.cam.x + shake.x, camY = E.cam.y + shake.y;
     var pal = run.map.palette;
 
-    drawGround(pal, camX, camY);
+    drawGround(run.map, camX, camY);
     // 角色背后的装饰物(y 小于玩家)
     drawDecor(run.map, camX, camY, run.player.y, 'back');
 
@@ -1223,8 +1249,7 @@
       ctx.fillStyle = 'rgba(8,3,18,0.20)';
       ctx.fillRect(0, 0, CFG.GAME.W, CFG.GAME.H);
     } else {
-      var pal = CFG.MAPS[0].palette;
-      drawGround(pal, menuT * 30, Math.sin(menuT * 0.1) * 40);
+      drawGround(CFG.MAPS[0], menuT * 30, Math.sin(menuT * 0.1) * 40);
       drawDecor(CFG.MAPS[0], menuT * 30, Math.sin(menuT * 0.1) * 40, 0, null);
     }
     drawMenuAsh();
@@ -1275,7 +1300,12 @@
     SpriteGen.init();
     var atlasReady = SpriteGen.loadAtlas();
     if (atlasReady) await atlasReady;
-    if (document.fonts && document.fonts.load) await document.fonts.load('16px "Fusion Pixel"');
+    if (document.fonts && document.fonts.load) {
+      await Promise.all([
+        document.fonts.load('16px "Fusion Pixel"'),
+        document.fonts.load('700 96px "Darktide Gothic"')
+      ]);
+    }
     menuBgImg = new Image();
     menuBgImg.src = 'assets/backgrounds/menu-monolith.png';
     Meta.load();

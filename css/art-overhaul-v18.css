@@ -1,0 +1,69 @@
+@font-face {
+  font-family: "Darktide Gothic";
+  src: url("../fonts/unifrakturcook-bold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+.gothic-title {
+  position: relative;
+  overflow: visible;
+  font-family: "Darktide Gothic", Georgia, serif;
+  font-weight: 700;
+  font-style: normal;
+  text-transform: none;
+  color: transparent;
+  background: linear-gradient(180deg, #fff7d0 5%, #eecb77 38%, #a86836 68%, #f0d69b 92%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-stroke: 1px rgba(31, 9, 35, 0.92);
+  letter-spacing: 2px;
+  filter: drop-shadow(0 3px 0 #2a0c2e) drop-shadow(0 7px 8px rgba(0, 0, 0, 0.88));
+  text-shadow: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+  animation: gothicFloat 4.8s ease-in-out infinite;
+}
+
+.gothic-title::before,
+.gothic-title::after {
+  position: absolute;
+  top: 53%;
+  color: #e9c777;
+  font-family: Georgia, serif;
+  font-size: 0.28em;
+  -webkit-text-stroke: 0;
+  text-shadow: 0 0 10px rgba(228, 114, 201, 0.75);
+  transform: translateY(-50%);
+}
+
+.gothic-title::before { content: "✦"; left: -0.72em; }
+.gothic-title::after { content: "✦"; right: -0.72em; }
+
+.menu-big.gothic-title {
+  font-size: 104px;
+  line-height: 0.94;
+  letter-spacing: 1px;
+}
+
+.menu-big.gothic-title::after {
+  bottom: auto;
+  width: auto;
+  height: auto;
+  background: none;
+  box-shadow: none;
+}
+
+.logo:not(.menu-logo) .gothic-title { font-size: 92px; }
+.logo-sub { margin-top: 16px; color: #d6c9e6; letter-spacing: 5px; }
+
+@keyframes gothicFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-4px) scale(1.012); }
+}
+
+@media (max-width: 700px), (max-height: 430px) {
+  .menu-big.gothic-title { font-size: 76px; }
+  .logo:not(.menu-logo) .gothic-title { font-size: 68px; }
+}

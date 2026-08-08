@@ -1,6 +1,6 @@
 # ⚔️ 暗潮幸存者 · Darktide Survivors
 
-[![Online](https://img.shields.io/badge/Online-GitHub%20Pages-blue)](https://bbdunk.github.io/darktide-survivors/)
+[![Online](https://img.shields.io/badge/Online-Cloudflare%20Pages-blue)](https://darktide-survivors.pages.dev/)
 [![Zero Dependency](https://img.shields.io/badge/Zero%20Dependency-true-brightgreen)]()
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES2020-yellow)]()
 [![Genre](https://img.shields.io/badge/Genre-Bullet%20Heaven-orange)]()
@@ -11,7 +11,7 @@
 
 ## 快速开始
 
-- **在线试玩**:<https://bbdunk.github.io/darktide-survivors/>
+- **在线试玩**:<https://darktide-survivors.pages.dev/>
 - **本地运行**:直接双击 `index.html`,或在项目目录启动任意静态服务器:
 
 ```bash
@@ -44,14 +44,14 @@ python -m http.server 8000
 ## 技术实现
 
 - `assets/sprites/atlas.png` 优先提供精修像素素材;`js/sprites.js` 保留全部程序化素材作为离线/加载失败兜底
-- 当前图集含 13 项 37 帧;六名角色、骷髅与史莱姆王使用四帧循环和逐素材帧率
+- 当前图集含 131 项 288 帧;覆盖全部角色、16 种普通敌人、4 个 Boss、武器/进化/被动/系统图标、弹体、掉落物、地图装饰、地表纹理和 10 组精灵特效
 - 图集经固定调色板、硬 Alpha、锚点对齐、重心防抖和自动质量报告生成,游戏运行时不增加第三方依赖
 - 全局 UI 使用 CC0 Dark Dwellers 九宫格像素皮肤,中文排版使用本地 OFL Fusion Pixel 字体;来源与授权见 `assets/THIRD_PARTY_ASSETS.md`
 - 音乐音效由 `js/audio.js` 用 WebAudio 实时合成(16 步音序器,强度分层)
-- 对象池 + 空间哈希,同屏 400 敌人 + 1500 粒子稳定 60fps
+- 对象池 + 空间哈希;自动化压力测试覆盖同屏 400 敌人和高密度粒子
 - 存档保存在 `localStorage`(`darktide_save_v1`)
 - 经典 `<script>` 全局命名空间,无 ES modules,`file://` 协议下也能直接运行
-- 除 Google Fonts 外无任何外部资源请求,离线自动回退系统字体
+- 字体、图集、UI 和背景全部本地化,运行时无外部美术或字体请求
 
 ## 项目结构
 
@@ -103,4 +103,4 @@ node test/art-probe.js
 
 ## 版权与免责声明
 
-本作是个人自制的**非商业同人项目**,与 Fatshark 或 Games Workshop 无任何隶属关系;游戏不包含任何官方素材,全部美术与音频均由代码生成。"Darktide" 等相关名称与设定归原权利方所有。
+本作是个人自制的**非商业同人项目**,与 Fatshark 或 Games Workshop 无任何隶属关系;游戏不包含任何官方素材。美术由原创程序素材及 CC0/OFL 开放授权资源组成,完整作者、来源和许可证见 `assets/THIRD_PARTY_ASSETS.md`;音频由代码生成。"Darktide" 等相关名称与设定归原权利方所有。

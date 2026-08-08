@@ -50,7 +50,7 @@ SpriteGen.animationFps(name, n);   // → number;图集逐素材帧率,缺失时
 SpriteGen.atlasStatus();           // → {loaded,count,image,error};测试与诊断
 ```
 
-v0.16.1 精修覆盖:六名 `char_*` 可玩角色、`skeleton`、`boss_slimeking`、`p_slash_big`、`w_crossblade`、`ps_core`、`deco_grave`、`deco_deadtree`,共 13 项 37 帧。六名角色与两类敌人均为四帧循环并使用逐素材帧率;其余命名继续使用原程序素材。图集由 `node tools/art/build-atlas.js` 构建并通过 `quality-report.json` 门禁。
+v0.18 精修覆盖 131 个运行时命名、288 帧:六名 `char_*`、16 种普通敌人、4 个 Boss、全部弹体/武器/进化/被动/系统图标、掉落物、地图装饰、3 张地表纹理和 10 组精灵特效。动画按逐素材 FPS 播放;任何缺失或加载失败仍回退程序素材。图集由 `node tools/art/build-atlas.js` 构建并通过 `quality-report.json` 门禁;开放素材映射与固定来源版本见 `tools/art/open-assets-manifest.json`。
 
 建议内部用调色板 + 小型绘图 DSL(plot/rect/outline/mirror)批量生产。**必须实现下表全部名字**:
 

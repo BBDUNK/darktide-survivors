@@ -18,6 +18,7 @@
   var SH_RECT = 0;    // 像素方块
   var SH_CROSS = 1;   // 十字/星光
   var SH_BEAM = 2;    // 竖直光柱(str = 定高)
+  var SH_SPRITE = 3;  // 图集多帧特效(str = SpriteGen 名字)
 
   var FONT_N = 'bold 10px "Courier New", monospace';
   var FONT_C = 'bold 15px "Courier New", monospace';
@@ -93,6 +94,11 @@
     return p;
   }
 
+  function spawnVfx(x, y, name, life, size, glow) {
+    return spawnP(x, y, 0, 0, life, size, size, 1, 0, '#fff', !!glow,
+      0, 0, SH_SPRITE, name);
+  }
+
   function spawnRing(x, y, r, color, life, w) {
     var rg = R[rCur];
     rCur++; if (rCur >= R_MAX) { rCur = 0; }
@@ -151,6 +157,7 @@
   // 击杀灵魂飘升:几缕白色魂光上升消散
   FX.soul = function (x, y, color) {
     var c = color || '#e8e4ff';
+    spawnVfx(x, y - 12, 'vfx_spirit', 0.55, 30, true);
     for (var i = 0; i < 3; i++) {
       var ax = x + (rand() - 0.5) * 14;
       spawnP(ax, y - 2, (rand() - 0.5) * 10, -(26 + rand() * 26),
@@ -161,6 +168,7 @@
 
   // 脚步尘土:移动时从脚下扬起小土粒
   FX.step = function (x, y, color) {
+    spawnVfx(x, y - 2, 'vfx_smoke', 0.24, 13, false);
     for (var i = 0; i < 1; i++) {
       spawnP(x + (rand() - 0.5) * 6, y + (rand() - 0.5) * 2,
         (rand() - 0.5) * 26, -(14 + rand() * 20),
@@ -294,8 +302,12 @@
       var th = s * 0.34; if (th < 1) { th = 1; }
       ctx.fillRect(p.x - s * 0.5, p.y - th * 0.5, s, th);
       ctx.fillRect(p.x - th * 0.5, p.y - s * 0.5, th, s);
-    } else {
+    } else if (p.shape === SH_BEAM) {
       ctx.fillRect(p.x - s * 0.5, p.y - p.str, s, p.str);   // SH_BEAM:定高竖梁,底端锚定
+    } else {
+      var frames = SpriteGen.frames(p.str);
+      var frame = frames[Math.min(frames.length - 1, Math.floor(t01 * frames.length))];
+      ctx.drawImage(frame, p.x - s * 0.5, p.y - s * 0.5, s, s);
     }
   }
 
@@ -483,6 +495,7 @@
     if (r > 400) { r = 400; }
     FX.shake(Math.min(11, 3 + r * 0.09), 0.32);
     FX.flash('#ffd9a0', Math.min(0.16, 0.05 + r * 0.0016), 0.16);
+    spawnVfx(x, y, 'vfx_explosion', 0.42, Math.max(34, r * 1.65), true);
     spawnRing(x, y, r * 1.5, '#ffc26e', 0.32, 3);            // 冲击环
     var core = spawnP(x, y, 0, 0, 0.14, r * 0.9, r * 0.2, 0.9, 0, '#fff3b0', true, 0, 0, SH_RECT, 0);
     core.a1 = 0;
@@ -524,6 +537,7 @@
     b.max = 0.15;
     b.life = 0.15;
     genBolt(b, x1, y1, x2, y2);
+    spawnVfx(x2, y2, 'vfx_lightning', 0.24, 30, true);
     for (var i = 0; i < 2; i++) {                            // 落点电火花
       var a = rand() * TAU;
       var sp = 40 + rand() * 80;
@@ -534,6 +548,7 @@
   };
 
   FX.heal = function (x, y) {
+    spawnVfx(x, y - 8, 'vfx_heal', 0.5, 42, true);
     if (!isFinite(x) || !isFinite(y)) { return; }
     for (var i = 0; i < 6; i++) {                            // 绿色十字上升
       spawnP(x + (rand() - 0.5) * 22, y + (rand() - 0.5) * 10,
@@ -544,6 +559,7 @@
   };
 
   FX.levelBeam = function (x, y) {
+    spawnVfx(x, y - 12, 'vfx_circle', 0.58, 64, true);
     if (!isFinite(x) || !isFinite(y)) { return; }
     spawnP(x, y + 6, 0, -30, 0.55, 14, 0, 0.85, 0, '#ffe98a', true, 0, 0, SH_BEAM, 96);
     spawnP(x, y + 6, 0, -18, 0.7, 6, 0, 1, 0, '#fff6c8', true, 0, 0, SH_BEAM, 120);
@@ -559,6 +575,7 @@
   FX.pickup = function (x, y, color) {
     if (!isFinite(x) || !isFinite(y)) { return; }
     var c = (typeof color === 'string') ? color : '#ffe98a';
+    spawnVfx(x, y, 'vfx_spark', 0.32, 24, true);
     for (var i = 0; i < 4; i++) {                            // 小星星
       var a = rand() * TAU;
       var sp = 26 + rand() * 40;
