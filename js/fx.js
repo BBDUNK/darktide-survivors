@@ -168,7 +168,8 @@
 
   // 脚步尘土:移动时从脚下扬起小土粒
   FX.step = function (x, y, color) {
-    spawnVfx(x, y - 2, 'vfx_smoke', 0.24, 13, false);
+    // 传入的是脚底世界坐标。烟雾保持贴地，避免大贴图中心落到角色躯干。
+    spawnVfx(x, y + 1, 'vfx_smoke', 0.22, 10, false);
     for (var i = 0; i < 1; i++) {
       spawnP(x + (rand() - 0.5) * 6, y + (rand() - 0.5) * 2,
         (rand() - 0.5) * 26, -(14 + rand() * 20),

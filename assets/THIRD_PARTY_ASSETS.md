@@ -27,13 +27,19 @@ Only assets with redistribution-friendly licenses are included. Runtime copies a
 
 The original user-provided Jade Emperor opening image remains `assets/intro.jpg` and is not replaced by third-party art.
 
+## Project-authored image-generation sources
+
+- `assets/sprites/sources/v19-key-art-concepts.png`: original v0.19 Tesla coil, incendiary flask, zombie and merchant design reference sheet.
+- `assets/sprites/sources/v19-zombie-walk-source.png`: original four-frame zombie walk source derived from that reference.
+- These are project-authored source assets rather than third-party downloads; the deterministic atlas pipeline performs chroma removal, palette quantization, hard alpha, scaling and anchor alignment.
+
 ## Ninja Adventure Asset Pack
 
 - Authors: Pixel-Boy and AAA
 - Official source: https://pixel-boy.itch.io/ninja-adventure-asset-pack
 - Pinned source mirror revision: `0476a561d5e6da477d5d2de2e738f0595754adbb`
 - License: CC0 1.0 Universal
-- Used for: animated enemies and bosses, projectiles, weapon/passive/system icons, drops, terrain details, decorations and sprite VFX.
+- Used for: six playable characters with idle/walk/attack actions, the animated merchant, enemies and bosses, projectiles, weapon/passive/system icons, drops, terrain details, decorations and sprite VFX.
 - Local license: `assets/sprites/vendor/ninja-adventure/LICENSE.txt`
 - Import map: `tools/art/open-assets-manifest.json`
 

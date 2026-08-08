@@ -9,6 +9,7 @@ window.Entities = (function () {
       x: 0, y: 0, r: 10,
       hp: 100, iframe: 0, hurtFlash: 0,
       face: 1, moving: false, animT: 0,
+      attackAnimT: 0, attackAnimAge: 0,
       char: charDef,
       shield: 0, shieldRegenT: 0,  // 护盾当前值 / 下次恢复计时
       lastVx: 0, lastVy: 0,        // 移动矢量,敌人抛击用于预判落点
@@ -133,7 +134,7 @@ window.Entities = (function () {
       p.x += iv.x * mspd * dt;
       p.y += iv.y * mspd * dt;
       // 脚步尘土(隔帧少量,避免粒子池被占满)
-      if ((run.frame & 3) === 0) FX.step(p.x, p.y + 8, '#b9b0c8');
+      if ((run.frame & 3) === 0) FX.step(p.x, p.y + 20, '#b9b0c8');
       if (iv.x > 0.01) p.face = 1; else if (iv.x < -0.01) p.face = -1;
       p.animT += dt;
     }
@@ -143,6 +144,10 @@ window.Entities = (function () {
     p.y = E.clamp(p.y, -R, R);
     if (p.iframe > 0) p.iframe -= dt;
     if (p.hurtFlash > 0) p.hurtFlash -= dt;
+    if (p.attackAnimT > 0) {
+      p.attackAnimT = Math.max(0, p.attackAnimT - dt);
+      p.attackAnimAge += dt;
+    }
     // 回复
     if (s.regen > 0 && p.hp < s.hp) p.hp = Math.min(s.hp, p.hp + s.regen * dt);
     // 护盾再生(每 shieldCd 秒恢复一次)
@@ -1752,8 +1757,17 @@ window.Entities = (function () {
         ctx.globalAlpha = 1;
       }
     } else if (!blink) {
-      var pf = p.moving ? Math.floor(p.animT * SpriteGen.animationFps(p.char.sprite, 8)) : 0;
-      drawSprite(ctx, p.char.sprite, pf, p.x, p.y, 1, p.face < 0, 1, p.hurtFlash > 0 ? '#ff4444' : null);
+      var playerSprite = p.char.sprite;
+      var playerClock = run.t;
+      if (p.attackAnimT > 0) {
+        playerSprite += '_attack';
+        playerClock = p.attackAnimAge;
+      } else if (p.moving) {
+        playerSprite += '_walk';
+        playerClock = p.animT;
+      }
+      var pf = Math.floor(playerClock * SpriteGen.animationFps(playerSprite, p.moving ? 10 : 8));
+      drawSprite(ctx, playerSprite, pf, p.x, p.y, 1, p.face < 0, 1, p.hurtFlash > 0 ? '#ff4444' : null);
     }
     // 蛛网缠身:白色丝痕附着在角色身上,随减速结束而消失;硬控时整体被网包裹
     if (p.webStacks > 0 || p.rootT > 0) drawWebOnPlayer(ctx, run, p);
@@ -1885,8 +1899,9 @@ window.Entities = (function () {
           ctx.stroke();
         }
       } else {
-        var mateF = m.moving ? Math.floor(run.t * SpriteGen.animationFps(cd.sprite, 8)) : 0;
-        drawSprite(ctx, cd.sprite, mateF, m.x, m.y, 1, m.face < 0, 1, null);
+        var mateSprite = cd.sprite + (m.attacking ? '_attack' : (m.moving ? '_walk' : ''));
+        var mateF = Math.floor(run.t * SpriteGen.animationFps(mateSprite, m.attacking ? 13 : (m.moving ? 10 : 8)));
+        drawSprite(ctx, mateSprite, mateF, m.x, m.y, 1, m.face < 0, 1, null);
         // 队友身上的光环增益提示
         if (m.buffed) {
           ctx.globalAlpha = 0.35 + Math.sin(run.t * 5) * 0.15;

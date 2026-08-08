@@ -209,6 +209,10 @@ window.Weapons = (function () {
     var st = wStats(run, w);
     var p = run.player;
     var i, a, e, b;
+    if (w.id !== 'holyaura') {
+      p.attackAnimT = 0.31;
+      p.attackAnimAge = 0;
+    }
     switch (w.id) {
       case 'crossblade': {
         for (i = 0; i < st.count; i++) {

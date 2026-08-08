@@ -233,7 +233,7 @@
     var ps = [{
       id: 'host', name: '房主', charId: run.player.char.id,
       x: Math.round(run.player.x), y: Math.round(run.player.y),
-      f: run.player.face, mv: run.player.moving ? 1 : 0,
+      f: run.player.face, mv: run.player.moving ? 1 : 0, at: run.player.attackAnimT > 0 ? 1 : 0,
       hp: +(run.player.hp / run.player.stats.hp).toFixed(2),
       dn: run.player.downed ? 1 : 0, rv: +(run.player.reviveT || 0).toFixed(2),
       bf: run.player.auraBuff ? 1 : 0,
@@ -248,7 +248,7 @@
       ps.push({
         id: mt.peerId, name: mt.name, charId: mt.charId,
         x: Math.round(mp.x), y: Math.round(mp.y),
-        f: mp.face, mv: mp.moving ? 1 : 0,
+        f: mp.face, mv: mp.moving ? 1 : 0, at: mp.attackAnimT > 0 ? 1 : 0,
         hp: mp.stats ? +(mp.hp / mp.stats.hp).toFixed(2) : 1,
         dn: mt.downed ? 1 : 0, rv: +(mt.reviveT || 0).toFixed(2),
         bf: mp.auraBuff ? 1 : 0,
@@ -291,6 +291,10 @@
       var R = CFG.GAME.MAP_R;
       p.x = E.clamp(p.x, -R, R); p.y = E.clamp(p.y, -R, R);
       if (p.iframe > 0) p.iframe -= dt;
+      if (p.attackAnimT > 0) {
+        p.attackAnimT = Math.max(0, p.attackAnimT - dt);
+        p.attackAnimAge += dt;
+      }
       if (s.regen > 0 && p.hp < s.hp) p.hp = Math.min(s.hp, p.hp + s.regen * dt);
       // 队友的武器由房主代跑
       Weapons.updateFor(run, p, m.weapons, dt);
@@ -320,7 +324,7 @@
       var m = coop.mates[i], p = m.player;
       out.push({
         name: m.name, charId: m.charId, x: p.x, y: p.y,
-        face: p.face, moving: p.moving,
+        face: p.face, moving: p.moving, attacking: p.attackAnimT > 0,
         hpPct: p.stats ? p.hp / p.stats.hp : 1,
         downed: m.downed, reviveT: m.reviveT || 0, buffed: !!p.auraBuff
       });
@@ -720,7 +724,7 @@
     var p = run.player;
     var prevHp = p.hp, prevStatsHp = p.stats ? p.stats.hp : 1;
     p.netX = ps.x; p.netY = ps.y;
-    p.netFace = ps.f || 1; p.netMoving = !!ps.mv;
+    p.netFace = ps.f || 1; p.netMoving = !!ps.mv; p.netAttacking = !!ps.at;
     p.downed = !!ps.dn;
     p.reviveT = ps.rv || 0;
     p.slow = ps.sl || 0;
@@ -838,6 +842,8 @@
         cp.y += (cp.netY - cp.y) * ck;
         if (cp.netFace > 0.01) cp.face = 1; else if (cp.netFace < -0.01) cp.face = -1;
         cp.moving = !!cp.netMoving;
+        cp.attackAnimT = cp.netAttacking ? 0.12 : 0;
+        if (cp.netAttacking) cp.attackAnimAge += dt;
       }
       if (cp.iframe > 0) cp.iframe -= dt;
       if (cp.hurtFlash > 0) cp.hurtFlash -= dt;
@@ -991,28 +997,23 @@
     ctx.fillStyle = pal.ground;
     ctx.fillRect(0, 0, W, H);
 
-    // CC0 地表纹理以低对比度重复铺设,保留地图配色同时增加真实像素细节。
-    var pattern = groundPattern(map.id);
-    if (pattern) {
-      ctx.save();
-      ctx.globalAlpha = 0.16;
-      ctx.translate((-camX % 32) - 32, (-camY % 32) - 32);
-      ctx.fillStyle = pattern;
-      ctx.fillRect(0, 0, W + 64, H + 64);
-      ctx.restore();
-    }
-
-    // 第一层:大块地砖色差,给地面基础层次
-    var big = 160;
+    // 第一层：不规则土色斑。禁止重复地砖和方形色块，彻底消除可见网格。
+    var big = 184;
     var bx0 = Math.floor((camX - W / 2) / big) - 1, bx1 = Math.floor((camX + W / 2) / big) + 1;
     var by0 = Math.floor((camY - H / 2) / big) - 1, by1 = Math.floor((camY + H / 2) / big) + 1;
     for (var by = by0; by <= by1; by++) {
       for (var bx = bx0; bx <= bx1; bx++) {
         var bh = E.hash2(bx * 17 + 5, by * 17 + 5);
-        if (bh < 0.5) continue;
-        ctx.globalAlpha = 0.35 * (bh - 0.5);
+        if (bh < 0.28) continue;
+        var patchX = bx * big - camX + W / 2 + 28 + E.hash2(bx * 29, by * 31) * 128;
+        var patchY = by * big - camY + H / 2 + 24 + E.hash2(bx * 37, by * 41) * 132;
+        var patchW = 28 + E.hash2(bx * 43, by * 47) * 54;
+        var patchH = 12 + E.hash2(bx * 53, by * 59) * 28;
+        ctx.globalAlpha = 0.045 + bh * 0.055;
         ctx.fillStyle = pal.ground2;
-        ctx.fillRect(bx * big - camX + W / 2, by * big - camY + H / 2, big, big);
+        ctx.beginPath();
+        ctx.ellipse(patchX | 0, patchY | 0, patchW, patchH, bh * Math.PI, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
     ctx.globalAlpha = 1;
@@ -1451,7 +1452,7 @@
             }
             coop.remote.push({
               name: ps.name, charId: ps.charId, x: ps.x, y: ps.y,
-              face: ps.f, moving: !!ps.mv, hpPct: ps.hp,
+              face: ps.f, moving: !!ps.mv, attacking: !!ps.at, hpPct: ps.hp,
               downed: !!ps.dn, reviveT: ps.rv, buffed: !!ps.bf
             });
           }

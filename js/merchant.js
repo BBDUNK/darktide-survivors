@@ -178,22 +178,16 @@ window.Merchant = (function () {
   // 摊位与商人:画在地面层之上、角色之下
   function draw(ctx, run) {
     var M = CFG.MERCHANT;
-    // 商人本体(行商浪人专属形象)+ 摊位底座
-    var mimg = SpriteGen.get('merchant');
-    var bob = Math.sin(run.t * 2) * 2;
+    // 新商人使用四帧待机动画；脚底锚定在摊位后方，不再用名字遮挡形象。
+    var merchantFrames = SpriteGen.frames('merchant');
+    var merchantFps = SpriteGen.animationFps('merchant', 6);
+    var mimg = merchantFrames[Math.floor(run.t * merchantFps) % merchantFrames.length];
+    var bob = Math.sin(run.t * 2) * 1;
+    var mw = 72, mh = 72;
     ctx.globalAlpha = 0.4;
-    ctx.drawImage(SpriteGen.get('vfx_shadow'), M.x - 14, M.y - 52, 28, 9);
+    ctx.drawImage(SpriteGen.get('vfx_shadow'), M.x - 22, M.y - 60, 44, 12);
     ctx.globalAlpha = 1;
-    ctx.drawImage(mimg, M.x - mimg.width, M.y - 56 - mimg.height * 2 + bob,
-                  mimg.width * 2, mimg.height * 2);
-    // 招牌(无底色,直接描边文字)——上移到商人头顶上方,避免挡住形象
-    ctx.font = 'bold 17px "Microsoft YaHei",sans-serif';
-    ctx.textAlign = 'center';
-    ctx.lineWidth = 5;
-    ctx.strokeStyle = 'rgba(8,6,18,0.9)';
-    ctx.strokeText('行商浪人', M.x, M.y - 108);
-    ctx.fillStyle = '#ffd76b';
-    ctx.fillText('行商浪人', M.x, M.y - 108);
+    ctx.drawImage(mimg, M.x - mw / 2, M.y - 58 - mh + bob, mw, mh);
     // 补货倒计时小闹钟
     drawClock(ctx, run);
 

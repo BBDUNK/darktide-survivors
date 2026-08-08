@@ -1,0 +1,165 @@
+/* v0.19 — 游戏内 HUD：与暗紫石材 / 黄铜边框统一 */
+.hud {
+  --hud-bg: rgba(8, 5, 16, .92);
+  --hud-inner: #171026;
+  --hud-line: #604c78;
+  --hud-gold: #c89c55;
+}
+
+.xp-wrap {
+  top: 0;
+  height: 13px;
+  background: #090611;
+  border: 0;
+  border-bottom: 2px solid #2c203f;
+  box-shadow: inset 0 -2px 0 #050309, 0 2px 0 rgba(0, 0, 0, .55);
+}
+.xp-fill {
+  height: 9px;
+  margin-top: 1px;
+  background: repeating-linear-gradient(90deg, #3558a0 0 13px, #6d9ee8 13px 22px);
+  box-shadow: inset 0 1px 0 rgba(220, 236, 255, .45), 0 0 9px rgba(96, 153, 238, .45);
+}
+.lv-text {
+  right: 10px;
+  top: 0;
+  line-height: 12px;
+  color: #f7e6b2;
+  font-size: 8px;
+}
+
+.hud-tl {
+  top: 23px;
+  left: 10px;
+  padding: 9px 10px 10px;
+  gap: 7px;
+  background: linear-gradient(180deg, rgba(23, 16, 38, .96), rgba(9, 6, 17, .94));
+  border: 2px solid #191222;
+  outline: 1px solid var(--hud-gold);
+  box-shadow: inset 0 0 0 2px #49385c, 4px 5px 0 rgba(0, 0, 0, .48);
+}
+.hud-tl::before {
+  content: '✦ 生命与装备';
+  display: block;
+  margin: -3px 0 1px;
+  font-family: var(--font-pix);
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: #d8bd83;
+  text-shadow: 1px 1px 0 #000;
+}
+.hp-wrap {
+  width: 210px;
+  height: 22px;
+  padding: 4px 7px;
+  background: #08050e;
+  border: 2px solid #2e213a;
+  box-shadow: inset 0 0 0 1px #624e72;
+}
+.hp-wrap::after {
+  background-image: none;
+  border: 1px solid rgba(231, 209, 156, .24);
+  box-sizing: border-box;
+}
+.hp-fill {
+  height: 100%;
+  background: repeating-linear-gradient(90deg, #2b7848 0 12px, #5ec774 12px 20px);
+  box-shadow: inset 0 1px 0 rgba(215, 255, 218, .35);
+}
+.hp-fill.low { background: repeating-linear-gradient(90deg, #8b173a 0 12px, #e44b64 12px 20px); }
+.shield-fill { top: 4px; left: 7px; height: calc(100% - 8px); }
+.hp-text { line-height: 22px; font-size: 9px; letter-spacing: 1px; }
+.slots { gap: 5px; max-width: 220px; }
+.slots.small { opacity: .9; }
+.slot {
+  width: 32px;
+  height: 32px;
+  padding: 4px;
+  background: #120c1e;
+  border: 2px solid #2c203a;
+  outline: 1px solid #6a527d;
+  box-shadow: inset 0 0 0 1px #08050d, 2px 2px 0 rgba(0, 0, 0, .5);
+}
+.slot-lv { color: #ffe08c; right: 0; bottom: -3px; }
+
+.hud-timer {
+  top: 22px;
+  min-width: 118px;
+  box-sizing: border-box;
+  padding: 7px 18px 6px;
+  text-align: center;
+  font-size: 18px;
+  color: #fff0c4;
+  background: linear-gradient(180deg, rgba(27, 17, 44, .97), rgba(8, 5, 15, .96));
+  border: 2px solid #171020;
+  outline: 1px solid #a47b48;
+  box-shadow: inset 0 0 0 2px #49345d, 3px 4px 0 rgba(0, 0, 0, .45);
+}
+.hud-timer::before, .hud-timer::after { content: '◆'; color: #7b5b98; font-size: 8px; margin: 0 7px; vertical-align: 2px; }
+.hud-nextev {
+  top: 67px;
+  padding: 4px 13px;
+  color: #e9cf8e;
+  background: rgba(13, 8, 23, .92);
+  border: 1px solid #6b4f7e;
+  box-shadow: 2px 3px 0 rgba(0, 0, 0, .45);
+}
+
+.hud-tr {
+  left: 10px;
+  bottom: 10px;
+  padding: 3px;
+  gap: 0;
+  background: var(--hud-bg);
+  border: 2px solid #171020;
+  outline: 1px solid #9d7848;
+  box-shadow: inset 0 0 0 2px #3f3050, 3px 4px 0 rgba(0, 0, 0, .48);
+}
+.hud-stat {
+  min-width: 92px;
+  height: 29px;
+  box-sizing: border-box;
+  padding: 4px 9px;
+  gap: 5px;
+  border: 0;
+  border-radius: 0;
+  background: #130d20;
+  box-shadow: none;
+  color: #ffe094;
+  font-family: var(--font-pix);
+  font-size: 11px;
+}
+.hud-stat + .hud-stat { border-left: 1px solid #59416b; }
+.hud-stat-label { color: #a99ab6; font-family: var(--font-cn); font-size: 10px; font-weight: 600; }
+
+.boss-wrap { bottom: 15px; width: 500px; }
+.boss-name { margin-bottom: 5px; color: #ff91a6; text-shadow: 2px 2px 0 #1f0c18, 0 0 10px rgba(255, 70, 100, .42); }
+.boss-bar {
+  height: 18px;
+  padding: 4px 8px;
+  background: #08050d;
+  border: 2px solid #160d18;
+  outline: 1px solid #9c5b63;
+  box-shadow: inset 0 0 0 1px #552f43, 3px 4px 0 rgba(0, 0, 0, .55);
+}
+.boss-bar::after { background-image: none; border: 1px solid rgba(255, 221, 197, .2); box-sizing: border-box; }
+.boss-fill { height: 100%; background: repeating-linear-gradient(90deg, #8f1d3f 0 14px, #e54d68 14px 23px); }
+
+.hud-pausebtn, .hud-targetbtn {
+  right: 150px;
+  opacity: .82;
+  background: #171025;
+  border-color: #72568b;
+}
+.hud-pausebtn { top: 17px; }
+.hud-targetbtn { top: 118px; }
+
+@media (max-width: 700px) {
+  .hud-tl { left: 6px; padding: 6px; }
+  .hud-tl::before { display: none; }
+  .hp-wrap { width: 154px; }
+  .slot { width: 28px; height: 28px; }
+  .hud-tr { left: 6px; bottom: 6px; }
+  .hud-stat { min-width: 76px; padding: 3px 6px; }
+  .hud-stat-label { display: none; }
+}

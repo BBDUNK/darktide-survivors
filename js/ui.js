@@ -809,11 +809,13 @@ window.UI = (function () {
     var tr = h('div', 'hud-tr');
     var goldRow = h('div', 'hud-stat');
     goldRow.appendChild(iconCanvas('icon_gold', 16));
+    goldRow.appendChild(h('span', 'hud-stat-label', '金币'));
     hudRefs.gold = h('span', '', '0');
     goldRow.appendChild(hudRefs.gold);
     tr.appendChild(goldRow);
     var killRow = h('div', 'hud-stat');
     killRow.appendChild(iconCanvas('icon_kill', 16));
+    killRow.appendChild(h('span', 'hud-stat-label', '击杀'));
     hudRefs.kills = h('span', '', '0');
     killRow.appendChild(hudRefs.kills);
     tr.appendChild(killRow);
