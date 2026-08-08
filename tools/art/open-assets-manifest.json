@@ -513,12 +513,12 @@
     {
       "name": "p_arrow",
       "category": "projectile",
-      "source": "assets/sprites/vendor/ninja-adventure/FX/Projectile/Arrow.png",
-      "size": [44, 22],
-      "anchor": [22, 17],
+      "source": "assets/sprites/sources/props/p_arrow_small.png",
+      "size": [24, 10],
+      "anchor": [12, 9],
       "frames": 1,
       "fps": 12,
-      "pixelScale": 3,
+      "pixelScale": 1,
       "preservePixels": true,
       "allowDuplicateFrames": true,
       "minCoverage": 0.015
@@ -935,7 +935,7 @@
     {
       "name": "magnet",
       "category": "drop",
-      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/misc/misc_orb.png",
+      "source": "assets/sprites/sources/props/magnet_horseshoe.png",
       "size": [
         18,
         18
@@ -952,7 +952,7 @@
     {
       "name": "bomb",
       "category": "drop",
-      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/effect/iron_shot_0.png",
+      "source": "assets/sprites/sources/props/bomb_round.png",
       "size": [
         18,
         18

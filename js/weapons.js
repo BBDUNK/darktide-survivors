@@ -588,7 +588,7 @@ window.Weapons = (function () {
               var te = nearestEnemy(b.x, b.y, b.orbitR, _zapHit);
               if (!te) break;
               _zapHit.add(te.uid);
-              FX.lightning(b.x, b.y - 42, te.x, te.y, '#8ef');
+              FX.lightning(b.x, b.y - 92, te.x, te.y, '#8ef');
               if (!run._netVisual) Entities.damageEnemy(run, te, b.dmg, {});
               zapped++;
               if (b.evolved) { // 天网:每道再链一跳
@@ -602,8 +602,8 @@ window.Weapons = (function () {
             }
             if (zapped) {
               AudioSys.play('zap');
-              FX.burst(b.x, b.y - 44, { color: '#8ef', n: 7, speed: 120, life: 0.28, size: 2.2, glow: true });
-              FX.ring(b.x, b.y - 42, { r: 22, color: '#8ef', life: 0.22, width: 2 });
+              FX.burst(b.x, b.y - 94, { color: '#8ef', n: 7, speed: 120, life: 0.28, size: 2.2, glow: true });
+              FX.ring(b.x, b.y - 92, { r: 22, color: '#8ef', life: 0.22, width: 2 });
             }
             // 塔间电弧:与射程内的另一座塔连线,对连线附近敌人造成伤害
             for (var tj = 0; tj < BMAX; tj++) {
@@ -611,7 +611,7 @@ window.Weapons = (function () {
               if (ob === b || !ob.alive || ob.kind !== 'turret') continue;
               var ad = Math.hypot(ob.x - b.x, ob.y - b.y);
               if (ad > 260 || ad < 1) continue;
-              FX.lightning(b.x, b.y - 42, ob.x, ob.y - 42, '#bdf');
+              FX.lightning(b.x, b.y - 92, ob.x, ob.y - 92, '#bdf');
               // 沿电弧采样几个点做范围伤害
               var steps = Math.max(2, Math.round(ad / 40));
               for (var sk = 1; sk < steps; sk++) {
@@ -813,80 +813,20 @@ window.Weapons = (function () {
     }
   }
 
-  // 经典特斯拉电塔:基座、绝缘柱、锥形铜线圈、顶环、放电叉与脉冲球
+  // 经典特斯拉电塔:复古像素塔身 + 顶部脉冲电球与放电叉
   function drawTeslaCoil(ctx, b, run) {
     var bx = b.x, baseY = b.y + 12;
     var pulse = 0.5 + 0.5 * Math.sin(run.t * 5.2 + bx * 0.17);
     ctx.globalAlpha = b.ttl < 1 ? E.clamp(b.ttl * 2, 0, 1) : 1;
 
-    // 四脚支架 + 金属平台
-    ctx.fillStyle = '#14141f';
-    ctx.fillRect(bx - 30, baseY + 2, 8, 5);
-    ctx.fillRect(bx + 22, baseY + 2, 8, 5);
-    ctx.fillStyle = '#232335';
-    ctx.fillRect(bx - 26, baseY - 6, 52, 8);
-    ctx.fillStyle = '#3b3b55';
-    ctx.fillRect(bx - 22, baseY - 8, 44, 4);
-    ctx.fillStyle = '#14141f';
-    ctx.fillRect(bx - 18, baseY - 2, 36, 2);
-
-    // 底部陶瓷绝缘子
-    ctx.fillStyle = '#cfd0da';
-    ctx.fillRect(bx - 14, baseY - 20, 28, 4);
-    ctx.fillStyle = '#eceef6';
-    ctx.fillRect(bx - 14, baseY - 20, 28, 1.5);
-    ctx.fillStyle = '#9a9cb0';
-    ctx.fillRect(bx - 13, baseY - 14, 26, 3);
-    ctx.fillStyle = '#cfd0da';
-    ctx.fillRect(bx - 13, baseY - 11, 26, 4);
-    ctx.fillStyle = '#eceef6';
-    ctx.fillRect(bx - 13, baseY - 11, 26, 1.5);
-    ctx.fillStyle = '#83859a';
-    ctx.fillRect(bx - 13, baseY - 8, 26, 2);
-
-    // 锥形线圈塔身 + 密集铜色绕线
-    var coilBottom = baseY - 20, coilTop = baseY - 52;
-    var bottomW = 30, topW = 16;
-    ctx.fillStyle = '#3b4656';
-    ctx.beginPath();
-    ctx.moveTo(bx - bottomW / 2, coilBottom);
-    ctx.lineTo(bx - topW / 2, coilTop);
-    ctx.lineTo(bx + topW / 2, coilTop);
-    ctx.lineTo(bx + bottomW / 2, coilBottom);
-    ctx.closePath();
-    ctx.fill();
-    ctx.strokeStyle = '#c9863a';
-    ctx.lineWidth = 2;
-    for (var ly = 0; ly < 8; ly++) {
-      var y = coilTop + (coilBottom - coilTop) * (ly + 0.5) / 8;
-      var wAt = topW + (bottomW - topW) * (y - coilTop) / (coilBottom - coilTop);
-      ctx.beginPath();
-      ctx.moveTo(bx - wAt / 2 + 1, y);
-      ctx.quadraticCurveTo(bx, y + (ly % 2 === 0 ? 3 : -3), bx + wAt / 2 - 1, y);
-      ctx.stroke();
-    }
-    ctx.fillStyle = 'rgba(255,255,255,0.12)';
-    ctx.fillRect(bx - bottomW / 2 + 3, coilTop, 4, coilBottom - coilTop);
-    ctx.fillStyle = 'rgba(0,0,0,0.22)';
-    ctx.fillRect(bx + bottomW / 2 - 7, coilTop, 4, coilBottom - coilTop);
-
-    // 顶端绝缘环与长放电叉
-    ctx.fillStyle = '#5a5a76';
-    ctx.fillRect(bx - 17, coilTop - 4, 34, 6);
-    ctx.fillStyle = '#74749a';
-    ctx.fillRect(bx - 17, coilTop - 4, 34, 2);
-    ctx.strokeStyle = '#a7d4ee';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(bx - 10, coilTop - 8); ctx.lineTo(bx - 10, coilTop - 20);
-    ctx.moveTo(bx - 3, coilTop - 8); ctx.lineTo(bx - 4, coilTop - 26);
-    ctx.moveTo(bx + 3, coilTop - 8); ctx.lineTo(bx + 4, coilTop - 26);
-    ctx.moveTo(bx + 10, coilTop - 8); ctx.lineTo(bx + 10, coilTop - 18);
-    ctx.stroke();
+    // 塔身:使用复古像素电塔素材,底部锚定在地面
+    var towerImg = SpriteGen.frames('tesla_tower')[0];
+    var towerW = 96, towerH = 96;
+    ctx.drawImage(towerImg, bx - towerW / 2, baseY - towerH, towerW, towerH);
 
     // 顶部电球与脉冲辉光
-    var orbY = coilTop - 18;
-    var glowR = 16 + pulse * 6;
+    var orbY = baseY - towerH - 8;
+    var glowR = 17 + pulse * 6;
     var glow = ctx.createRadialGradient(bx, orbY, 1, bx, orbY, glowR);
     glow.addColorStop(0, 'rgba(140,235,255,' + (0.42 + pulse * 0.18).toFixed(3) + ')');
     glow.addColorStop(1, 'rgba(140,235,255,0)');
@@ -946,6 +886,17 @@ window.Weapons = (function () {
       var projectileAge = Math.max(0, run.t - (b.born || 0));
       var img = projectileFrames[Math.floor(projectileAge * projectileFps) % projectileFrames.length];
       var sc = 2 * (b.size / 16);
+      if (b.spr === 'p_arrow') {
+        // 箭矢固定朝发射方向,不旋转;左飞时水平翻转
+        var aw = img.width * 2 * (b.size / 16);
+        var ah = img.height * 2 * (b.size / 16);
+        ctx.save();
+        ctx.translate(b.x, b.y);
+        if (Math.cos(b.angle) < 0) ctx.scale(-1, 1);
+        ctx.drawImage(img, -aw / 2, -ah / 2, aw, ah);
+        ctx.restore();
+        continue;
+      }
       if (b.kind === 'turret') {
         drawTeslaCoil(ctx, b, run);
         continue;

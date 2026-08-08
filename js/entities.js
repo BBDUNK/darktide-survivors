@@ -1772,8 +1772,8 @@ window.Entities = (function () {
         playerSprite += '_walk';
         pf = Math.floor(p.animT * SpriteGen.animationFps(playerSprite, 10));
       } else {
-        var idleFrames = SpriteGen.frames(playerSprite);
-        pf = Math.floor(run.t * SpriteGen.animationFps(playerSprite, 6)) % idleFrames.length;
+        // 待机固定第一帧,不做旋转动画
+        pf = 0;
       }
       drawSprite(ctx, playerSprite, pf, p.x, p.y, 1, p.face < 0, 1, p.hurtFlash > 0 ? '#ff4444' : null);
     }
