@@ -6,6 +6,7 @@
   var state = 'intro'; // intro | menu | run | levelup | chest | pause | result
   var run = null;
   var vignette = null;
+  var menuBgImg = null;
   var achvTimer = 0;
   var dpsTimer = 0, lastDmg = 0;
 
@@ -61,13 +62,13 @@
 
     // 中央题字(放大,两行)
     ctx.textAlign = 'center';
-    ctx.font = 'bold 56px "Press Start 2P","Microsoft YaHei",monospace';
+    ctx.font = 'bold 56px "Fusion Pixel","SimSun",monospace';
     ctx.lineWidth = 10;
     ctx.strokeStyle = 'rgba(0,0,0,0.9)';
     ctx.strokeText('天庭制作组', W / 2, H / 2 - 38);
     ctx.fillStyle = '#ffd76b';
     ctx.fillText('天庭制作组', W / 2, H / 2 - 38);
-    ctx.font = 'bold 30px "Press Start 2P","Microsoft YaHei",monospace';
+    ctx.font = 'bold 30px "Fusion Pixel","SimSun",monospace';
     ctx.lineWidth = 7;
     ctx.strokeText('倾心呈现', W / 2, H / 2 + 24);
     ctx.fillStyle = '#fff3c8';
@@ -1215,9 +1216,17 @@
 
   function renderMenuBg() {
     menuT += 1 / 60;
-    var pal = CFG.MAPS[0].palette;
-    drawGround(pal, menuT * 30, Math.sin(menuT * 0.1) * 40);
-    drawDecor(CFG.MAPS[0], menuT * 30, Math.sin(menuT * 0.1) * 40, 0, null);
+    if (menuBgImg && menuBgImg.width) {
+      var cropH = menuBgImg.width * CFG.GAME.H / CFG.GAME.W;
+      var cropY = Math.max(0, (menuBgImg.height - cropH) * 0.44);
+      ctx.drawImage(menuBgImg, 0, cropY, menuBgImg.width, cropH, 0, 0, CFG.GAME.W, CFG.GAME.H);
+      ctx.fillStyle = 'rgba(8,3,18,0.20)';
+      ctx.fillRect(0, 0, CFG.GAME.W, CFG.GAME.H);
+    } else {
+      var pal = CFG.MAPS[0].palette;
+      drawGround(pal, menuT * 30, Math.sin(menuT * 0.1) * 40);
+      drawDecor(CFG.MAPS[0], menuT * 30, Math.sin(menuT * 0.1) * 40, 0, null);
+    }
     drawMenuAsh();
 
     // 顶部角色行:从右往左跳动,固定间隔整齐排列
@@ -1266,6 +1275,9 @@
     SpriteGen.init();
     var atlasReady = SpriteGen.loadAtlas();
     if (atlasReady) await atlasReady;
+    if (document.fonts && document.fonts.load) await document.fonts.load('16px "Fusion Pixel"');
+    menuBgImg = new Image();
+    menuBgImg.src = 'assets/backgrounds/menu-monolith.png';
     Meta.load();
     var st = Meta.settings();
     if (st.uiScale) CFG.GAME.UI_SCALE = st.uiScale;   // 玩家保存的适配档位优先
@@ -1520,7 +1532,10 @@
   window.Debug = {
     run: function () { return run; },
     state: function () { return state; },
-    coop: function () { return coop; }
+    coop: function () { return coop; },
+    menuBackground: function () {
+      return { loaded: !!(menuBgImg && menuBgImg.width), src: menuBgImg ? menuBgImg.src : '' };
+    }
   };
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);

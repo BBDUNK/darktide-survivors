@@ -35,6 +35,24 @@ const URL = 'file://' + path.join(ROOT, 'index.html').replace(/\\/g, '/');
   await page.waitForTimeout(600);
   await shot('02-menu');
 
+  // 主菜单分支:圣坛、设置、成就、联机大厅
+  await page.locator('.menu-altar .btn').click();
+  await page.waitForTimeout(400);
+  await shot('02b-shop');
+  await page.locator('.screen:not(.hidden) .btn', { hasText: '返回' }).last().click();
+  await page.locator('.menu-screen:not(.hidden) .btn', { hasText: '设置' }).click();
+  await page.waitForTimeout(400);
+  await shot('02c-settings');
+  await page.locator('.screen:not(.hidden) .btn', { hasText: '返回' }).last().click();
+  await page.locator('.menu-screen:not(.hidden) .btn', { hasText: '成就' }).click();
+  await page.waitForTimeout(400);
+  await shot('02d-achievements');
+  await page.locator('.screen:not(.hidden) .btn', { hasText: '返回' }).last().click();
+  await page.locator('.menu-screen:not(.hidden) .btn', { hasText: '联机远征' }).click();
+  await page.waitForTimeout(400);
+  await shot('02e-coop');
+  await page.locator('.screen:not(.hidden) .btn', { hasText: '返回' }).last().click();
+
   // 百科全书:四个页签都截
   const vis = (sel) => page.locator(sel).locator('visible=true').first();
   await vis('text=📖 百科全书').click();
@@ -54,6 +72,7 @@ const URL = 'file://' + path.join(ROOT, 'index.html').replace(/\\/g, '/');
   await shot('07-chars');
   await page.getByText('下一步').click();
   await page.waitForTimeout(400);
+  await shot('07b-maps');
   await page.getByText('出发').click();
   await page.waitForTimeout(2500);
   await shot('08-run-early');

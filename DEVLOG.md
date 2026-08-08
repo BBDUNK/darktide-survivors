@@ -30,6 +30,17 @@
 
 ---
 
+## 2026-08-08 — v17:开放授权素材与全局视觉焕新
+
+- 接入 CC0 “Tiny RPG — Dark Dwellers GUI”,以原生九宫格面板、四态按钮、HUD 血条、槽位与像素鼠标替换旧 Minecraft 风格 UI
+- 接入 OFL-1.1 Fusion Pixel 12px 简体中文字体,DOM 与 Canvas 开幕题字统一使用本地像素字体
+- 主菜单使用 CC0 “Monolith with backdrop” 像素背景,16:9 最近邻裁切并保留角色/怪物动态巡游;用户指定的玉皇大帝开幕图保持不变
+- 新增 `css/theme-v17.css` 独立主题层、`tools/ui/build-theme.py` 可复现资源切片及 `assets/THIRD_PARTY_ASSETS.md` 授权清单
+- 截图验收扩展到圣坛、设置、成就、联机、地图选择等完整 UI 分支
+- 版本号 v0.17.0
+
+---
+
 ## 2026-08-08 — v16.1:原开幕图与四帧角色动画
 
 - 开幕恢复用户指定的玉皇大帝原图 `assets/intro.jpg`,并从生成式背景流水线中排除

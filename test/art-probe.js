@@ -61,6 +61,24 @@ function assert(ok, message) {
 
   // Skip intro and start the default knight/graveyard run through the real UI.
   await page.mouse.click(640, 360);
+  await page.waitForFunction(() => document.fonts.check('16px "Fusion Pixel"'));
+  await page.waitForFunction(() => Debug.menuBackground().loaded);
+  const theme = await page.evaluate(() => {
+    const button = document.querySelector('.menu-screen:not(.hidden) .menu-col .btn:not(.primary)');
+    const panel = document.querySelector('.menu-screen:not(.hidden) .menu-board');
+    return {
+      font: getComputedStyle(document.body).fontFamily,
+      buttonSkin: getComputedStyle(button).borderImageSource,
+      panelSkin: getComputedStyle(panel).borderImageSource,
+      menuBackground: Debug.menuBackground()
+    };
+  });
+  assert(theme.font.includes('Fusion Pixel'), 'Fusion Pixel font is not active');
+  assert(theme.buttonSkin.includes('button-neutral-0.png'), 'Dark Dwellers button skin is not active');
+  assert(theme.panelSkin.includes('panel-base.png'), 'Dark Dwellers panel skin is not active');
+  assert(theme.menuBackground.loaded && theme.menuBackground.src.includes('menu-monolith.png'),
+    'menu background asset was not loaded');
+  console.log('THEME OK  local OFL font, CC0 controls, panels and menu background');
   await page.getByText('开始远征').click();
   await page.getByText('下一步').click();
   await page.getByText('出发').click();

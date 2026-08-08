@@ -46,6 +46,7 @@ python -m http.server 8000
 - `assets/sprites/atlas.png` 优先提供精修像素素材;`js/sprites.js` 保留全部程序化素材作为离线/加载失败兜底
 - 当前图集含 13 项 37 帧;六名角色、骷髅与史莱姆王使用四帧循环和逐素材帧率
 - 图集经固定调色板、硬 Alpha、锚点对齐、重心防抖和自动质量报告生成,游戏运行时不增加第三方依赖
+- 全局 UI 使用 CC0 Dark Dwellers 九宫格像素皮肤,中文排版使用本地 OFL Fusion Pixel 字体;来源与授权见 `assets/THIRD_PARTY_ASSETS.md`
 - 音乐音效由 `js/audio.js` 用 WebAudio 实时合成(16 步音序器,强度分层)
 - 对象池 + 空间哈希,同屏 400 敌人 + 1500 粒子稳定 60fps
 - 存档保存在 `localStorage`(`darktide_save_v1`)
@@ -71,7 +72,10 @@ darktide-survivors/
 │   ├── ui.js           # 全部界面(DOM)
 │   └── main.js         # 状态机与启动
 ├── assets/sprites/     # PNG 图集、元数据、源图与像素预览
+├── assets/ui/          # CC0 九宫格面板、按钮、HUD 与槽位资源
+├── assets/backgrounds/ # 本地主菜单像素背景
 ├── tools/art/          # 确定性像素修整、校验和图集构建
+├── tools/ui/           # 第三方 UI 图表的确定性切片构建
 ├── test/
 │   ├── headless.js     # 无头冒烟测试(模拟真实游玩)
 │   └── art-probe.js    # 真浏览器图集与 400 敌人性能验收
