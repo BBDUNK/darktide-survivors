@@ -5,7 +5,7 @@
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES2020-yellow)]()
 [![Genre](https://img.shields.io/badge/Genre-Bullet%20Heaven-orange)]()
 
-一款纯浏览器弹幕生存 Roguelite(类《吸血鬼幸存者》)。**零依赖、零构建、零后端**;所有像素美术与音乐都由代码实时生成,双击 `index.html` 即可游玩。
+一款纯浏览器弹幕生存 Roguelite(类《吸血鬼幸存者》)。**零依赖、零构建、零后端**;像素美术使用本地图集并保留完整程序化兜底,音乐由代码实时生成,双击 `index.html` 即可游玩。
 
 ![游戏截图](screenshot.png)
 
@@ -43,7 +43,8 @@ python -m http.server 8000
 
 ## 技术实现
 
-- 全部像素美术由 `js/sprites.js` 程序化生成(种子确定性,每次刷新一致)
+- `assets/sprites/atlas.png` 优先提供精修像素素材;`js/sprites.js` 保留全部程序化素材作为离线/加载失败兜底
+- 图集经固定调色板、硬 Alpha、锚点对齐和自动质量报告生成,游戏运行时不增加第三方依赖
 - 音乐音效由 `js/audio.js` 用 WebAudio 实时合成(16 步音序器,强度分层)
 - 对象池 + 空间哈希,同屏 400 敌人 + 1500 粒子稳定 60fps
 - 存档保存在 `localStorage`(`darktide_save_v1`)
@@ -59,7 +60,7 @@ darktide-survivors/
 │   └── style.css       # 像素风样式与响应式布局
 ├── js/
 │   ├── config.js       # 全部数值 / 数据表 / 文案
-│   ├── sprites.js      # 程序化像素美术
+│   ├── sprites.js      # 图集加载、缓存与程序化素材兜底
 │   ├── audio.js        # WebAudio 音效与芯片音乐
 │   ├── fx.js           # 粒子 / 伤害数字 / 震屏
 │   ├── engine.js       # 主循环 / 输入 / 相机 / 空间哈希
@@ -68,8 +69,11 @@ darktide-survivors/
 │   ├── weapons.js      # 武器 / 弹体 / 进化
 │   ├── ui.js           # 全部界面(DOM)
 │   └── main.js         # 状态机与启动
+├── assets/sprites/     # PNG 图集、元数据、源图与像素预览
+├── tools/art/          # 确定性像素修整、校验和图集构建
 ├── test/
-│   └── headless.js     # 无头冒烟测试(模拟真实游玩)
+│   ├── headless.js     # 无头冒烟测试(模拟真实游玩)
+│   └── art-probe.js    # 真浏览器图集与 400 敌人性能验收
 └── SPEC.md             # 技术规范(模块接口与数据表)
 ```
 
@@ -84,6 +88,12 @@ for f in js/*.js; do node --check "$f"; done
 
 # 无头冒烟测试(模拟真实游玩约 160 秒)
 node test/headless.js
+
+# 重建并校验像素图集
+node tools/art/build-atlas.js
+
+# 真浏览器图集与 400 敌人压测
+node test/art-probe.js
 ```
 
 ## 版权与免责声明

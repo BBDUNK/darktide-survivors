@@ -1,0 +1,108 @@
+{
+  "version": 1,
+  "atlasWidth": 256,
+  "atlasPadding": 2,
+  "previewScale": 8,
+  "backgroundPalette": [
+    "#080711", "#100d18", "#171329", "#211a3b", "#2d2450", "#382d61",
+    "#111d2e", "#172b3e", "#203d50", "#2d5668", "#477889", "#78a4ad",
+    "#202536", "#343a4d", "#4c5365", "#697180", "#9298a0", "#c4c7c4",
+    "#0b2a29", "#0d4436", "#116344", "#16864c", "#2ead59", "#72d879",
+    "#5c3b18", "#96701f", "#d2ad3a", "#d8efbd"
+  ],
+  "backgrounds": [
+    {
+      "source": "assets/intro-v2.png",
+      "output": "assets/intro-v2.jpg",
+      "size": [960, 540],
+      "quality": 92
+    }
+  ],
+  "assets": [
+    {
+      "name": "char_knight",
+      "source": "assets/sprites/sources/char-knight-source.png",
+      "key": "#00ff00",
+      "frames": 2,
+      "size": [32, 32],
+      "anchor": [16, 31],
+      "renderScale": 0.75,
+      "outline": "#100d18",
+      "colors": ["#100d18", "#22213a", "#43475e", "#777f95", "#c5cad5", "#f4f0e6", "#152456", "#274fb0", "#d18b18", "#ffd76b"]
+    },
+    {
+      "name": "skeleton",
+      "source": "assets/sprites/sources/skeleton-source.png",
+      "key": "#00ff00",
+      "frames": 2,
+      "size": [32, 32],
+      "anchor": [16, 31],
+      "renderScale": 0.75,
+      "outline": "#100d18",
+      "colors": ["#100d18", "#29202b", "#4a3940", "#6f5357", "#8d2445", "#c2a87b", "#eadcb0", "#fff4cf", "#5c3928", "#9a795a"]
+    },
+    {
+      "name": "boss_slimeking",
+      "source": "assets/sprites/sources/boss-slimeking-source.png",
+      "key": "#ff00ff",
+      "frames": 2,
+      "size": [48, 48],
+      "anchor": [24, 47],
+      "renderScale": 0.666667,
+      "outline": "#100d18",
+      "colors": ["#100d18", "#0b332d", "#0e5741", "#16864c", "#35bd58", "#84e36d", "#c9f58c", "#6d3d16", "#b87316", "#e3a928", "#ffe477"]
+    },
+    {
+      "name": "p_slash_big",
+      "source": "assets/sprites/sources/slash-source.png",
+      "key": "#00ff00",
+      "frames": 1,
+      "size": [24, 24],
+      "anchor": [12, 12],
+      "outline": "#100d18",
+      "colors": ["#100d18", "#6d3d16", "#b87316", "#e3a928", "#ffd65a", "#fff1a6", "#fffdf0", "#1746a2", "#62b8ff"]
+    },
+    {
+      "name": "w_crossblade",
+      "source": "assets/sprites/sources/icons-source.png",
+      "key": "#ff00ff",
+      "region": [0.0, 0.0, 0.5, 1.0],
+      "frames": 1,
+      "size": [24, 24],
+      "anchor": [12, 12],
+      "colors": ["#100d18", "#091629", "#173250", "#5c3915", "#9c6418", "#d89b25", "#ffd65a", "#fff1a6", "#8d2445", "#d94b8d"]
+    },
+    {
+      "name": "ps_core",
+      "source": "assets/sprites/sources/icons-source.png",
+      "key": "#ff00ff",
+      "region": [0.5, 0.0, 1.0, 1.0],
+      "frames": 1,
+      "size": [24, 24],
+      "anchor": [12, 12],
+      "colors": ["#100d18", "#091629", "#173250", "#31587a", "#3d78b8", "#278fe0", "#62b8ff", "#b9e9ff", "#f2fdff"]
+    },
+    {
+      "name": "deco_grave",
+      "source": "assets/sprites/sources/graveyard-props-source.png",
+      "key": "#00ff00",
+      "region": [0.0, 0.0, 0.5, 1.0],
+      "frames": 1,
+      "size": [24, 32],
+      "anchor": [12, 31],
+      "outline": "#100d18",
+      "colors": ["#100d18", "#262638", "#414457", "#666a77", "#92959b", "#c6c3b6", "#233626", "#48613b"]
+    },
+    {
+      "name": "deco_deadtree",
+      "source": "assets/sprites/sources/graveyard-props-source.png",
+      "key": "#00ff00",
+      "region": [0.5, 0.0, 1.0, 1.0],
+      "frames": 1,
+      "size": [32, 40],
+      "anchor": [16, 39],
+      "outline": "#100d18",
+      "colors": ["#100d18", "#251a22", "#3b2830", "#583a35", "#76513e", "#9a704d", "#c49a68"]
+    }
+  ]
+}

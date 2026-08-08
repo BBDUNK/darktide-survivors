@@ -1541,6 +1541,7 @@ window.Entities = (function () {
   function drawSprite(ctx, name, frameIdx, x, y, scale, flip, alpha, tint) {
     var frames = getFrames(name, flip);
     var img = frames[frameIdx % frames.length];
+    scale *= SpriteGen.renderScale(name);
     var w = img.width * 2 * scale, h = img.height * 2 * scale;
     if (alpha !== 1) ctx.globalAlpha = alpha;
     ctx.drawImage(img, x - w / 2, y - h / 2, w, h);

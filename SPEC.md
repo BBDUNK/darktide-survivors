@@ -5,18 +5,19 @@
 ## 硬性约束(所有模块必须遵守)
 
 1. **禁止 ES modules**(file:// 下 CORS 会失败)。全部用经典 `<script>` 全局命名空间:`window.XXX = {...}`。
-2. **禁止外部资源加载**(除 index.html 里的 Google Fonts `<link>`,且有本地回退)。不许 fetch/XHR/Image 网络 src。
-3. 所有美术 = 程序化生成到离屏 canvas;所有音频 = WebAudio 合成。
+2. **禁止外部网络资源加载**。允许加载仓库内 `assets/` 的本地图集,不许 fetch/XHR/远程 Image src。
+3. 美术 = 本地 PNG 图集优先 + 程序化离屏 canvas 兜底;所有音频 = WebAudio 合成。
 4. 目标 60fps,同屏 400 敌人 + 1500 粒子。凡是高频对象一律**对象池**,禁止每帧 new 大量对象/数组。
-5. 像素风:sprite 原生 16×16(Boss 32×32),绘制时 2 倍放大;全局 `imageSmoothingEnabled=false`。
+5. 像素风:旧程序素材原生 16×16(Boss 32×32);精修图集角色/敌人可为 32×32、Boss 48×48,通过 `renderScale` 保持显示尺寸;全局 `imageSmoothingEnabled=false`。
 6. 代码风格:ES2020,分号,单引号,2 空格缩进。文件头一行注释说明模块职责。
 7. 每个模块文件**自包含**,只依赖已声明的全局(CFG / Engine 等),不得依赖未在本规范声明的接口。
 
 ## 文件与加载顺序(index.html 按此顺序引入)
 
 ```
-js/config.js    → window.CFG        全部数值/文案/数据表(已完成,可直接读)
-js/sprites.js   → window.SpriteGen  程序化像素美术        【模块A·委托】
+js/config.js                 → window.CFG        全部数值/文案/数据表(已完成,可直接读)
+assets/sprites/atlas-data.js → window.SPRITE_ATLAS 本地图集元数据
+js/sprites.js                → window.SpriteGen  图集优先 + 程序化兜底 【模块A·委托】
 js/audio.js     → window.AudioSys   WebAudio 音效+音乐    【模块B·委托】
 js/fx.js        → window.FX         粒子/伤害数字/震屏    【模块C·委托】
 js/engine.js    → window.Engine     循环/输入/相机/空间哈希
@@ -34,22 +35,27 @@ js/main.js      → 状态机+启动
 
 ## 模块A:js/sprites.js → window.SpriteGen 【委托开发】
 
-程序化生成全部像素画。要求:风格统一(1px 深色描边、2~3 级明暗、可爱但狠的暗黑奇幻)、剪影差异明显、确定性(用内置种子 RNG,每次刷新一致)。
+程序化生成全部像素画作为可靠兜底;启动时若本地图集可用,同名素材会被精修帧原子覆盖。要求:风格统一(1px 深色描边、2~3 级明暗、可爱但狠的暗黑奇幻)、剪影差异明显、确定性。
 
 ### 接口(严格)
 
 ```js
 SpriteGen.init();                 // 同步,构建全部;启动时调用一次
+SpriteGen.loadAtlas();            // → Promise|null;加载本地图集,失败时保留程序素材
 SpriteGen.get(name);              // → HTMLCanvasElement;未知名字返回 8×8 洋红占位并 console.warn(每名一次)
 SpriteGen.frames(name);           // → [canvas,...] 动画帧数组(≥1);单帧素材返回 [同一 canvas]
+SpriteGen.renderScale(name);       // → number;图集素材的显示缩放,程序素材为 1
+SpriteGen.atlasStatus();           // → {loaded,count,image,error};测试与诊断
 ```
+
+v0.16 垂直切片覆盖:`char_knight`、`skeleton`、`boss_slimeking`、`p_slash_big`、`w_crossblade`、`ps_core`、`deco_grave`、`deco_deadtree`。其余命名继续使用原程序素材。图集由 `node tools/art/build-atlas.js` 构建并通过 `quality-report.json` 门禁。
 
 建议内部用调色板 + 小型绘图 DSL(plot/rect/outline/mirror)批量生产。**必须实现下表全部名字**:
 
-### 角色(16×16,各 2 帧走路摆动,frames 返回 2 帧)
+### 角色(程序素材 16×16;精修覆盖可为 32×32,各 2 帧)
 `char_knight`(银甲蓝披风) `char_mage`(紫袍尖帽) `char_ranger`(绿兜帽) `char_cleric`(白金袍) `char_berserker`(红发裸上身双斧) `char_chrono`(青蓝长袍怀表)
 
-### 敌人(16×16,各 2 帧)
+### 敌人(程序素材 16×16;精修覆盖可为 32×32,各 2 帧)
 `bat`(小蝙蝠) `slime`(绿史莱姆) `slime_big`(深绿大史莱姆) `zombie`(烂绿僵尸) `skeleton`(白骨) `ghost`(半透明幽灵,自带 alpha) `spider`(黑紫蜘蛛) `cultist`(暗红兜帽邪教徒) `orc`(墨绿兽人) `imp`(橙红小恶魔) `knight_armored`(黑甲骑士) `werewolf`(灰狼人) `mummy`(米色木乃伊) `gargoyle`(石像鬼) `bloodbat`(红大蝙蝠) `wraith`(暗影死灵)
 
 ### Boss(32×32,各 2 帧)

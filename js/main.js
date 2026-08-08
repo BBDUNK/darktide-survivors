@@ -13,7 +13,7 @@
   var introImg = null, introT = 0, introDone = false, introSkipped = false;
   function bootIntro() {
     introImg = new Image();
-    introImg.src = 'assets/intro.jpg';
+    introImg.src = 'assets/intro-v2.jpg';
     introT = 0; introDone = false; introSkipped = false;
     // 隐藏所有 DOM 屏(title 屏会盖住 canvas 拦截点击),让开幕 canvas 独占画面
     UI.hideAllScreens();
@@ -1227,13 +1227,15 @@
   }
 
   // ================= 启动 =================
-  function boot() {
+  async function boot() {
     canvas = document.getElementById('game');
     canvas.width = CFG.GAME.W; canvas.height = CFG.GAME.H;
     ctx = canvas.getContext('2d');
     ctx.imageSmoothingEnabled = false;
 
     SpriteGen.init();
+    var atlasReady = SpriteGen.loadAtlas();
+    if (atlasReady) await atlasReady;
     Meta.load();
     var st = Meta.settings();
     if (st.uiScale) CFG.GAME.UI_SCALE = st.uiScale;   // 玩家保存的适配档位优先

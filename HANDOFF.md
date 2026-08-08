@@ -1,7 +1,7 @@
 # 项目交接文档 (HANDOFF)
 
 > 本文件用于把《暗黑逃跑神》(Darktide Survivors) 项目完整交接给任何后续开发工具/会话。
-> 生成时间:2026-08-08,当前版本 **v0.15.0**。
+> 生成时间:2026-08-08,当前版本 **v0.16.0**。
 > 若你在新会话接手,请先读本文件,再读 `DEVLOG.md`(完整迭代历史)与 `SPEC.md`(原始设计)。
 
 ---
@@ -35,7 +35,9 @@
 | `js/main.js` | 状态机(intro/menu/run/pause/result)、渲染、联机快照、主菜单背景 |
 | `js/entities.js` | 玩家/敌人/Boss AI、对象池(敌人520)、伤害、光环 |
 | `js/weapons.js` | 武器行为、索敌模式(最近/低血/高血)、升级/进化逻辑 |
-| `js/sprites.js` | **程序化像素美术**(Pix DSL,16×16,2~3帧)。不要引入外部素材 |
+| `js/sprites.js` | **本地图集优先 + 程序化像素美术兜底**。`get()`/`frames()` 公开接口保持不变 |
+| `assets/sprites/` | 精修 PNG 图集、元数据、AI 源图、预览与质量报告 |
+| `tools/art/` | 开发期像素化、调色板量化、锚点对齐、图集构建和自动校验 |
 | `js/minimap.js` | 小地图(局部/全图,点击或按M切换) |
 | `js/merchant.js` | 行走商人(单针钟倒计时,道具10金/武器20金) |
 | `js/encyclopedia.js` | 百科全书:武器表/被动/敌人/机制/操作指南/**修仙文笔故事**(主线+人物传记) |
@@ -47,6 +49,7 @@
 | `js/fx.js` | 粒子/伤害数字/震屏(渐变已改缓存贴图优化) |
 | `test/headless.js` | 无头冒烟测试(桩 canvas 抓负半径/NaN),`node test/headless.js` |
 | `test/resp-probe.js` | 多分辨率适配探针(Playwright),验证 HUD 不裁切 |
+| `test/art-probe.js` | 真浏览器图集加载与 400 敌人 180 帧性能验收 |
 | `DEVLOG.md` | 版本迭代日志(每次大版本必更新) |
 
 ## 四、UI 风格与设计约定
@@ -107,6 +110,8 @@ gh run list --limit 1
 
 ## 九、后续可能的方向(未做)
 
+- 按 `tools/art/ART_BIBLE.md` 将 v0.16 垂直切片扩展到剩余角色、敌人、Boss、图标与地图;每批都保留程序素材兜底
+- 美术改造前稳定回退标签:`pre-art-overhaul-v0.15.0`(提交 `b9f102e`,已推送 GitHub/Gitee)
 - 数据文案(武器/角色/敌人描述)的完整英文化
 - 更多角色/武器/进化
 - 移动端触控优化细节

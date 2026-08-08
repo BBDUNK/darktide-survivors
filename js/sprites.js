@@ -1623,15 +1623,25 @@
     return PLACEHOLDER;
   }
 
+  var atlasState = {
+    loaded: false,
+    count: 0,
+    image: null,
+    error: null,
+    promise: null,
+    names: {},
+    scales: {}
+  };
+
   window.SpriteGen = {
     // 同步构建全部素材;启动时调用一次(重复调用无副作用)
     init: function () {
       if (store) return;
       store = {};
       PLACEHOLDER = buildPlaceholder();
+      store.vfx_glow = buildGlowTexture();
       var name, i;
       for (name in defs) {
-        if (name === 'vfx_glow') { store[name] = buildGlowTexture(); continue; }   // 渐变贴图走真实 canvas
         var pxFrames = defs[name]();
         var cs = [];
         for (i = 0; i < pxFrames.length; i++) cs.push(pxFrames[i].toCanvas());
@@ -1643,6 +1653,69 @@
         if (!store[NAMES[i]]) { missing++; console.warn('[SpriteGen] 缺失素材: ' + NAMES[i]); }
       }
       console.assert(missing === 0, '[SpriteGen] 覆盖率自检未通过,缺失 ' + missing + ' 项');
+    },
+    // 本地图集优先覆盖同名程序素材；加载失败时保留完整的离线程序兜底。
+    // 未注入 atlas-data.js 时返回 null，让无 DOM/旧页面保持同步启动。
+    loadAtlas: function () {
+      var cfg = window.SPRITE_ATLAS;
+      if (!cfg || !cfg.image || !cfg.frames) return null;
+      if (atlasState.promise) return atlasState.promise;
+      if (!store) this.init();
+      atlasState.image = cfg.image;
+      atlasState.promise = new Promise(function (resolve) {
+        var image = new Image();
+        image.onload = function () {
+          try {
+            var replacements = {};
+            var names = Object.keys(cfg.frames);
+            for (var ni = 0; ni < names.length; ni++) {
+              var name = names[ni];
+              var sourceFrames = cfg.frames[name];
+              var canvases = [];
+              for (var fi = 0; fi < sourceFrames.length; fi++) {
+                var frame = sourceFrames[fi];
+                var cv = document.createElement('canvas');
+                cv.width = frame.w; cv.height = frame.h;
+                var g = cv.getContext('2d');
+                g.imageSmoothingEnabled = false;
+                g.drawImage(image, frame.x, frame.y, frame.w, frame.h, 0, 0, frame.w, frame.h);
+                canvases.push(cv);
+              }
+              replacements[name] = canvases;
+            }
+            for (var key in replacements) {
+              store[key] = replacements[key];
+              atlasState.names[key] = true;
+            }
+            atlasState.scales = cfg.renderScale || {};
+            atlasState.count = names.length;
+            atlasState.loaded = true;
+            console.info('[SpriteGen] 本地图集已加载: ' + names.length + ' 项');
+            resolve(true);
+          } catch (err) {
+            atlasState.error = String(err && err.message ? err.message : err);
+            console.warn('[SpriteGen] 图集切片失败,继续使用程序素材:', err);
+            resolve(false);
+          }
+        };
+        image.onerror = function () {
+          atlasState.error = 'image load failed: ' + cfg.image;
+          console.warn('[SpriteGen] 图集加载失败,继续使用程序素材: ' + cfg.image);
+          resolve(false);
+        };
+        image.src = cfg.image;
+      });
+      return atlasState.promise;
+    },
+    isAtlas: function (name) { return !!atlasState.names[name]; },
+    renderScale: function (name) { return atlasState.scales[name] || 1; },
+    atlasStatus: function () {
+      return {
+        loaded: atlasState.loaded,
+        count: atlasState.count,
+        image: atlasState.image,
+        error: atlasState.error
+      };
     },
     // → HTMLCanvasElement;未知名字返回 8×8 洋红占位并 console.warn(每名一次)
     get: function (name) {

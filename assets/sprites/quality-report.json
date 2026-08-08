@@ -1,0 +1,148 @@
+{
+  "ok": true,
+  "atlas": {
+    "width": 256,
+    "height": 128
+  },
+  "assets": {
+    "char_knight": [
+      {
+        "index": 0,
+        "coverage": 0.3193,
+        "colors": 10,
+        "bbox": [
+          1,
+          7,
+          31,
+          31
+        ]
+      },
+      {
+        "index": 1,
+        "coverage": 0.3594,
+        "colors": 10,
+        "bbox": [
+          1,
+          4,
+          31,
+          31
+        ]
+      }
+    ],
+    "skeleton": [
+      {
+        "index": 0,
+        "coverage": 0.4014,
+        "colors": 9,
+        "bbox": [
+          1,
+          1,
+          31,
+          31
+        ]
+      },
+      {
+        "index": 1,
+        "coverage": 0.3711,
+        "colors": 9,
+        "bbox": [
+          1,
+          1,
+          30,
+          31
+        ]
+      }
+    ],
+    "boss_slimeking": [
+      {
+        "index": 0,
+        "coverage": 0.3676,
+        "colors": 10,
+        "bbox": [
+          1,
+          17,
+          47,
+          47
+        ]
+      },
+      {
+        "index": 1,
+        "coverage": 0.533,
+        "colors": 11,
+        "bbox": [
+          3,
+          1,
+          45,
+          47
+        ]
+      }
+    ],
+    "p_slash_big": [
+      {
+        "index": 0,
+        "coverage": 0.4184,
+        "colors": 9,
+        "bbox": [
+          2,
+          1,
+          22,
+          23
+        ]
+      }
+    ],
+    "w_crossblade": [
+      {
+        "index": 0,
+        "coverage": 0.8403,
+        "colors": 7,
+        "bbox": [
+          1,
+          1,
+          23,
+          23
+        ]
+      }
+    ],
+    "ps_core": [
+      {
+        "index": 0,
+        "coverage": 0.8021,
+        "colors": 8,
+        "bbox": [
+          1,
+          1,
+          22,
+          23
+        ]
+      }
+    ],
+    "deco_grave": [
+      {
+        "index": 0,
+        "coverage": 0.5703,
+        "colors": 8,
+        "bbox": [
+          1,
+          4,
+          23,
+          31
+        ]
+      }
+    ],
+    "deco_deadtree": [
+      {
+        "index": 0,
+        "coverage": 0.3211,
+        "colors": 6,
+        "bbox": [
+          1,
+          5,
+          31,
+          39
+        ]
+      }
+    ]
+  },
+  "warnings": [],
+  "errors": []
+}
