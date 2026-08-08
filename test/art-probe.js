@@ -81,7 +81,9 @@ function assert(ok, message) {
         frames: SpriteGen.frames(name).map(c => [c.width, c.height]),
         walk: SpriteGen.frames(name + '_walk').map(c => [c.width, c.height]),
         attack: SpriteGen.frames(name + '_attack').map(c => [c.width, c.height]),
-        fps: SpriteGen.animationFps(name, 0)
+        fps: SpriteGen.animationFps(name, 0),
+        walkFps: SpriteGen.animationFps(name + '_walk', 0),
+        attackFps: SpriteGen.animationFps(name + '_attack', 0)
       })),
     skeleton: SpriteGen.frames('skeleton').map(c => [c.width, c.height]),
     slimeKing: SpriteGen.frames('boss_slimeking').map(c => [c.width, c.height]),
@@ -91,30 +93,37 @@ function assert(ok, message) {
     skeletonFps: SpriteGen.animationFps('skeleton', 0),
     slimeKingFps: SpriteGen.animationFps('boss_slimeking', 0),
     arrowFps: SpriteGen.animationFps('p_arrow', 0),
+    tesla: SpriteGen.frames('tesla_tower').map(c => [c.width, c.height]),
+    teslaFps: SpriteGen.animationFps('tesla_tower', 0),
     knightScale: SpriteGen.renderScale('char_knight'),
     bossScale: SpriteGen.renderScale('boss_slimeking')
   }));
-  assert(atlas.status.count === 143, 'expected 143 atlas assets, got ' + atlas.status.count);
+  assert(atlas.status.count === 144, 'expected 144 atlas assets, got ' + atlas.status.count);
   for (const hero of atlas.heroes) {
     assert(JSON.stringify(hero.frames) === '[[34,34],[34,34],[34,34],[34,34]]',
       hero.name + ' atlas frames are incorrect');
-    assert(JSON.stringify(hero.walk) === '[[34,34],[34,34],[34,34],[34,34]]',
+    assert(JSON.stringify(hero.walk) ===
+      '[[34,34],[34,34],[34,34],[34,34],[34,34],[34,34],[34,34],[34,34],[34,34]]',
       hero.name + ' walk frames are incorrect');
     assert(JSON.stringify(hero.attack) === '[[34,34],[34,34],[34,34],[34,34]]',
       hero.name + ' attack frames are incorrect');
-    assert(hero.fps === 8, hero.name + ' animation fps is incorrect');
+    assert(hero.fps === 8, hero.name + ' idle animation fps is incorrect');
+    assert(hero.walkFps === 10, hero.name + ' walk animation fps is incorrect');
+    assert(hero.attackFps === 13, hero.name + ' attack animation fps is incorrect');
   }
   assert(JSON.stringify(atlas.skeleton) === '[[32,32],[32,32],[32,32],[32,32]]', 'skeleton atlas frames are incorrect');
   assert(JSON.stringify(atlas.slimeKing) === '[[48,48],[48,48],[48,48],[48,48]]', 'slime king atlas frames are incorrect');
-  assert(JSON.stringify(atlas.arrow) === '[[44,22]]', 'arrow atlas frames are incorrect');
+  assert(JSON.stringify(atlas.arrow) === '[[24,10]]', 'arrow atlas frames are incorrect');
+  assert(JSON.stringify(atlas.tesla) === '[[128,128]]', 'tesla tower atlas frame is incorrect');
   assert(atlas.skeletonFps === 7 && atlas.slimeKingFps === 5, 'enemy animation fps values are incorrect');
   assert(atlas.arrowFps === 12, 'arrow animation fps is incorrect');
+  assert(atlas.teslaFps === 1, 'tesla tower animation fps is incorrect');
   assert(atlas.knightScale === 0.72 && Math.abs(atlas.bossScale - 0.666667) < 0.00001,
     'atlas art scales are incorrect');
   assert(JSON.stringify(atlas.explosion) === '[[32,32],[32,32],[32,32],[32,32],[32,32]]',
     'explosion VFX atlas frames are incorrect');
   assert(JSON.stringify(atlas.terrain) === '[[16,16]]', 'graveyard terrain tile is incorrect');
-  console.log('ATLAS OK  143 assets, 343 frames, complete hero actions, VFX and art scales');
+  console.log('ATLAS OK  144 assets, 374 frames, complete hero actions, VFX and art scales');
 
   const animStats = await page.evaluate(() => {
     function stats(name) {

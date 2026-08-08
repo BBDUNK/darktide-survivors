@@ -129,6 +129,8 @@ function colorCount(fg, w, h, match) {
     run.player.x = 0;
     run.player.y = 0;
     run.player.hp = run.player.maxHp = 1000000000;
+    FX.setCfg({ ambient: false });
+    FX.reset();
 
     window.__clearProbeBullets = function () {
       const bs = Weapons.getBullets();
@@ -170,11 +172,12 @@ function colorCount(fg, w, h, match) {
   await page.waitForTimeout(250);
 
   async function diffShot(cfg, threshold) {
+    await page.evaluate(() => { FX.reset(); });
     await page.evaluate(() => window.__clearProbeBullets());
-    await page.waitForTimeout(70);
+    await page.waitForTimeout(50);
     const bg = await page.evaluate(c => window.__sampleProbe(c), { x: cfg.x, y: cfg.y, w: cfg.w, h: cfg.h });
     await page.evaluate(c => window.__setProbeBullet(c), cfg);
-    await page.waitForTimeout(90);
+    await page.waitForTimeout(50);
     const fg = await page.evaluate(c => window.__sampleProbe(c), { x: cfg.x, y: cfg.y, w: cfg.w, h: cfg.h });
     return {
       bg, fg,
@@ -184,7 +187,7 @@ function colorCount(fg, w, h, match) {
   }
 
   // 特斯拉电塔：经典塔形，尺寸明显大于旧 32px 精灵，且铜线圈/电球可被像素识别。
-  const tower = await diffShot({ spr: 'p_turret', kind: 'turret', x: 220, y: 0, size: 16, w: 150, h: 140, ttl: 10 }, 1400);
+  const tower = await diffShot({ spr: 'p_turret', kind: 'turret', x: 220, y: 0, size: 16, w: 150, h: 200, ttl: 10 }, 1400);
   assert(tower.box.w >= 54, 'tower too narrow: ' + tower.box.w + 'px');
   assert(tower.box.h >= 60, 'tower too short: ' + tower.box.h + 'px');
   const copper = colorCount(tower.fg, tower.fg.w, tower.fg.h, (r, g, b) =>

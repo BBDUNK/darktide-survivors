@@ -193,6 +193,7 @@
     if (!o || typeof o !== 'object') { return; }
     if (o.shake !== undefined) { cfg.shake = !!o.shake; }
     if (o.dmgText !== undefined) { cfg.dmgText = !!o.dmgText; }
+    if (o.ambient !== undefined) { cfg.ambient = !!o.ambient; }
   };
 
   FX.shake = function (power, dur) {

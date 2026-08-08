@@ -938,6 +938,28 @@
     p.outline(OUT);
     return p;
   }));
+  def('tesla_tower', one(function () {
+    var p = new Pix(32, 64);
+    var COPPER = '#b06a34', COPPER_H = '#d8934f', COPPER_D = '#6f3d1c';
+    p.rect(5, 56, 22, 7, COPPER_D);             // 基座
+    p.hline(5, 26, 56, COPPER_H);
+    p.vline(8, 12, 56, COPPER); p.vline(23, 12, 56, COPPER); // 两侧立柱
+    p.vline(16, 12, 56, COPPER_D);
+    for (var y = 20; y <= 48; y += 14) {
+      p.hline(8, 23, y, COPPER);
+      p.px(8, y, COPPER_H); p.px(23, y, COPPER_H);
+    }
+    p.line(9, 20, 15, 34, COPPER); p.line(23, 20, 17, 34, COPPER);
+    p.line(9, 48, 15, 34, COPPER); p.line(23, 48, 17, 34, COPPER);
+    p.disc(16, 9, 5, '#3f8fb0');                // 顶部电球
+    p.disc(16, 9, 3.2, '#6fd8f0');
+    p.disc(16, 9, 1.5, '#e8fdff');
+    p.line(16, 2, 10, 0, '#7ae8ff');
+    p.line(16, 4, 23, 1, '#aef7ff');
+    p.line(16, 3, 18, 0, '#ffffff');
+    p.outline(OUT);
+    return p;
+  }));
   def('p_enemy_bolt', one(function () {
     var p = new Pix(8, 8);
     p.disc(4, 4, 2.6, '#c42030');

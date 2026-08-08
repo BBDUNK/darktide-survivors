@@ -887,12 +887,12 @@ window.Weapons = (function () {
       var img = projectileFrames[Math.floor(projectileAge * projectileFps) % projectileFrames.length];
       var sc = 2 * (b.size / 16);
       if (b.spr === 'p_arrow') {
-        // 箭矢固定朝发射方向,不旋转;左飞时水平翻转
+        // 箭矢固定朝发射方向,飞行途中不再随速度旋转
         var aw = img.width * 2 * (b.size / 16);
         var ah = img.height * 2 * (b.size / 16);
         ctx.save();
         ctx.translate(b.x, b.y);
-        if (Math.cos(b.angle) < 0) ctx.scale(-1, 1);
+        ctx.rotate(b.angle);
         ctx.drawImage(img, -aw / 2, -ah / 2, aw, ah);
         ctx.restore();
         continue;
