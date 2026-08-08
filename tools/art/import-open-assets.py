@@ -15,9 +15,9 @@ VENDOR_PREFIX = "assets/sprites/vendor/ninja-adventure/"
 PINNED_REV = "0476a561d5e6da477d5d2de2e738f0595754adbb"
 RAW_ROOT = f"https://raw.githubusercontent.com/MarioLDD/Kuroshiro-adventure/{PINNED_REV}/Assets/NinjaAdventure/"
 OGA_FILES = {
-    "assets/sprites/vendor/oga/Bat16x16.png":
+    "_unused/vendor/oga/Bat16x16.png":
         "https://opengameart.org/sites/default/files/Bat16x16.png",
-    "assets/sprites/vendor/oga/Stalkette16x16.png":
+    "_unused/vendor/oga/Stalkette16x16.png":
         "https://opengameart.org/sites/default/files/Stalkette16x16.png",
 }
 

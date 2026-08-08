@@ -12,3 +12,7 @@ Thumbs.db
 
 # 自查截图产物
 shots/
+
+# 归档的未使用素材
+_unused/
+__pycache__/
