@@ -5,18 +5,40 @@
   "previewScale": 8,
   "externalManifest": "tools/art/open-assets-manifest.json",
   "backgroundPalette": [
-    "#080711", "#100d18", "#171329", "#211a3b", "#2d2450", "#382d61",
-    "#111d2e", "#172b3e", "#203d50", "#2d5668", "#477889", "#78a4ad",
-    "#202536", "#343a4d", "#4c5365", "#697180", "#9298a0", "#c4c7c4",
-    "#0b2a29", "#0d4436", "#116344", "#16864c", "#2ead59", "#72d879",
-    "#5c3b18", "#96701f", "#d2ad3a", "#d8efbd"
+    "#080711",
+    "#100d18",
+    "#171329",
+    "#211a3b",
+    "#2d2450",
+    "#382d61",
+    "#111d2e",
+    "#172b3e",
+    "#203d50",
+    "#2d5668",
+    "#477889",
+    "#78a4ad",
+    "#202536",
+    "#343a4d",
+    "#4c5365",
+    "#697180",
+    "#9298a0",
+    "#c4c7c4",
+    "#0b2a29",
+    "#0d4436",
+    "#116344",
+    "#16864c",
+    "#2ead59",
+    "#72d879",
+    "#5c3b18",
+    "#96701f",
+    "#d2ad3a",
+    "#d8efbd"
   ],
   "backgrounds": [],
   "assets": [
     {
       "name": "char_knight",
       "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/Knight/SeparateAnim/Idle.png",
-      "key": null,
       "frameSize": [16, 16],
       "preservePixels": true,
       "pixelScale": 2,
@@ -26,13 +48,12 @@
       "size": [34, 34],
       "anchor": [17, 33],
       "renderScale": 0.72,
-      "outline": "#100d18",
-      "colors": ["#100d18", "#22213a", "#43475e", "#777f95", "#c5cad5", "#f4f0e6", "#152456", "#274fb0", "#d18b18", "#ffd76b"]
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
     },
     {
       "name": "char_mage",
       "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/NinjaMageBlack/SeparateAnim/Idle.png",
-      "key": null,
       "frameSize": [16, 16],
       "preservePixels": true,
       "pixelScale": 2,
@@ -42,13 +63,12 @@
       "size": [34, 34],
       "anchor": [17, 33],
       "renderScale": 0.72,
-      "outline": "#100d18",
-      "colors": ["#100d18", "#21152f", "#40205f", "#652c91", "#8f43c1", "#bd75e2", "#e2b0dc", "#24405e", "#278fe0", "#8ce6ff"]
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
     },
     {
       "name": "char_ranger",
       "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/Hunter/SeparateAnim/Idle.png",
-      "key": null,
       "frameSize": [16, 16],
       "preservePixels": true,
       "pixelScale": 2,
@@ -58,13 +78,12 @@
       "size": [34, 34],
       "anchor": [17, 33],
       "renderScale": 0.72,
-      "outline": "#100d18",
-      "colors": ["#100d18", "#26301c", "#3d4b25", "#5e7132", "#8a9a4d", "#38261c", "#66412a", "#9b6b3d", "#c58b55", "#e4b07c"]
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
     },
     {
       "name": "char_cleric",
       "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/Monk2/SeparateAnim/Idle.png",
-      "key": null,
       "frameSize": [16, 16],
       "preservePixels": true,
       "pixelScale": 2,
@@ -74,13 +93,12 @@
       "size": [34, 34],
       "anchor": [17, 33],
       "renderScale": 0.72,
-      "outline": "#100d18",
-      "colors": ["#100d18", "#292b35", "#4b4f5a", "#85858a", "#d2d0c5", "#fff5dc", "#76511a", "#b9821f", "#e4b743", "#8d2445", "#d4a074"]
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
     },
     {
       "name": "char_berserker",
       "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/GladiatorBlue/SeparateAnim/Idle.png",
-      "key": null,
       "frameSize": [16, 16],
       "preservePixels": true,
       "pixelScale": 2,
@@ -90,13 +108,12 @@
       "size": [34, 34],
       "anchor": [17, 33],
       "renderScale": 0.72,
-      "outline": "#100d18",
-      "colors": ["#100d18", "#372028", "#672238", "#9e2948", "#d0445c", "#613525", "#9b593b", "#d28a63", "#f0b184", "#4b4f5a", "#aeb2b8"]
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
     },
     {
       "name": "char_chrono",
       "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/SorcererOrange/SeparateAnim/Idle.png",
-      "key": null,
       "frameSize": [16, 16],
       "preservePixels": true,
       "pixelScale": 2,
@@ -106,98 +123,332 @@
       "size": [34, 34],
       "anchor": [17, 33],
       "renderScale": 0.72,
-      "outline": "#100d18",
-      "colors": ["#100d18", "#141c3a", "#202c5d", "#294887", "#1d769c", "#23aaca", "#79e3ec", "#74501b", "#b77c20", "#e8bd4d", "#d9d6cf"]
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
     },
-    { "name": "char_knight_walk", "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/Knight/SeparateAnim/Walk.png", "frameSize": [16, 16], "frameRow": 0, "frames": 4, "fps": 10, "preservePixels": true, "pixelScale": 2, "size": [34, 34], "anchor": [17, 33], "renderScale": 0.72, "maxCentroidDrift": 5 },
-    { "name": "char_knight_attack", "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/Knight/SeparateAnim/Attack.png", "frameSize": [16, 16], "frames": 4, "fps": 13, "preservePixels": true, "pixelScale": 2, "size": [34, 34], "anchor": [17, 33], "renderScale": 0.72, "maxCentroidDrift": 5 },
-    { "name": "char_mage_walk", "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/NinjaMageBlack/SeparateAnim/Walk.png", "frameSize": [16, 16], "frameRow": 0, "frames": 4, "fps": 10, "preservePixels": true, "pixelScale": 2, "size": [34, 34], "anchor": [17, 33], "renderScale": 0.72, "maxCentroidDrift": 5 },
-    { "name": "char_mage_attack", "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/NinjaMageBlack/SeparateAnim/Attack.png", "frameSize": [16, 16], "frames": 4, "fps": 13, "preservePixels": true, "pixelScale": 2, "size": [34, 34], "anchor": [17, 33], "renderScale": 0.72, "maxCentroidDrift": 5 },
-    { "name": "char_ranger_walk", "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/Hunter/SeparateAnim/Walk.png", "frameSize": [16, 16], "frameRow": 0, "frames": 4, "fps": 10, "preservePixels": true, "pixelScale": 2, "size": [34, 34], "anchor": [17, 33], "renderScale": 0.72, "maxCentroidDrift": 5 },
-    { "name": "char_ranger_attack", "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/Hunter/SeparateAnim/Attack.png", "frameSize": [16, 16], "frames": 4, "fps": 13, "preservePixels": true, "pixelScale": 2, "size": [34, 34], "anchor": [17, 33], "renderScale": 0.72, "maxCentroidDrift": 5 },
-    { "name": "char_cleric_walk", "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/Monk2/SeparateAnim/Walk.png", "frameSize": [16, 16], "frameRow": 0, "frames": 4, "fps": 10, "preservePixels": true, "pixelScale": 2, "size": [34, 34], "anchor": [17, 33], "renderScale": 0.72, "maxCentroidDrift": 5 },
-    { "name": "char_cleric_attack", "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/Monk2/SeparateAnim/Attack.png", "frameSize": [16, 16], "frames": 4, "fps": 13, "preservePixels": true, "pixelScale": 2, "size": [34, 34], "anchor": [17, 33], "renderScale": 0.72, "maxCentroidDrift": 5 },
-    { "name": "char_berserker_walk", "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/GladiatorBlue/SeparateAnim/Walk.png", "frameSize": [16, 16], "frameRow": 0, "frames": 4, "fps": 10, "preservePixels": true, "pixelScale": 2, "size": [34, 34], "anchor": [17, 33], "renderScale": 0.72, "maxCentroidDrift": 5 },
-    { "name": "char_berserker_attack", "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/GladiatorBlue/SeparateAnim/Attack.png", "frameSize": [16, 16], "frames": 4, "fps": 13, "preservePixels": true, "pixelScale": 2, "size": [34, 34], "anchor": [17, 33], "renderScale": 0.72, "maxCentroidDrift": 5 },
-    { "name": "char_chrono_walk", "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/SorcererOrange/SeparateAnim/Walk.png", "frameSize": [16, 16], "frameRow": 0, "frames": 4, "fps": 10, "preservePixels": true, "pixelScale": 2, "size": [34, 34], "anchor": [17, 33], "renderScale": 0.72, "maxCentroidDrift": 5 },
-    { "name": "char_chrono_attack", "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/SorcererOrange/SeparateAnim/Attack.png", "frameSize": [16, 16], "frames": 4, "fps": 13, "preservePixels": true, "pixelScale": 2, "size": [34, 34], "anchor": [17, 33], "renderScale": 0.72, "maxCentroidDrift": 5 },
+    {
+      "name": "char_knight_walk",
+      "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/Knight/SeparateAnim/Walk.png",
+      "frameSize": [16, 16],
+      "frameRow": 1,
+      "preservePixels": true,
+      "pixelScale": 2,
+      "frames": 4,
+      "fps": 10,
+      "maxCentroidDrift": 5,
+      "size": [34, 34],
+      "anchor": [17, 33],
+      "renderScale": 0.72,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "char_knight_attack",
+      "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/Knight/SeparateAnim/Attack.png",
+      "frameSize": [16, 16],
+      "preservePixels": true,
+      "pixelScale": 2,
+      "frames": 4,
+      "fps": 13,
+      "maxCentroidDrift": 5,
+      "size": [34, 34],
+      "anchor": [17, 33],
+      "renderScale": 0.72,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "char_mage_walk",
+      "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/NinjaMageBlack/SeparateAnim/Walk.png",
+      "frameSize": [16, 16],
+      "frameRow": 1,
+      "preservePixels": true,
+      "pixelScale": 2,
+      "frames": 4,
+      "fps": 10,
+      "maxCentroidDrift": 5,
+      "size": [34, 34],
+      "anchor": [17, 33],
+      "renderScale": 0.72,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "char_mage_attack",
+      "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/NinjaMageBlack/SeparateAnim/Attack.png",
+      "frameSize": [16, 16],
+      "preservePixels": true,
+      "pixelScale": 2,
+      "frames": 4,
+      "fps": 13,
+      "maxCentroidDrift": 5,
+      "size": [34, 34],
+      "anchor": [17, 33],
+      "renderScale": 0.72,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "char_ranger_walk",
+      "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/Hunter/SeparateAnim/Walk.png",
+      "frameSize": [16, 16],
+      "frameRow": 1,
+      "preservePixels": true,
+      "pixelScale": 2,
+      "frames": 4,
+      "fps": 10,
+      "maxCentroidDrift": 5,
+      "size": [34, 34],
+      "anchor": [17, 33],
+      "renderScale": 0.72,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "char_ranger_attack",
+      "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/Hunter/SeparateAnim/Attack.png",
+      "frameSize": [16, 16],
+      "preservePixels": true,
+      "pixelScale": 2,
+      "frames": 4,
+      "fps": 13,
+      "maxCentroidDrift": 5,
+      "size": [34, 34],
+      "anchor": [17, 33],
+      "renderScale": 0.72,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "char_cleric_walk",
+      "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/Monk2/SeparateAnim/Walk.png",
+      "frameSize": [16, 16],
+      "frameRow": 1,
+      "preservePixels": true,
+      "pixelScale": 2,
+      "frames": 4,
+      "fps": 10,
+      "maxCentroidDrift": 5,
+      "size": [34, 34],
+      "anchor": [17, 33],
+      "renderScale": 0.72,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "char_cleric_attack",
+      "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/Monk2/SeparateAnim/Attack.png",
+      "frameSize": [16, 16],
+      "preservePixels": true,
+      "pixelScale": 2,
+      "frames": 4,
+      "fps": 13,
+      "maxCentroidDrift": 5,
+      "size": [34, 34],
+      "anchor": [17, 33],
+      "renderScale": 0.72,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "char_berserker_walk",
+      "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/GladiatorBlue/SeparateAnim/Walk.png",
+      "frameSize": [16, 16],
+      "frameRow": 1,
+      "preservePixels": true,
+      "pixelScale": 2,
+      "frames": 4,
+      "fps": 10,
+      "maxCentroidDrift": 5,
+      "size": [34, 34],
+      "anchor": [17, 33],
+      "renderScale": 0.72,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "char_berserker_attack",
+      "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/GladiatorBlue/SeparateAnim/Attack.png",
+      "frameSize": [16, 16],
+      "preservePixels": true,
+      "pixelScale": 2,
+      "frames": 4,
+      "fps": 13,
+      "maxCentroidDrift": 5,
+      "size": [34, 34],
+      "anchor": [17, 33],
+      "renderScale": 0.72,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "char_chrono_walk",
+      "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/SorcererOrange/SeparateAnim/Walk.png",
+      "frameSize": [16, 16],
+      "frameRow": 1,
+      "preservePixels": true,
+      "pixelScale": 2,
+      "frames": 4,
+      "fps": 10,
+      "maxCentroidDrift": 5,
+      "size": [34, 34],
+      "anchor": [17, 33],
+      "renderScale": 0.72,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "char_chrono_attack",
+      "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/SorcererOrange/SeparateAnim/Attack.png",
+      "frameSize": [16, 16],
+      "preservePixels": true,
+      "pixelScale": 2,
+      "frames": 4,
+      "fps": 13,
+      "maxCentroidDrift": 5,
+      "size": [34, 34],
+      "anchor": [17, 33],
+      "renderScale": 0.72,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
     {
       "name": "skeleton",
-      "source": "assets/sprites/sources/skeleton-4f-source.png",
-      "key": "#00ff00",
+      "source": "assets/sprites/sources/dcss-derived/skeleton.png",
       "frames": 4,
       "fps": 7,
-      "maxCentroidDrift": 3,
-      "size": [32, 32],
-      "anchor": [16, 31],
+      "maxCentroidDrift": 20,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        31
+      ],
       "renderScale": 0.75,
-      "outline": "#100d18",
-      "colors": ["#100d18", "#29202b", "#4a3940", "#6f5357", "#8d2445", "#c2a87b", "#eadcb0", "#fff4cf", "#5c3928", "#9a795a"]
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "frameSize": [
+        32,
+        32
+      ]
     },
     {
       "name": "boss_slimeking",
-      "source": "assets/sprites/sources/boss-slimeking-4f-source.png",
-      "key": "#ff00ff",
+      "source": "assets/sprites/sources/dcss-derived/boss_slimeking.png",
       "frames": 4,
       "fps": 5,
-      "maxCentroidDrift": 3,
-      "size": [48, 48],
-      "anchor": [24, 47],
+      "maxCentroidDrift": 20,
+      "size": [
+        48,
+        48
+      ],
+      "anchor": [
+        24,
+        47
+      ],
       "renderScale": 0.666667,
-      "outline": "#100d18",
-      "colors": ["#100d18", "#0b332d", "#0e5741", "#16864c", "#35bd58", "#84e36d", "#c9f58c", "#6d3d16", "#b87316", "#e3a928", "#ffe477"]
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "frameSize": [
+        32,
+        32
+      ],
+      "pixelScale": 2
     },
     {
       "name": "p_slash_big",
-      "source": "assets/sprites/sources/slash-source.png",
-      "key": "#00ff00",
-      "frames": 1,
-      "size": [24, 24],
-      "anchor": [12, 12],
-      "outline": "#100d18",
-      "colors": ["#100d18", "#6d3d16", "#b87316", "#e3a928", "#ffd65a", "#fff1a6", "#fffdf0", "#1746a2", "#62b8ff"]
+      "source": "assets/sprites/vendor/ninja-adventure/FX/SlashFx/CircularSlash/SpriteSheet.png",
+      "frameSize": [32, 32],
+      "frames": 4,
+      "fps": 14,
+      "size": [34, 34],
+      "anchor": [17, 33],
+      "pixelScale": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "maxBaselineDrift": 8,
+      "maxCentroidDrift": 16,
+      "minCoverage": 0.015
     },
     {
       "name": "w_crossblade",
-      "source": "assets/sprites/sources/icons-source.png",
-      "key": "#ff00ff",
-      "region": [0.0, 0.0, 0.5, 1.0],
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/weapon/greatsword_1_new.png",
       "frames": 1,
-      "size": [24, 24],
-      "anchor": [12, 12],
-      "colors": ["#100d18", "#091629", "#173250", "#5c3915", "#9c6418", "#d89b25", "#ffd65a", "#fff1a6", "#8d2445", "#d94b8d"]
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        12
+      ],
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
     },
     {
       "name": "ps_core",
-      "source": "assets/sprites/sources/icons-source.png",
-      "key": "#ff00ff",
-      "region": [0.5, 0.0, 1.0, 1.0],
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/misc/misc_orb.png",
       "frames": 1,
-      "size": [24, 24],
-      "anchor": [12, 12],
-      "colors": ["#100d18", "#091629", "#173250", "#31587a", "#3d78b8", "#278fe0", "#62b8ff", "#b9e9ff", "#f2fdff"]
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        12
+      ],
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
     },
     {
       "name": "deco_grave",
-      "source": "assets/sprites/sources/graveyard-props-source.png",
-      "key": "#00ff00",
-      "region": [0.0, 0.0, 0.5, 1.0],
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/dungeon/statues/granite_statue.png",
       "frames": 1,
-      "size": [24, 32],
-      "anchor": [12, 31],
-      "outline": "#100d18",
-      "colors": ["#100d18", "#262638", "#414457", "#666a77", "#92959b", "#c6c3b6", "#233626", "#48613b"]
+      "size": [
+        24,
+        32
+      ],
+      "anchor": [
+        12,
+        31
+      ],
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "cropPx": [
+        8,
+        0,
+        16,
+        32
+      ]
     },
     {
       "name": "deco_deadtree",
-      "source": "assets/sprites/sources/graveyard-props-source.png",
-      "key": "#00ff00",
-      "region": [0.5, 0.0, 1.0, 1.0],
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/dungeon/trees/tree_1_lightred.png",
       "frames": 1,
-      "size": [32, 40],
-      "anchor": [16, 39],
-      "outline": "#100d18",
-      "colors": ["#100d18", "#251a22", "#3b2830", "#583a35", "#76513e", "#9a704d", "#c49a68"]
+      "size": [
+        32,
+        40
+      ],
+      "anchor": [
+        16,
+        39
+      ],
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "cropPx": [
+        4,
+        0,
+        24,
+        32
+      ]
     }
   ]
 }

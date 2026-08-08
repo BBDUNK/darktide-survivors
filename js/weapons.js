@@ -456,7 +456,10 @@ window.Weapons = (function () {
         case 'ricochet':
         case 'dragon':
           b.x += b.vx * dt; b.y += b.vy * dt;
-          b.angle = Math.atan2(b.vy, b.vx);
+          // 剑气和箭矢保持发射朝向,不再逐帧跟随速度旋转
+          if (b.spr !== 'p_slash' && b.spr !== 'p_slash_big' && b.spr !== 'p_arrow') {
+            b.angle = Math.atan2(b.vy, b.vx);
+          }
           if (b.kind === 'dragon') {
             // 绿龙:全路径粒子尾迹 + 大范围命中
             if ((run.frame & 1) === 0) FX.trail(b.x, b.y, '#44ff88', 4);
@@ -468,6 +471,7 @@ window.Weapons = (function () {
                 var d = Math.hypot(b.vx, b.vy);
                 var a = Math.atan2(nx.y - b.x, nx.x - b.x);
                 b.vx = Math.cos(a) * d; b.vy = Math.sin(a) * d;
+                if (b.spr !== 'p_slash' && b.spr !== 'p_slash_big' && b.spr !== 'p_arrow') b.angle = a;
               }
             }
           } else {
@@ -584,7 +588,7 @@ window.Weapons = (function () {
               var te = nearestEnemy(b.x, b.y, b.orbitR, _zapHit);
               if (!te) break;
               _zapHit.add(te.uid);
-              FX.lightning(b.x, b.y - 10, te.x, te.y, '#8ef');
+              FX.lightning(b.x, b.y - 42, te.x, te.y, '#8ef');
               if (!run._netVisual) Entities.damageEnemy(run, te, b.dmg, {});
               zapped++;
               if (b.evolved) { // 天网:每道再链一跳
@@ -596,14 +600,18 @@ window.Weapons = (function () {
                 }
               }
             }
-            if (zapped) AudioSys.play('zap');
+            if (zapped) {
+              AudioSys.play('zap');
+              FX.burst(b.x, b.y - 44, { color: '#8ef', n: 7, speed: 120, life: 0.28, size: 2.2, glow: true });
+              FX.ring(b.x, b.y - 42, { r: 22, color: '#8ef', life: 0.22, width: 2 });
+            }
             // 塔间电弧:与射程内的另一座塔连线,对连线附近敌人造成伤害
             for (var tj = 0; tj < BMAX; tj++) {
               var ob = bullets[tj];
               if (ob === b || !ob.alive || ob.kind !== 'turret') continue;
               var ad = Math.hypot(ob.x - b.x, ob.y - b.y);
               if (ad > 260 || ad < 1) continue;
-              FX.lightning(b.x, b.y - 10, ob.x, ob.y - 10, '#bdf');
+              FX.lightning(b.x, b.y - 42, ob.x, ob.y - 42, '#bdf');
               // 沿电弧采样几个点做范围伤害
               var steps = Math.max(2, Math.round(ad / 40));
               for (var sk = 1; sk < steps; sk++) {
@@ -805,6 +813,105 @@ window.Weapons = (function () {
     }
   }
 
+  // 经典特斯拉电塔:基座、绝缘柱、锥形铜线圈、顶环、放电叉与脉冲球
+  function drawTeslaCoil(ctx, b, run) {
+    var bx = b.x, baseY = b.y + 12;
+    var pulse = 0.5 + 0.5 * Math.sin(run.t * 5.2 + bx * 0.17);
+    ctx.globalAlpha = b.ttl < 1 ? E.clamp(b.ttl * 2, 0, 1) : 1;
+
+    // 四脚支架 + 金属平台
+    ctx.fillStyle = '#14141f';
+    ctx.fillRect(bx - 30, baseY + 2, 8, 5);
+    ctx.fillRect(bx + 22, baseY + 2, 8, 5);
+    ctx.fillStyle = '#232335';
+    ctx.fillRect(bx - 26, baseY - 6, 52, 8);
+    ctx.fillStyle = '#3b3b55';
+    ctx.fillRect(bx - 22, baseY - 8, 44, 4);
+    ctx.fillStyle = '#14141f';
+    ctx.fillRect(bx - 18, baseY - 2, 36, 2);
+
+    // 底部陶瓷绝缘子
+    ctx.fillStyle = '#cfd0da';
+    ctx.fillRect(bx - 14, baseY - 20, 28, 4);
+    ctx.fillStyle = '#eceef6';
+    ctx.fillRect(bx - 14, baseY - 20, 28, 1.5);
+    ctx.fillStyle = '#9a9cb0';
+    ctx.fillRect(bx - 13, baseY - 14, 26, 3);
+    ctx.fillStyle = '#cfd0da';
+    ctx.fillRect(bx - 13, baseY - 11, 26, 4);
+    ctx.fillStyle = '#eceef6';
+    ctx.fillRect(bx - 13, baseY - 11, 26, 1.5);
+    ctx.fillStyle = '#83859a';
+    ctx.fillRect(bx - 13, baseY - 8, 26, 2);
+
+    // 锥形线圈塔身 + 密集铜色绕线
+    var coilBottom = baseY - 20, coilTop = baseY - 52;
+    var bottomW = 30, topW = 16;
+    ctx.fillStyle = '#3b4656';
+    ctx.beginPath();
+    ctx.moveTo(bx - bottomW / 2, coilBottom);
+    ctx.lineTo(bx - topW / 2, coilTop);
+    ctx.lineTo(bx + topW / 2, coilTop);
+    ctx.lineTo(bx + bottomW / 2, coilBottom);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = '#c9863a';
+    ctx.lineWidth = 2;
+    for (var ly = 0; ly < 8; ly++) {
+      var y = coilTop + (coilBottom - coilTop) * (ly + 0.5) / 8;
+      var wAt = topW + (bottomW - topW) * (y - coilTop) / (coilBottom - coilTop);
+      ctx.beginPath();
+      ctx.moveTo(bx - wAt / 2 + 1, y);
+      ctx.quadraticCurveTo(bx, y + (ly % 2 === 0 ? 3 : -3), bx + wAt / 2 - 1, y);
+      ctx.stroke();
+    }
+    ctx.fillStyle = 'rgba(255,255,255,0.12)';
+    ctx.fillRect(bx - bottomW / 2 + 3, coilTop, 4, coilBottom - coilTop);
+    ctx.fillStyle = 'rgba(0,0,0,0.22)';
+    ctx.fillRect(bx + bottomW / 2 - 7, coilTop, 4, coilBottom - coilTop);
+
+    // 顶端绝缘环与长放电叉
+    ctx.fillStyle = '#5a5a76';
+    ctx.fillRect(bx - 17, coilTop - 4, 34, 6);
+    ctx.fillStyle = '#74749a';
+    ctx.fillRect(bx - 17, coilTop - 4, 34, 2);
+    ctx.strokeStyle = '#a7d4ee';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(bx - 10, coilTop - 8); ctx.lineTo(bx - 10, coilTop - 20);
+    ctx.moveTo(bx - 3, coilTop - 8); ctx.lineTo(bx - 4, coilTop - 26);
+    ctx.moveTo(bx + 3, coilTop - 8); ctx.lineTo(bx + 4, coilTop - 26);
+    ctx.moveTo(bx + 10, coilTop - 8); ctx.lineTo(bx + 10, coilTop - 18);
+    ctx.stroke();
+
+    // 顶部电球与脉冲辉光
+    var orbY = coilTop - 18;
+    var glowR = 16 + pulse * 6;
+    var glow = ctx.createRadialGradient(bx, orbY, 1, bx, orbY, glowR);
+    glow.addColorStop(0, 'rgba(140,235,255,' + (0.42 + pulse * 0.18).toFixed(3) + ')');
+    glow.addColorStop(1, 'rgba(140,235,255,0)');
+    ctx.fillStyle = glow;
+    ctx.beginPath(); ctx.arc(bx, orbY, glowR, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#a8e4ff';
+    ctx.beginPath(); ctx.arc(bx, orbY, 6, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#eafcff';
+    ctx.beginPath(); ctx.arc(bx - 1.6, orbY - 1.6, 2.4, 0, Math.PI * 2); ctx.fill();
+
+    // 球顶随机放电分支
+    ctx.strokeStyle = 'rgba(160,240,255,0.9)';
+    ctx.lineWidth = 1.4;
+    for (var di = 0; di < 4; di++) {
+      ctx.beginPath();
+      var sx = bx + (di - 1.5) * 7, sy = orbY + 2;
+      ctx.moveTo(sx, sy);
+      var ex = sx + (Math.random() * 24 - 12), ey = sy - 8 - Math.random() * 18;
+      ctx.lineTo(ex, ey);
+      if (Math.random() < 0.6) ctx.lineTo(ex + (Math.random() * 12 - 6), ey - 4 - Math.random() * 8);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+
   function draw(ctx, run) {
     // 普通弹幕与飞行物(火焰池已移到 drawGround)
     for (var i = 0; i < BMAX; i++) {
@@ -840,10 +947,7 @@ window.Weapons = (function () {
       var img = projectileFrames[Math.floor(projectileAge * projectileFps) % projectileFrames.length];
       var sc = 2 * (b.size / 16);
       if (b.kind === 'turret') {
-        var frT = SpriteGen.frames(b.spr);
-        img = frT[Math.floor(run.t * 6) % frT.length];
-        ctx.drawImage(img, b.x - 16, b.y - 16, 32, 32);
-        if (b.ttl < 1) ctx.globalAlpha = 1; // 淡出可省
+        drawTeslaCoil(ctx, b, run);
         continue;
       }
       // 受队友光环加持的弹幕:先铺一层金色光晕
@@ -857,9 +961,13 @@ window.Weapons = (function () {
       ctx.save();
       ctx.translate(b.x, b.y);
       ctx.rotate(b.angle);
-      var w2 = img.width * 2 * (b.size / 16) / 2;
-      var h2 = img.height * 2 * (b.size / 16) / 2;
-      ctx.drawImage(img, -w2, -h2, w2 * 2, h2 * 2);
+      var dw = img.width * 2 * (b.size / 16);
+      if (b.spr === 'p_slash' || b.spr === 'p_slash_big') {
+        dw = Math.min(img.width * (b.spr === 'p_slash_big' ? 3 : 2.4) * (b.size / 16), 132);
+      }
+      var w2 = dw / 2;
+      var h2 = img.height * dw / img.width / 2;
+      ctx.drawImage(img, -w2, -h2, dw, h2 * 2);
       ctx.restore();
     }
   }

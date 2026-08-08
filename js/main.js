@@ -53,7 +53,8 @@
     for (var hi = 0; hi < heroRow.length; hi++) {
       var hx = hStart + hi * hGap + hGap / 2;
       var hy = 58 + Math.sin(introT * 2.5 + hi * 0.6) * 3;
-      var himg = SpriteGen.get(heroRow[hi]);
+      var hFrames = SpriteGen.frames(heroRow[hi]);
+      var himg = hFrames[Math.floor(introT * 6 + hi * 0.35) % hFrames.length];
       var hw = heroRow[hi].indexOf('char_') === 0 ? 38 : 26;
       ctx.globalAlpha = 1;   // 透明度拉到最高,不若隐若现
       ctx.drawImage(himg, hx - hw / 2, hy - hw / 2, hw, hw);

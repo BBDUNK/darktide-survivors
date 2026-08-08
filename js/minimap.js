@@ -24,6 +24,16 @@ window.Minimap = (function () {
     return { x: cx + dx / LOCAL_RANGE * half, y: cy + dy / LOCAL_RANGE * half };
   }
 
+  // 常驻地标(商人):本地模式超出范围也钳制到罗盘边缘指示方向,保证始终可见
+  function landmarkPoint(wx, wy, p, cx, cy, half) {
+    if (mode === 'full') return project(wx, wy, p, cx, cy, half);
+    var dx = wx - p.x, dy = wy - p.y;
+    var dist = Math.hypot(dx, dy);
+    if (dist <= LOCAL_RANGE) return project(wx, wy, p, cx, cy, half);
+    var k = half * 0.96 / dist;
+    return { x: cx + dx * k, y: cy + dy * k };
+  }
+
   function dot(ctx, pt, color, size) {
     ctx.fillStyle = 'rgba(5,3,12,0.86)';
     ctx.fillRect(Math.round(pt.x - size / 2) - 1, Math.round(pt.y - size / 2) - 1, size + 2, size + 2);
@@ -108,7 +118,8 @@ window.Minimap = (function () {
 
     var merchant = CFG.MERCHANT;
     if (merchant) {
-      var mp = project(merchant.x, merchant.y, p, cx, cy, half - 2);
+      // 商人是常驻 NPC,超出局部范围也钳制到边缘显示方向
+      var mp = landmarkPoint(merchant.x, merchant.y, p, cx, cy, half - 2);
       if (mp) {
         ctx.fillStyle = '#1a1010';
         ctx.fillRect(mp.x - 4, mp.y - 5, 9, 10);

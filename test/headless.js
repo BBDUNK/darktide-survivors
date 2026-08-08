@@ -108,6 +108,11 @@ let rafCb = null;
 const store = {};
 const winHandlers = {};
 
+process.on('unhandledRejection', (err) => {
+  console.error('UNHANDLED REJECTION: ' + (err && err.stack ? err.stack : err));
+  process.exit(1);
+});
+
 const windowObj = {
   innerWidth: 1280, innerHeight: 720,
   addEventListener: (ev, fn) => { (winHandlers[ev] = winHandlers[ev] || []).push(fn); },

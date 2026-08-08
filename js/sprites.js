@@ -137,6 +137,9 @@
   function def(name, fn) { defs[name] = fn; }
   function two(fn) { return function () { return [fn(0), fn(1)]; }; }
   function one(fn) { return function () { return [fn()]; }; }
+  function multi(n, fn) {
+    return function () { var out = []; for (var i = 0; i < n; i++) out.push(fn(i)); return out; };
+  }
 
   // ---------- 通用 16×16 人形(2 帧:躯干上下 1px + 腿部交替) ----------
   // o:{skin,eye,hair,torso,torsoHi,torsoLo,leg,boot,sleeve,robe,noFace,pre(p,f,dy),post(p,f,dy)}
@@ -1565,6 +1568,148 @@
     return p;
   }));
 
+  def('vfx_explosion', multi(5, function (f) {
+    var p = new Pix(32, 32);
+    var r = 3 + f * 2.8;
+    p.disc(16, 17, r + 2, '#7a1c08');
+    p.disc(16, 17, r, '#e85a1a');
+    p.disc(16, 17, Math.max(1, r - 2), '#ffb23a');
+    p.disc(16, 17, Math.max(1, r - 4), '#ffd84a');
+    var i;
+    for (i = 0; i < 8; i++) {
+      var a = i * Math.PI / 4 + f * 0.4;
+      var len = r + 1 + ((i + f) % 3);
+      p.line(16, 17, Math.round(16 + Math.cos(a) * len), Math.round(17 + Math.sin(a) * len), '#ffd84a');
+      p.line(16, 17, Math.round(16 + Math.cos(a) * (len - 2)), Math.round(17 + Math.sin(a) * (len - 2)), '#fff6c0');
+    }
+    p.px(16, 17, '#ffffff');
+    p.outline('#3a0a04');
+    return p;
+  }));
+
+  def('vfx_spirit', multi(5, function (f) {
+    var p = new Pix(32, 32);
+    var cy = 22 - f * 2;
+    p.disc(16, cy, 6, '#1a5a70');
+    p.disc(16, cy - 1, 4.4, '#3fa8c8');
+    p.disc(16, cy - 2, 2.6, '#b8f7ff');
+    p.disc(12, cy - 6, 2, '#8fe8f8');
+    p.disc(20, cy - 6, 2, '#8fe8f8');
+    p.line(16, cy + 6, 16, cy + 9, '#4ac8e0');
+    p.line(13, cy + 7, 13, cy + 10, '#2a90a8');
+    p.line(19, cy + 7, 19, cy + 10, '#2a90a8');
+    p.px(16, cy - 2, '#ffffff');
+    p.outline('#0a3040');
+    return p;
+  }));
+
+  def('vfx_heal', multi(4, function (f) {
+    var p = new Pix(32, 32);
+    var r = 2 + f * 2;
+    p.disc(16, 18, r + 1, '#1d5c38');
+    p.disc(16, 18, r, '#4edb7c');
+    p.disc(16, 18, Math.max(1, r - 1.4), '#b6ffc8');
+    p.rect(14, 12, 4, 12, '#d9ffd9');
+    p.rect(10, 16, 12, 4, '#d9ffd9');
+    p.px(16, 12, '#ffffff'); p.px(16, 23, '#ffffff');
+    p.px(10, 18, '#ffffff'); p.px(21, 18, '#ffffff');
+    p.outline('#0e3a22');
+    return p;
+  }));
+
+  def('vfx_spark', multi(5, function (f) {
+    var p = new Pix(32, 32);
+    p.disc(16, 16, 2.4, '#ffe95a');
+    p.disc(16, 16, 1, '#ffffff');
+    var i;
+    for (i = 0; i < 10; i++) {
+      var a = i * Math.PI * 2 / 10 + f * 0.35;
+      var len = 4 + (i % 3) + f * 1.4;
+      var c = i % 2 === 0 ? '#ffd84a' : '#fff6c0';
+      p.line(16, 16, Math.round(16 + Math.cos(a) * len), Math.round(16 + Math.sin(a) * len), c);
+    }
+    return p;
+  }));
+
+  def('vfx_smoke', multi(6, function (f) {
+    var p = new Pix(32, 32);
+    var base = 26 - f * 2;
+    var i;
+    for (i = 0; i < 5; i++) {
+      var cx = 12 + i * 3 + ((i + f) % 2);
+      var cy = base - ((i * 4 + f) % 9);
+      var r = 2 + (i % 3) + f * 0.5;
+      p.disc(cx, cy, r, 'rgba(120,128,140,0.55)');
+      p.disc(cx - 1, cy - 1, Math.max(1, r - 1), 'rgba(190,196,206,0.5)');
+    }
+    return p;
+  }));
+
+  def('vfx_lightning', multi(5, function (f) {
+    var p = new Pix(32, 32);
+    var x = 16, y = 2;
+    var i;
+    p.line(16, 2, 18, 8, '#5ab8e8');
+    p.line(18, 8, 14, 16, '#8ed4ff');
+    p.line(14, 16, 17, 28, '#bfe8ff');
+    for (i = 0; i < 7; i++) {
+      var nx = x + (((i * 7 + f * 3) % 5) - 2);
+      var ny = y + 3 + ((i + f) % 3);
+      p.line(x, y, nx, ny, i % 2 === 0 ? '#bfe8ff' : '#e8fbff');
+      x = nx; y = ny;
+    }
+    p.px(16, 2, '#ffffff');
+    return p;
+  }));
+
+  def('vfx_ice', multi(9, function (f) {
+    var p = new Pix(32, 32);
+    var i;
+    for (i = 0; i < 12; i++) {
+      var a = i * Math.PI * 2 / 12 + f * 0.22;
+      var len = 5 + (i % 3) * 2 + f * 1.1;
+      var c = i % 3 === 0 ? '#9ff8ff' : (i % 3 === 1 ? '#5ed8ff' : '#2a7ab0');
+      p.line(16, 16, Math.round(16 + Math.cos(a) * len), Math.round(16 + Math.sin(a) * len), c);
+      p.line(16, 16, Math.round(16 + Math.cos(a + 0.35) * (len - 1)), Math.round(16 + Math.sin(a + 0.35) * (len - 1)), '#d6fcff');
+    }
+    p.disc(16, 16, 1.4, '#ffffff');
+    return p;
+  }));
+
+  def('vfx_circle', multi(3, function (f) {
+    var p = new Pix(32, 32);
+    var r = 5 + f * 5;
+    p.disc(16, 17, r, '#ffe9a3');
+    p.eraseDisc(16, 17, Math.max(1, r - 2.5));
+    p.disc(16, 17, 1.5, '#ffffff');
+    p.outline('#8a6a20');
+    return p;
+  }));
+
+  def('vfx_slash', multi(4, function (f) {
+    var p = new Pix(32, 32);
+    crescent(p, 15, 17, 10 + f, '#f4feff', '#9fe8ff', '#4ab8e8');
+    p.line(12, 11, 21, 23, '#ffffff');
+    p.px(23, 9, '#ffffff'); p.px(25, 13, '#ffffff'); p.px(7, 24, '#ffffff');
+    p.outline('#123a58');
+    return p;
+  }));
+
+  def('vfx_shield', multi(6, function (f) {
+    var p = new Pix(32, 32);
+    var r = 8 + (f % 2);
+    p.disc(16, 17, r, 'rgba(138,232,255,0.45)');
+    p.eraseDisc(16, 17, Math.max(1, r - 2));
+    p.disc(16, 17, 1.6, '#eafcff');
+    var i;
+    for (i = 0; i < 6; i++) {
+      var a = i * Math.PI * 2 / 6 + f * 0.5;
+      p.px(Math.round(16 + Math.cos(a) * (r + 1)), Math.round(17 + Math.sin(a) * (r + 1)), '#ffffff');
+    }
+    p.outline('#1a5a70');
+    return p;
+  }));
+
   // 预渲染柔光贴图:64×64 径向渐变,每帧 drawImage 代替 createRadialGradient(后者很贵)
   // 绘制时按需缩放,白底半透明,调用方用 globalAlpha 控制强度、用合成模式着色
   function buildGlowTexture() {
@@ -1602,7 +1747,9 @@
     'deco_grave', 'deco_deadtree', 'deco_bone', 'deco_fence', 'deco_skullpost',
     'deco_tree2', 'deco_rock', 'deco_bush', 'deco_mushroom',
     'deco_pillar', 'deco_crystal', 'deco_rune', 'deco_stalag',
-    'vfx_shadow'
+    'vfx_shadow',
+    'vfx_explosion', 'vfx_spirit', 'vfx_heal', 'vfx_spark', 'vfx_smoke', 'vfx_lightning',
+    'vfx_ice', 'vfx_circle', 'vfx_slash', 'vfx_shield'
   ];
 
   function buildPlaceholder() {
@@ -1643,6 +1790,9 @@
       store.vfx_glow = buildGlowTexture();
       var name, i;
       for (name in defs) {
+        if (typeof defs[name] !== 'function') {
+          throw new Error('SpriteGen bad def: ' + name + ' -> ' + typeof defs[name]);
+        }
         var pxFrames = defs[name]();
         var cs = [];
         for (i = 0; i < pxFrames.length; i++) cs.push(pxFrames[i].toCanvas());

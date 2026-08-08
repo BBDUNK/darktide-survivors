@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import time
 from collections import deque
 from pathlib import Path
 
@@ -213,6 +214,18 @@ def checker_preview(frame: Image.Image, scale: int) -> Image.Image:
     return bg.resize((w * scale, h * scale), Image.Resampling.NEAREST)
 
 
+def save_retry(image: Image.Image, destination: Path) -> None:
+    """Windows scanners can briefly hold new PNGs open; retry before failing."""
+    for attempt in range(5):
+        try:
+            image.save(destination, optimize=True)
+            return
+        except OSError:
+            if attempt == 4:
+                raise
+            time.sleep(0.15 * (attempt + 1))
+
+
 def pack(frames: dict[str, list[Image.Image]], manifest: dict, out_dir: Path) -> dict:
     width = manifest.get("atlasWidth", 256)
     padding = manifest.get("atlasPadding", 2)
@@ -237,7 +250,7 @@ def pack(frames: dict[str, list[Image.Image]], manifest: dict, out_dir: Path) ->
     for name, index, frame in ordered:
         pos = placements[name][index]
         atlas.alpha_composite(frame, (pos["x"], pos["y"]))
-    atlas.save(out_dir / "atlas.png", optimize=True)
+    save_retry(atlas, out_dir / "atlas.png")
 
     assets_by_name = {a["name"]: a for a in manifest["assets"]}
     result = {
@@ -275,7 +288,7 @@ def contact_sheet(frames: dict[str, list[Image.Image]], scale: int, destination:
     for row in rows:
         sheet.alpha_composite(row, (0, sy))
         sy += row.height
-    sheet.save(destination, optimize=True)
+    save_retry(sheet, destination)
 
 
 def process_backgrounds(manifest: dict, root: Path) -> None:
@@ -326,7 +339,7 @@ def build(manifest_path: Path) -> None:
             except ValueError as error:
                 raise ValueError(f"{spec['name']}[{index}]: {error}") from error
             processed.append(frame)
-            checker_preview(frame, manifest.get("previewScale", 8)).save(preview_dir / f"{spec['name']}-{index}.png", optimize=True)
+            save_retry(checker_preview(frame, manifest.get("previewScale", 8)), preview_dir / f"{spec['name']}-{index}.png")
         frames[spec["name"]] = processed
 
     atlas_meta = pack(frames, manifest, out_dir)

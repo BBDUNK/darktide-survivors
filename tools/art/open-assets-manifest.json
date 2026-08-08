@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "sourcePack": "Ninja Adventure Asset Pack",
-  "sourceRevision": "2024-07-29 mirror snapshot; official pack remains CC0",
+  "sourcePack": "Dungeon Crawl Stone Soup Full (CC0)",
+  "sourceRevision": "downloaded 2026-08-09 from the official DCSS repository mirror",
   "defaults": {
     "preservePixels": true,
     "maxColors": 256,
@@ -10,134 +10,2322 @@
     "maxBaselineDrift": 6
   },
   "assets": [
-    { "name": "merchant", "category": "character", "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/OldMan3/SeparateAnim/Idle.png", "frameSize": [16, 16], "frames": 4, "fps": 6, "pixelScale": 2, "size": [34, 34], "anchor": [17, 33], "renderScale": 1, "maxCentroidDrift": 5 },
-
-    { "name": "bat", "category": "enemy", "source": "assets/sprites/vendor/oga/Bat16x16.png", "frameRects": [[0, 0, 16, 16], [16, 0, 16, 16], [0, 16, 16, 16], [16, 16, 16, 16]], "fps": 8, "size": [24, 24], "anchor": [12, 18], "renderScale": 0.75, "allowDuplicateFrames": true },
-    { "name": "slime", "category": "enemy", "source": "assets/sprites/vendor/ninja-adventure/Actor/Monsters/Slime/Slime.png", "frameSize": [16, 16], "frames": 4, "fps": 7, "size": [24, 24], "anchor": [12, 23], "renderScale": 0.75 },
-    { "name": "slime_big", "category": "enemy", "source": "assets/sprites/vendor/ninja-adventure/Actor/Monsters/Slime4/Slime4.png", "frameSize": [16, 16], "frames": 4, "fps": 6, "size": [24, 24], "anchor": [12, 23], "renderScale": 0.9 },
-    { "name": "zombie", "category": "enemy", "source": "assets/sprites/sources/v19-zombie-walk-source.png", "key": "#ff00ff", "preservePixels": false, "frames": 4, "fps": 8, "size": [32, 32], "anchor": [16, 31], "renderScale": 0.82, "maxCentroidDrift": 8, "maxBaselineDrift": 2, "outline": "#100d18", "colors": ["#100d18", "#2b211b", "#49301d", "#704827", "#9b6a35", "#283024", "#405531", "#668342", "#9db863", "#d2d67b", "#35343a", "#69666c", "#d98b18"] },
-    { "name": "ghost", "category": "enemy", "source": "assets/sprites/vendor/ninja-adventure/Actor/Monsters/Spirit/SpriteSheet.png", "frameSize": [16, 16], "frames": 4, "fps": 7, "size": [24, 24], "anchor": [12, 21], "renderScale": 0.78 },
-    { "name": "spider", "category": "enemy", "source": "assets/sprites/vendor/ninja-adventure/Actor/Monsters/SpiderRed/SpriteSheet.png", "frameSize": [16, 16], "frames": 4, "fps": 9, "size": [24, 24], "anchor": [12, 23], "renderScale": 0.75, "allowDuplicateFrames": true },
-    { "name": "cultist", "category": "enemy", "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/SorcererBlack/SeparateAnim/Walk.png", "frameSize": [16, 16], "frames": 4, "fps": 6, "size": [24, 24], "anchor": [12, 23], "renderScale": 0.78 },
-    { "name": "orc", "category": "enemy", "source": "assets/sprites/vendor/ninja-adventure/Actor/Monsters/Beast2/Beast2.png", "frameSize": [16, 16], "frames": 4, "fps": 7, "size": [24, 24], "anchor": [12, 23], "renderScale": 0.9 },
-    { "name": "imp", "category": "enemy", "source": "assets/sprites/vendor/ninja-adventure/Actor/Monsters/Flam/SpriteSheet.png", "frameSize": [16, 16], "frames": 4, "fps": 9, "size": [24, 24], "anchor": [12, 22], "renderScale": 0.75 },
-    { "name": "knight_armored", "category": "enemy", "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/KnightGold/SeparateAnim/Walk.png", "frameSize": [16, 16], "frames": 4, "fps": 6, "size": [24, 24], "anchor": [12, 23], "renderScale": 0.9 },
-    { "name": "werewolf", "category": "enemy", "source": "assets/sprites/vendor/ninja-adventure/Actor/Monsters/Beast/Beast.png", "frameSize": [16, 16], "frames": 4, "fps": 9, "size": [24, 24], "anchor": [12, 23], "renderScale": 0.85 },
-    { "name": "mummy", "category": "enemy", "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/OldMan3/SeparateAnim/Walk.png", "frameSize": [16, 16], "frames": 4, "fps": 5, "size": [24, 24], "anchor": [12, 23], "renderScale": 0.8 },
-    { "name": "gargoyle", "category": "enemy", "source": "assets/sprites/vendor/ninja-adventure/Actor/Monsters/DragonYellow/SpriteSheet.png", "frameSize": [16, 16], "frames": 4, "fps": 7, "size": [24, 24], "anchor": [12, 22], "renderScale": 0.9 },
-    { "name": "bloodbat", "category": "enemy", "source": "assets/sprites/vendor/oga/Stalkette16x16.png", "frameRects": [[0, 0, 16, 16], [16, 0, 16, 16], [0, 16, 16, 16], [16, 16, 16, 16]], "fps": 10, "size": [24, 24], "anchor": [12, 18], "renderScale": 0.78, "allowDuplicateFrames": true },
-    { "name": "wraith", "category": "enemy", "source": "assets/sprites/vendor/ninja-adventure/Actor/Monsters/Spirit2/SpriteSheet.png", "frameSize": [16, 16], "frames": 4, "fps": 6, "size": [24, 24], "anchor": [12, 21], "renderScale": 0.9 },
-
-    { "name": "boss_bonelord", "category": "boss", "source": "assets/sprites/vendor/ninja-adventure/Actor/Boss/DemonCyclop2/Idle.png", "frameSize": [50, 50], "frames": 5, "fps": 5, "size": [56, 56], "anchor": [28, 55], "renderScale": 0.57, "allowDuplicateFrames": true },
-    { "name": "boss_abysseye", "category": "boss", "source": "assets/sprites/vendor/ninja-adventure/Actor/Boss/GiantSpirit/Idle.png", "frameSize": [50, 50], "frames": 5, "fps": 5, "size": [56, 56], "anchor": [28, 55], "renderScale": 0.57 },
-    { "name": "boss_darklord", "category": "boss", "source": "assets/sprites/vendor/ninja-adventure/Actor/Boss/TenguRed/Idle.png", "frameSize": [82, 82], "frames": 6, "fps": 5, "size": [84, 84], "anchor": [42, 83], "renderScale": 0.38 },
-
-    { "name": "p_slash", "category": "projectile", "source": "assets/sprites/vendor/ninja-adventure/FX/SlashFx/SlashDoubleCurved/SpriteSheet.png", "frameSize": [32, 32], "frames": 4, "fps": 14, "size": [32, 32], "anchor": [16, 16], "allowDuplicateFrames": true, "maxBaselineDrift": 18 },
-    { "name": "p_bolt", "category": "projectile", "source": "assets/sprites/vendor/ninja-adventure/FX/Projectile/EnergyBall.png", "frameSize": [16, 16], "frames": 4, "fps": 12, "size": [16, 16], "anchor": [8, 15] },
-    { "name": "p_arrow", "category": "projectile", "source": "assets/sprites/vendor/ninja-adventure/FX/Projectile/Arrow.png", "cropPx": [0, 0, 13, 5], "size": [16, 16], "anchor": [8, 10] },
-    { "name": "p_dragon", "category": "projectile", "source": "assets/sprites/vendor/ninja-adventure/Actor/Monsters/Dragon/SpriteSheet.png", "frameSize": [16, 16], "frames": 4, "fps": 10, "size": [24, 24], "anchor": [12, 22] },
-    { "name": "p_axe", "category": "projectile", "source": "assets/sprites/vendor/ninja-adventure/Items/Weapons/Axe/Sprite.png", "cropPx": [0, 0, 11, 13], "size": [16, 16], "anchor": [8, 14] },
-    { "name": "p_dagger", "category": "projectile", "source": "assets/sprites/vendor/ninja-adventure/FX/Projectile/Kunai.png", "cropPx": [0, 0, 14, 5], "size": [16, 16], "anchor": [8, 10] },
-    { "name": "p_orbitblade", "category": "projectile", "source": "assets/sprites/vendor/ninja-adventure/FX/Projectile/BigShuriken.png", "frameSize": [23, 23], "frames": 2, "fps": 12, "size": [24, 24], "anchor": [12, 23] },
-    { "name": "p_book", "category": "projectile", "source": "assets/sprites/vendor/ninja-adventure/Items/Weapons/Book/Sprite.png", "cropPx": [0, 0, 9, 9], "pixelScale": 1.5, "size": [16, 16], "anchor": [8, 14] },
-    { "name": "p_fireflask", "category": "projectile", "source": "assets/sprites/sources/v19-key-art-concepts.png", "key": "#ff00ff", "region": [0.5, 0.0, 1.0, 0.5], "preservePixels": false, "size": [18, 18], "anchor": [9, 17], "outline": "#100d18", "colors": ["#100d18", "#3b2a20", "#73502c", "#a87a42", "#d1b17c", "#e8e2d2", "#8e3b0c", "#d86a0a", "#ffad18", "#ffe36a"] },
-    { "name": "p_firepool", "category": "projectile", "source": "assets/sprites/vendor/ninja-adventure/FX/Elemental/Flam/SpriteSheet.png", "frameSize": [32, 32], "frames": 5, "fps": 12, "size": [32, 32], "anchor": [16, 31] },
-    { "name": "p_spark", "category": "projectile", "source": "assets/sprites/vendor/ninja-adventure/FX/Projectile/ShurikenMagic.png", "frameSize": [16, 16], "frames": 2, "fps": 12, "size": [16, 16], "anchor": [8, 15] },
-    { "name": "p_shadow", "category": "projectile", "source": "assets/sprites/vendor/ninja-adventure/FX/Projectile/BigEnergyBall.png", "frameSize": [24, 24], "frames": 4, "fps": 10, "size": [24, 24], "anchor": [12, 23] },
-    { "name": "p_turret", "category": "projectile", "source": "assets/sprites/sources/v19-key-art-concepts.png", "key": "#ff00ff", "region": [0.0, 0.0, 0.5, 0.5], "preservePixels": false, "size": [32, 32], "anchor": [16, 31], "renderScale": 1, "outline": "#100d18", "colors": ["#100d18", "#2d2e2d", "#4d4d48", "#777267", "#a89979", "#5b2b16", "#8d471d", "#c77427", "#e6b354", "#1d7380", "#39c5d7", "#baf8ff"] },
-    { "name": "p_enemy_bolt", "category": "projectile", "source": "assets/sprites/vendor/ninja-adventure/FX/Projectile/Fireball.png", "frameSize": [16, 16], "frames": 4, "fps": 12, "size": [16, 16], "anchor": [8, 15] },
-    { "name": "p_holy", "category": "projectile", "source": "assets/sprites/vendor/ninja-adventure/FX/Magic/Spirit/SpriteSheetBlue.png", "frameSize": [32, 32], "frames": 5, "fps": 12, "size": [32, 32], "anchor": [16, 31] },
-    { "name": "p_web", "category": "projectile", "source": "assets/sprites/vendor/ninja-adventure/FX/Magic/Circle/SpriteSheetWhite.png", "frameSize": [32, 32], "frames": 4, "fps": 10, "size": [32, 32], "anchor": [16, 31] },
-
-    { "name": "gem1", "category": "drop", "source": "assets/sprites/vendor/ninja-adventure/Items/Food/Seed1.png", "cropPx": [0, 0, 8, 8], "pixelScale": 1.5, "size": [16, 16], "anchor": [8, 14] },
-    { "name": "gem2", "category": "drop", "source": "assets/sprites/vendor/ninja-adventure/Items/Food/Seed2.png", "cropPx": [0, 0, 8, 8], "pixelScale": 1.5, "size": [16, 16], "anchor": [8, 14] },
-    { "name": "gem3", "category": "drop", "source": "assets/sprites/vendor/ninja-adventure/Items/Food/Seed3.png", "cropPx": [0, 0, 8, 8], "pixelScale": 1.5, "size": [16, 16], "anchor": [8, 14] },
-    { "name": "gem_big", "category": "drop", "source": "assets/sprites/vendor/ninja-adventure/Items/Food/SeedBig3.png", "cropPx": [0, 0, 10, 13], "size": [16, 16], "anchor": [8, 15] },
-    { "name": "coin", "category": "drop", "source": "assets/sprites/vendor/ninja-adventure/Items/Treasure/GoldCoin.png", "cropPx": [0, 0, 7, 7], "pixelScale": 2, "size": [16, 16], "anchor": [8, 14] },
-    { "name": "chest", "category": "drop", "source": "assets/sprites/vendor/ninja-adventure/Items/Treasure/LittleTreasureChest.png", "frameSize": [16, 16], "frames": 2, "fps": 4, "size": [20, 20], "anchor": [10, 19] },
-    { "name": "vault_chest", "category": "drop", "source": "assets/sprites/vendor/ninja-adventure/Items/Treasure/BigTreasureChest.png", "frameSize": [16, 14], "frames": 2, "fps": 4, "size": [24, 24], "anchor": [12, 23] },
-    { "name": "magnet", "category": "drop", "source": "assets/sprites/vendor/ninja-adventure/FX/Magic/Circle/SpriteSheetSpark2.png", "cropPx": [0, 0, 32, 32], "size": [18, 18], "anchor": [9, 17] },
-    { "name": "bomb", "category": "drop", "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/NinjaBomb/SeparateAnim/Idle.png", "cropPx": [0, 0, 16, 16], "size": [18, 18], "anchor": [9, 17] },
-    { "name": "meat", "category": "drop", "source": "assets/sprites/vendor/ninja-adventure/Items/Food/Beaf.png", "cropPx": [0, 0, 16, 16], "size": [18, 18], "anchor": [9, 17] },
-    { "name": "clock", "category": "drop", "source": "assets/sprites/vendor/ninja-adventure/FX/Magic/Circle/SpriteSheetOrange.png", "cropPx": [0, 0, 32, 32], "size": [18, 18], "anchor": [9, 17] },
-    { "name": "vfx_glow", "category": "vfx", "source": "assets/sprites/vendor/ninja-adventure/FX/Magic/Aura/SpriteSheetPurple.png", "cropPx": [0, 0, 32, 32], "size": [32, 32], "anchor": [16, 31] },
-
-    { "name": "w_arcanebolt", "category": "weapon-icon", "source": "assets/sprites/vendor/ninja-adventure/Items/Weapons/MagicWand/Sprite.png", "cropPx": [0, 0, 5, 18], "size": [24, 24], "anchor": [12, 21] },
-    { "name": "w_windbow", "category": "weapon-icon", "source": "assets/sprites/vendor/ninja-adventure/Items/Weapons/Bow/Sprite.png", "cropPx": [0, 0, 15, 7], "size": [24, 24], "anchor": [12, 16] },
-    { "name": "w_holyaura", "category": "weapon-icon", "source": "assets/sprites/vendor/ninja-adventure/Items/Scroll/ScrollEmpty.png", "cropPx": [0, 0, 16, 16], "size": [24, 24], "anchor": [12, 21] },
-    { "name": "w_whirlaxe", "category": "weapon-icon", "source": "assets/sprites/vendor/ninja-adventure/Items/Weapons/Axe/Sprite.png", "cropPx": [0, 0, 11, 13], "pixelScale": 1.5, "size": [24, 24], "anchor": [12, 22] },
-    { "name": "w_chainlight", "category": "weapon-icon", "source": "assets/sprites/vendor/ninja-adventure/Items/Scroll/ScrollThunder.png", "cropPx": [0, 0, 16, 16], "size": [24, 24], "anchor": [12, 21] },
-    { "name": "w_frostnova", "category": "weapon-icon", "source": "assets/sprites/vendor/ninja-adventure/Items/Scroll/ScrollIce.png", "cropPx": [0, 0, 16, 16], "size": [24, 24], "anchor": [12, 21] },
-    { "name": "w_fireflask", "category": "weapon-icon", "source": "assets/sprites/sources/v19-key-art-concepts.png", "key": "#ff00ff", "region": [0.5, 0.0, 1.0, 0.5], "preservePixels": false, "size": [24, 24], "anchor": [12, 23], "outline": "#100d18", "colors": ["#100d18", "#3b2a20", "#73502c", "#a87a42", "#d1b17c", "#e8e2d2", "#8e3b0c", "#d86a0a", "#ffad18", "#ffe36a"] },
-    { "name": "w_shadowdagger", "category": "weapon-icon", "source": "assets/sprites/vendor/ninja-adventure/Items/Weapons/Ninjaku/Sprite.png", "cropPx": [0, 0, 7, 12], "pixelScale": 1.5, "size": [24, 24], "anchor": [12, 22] },
-    { "name": "w_orbitblade", "category": "weapon-icon", "source": "assets/sprites/vendor/ninja-adventure/Items/Weapons/Katana/Sprite.png", "cropPx": [0, 0, 6, 14], "pixelScale": 1.4, "size": [24, 24], "anchor": [12, 22] },
-    { "name": "w_holytome", "category": "weapon-icon", "source": "assets/sprites/vendor/ninja-adventure/Items/Weapons/Book/Sprite.png", "cropPx": [0, 0, 9, 9], "pixelScale": 2, "size": [24, 24], "anchor": [12, 21] },
-    { "name": "w_teslacoil", "category": "weapon-icon", "source": "assets/sprites/sources/v19-key-art-concepts.png", "key": "#ff00ff", "region": [0.0, 0.0, 0.5, 0.5], "preservePixels": false, "size": [24, 24], "anchor": [12, 23], "outline": "#100d18", "colors": ["#100d18", "#2d2e2d", "#4d4d48", "#777267", "#a89979", "#5b2b16", "#8d471d", "#c77427", "#e6b354", "#1d7380", "#39c5d7", "#baf8ff"] },
-
-    { "name": "we_crossjudge", "category": "evolution-icon", "source": "assets/sprites/vendor/ninja-adventure/Items/Weapons/BigSword/Sprite.png", "cropPx": [0, 0, 7, 16], "pixelScale": 1.35, "size": [24, 24], "anchor": [12, 22] },
-    { "name": "we_arcanestorm", "category": "evolution-icon", "source": "assets/sprites/vendor/ninja-adventure/FX/Projectile/BigEnergyBall.png", "cropPx": [0, 0, 24, 24], "size": [24, 24], "anchor": [12, 23] },
-    { "name": "we_featherstorm", "category": "evolution-icon", "source": "assets/sprites/vendor/ninja-adventure/Items/Weapons/Bow2/Sprite.png", "cropPx": [0, 0, 15, 7], "size": [24, 24], "anchor": [12, 16] },
-    { "name": "we_sanctuary", "category": "evolution-icon", "source": "assets/sprites/vendor/ninja-adventure/FX/Magic/Shield/SpriteSheetYellow.png", "cropPx": [0, 0, 24, 26], "size": [24, 24], "anchor": [12, 23] },
-    { "name": "we_worldender", "category": "evolution-icon", "source": "assets/sprites/vendor/ninja-adventure/Items/Weapons/Hammer/Sprite.png", "cropPx": [0, 0, 9, 16], "pixelScale": 1.35, "size": [24, 24], "anchor": [12, 22] },
-    { "name": "we_thorwrath", "category": "evolution-icon", "source": "assets/sprites/vendor/ninja-adventure/FX/Elemental/Thunder/SpriteSheet.png", "cropPx": [0, 0, 32, 28], "size": [24, 24], "anchor": [12, 23] },
-    { "name": "we_absolutezero", "category": "evolution-icon", "source": "assets/sprites/vendor/ninja-adventure/FX/Elemental/Ice/SpriteSheetFlake.png", "cropPx": [0, 0, 32, 32], "size": [24, 24], "anchor": [12, 23] },
-    { "name": "we_infernosea", "category": "evolution-icon", "source": "assets/sprites/vendor/ninja-adventure/FX/Elemental/Flam/SpriteSheet.png", "cropPx": [0, 0, 32, 32], "size": [24, 24], "anchor": [12, 23] },
-    { "name": "we_thousandcuts", "category": "evolution-icon", "source": "assets/sprites/vendor/ninja-adventure/FX/Projectile/BigKunai.png", "cropPx": [0, 0, 35, 9], "size": [24, 24], "anchor": [12, 16] },
-    { "name": "we_bladestorm", "category": "evolution-icon", "source": "assets/sprites/vendor/ninja-adventure/FX/SlashFx/CircularSlash/SpriteSheet.png", "cropPx": [0, 0, 32, 32], "size": [24, 24], "anchor": [12, 23] },
-    { "name": "we_forbidden", "category": "evolution-icon", "source": "assets/sprites/vendor/ninja-adventure/Items/Scroll/ScrollFire.png", "cropPx": [0, 0, 16, 16], "size": [24, 24], "anchor": [12, 21] },
-    { "name": "we_skynet", "category": "evolution-icon", "source": "assets/sprites/vendor/ninja-adventure/FX/Projectile/BigShuriken.png", "cropPx": [0, 0, 23, 23], "size": [24, 24], "anchor": [12, 23] },
-
-    { "name": "ps_power", "category": "passive-icon", "source": "assets/sprites/vendor/ninja-adventure/Items/Food/Beaf.png", "cropPx": [0, 0, 16, 16], "size": [24, 24], "anchor": [12, 21] },
-    { "name": "ps_eagle", "category": "passive-icon", "source": "assets/sprites/vendor/ninja-adventure/Items/Food/FortuneCookie.png", "cropPx": [0, 0, 16, 16], "size": [24, 24], "anchor": [12, 21] },
-    { "name": "ps_pendant", "category": "passive-icon", "source": "assets/sprites/vendor/ninja-adventure/Items/Potion/Hear.png", "cropPx": [0, 0, 9, 8], "pixelScale": 2, "size": [24, 24], "anchor": [12, 20] },
-    { "name": "ps_belt", "category": "passive-icon", "source": "assets/sprites/vendor/ninja-adventure/Items/Weapons/Whip/Sprite.png", "cropPx": [0, 0, 9, 13], "pixelScale": 1.5, "size": [24, 24], "anchor": [12, 22] },
-    { "name": "ps_boots", "category": "passive-icon", "source": "assets/sprites/vendor/ninja-adventure/FX/Projectile/Arrow.png", "cropPx": [0, 0, 13, 5], "pixelScale": 1.5, "size": [24, 24], "anchor": [12, 16] },
-    { "name": "ps_magnetstone", "category": "passive-icon", "source": "assets/sprites/vendor/ninja-adventure/FX/Elemental/Rock/SpriteSheet.png", "cropPx": [30, 0, 30, 30], "size": [24, 24], "anchor": [12, 23] },
-    { "name": "ps_clover", "category": "passive-icon", "source": "assets/sprites/vendor/ninja-adventure/Items/Food/TeaLeaf.png", "cropPx": [0, 0, 16, 16], "size": [24, 24], "anchor": [12, 21] },
-
-    { "name": "icon_gold", "category": "system-icon", "source": "assets/sprites/vendor/ninja-adventure/Items/Treasure/GoldCoin.png", "cropPx": [0, 0, 7, 7], "pixelScale": 2, "size": [24, 24], "anchor": [12, 20] },
-    { "name": "icon_hp", "category": "system-icon", "source": "assets/sprites/vendor/ninja-adventure/Ui/LifeReceptacle/heart.png", "cropPx": [0, 0, 15, 14], "size": [24, 24], "anchor": [12, 21] },
-    { "name": "icon_dmg", "category": "system-icon", "source": "assets/sprites/vendor/ninja-adventure/Items/Weapons/Sword/Sprite.png", "cropPx": [0, 0, 6, 17], "size": [24, 24], "anchor": [12, 22] },
-    { "name": "icon_armor", "category": "system-icon", "source": "assets/sprites/vendor/ninja-adventure/FX/Magic/Shield/SpriteSheetBlue.png", "cropPx": [0, 0, 24, 26], "size": [24, 24], "anchor": [12, 23] },
-    { "name": "icon_speed", "category": "system-icon", "source": "assets/sprites/vendor/ninja-adventure/FX/Projectile/Arrow.png", "cropPx": [0, 0, 13, 5], "pixelScale": 1.5, "size": [24, 24], "anchor": [12, 16] },
-    { "name": "icon_magnet", "category": "system-icon", "source": "assets/sprites/vendor/ninja-adventure/FX/Magic/Circle/SpriteSheetSpark2.png", "cropPx": [0, 0, 32, 32], "size": [24, 24], "anchor": [12, 23] },
-    { "name": "icon_luck", "category": "system-icon", "source": "assets/sprites/vendor/ninja-adventure/Items/Food/FortuneCookie.png", "cropPx": [0, 0, 16, 16], "size": [24, 24], "anchor": [12, 21] },
-    { "name": "icon_revive", "category": "system-icon", "source": "assets/sprites/vendor/ninja-adventure/Items/Potion/Hear.png", "cropPx": [0, 0, 9, 8], "pixelScale": 2, "size": [24, 24], "anchor": [12, 20] },
-    { "name": "icon_reroll", "category": "system-icon", "source": "assets/sprites/vendor/ninja-adventure/FX/Projectile/Shuriken.png", "cropPx": [0, 0, 16, 16], "size": [24, 24], "anchor": [12, 21] },
-    { "name": "icon_banish", "category": "system-icon", "source": "assets/sprites/vendor/ninja-adventure/Items/Other/Stamp.png", "cropPx": [0, 0, 16, 16], "size": [24, 24], "anchor": [12, 21] },
-    { "name": "icon_cd", "category": "system-icon", "source": "assets/sprites/vendor/ninja-adventure/FX/Magic/Circle/SpriteSheetOrange.png", "cropPx": [0, 0, 32, 32], "size": [24, 24], "anchor": [12, 23] },
-    { "name": "icon_area", "category": "system-icon", "source": "assets/sprites/vendor/ninja-adventure/FX/Magic/Aura/SpriteSheetWhite.png", "cropPx": [0, 0, 32, 32], "size": [24, 24], "anchor": [12, 23] },
-    { "name": "icon_growth", "category": "system-icon", "source": "assets/sprites/vendor/ninja-adventure/Items/Food/SeedBig1.png", "cropPx": [0, 0, 10, 13], "pixelScale": 1.5, "size": [24, 24], "anchor": [12, 22] },
-    { "name": "icon_kill", "category": "system-icon", "source": "assets/sprites/vendor/ninja-adventure/Actor/Monsters/Skull/SpriteSheet.png", "cropPx": [0, 0, 16, 16], "size": [24, 24], "anchor": [12, 21] },
-    { "name": "icon_time", "category": "system-icon", "source": "assets/sprites/vendor/ninja-adventure/FX/Magic/Circle/SpriteSheetSpark.png", "cropPx": [0, 0, 32, 32], "size": [24, 24], "anchor": [12, 23] },
-    { "name": "elite_crown", "category": "system-icon", "source": "assets/sprites/vendor/ninja-adventure/Items/Treasure/GoldCup.png", "cropPx": [0, 0, 9, 11], "size": [16, 16], "anchor": [8, 15] },
-
-    { "name": "deco_bone", "category": "decor", "source": "assets/sprites/vendor/ninja-adventure/Items/Weapons/Bone/Sprite.png", "cropPx": [0, 0, 7, 12], "size": [20, 20], "anchor": [10, 19] },
-    { "name": "deco_fence", "category": "decor", "source": "assets/sprites/vendor/ninja-adventure/Backgrounds/Tilesets/TilesetRelief.png", "cropPx": [96, 0, 16, 32], "size": [20, 40], "anchor": [10, 39] },
-    { "name": "deco_skullpost", "category": "decor", "source": "assets/sprites/vendor/ninja-adventure/Actor/Monsters/Skull/SpriteSheet.png", "cropPx": [0, 0, 16, 16], "size": [24, 32], "anchor": [12, 31] },
-    { "name": "deco_tree2", "category": "decor", "source": "assets/sprites/vendor/ninja-adventure/Backgrounds/Tilesets/TilesetNature.png", "cropPx": [0, 0, 32, 32], "size": [34, 42], "anchor": [17, 41] },
-    { "name": "deco_rock", "category": "decor", "source": "assets/sprites/vendor/ninja-adventure/Backgrounds/Tilesets/TilesetNature.png", "cropPx": [256, 192, 32, 32], "size": [34, 34], "anchor": [17, 33] },
-    { "name": "deco_bush", "category": "decor", "source": "assets/sprites/vendor/ninja-adventure/Backgrounds/Tilesets/TilesetNature.png", "cropPx": [128, 112, 16, 16], "size": [24, 24], "anchor": [12, 23] },
-    { "name": "deco_mushroom", "category": "decor", "source": "assets/sprites/vendor/ninja-adventure/Backgrounds/Tilesets/TilesetNature.png", "cropPx": [176, 144, 16, 16], "size": [24, 24], "anchor": [12, 23] },
-    { "name": "deco_pillar", "category": "decor", "source": "assets/sprites/vendor/ninja-adventure/Backgrounds/Tilesets/TilesetReliefDetail.png", "cropPx": [0, 0, 16, 32], "size": [24, 40], "anchor": [12, 39] },
-    { "name": "deco_crystal", "category": "decor", "source": "assets/sprites/vendor/ninja-adventure/Backgrounds/Tilesets/TilesetNature.png", "cropPx": [0, 256, 16, 16], "size": [24, 28], "anchor": [12, 27] },
-    { "name": "deco_rune", "category": "decor", "source": "assets/sprites/vendor/ninja-adventure/Backgrounds/Tilesets/TilesetDungeon.png", "cropPx": [0, 0, 16, 16], "size": [24, 24], "anchor": [12, 23] },
-    { "name": "deco_stalag", "category": "decor", "source": "assets/sprites/vendor/ninja-adventure/Backgrounds/Tilesets/TilesetNature.png", "cropPx": [16, 256, 16, 16], "size": [24, 28], "anchor": [12, 27] },
-    { "name": "vfx_shadow", "category": "vfx", "source": "assets/sprites/vendor/ninja-adventure/Actor/Characters/Shadow.png", "cropPx": [0, 0, 16, 8], "size": [24, 12], "anchor": [12, 10] },
-
-    { "name": "tile_graveyard", "category": "terrain", "source": "assets/sprites/vendor/ninja-adventure/Backgrounds/Tilesets/TilesetFloor.png", "cropPx": [192, 256, 16, 16], "size": [16, 16], "anchor": [8, 15] },
-    { "name": "tile_wilds", "category": "terrain", "source": "assets/sprites/vendor/ninja-adventure/Backgrounds/Tilesets/TilesetFloor.png", "cropPx": [96, 160, 16, 16], "size": [16, 16], "anchor": [8, 15] },
-    { "name": "tile_abyss", "category": "terrain", "source": "assets/sprites/vendor/ninja-adventure/Backgrounds/Tilesets/TilesetFloorB.png", "cropPx": [0, 0, 16, 16], "size": [16, 16], "anchor": [8, 15] },
-
-    { "name": "vfx_explosion", "category": "vfx", "source": "assets/sprites/vendor/ninja-adventure/FX/Elemental/Flam/SpriteSheet.png", "frameSize": [32, 32], "frames": 5, "fps": 14, "size": [32, 32], "anchor": [16, 31], "allowDuplicateFrames": true },
-    { "name": "vfx_spirit", "category": "vfx", "source": "assets/sprites/vendor/ninja-adventure/FX/Magic/Spirit/SpriteSheet.png", "frameSize": [32, 32], "frames": 5, "fps": 12, "size": [32, 32], "anchor": [16, 31], "allowDuplicateFrames": true },
-    { "name": "vfx_heal", "category": "vfx", "source": "assets/sprites/vendor/ninja-adventure/FX/Magic/Aura/SpriteSheetWhite.png", "frameSize": [32, 32], "frames": 4, "fps": 12, "size": [32, 32], "anchor": [16, 31], "allowDuplicateFrames": true },
-    { "name": "vfx_spark", "category": "vfx", "source": "assets/sprites/vendor/ninja-adventure/FX/Magic/Spark/SpriteSheet.png", "frameSize": [32, 32], "frames": 5, "fps": 16, "size": [32, 32], "anchor": [16, 31], "allowDuplicateFrames": true },
-    { "name": "vfx_smoke", "category": "vfx", "source": "assets/sprites/vendor/ninja-adventure/FX/Smoke/Smoke/SpriteSheet.png", "frameSize": [32, 32], "frames": 6, "fps": 12, "size": [32, 32], "anchor": [16, 31], "allowDuplicateFrames": true },
-    { "name": "vfx_lightning", "category": "vfx", "source": "assets/sprites/vendor/ninja-adventure/FX/Elemental/Thunder/SpriteSheet.png", "frameSize": [32, 28], "frames": 5, "fps": 16, "size": [32, 32], "anchor": [16, 31], "allowDuplicateFrames": true, "maxCentroidDrift": 20 },
-    { "name": "vfx_slash", "category": "vfx", "source": "assets/sprites/vendor/ninja-adventure/FX/SlashFx/SlashDoubleCurved/SpriteSheet.png", "frameSize": [32, 32], "frames": 4, "fps": 16, "size": [32, 32], "anchor": [16, 31], "allowDuplicateFrames": true },
-    { "name": "vfx_ice", "category": "vfx", "source": "assets/sprites/vendor/ninja-adventure/FX/Elemental/Ice/SpriteSheetFlake.png", "frameSize": [32, 32], "frames": 9, "fps": 16, "size": [32, 32], "anchor": [16, 31], "allowDuplicateFrames": true, "maxCentroidDrift": 20 },
-    { "name": "vfx_shield", "category": "vfx", "source": "assets/sprites/vendor/ninja-adventure/FX/Magic/Shield/SpriteSheetBlue.png", "frameSize": [24, 26], "frames": 6, "fps": 12, "size": [32, 32], "anchor": [16, 31], "allowDuplicateFrames": true },
-    { "name": "vfx_circle", "category": "vfx", "source": "assets/sprites/vendor/ninja-adventure/FX/Magic/Circle/SpriteSheetWhite.png", "frameSize": [32, 32], "frameStart": 1, "frames": 3, "fps": 12, "size": [32, 32], "anchor": [16, 31], "allowDuplicateFrames": true }
+    {
+      "name": "merchant",
+      "category": "character",
+      "source": "assets/sprites/sources/dcss-derived/merchant.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 4,
+      "fps": 6,
+      "size": [
+        34,
+        34
+      ],
+      "anchor": [
+        17,
+        33
+      ],
+      "renderScale": 1,
+      "maxCentroidDrift": 20,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "bat",
+      "category": "enemy",
+      "source": "assets/sprites/sources/dcss-derived/bat.png",
+      "fps": 8,
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        18
+      ],
+      "renderScale": 0.75,
+      "allowDuplicateFrames": true,
+      "frames": 4,
+      "preservePixels": true,
+      "minCoverage": 0.015,
+      "frameSize": [
+        32,
+        32
+      ],
+      "maxCentroidDrift": 20
+    },
+    {
+      "name": "slime",
+      "category": "enemy",
+      "source": "assets/sprites/sources/dcss-derived/slime.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 4,
+      "fps": 7,
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "renderScale": 0.75,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20
+    },
+    {
+      "name": "slime_big",
+      "category": "enemy",
+      "source": "assets/sprites/sources/dcss-derived/slime_big.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 4,
+      "fps": 6,
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "renderScale": 0.9,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20
+    },
+    {
+      "name": "zombie",
+      "category": "enemy",
+      "source": "assets/sprites/sources/dcss-derived/zombie.png",
+      "preservePixels": true,
+      "frames": 4,
+      "fps": 8,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        31
+      ],
+      "renderScale": 0.82,
+      "maxCentroidDrift": 20,
+      "maxBaselineDrift": 2,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "frameSize": [
+        32,
+        32
+      ]
+    },
+    {
+      "name": "ghost",
+      "category": "enemy",
+      "source": "assets/sprites/sources/dcss-derived/ghost.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 4,
+      "fps": 7,
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        21
+      ],
+      "renderScale": 0.78,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20
+    },
+    {
+      "name": "spider",
+      "category": "enemy",
+      "source": "assets/sprites/sources/dcss-derived/spider.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 4,
+      "fps": 9,
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "renderScale": 0.75,
+      "allowDuplicateFrames": true,
+      "preservePixels": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20
+    },
+    {
+      "name": "cultist",
+      "category": "enemy",
+      "source": "assets/sprites/sources/dcss-derived/cultist.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 4,
+      "fps": 6,
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "renderScale": 0.78,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20
+    },
+    {
+      "name": "orc",
+      "category": "enemy",
+      "source": "assets/sprites/sources/dcss-derived/orc.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 4,
+      "fps": 7,
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "renderScale": 0.9,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20
+    },
+    {
+      "name": "imp",
+      "category": "enemy",
+      "source": "assets/sprites/sources/dcss-derived/imp.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 4,
+      "fps": 9,
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        22
+      ],
+      "renderScale": 0.75,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20
+    },
+    {
+      "name": "knight_armored",
+      "category": "enemy",
+      "source": "assets/sprites/sources/dcss-derived/knight_armored.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 4,
+      "fps": 6,
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "renderScale": 0.9,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20
+    },
+    {
+      "name": "werewolf",
+      "category": "enemy",
+      "source": "assets/sprites/sources/dcss-derived/werewolf.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 4,
+      "fps": 9,
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "renderScale": 0.85,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20
+    },
+    {
+      "name": "mummy",
+      "category": "enemy",
+      "source": "assets/sprites/sources/dcss-derived/mummy.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 4,
+      "fps": 5,
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "renderScale": 0.8,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20
+    },
+    {
+      "name": "gargoyle",
+      "category": "enemy",
+      "source": "assets/sprites/sources/dcss-derived/gargoyle.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 4,
+      "fps": 7,
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        22
+      ],
+      "renderScale": 0.9,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20
+    },
+    {
+      "name": "bloodbat",
+      "category": "enemy",
+      "source": "assets/sprites/sources/dcss-derived/bloodbat.png",
+      "fps": 10,
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        18
+      ],
+      "renderScale": 0.78,
+      "allowDuplicateFrames": true,
+      "frames": 4,
+      "preservePixels": true,
+      "minCoverage": 0.015,
+      "frameSize": [
+        32,
+        32
+      ],
+      "maxCentroidDrift": 20
+    },
+    {
+      "name": "wraith",
+      "category": "enemy",
+      "source": "assets/sprites/sources/dcss-derived/wraith.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 4,
+      "fps": 6,
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        21
+      ],
+      "renderScale": 0.9,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20
+    },
+    {
+      "name": "boss_bonelord",
+      "category": "boss",
+      "source": "assets/sprites/sources/dcss-derived/boss_bonelord.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 5,
+      "fps": 5,
+      "size": [
+        56,
+        56
+      ],
+      "anchor": [
+        28,
+        55
+      ],
+      "renderScale": 0.57,
+      "allowDuplicateFrames": true,
+      "preservePixels": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20,
+      "pixelScale": 2
+    },
+    {
+      "name": "boss_abysseye",
+      "category": "boss",
+      "source": "assets/sprites/sources/dcss-derived/boss_abysseye.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 5,
+      "fps": 5,
+      "size": [
+        56,
+        56
+      ],
+      "anchor": [
+        28,
+        55
+      ],
+      "renderScale": 0.57,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20,
+      "pixelScale": 2
+    },
+    {
+      "name": "boss_darklord",
+      "category": "boss",
+      "source": "assets/sprites/sources/dcss-derived/boss_darklord.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 6,
+      "fps": 5,
+      "size": [
+        84,
+        84
+      ],
+      "anchor": [
+        42,
+        83
+      ],
+      "renderScale": 0.38,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20,
+      "pixelScale": 3
+    },
+    {
+      "name": "p_slash",
+      "category": "projectile",
+      "source": "assets/sprites/vendor/ninja-adventure/FX/SlashFx/SlashDoubleCurved/SpriteSheet.png",
+      "frameSize": [32, 32],
+      "frames": 4,
+      "fps": 14,
+      "size": [34, 34],
+      "anchor": [17, 33],
+      "pixelScale": 1,
+      "allowDuplicateFrames": true,
+      "maxBaselineDrift": 8,
+      "preservePixels": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 16
+    },
+    {
+      "name": "p_bolt",
+      "category": "projectile",
+      "source": "assets/sprites/sources/dcss-derived/p_bolt.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 4,
+      "fps": 12,
+      "size": [
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        15
+      ],
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20,
+      "maxBaselineDrift": 18
+    },
+    {
+      "name": "p_arrow",
+      "category": "projectile",
+      "source": "assets/sprites/vendor/ninja-adventure/FX/Projectile/Arrow.png",
+      "size": [44, 22],
+      "anchor": [22, 17],
+      "frames": 1,
+      "fps": 12,
+      "pixelScale": 3,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "p_dragon",
+      "category": "projectile",
+      "source": "assets/sprites/sources/dcss-derived/p_dragon.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 4,
+      "fps": 10,
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        22
+      ],
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20
+    },
+    {
+      "name": "p_axe",
+      "category": "projectile",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/weapon/hand_axe_1_new.png",
+      "size": [
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        14
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "p_dagger",
+      "category": "projectile",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/weapon/dagger_new.png",
+      "size": [
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        10
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "p_orbitblade",
+      "category": "projectile",
+      "source": "assets/sprites/sources/dcss-derived/p_orbitblade.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 2,
+      "fps": 12,
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20,
+      "maxBaselineDrift": 18
+    },
+    {
+      "name": "p_book",
+      "category": "projectile",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/book/book_gray.png",
+      "size": [
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        14
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "p_fireflask",
+      "category": "projectile",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/potion/ruby_new.png",
+      "preservePixels": true,
+      "size": [
+        18,
+        18
+      ],
+      "anchor": [
+        9,
+        17
+      ],
+      "frames": 1,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "p_firepool",
+      "category": "projectile",
+      "source": "assets/sprites/sources/dcss-derived/p_firepool.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 5,
+      "fps": 12,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        31
+      ],
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20,
+      "maxBaselineDrift": 18
+    },
+    {
+      "name": "p_spark",
+      "category": "projectile",
+      "source": "assets/sprites/sources/dcss-derived/p_spark.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 2,
+      "fps": 12,
+      "size": [
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        15
+      ],
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20,
+      "maxBaselineDrift": 18
+    },
+    {
+      "name": "p_shadow",
+      "category": "projectile",
+      "source": "assets/sprites/sources/dcss-derived/p_shadow.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 4,
+      "fps": 10,
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20,
+      "maxBaselineDrift": 18,
+      "maxColors": 340
+    },
+    {
+      "name": "p_turret",
+      "category": "projectile",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/monster/nonliving/iron_golem.png",
+      "preservePixels": true,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        31
+      ],
+      "renderScale": 1,
+      "frames": 1,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "p_enemy_bolt",
+      "category": "projectile",
+      "source": "assets/sprites/sources/dcss-derived/p_enemy_bolt.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 4,
+      "fps": 12,
+      "size": [
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        15
+      ],
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20,
+      "maxBaselineDrift": 18
+    },
+    {
+      "name": "p_holy",
+      "category": "projectile",
+      "source": "assets/sprites/sources/dcss-derived/p_holy.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 5,
+      "fps": 12,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        31
+      ],
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20,
+      "maxBaselineDrift": 18
+    },
+    {
+      "name": "p_web",
+      "category": "projectile",
+      "source": "assets/sprites/sources/dcss-derived/p_web.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        31
+      ],
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20,
+      "maxBaselineDrift": 6
+    },
+    {
+      "name": "gem1",
+      "category": "drop",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/ring/ruby.png",
+      "size": [
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        14
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "gem2",
+      "category": "drop",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/ring/emerald.png",
+      "size": [
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        14
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "gem3",
+      "category": "drop",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/ring/tourmaline.png",
+      "size": [
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        14
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "gem_big",
+      "category": "drop",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/misc/misc_crystal_new.png",
+      "size": [
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        15
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "coin",
+      "category": "drop",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/gold/gold_pile_1.png",
+      "size": [
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        14
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "chest",
+      "category": "drop",
+      "source": "assets/sprites/sources/dcss-derived/chest.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 2,
+      "fps": 4,
+      "size": [
+        20,
+        20
+      ],
+      "anchor": [
+        10,
+        19
+      ],
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxColors": 420
+    },
+    {
+      "name": "vault_chest",
+      "category": "drop",
+      "source": "assets/sprites/sources/dcss-derived/vault_chest.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 2,
+      "fps": 4,
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxColors": 460
+    },
+    {
+      "name": "magnet",
+      "category": "drop",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/misc/misc_orb.png",
+      "size": [
+        18,
+        18
+      ],
+      "anchor": [
+        9,
+        17
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "bomb",
+      "category": "drop",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/effect/iron_shot_0.png",
+      "size": [
+        18,
+        18
+      ],
+      "anchor": [
+        9,
+        17
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "meat",
+      "category": "drop",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/food/chunk.png",
+      "size": [
+        18,
+        18
+      ],
+      "anchor": [
+        9,
+        17
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "clock",
+      "category": "drop",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/misc/misc_horn.png",
+      "size": [
+        18,
+        18
+      ],
+      "anchor": [
+        9,
+        17
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "vfx_glow",
+      "category": "vfx",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/misc/misc_orb.png",
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        31
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "w_arcanebolt",
+      "category": "weapon-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/gui/spells/conjuration/magic_dart.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        21
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "w_windbow",
+      "category": "weapon-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/weapon/ranged/bow_1.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        16
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "w_holyaura",
+      "category": "weapon-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/gui/spells/necromancy/regeneration_new.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        21
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "w_whirlaxe",
+      "category": "weapon-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/weapon/battle_axe_1.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        22
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "w_chainlight",
+      "category": "weapon-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/gui/spells/air/chain_lightning_new.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        21
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "w_frostnova",
+      "category": "weapon-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/gui/spells/ice/freeze_new.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        21
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "w_fireflask",
+      "category": "weapon-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/potion/ruby_new.png",
+      "preservePixels": true,
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "frames": 1,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "w_shadowdagger",
+      "category": "weapon-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/weapon/dagger_new.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        22
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "w_orbitblade",
+      "category": "weapon-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/weapon/katana.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        22
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "w_holytome",
+      "category": "weapon-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/book/book_gray.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        21
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "w_teslacoil",
+      "category": "weapon-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/gui/spells/air/lightning_bolt_new.png",
+      "preservePixels": true,
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "frames": 1,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "we_crossjudge",
+      "category": "evolution-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/weapon/greatsword_1_new.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        22
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "we_arcanestorm",
+      "category": "evolution-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/gui/spells/conjuration/orb_of_destruction_big.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxColors": 650
+    },
+    {
+      "name": "we_featherstorm",
+      "category": "evolution-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/weapon/ranged/longbow.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        16
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "we_sanctuary",
+      "category": "evolution-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/effect/sanctuary.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "we_worldender",
+      "category": "evolution-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/weapon/hammer_1_new.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        22
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "we_thorwrath",
+      "category": "evolution-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/gui/spells/air/lightning_bolt_new.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "we_absolutezero",
+      "category": "evolution-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/gui/spells/ice/ice_storm_new.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxColors": 360
+    },
+    {
+      "name": "we_infernosea",
+      "category": "evolution-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/gui/spells/fire/fire_storm_new.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxColors": 480
+    },
+    {
+      "name": "we_thousandcuts",
+      "category": "evolution-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/weapon/dagger_new.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        16
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "we_bladestorm",
+      "category": "evolution-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/weapon/katana.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "we_forbidden",
+      "category": "evolution-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/book/book_of_the_dead_new.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        21
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "we_skynet",
+      "category": "evolution-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/effect/cloud_storm_1.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "ps_power",
+      "category": "passive-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/food/meat_ration_new.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        21
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "ps_eagle",
+      "category": "passive-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/gui/spells/components/bird.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        21
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "ps_pendant",
+      "category": "passive-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/amulet/crystal_red.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        20
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "ps_belt",
+      "category": "passive-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/weapon/bullwhip_new.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        22
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "ps_boots",
+      "category": "passive-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/armor/feet/boots_2_jackboots.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        16
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "ps_magnetstone",
+      "category": "passive-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/misc/misc_crystal_new.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "ps_clover",
+      "category": "passive-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/monster/fungi_plants/bush_2.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        21
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxColors": 420
+    },
+    {
+      "name": "icon_gold",
+      "category": "system-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/gold/gold_pile.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        20
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "icon_hp",
+      "category": "system-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/potion/ruby_new.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        21
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "icon_dmg",
+      "category": "system-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/weapon/long_sword_1_new.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        22
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "icon_armor",
+      "category": "system-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/armor/shields/shield_1.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "icon_speed",
+      "category": "system-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/gui/spells/components/arrow.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        16
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "icon_magnet",
+      "category": "system-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/misc/misc_crystal_new.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "icon_luck",
+      "category": "system-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/monster/fungi_plants/bush_3.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        21
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxColors": 390
+    },
+    {
+      "name": "icon_revive",
+      "category": "system-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/potion/brilliant_blue_new.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        20
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "icon_reroll",
+      "category": "system-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/misc/misc_disc_new.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        21
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "icon_banish",
+      "category": "system-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/misc/misc_orb.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        21
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "icon_cd",
+      "category": "system-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/effect/gold_sparkles_2.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "icon_area",
+      "category": "system-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/effect/sanctuary.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "icon_growth",
+      "category": "system-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/monster/fungi_plants/bush_4.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        22
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxColors": 390
+    },
+    {
+      "name": "icon_kill",
+      "category": "system-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/gui/spells/components/skull.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        21
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "icon_time",
+      "category": "system-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/misc/misc_horn.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "elite_crown",
+      "category": "system-icon",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/armor/headgear/crested_helmet.png",
+      "size": [
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        15
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "deco_bone",
+      "category": "decor",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/food/bone.png",
+      "size": [
+        20,
+        20
+      ],
+      "anchor": [
+        10,
+        19
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "deco_fence",
+      "category": "decor",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/dungeon/statues/crumbled_column.png",
+      "size": [
+        20,
+        40
+      ],
+      "anchor": [
+        10,
+        39
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "cropPx": [
+        8,
+        0,
+        16,
+        32
+      ]
+    },
+    {
+      "name": "deco_skullpost",
+      "category": "decor",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/gui/spells/components/skull.png",
+      "size": [
+        24,
+        32
+      ],
+      "anchor": [
+        12,
+        31
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "deco_tree2",
+      "category": "decor",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/dungeon/trees/tree_2_lightred.png",
+      "size": [
+        34,
+        42
+      ],
+      "anchor": [
+        17,
+        41
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "deco_rock",
+      "category": "decor",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/dungeon/boulder.png",
+      "size": [
+        34,
+        34
+      ],
+      "anchor": [
+        17,
+        33
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "deco_bush",
+      "category": "decor",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/monster/fungi_plants/bush_2.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxColors": 420
+    },
+    {
+      "name": "deco_mushroom",
+      "category": "decor",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/monster/fungi_plants/deathcap.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "deco_pillar",
+      "category": "decor",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/dungeon/statues/crumbled_column_1.png",
+      "size": [
+        24,
+        40
+      ],
+      "anchor": [
+        12,
+        39
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "cropPx": [
+        8,
+        0,
+        16,
+        32
+      ]
+    },
+    {
+      "name": "deco_crystal",
+      "category": "decor",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/misc/misc_crystal_new.png",
+      "size": [
+        24,
+        28
+      ],
+      "anchor": [
+        12,
+        27
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "deco_rune",
+      "category": "decor",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/misc/misc_rune.png",
+      "size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "deco_stalag",
+      "category": "decor",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/dungeon/zot_pillar.png",
+      "size": [
+        24,
+        28
+      ],
+      "anchor": [
+        12,
+        27
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015,
+      "maxColors": 900
+    },
+    {
+      "name": "vfx_shadow",
+      "category": "vfx",
+      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/player/base/shadow.png",
+      "size": [
+        24,
+        12
+      ],
+      "anchor": [
+        12,
+        10
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "tile_graveyard",
+      "category": "terrain",
+      "source": "assets/sprites/sources/dcss-derived/tile_graveyard.png",
+      "size": [
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        15
+      ],
+      "frameSize": [
+        16,
+        16
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "tile_wilds",
+      "category": "terrain",
+      "source": "assets/sprites/sources/dcss-derived/tile_wilds.png",
+      "size": [
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        15
+      ],
+      "frameSize": [
+        16,
+        16
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "tile_abyss",
+      "category": "terrain",
+      "source": "assets/sprites/sources/dcss-derived/tile_abyss.png",
+      "size": [
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        15
+      ],
+      "frameSize": [
+        16,
+        16
+      ],
+      "frames": 1,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.015
+    },
+    {
+      "name": "vfx_explosion",
+      "category": "vfx",
+      "source": "assets/sprites/sources/dcss-derived/vfx_explosion.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 5,
+      "fps": 14,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        31
+      ],
+      "allowDuplicateFrames": true,
+      "preservePixels": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20,
+      "maxBaselineDrift": 18
+    },
+    {
+      "name": "vfx_spirit",
+      "category": "vfx",
+      "source": "assets/sprites/sources/dcss-derived/vfx_spirit.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 5,
+      "fps": 12,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        31
+      ],
+      "allowDuplicateFrames": true,
+      "preservePixels": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20,
+      "maxBaselineDrift": 18,
+      "maxColors": 340
+    },
+    {
+      "name": "vfx_heal",
+      "category": "vfx",
+      "source": "assets/sprites/sources/dcss-derived/vfx_heal.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 4,
+      "fps": 12,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        31
+      ],
+      "allowDuplicateFrames": true,
+      "preservePixels": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20,
+      "maxBaselineDrift": 18
+    },
+    {
+      "name": "vfx_spark",
+      "category": "vfx",
+      "source": "assets/sprites/sources/dcss-derived/vfx_spark.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 5,
+      "fps": 16,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        31
+      ],
+      "allowDuplicateFrames": true,
+      "preservePixels": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20,
+      "maxBaselineDrift": 18
+    },
+    {
+      "name": "vfx_smoke",
+      "category": "vfx",
+      "source": "assets/sprites/sources/dcss-derived/vfx_smoke.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 6,
+      "fps": 12,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        31
+      ],
+      "allowDuplicateFrames": true,
+      "preservePixels": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20,
+      "maxBaselineDrift": 18
+    },
+    {
+      "name": "vfx_lightning",
+      "category": "vfx",
+      "source": "assets/sprites/sources/dcss-derived/vfx_lightning.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 5,
+      "fps": 16,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        31
+      ],
+      "allowDuplicateFrames": true,
+      "maxCentroidDrift": 20,
+      "preservePixels": true,
+      "minCoverage": 0.015,
+      "maxBaselineDrift": 18
+    },
+    {
+      "name": "vfx_slash",
+      "category": "vfx",
+      "source": "assets/sprites/sources/dcss-derived/vfx_slash.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 4,
+      "fps": 16,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        31
+      ],
+      "allowDuplicateFrames": true,
+      "preservePixels": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20,
+      "maxBaselineDrift": 18
+    },
+    {
+      "name": "vfx_ice",
+      "category": "vfx",
+      "source": "assets/sprites/sources/dcss-derived/vfx_ice.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 9,
+      "fps": 16,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        31
+      ],
+      "allowDuplicateFrames": true,
+      "maxCentroidDrift": 20,
+      "preservePixels": true,
+      "minCoverage": 0.015,
+      "maxBaselineDrift": 18
+    },
+    {
+      "name": "vfx_shield",
+      "category": "vfx",
+      "source": "assets/sprites/sources/dcss-derived/vfx_shield.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 6,
+      "fps": 12,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        31
+      ],
+      "allowDuplicateFrames": true,
+      "preservePixels": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20,
+      "maxBaselineDrift": 18
+    },
+    {
+      "name": "vfx_circle",
+      "category": "vfx",
+      "source": "assets/sprites/sources/dcss-derived/vfx_circle.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 3,
+      "fps": 12,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        31
+      ],
+      "allowDuplicateFrames": true,
+      "preservePixels": true,
+      "minCoverage": 0.015,
+      "maxCentroidDrift": 20,
+      "maxBaselineDrift": 18
+    }
   ]
 }

@@ -1715,12 +1715,16 @@ window.Entities = (function () {
       }
     }
     // 敌方子弹
-    var shotImg = SpriteGen.get('p_enemy_bolt');
-    var webImg = SpriteGen.get('p_web');
+    var shotFrames = SpriteGen.frames('p_enemy_bolt');
+    var webFrames = SpriteGen.frames('p_web');
     for (i = 0; i < shots.length; i++) {
       var sh = shots[i];
       if (!sh.alive) continue;
-      if (sh.webType) { ctx.drawImage(webImg, sh.x - 9, sh.y - 9, 18, 18); continue; }
+      if (sh.webType) {
+        var webImg = webFrames[Math.floor(run.t * 10) % webFrames.length];
+        ctx.drawImage(webImg, sh.x - 9, sh.y - 9, 18, 18);
+        continue;
+      }
       if (sh.col) {
         // Boss 专属配色弹幕:发光核心 + 外圈,和普通红弹明显区分
         var sr = (sh.size || 16) * 0.42;
@@ -1734,6 +1738,7 @@ window.Entities = (function () {
         ctx.beginPath(); ctx.arc(sh.x - sr * 0.25, sh.y - sr * 0.25, sr * 0.42, 0, Math.PI * 2); ctx.fill();
         continue;
       }
+      var shotImg = shotFrames[Math.floor(run.t * 10) % shotFrames.length];
       ctx.drawImage(shotImg, sh.x - 8, sh.y - 8, 16, 16);
     }
     // 玩家
@@ -1759,13 +1764,16 @@ window.Entities = (function () {
       }
     } else if (!blink) {
       var playerSprite = p.char.sprite;
-      var pf = 0;   // 静止:固定帧 0,不循环(修复空闲时角色不停原地动画/旋转感)
+      var pf = 0;
       if (p.attackAnimT > 0) {
         playerSprite += '_attack';
         pf = Math.floor(p.attackAnimAge * SpriteGen.animationFps(playerSprite, 13));
       } else if (p.moving) {
         playerSprite += '_walk';
         pf = Math.floor(p.animT * SpriteGen.animationFps(playerSprite, 10));
+      } else {
+        var idleFrames = SpriteGen.frames(playerSprite);
+        pf = Math.floor(run.t * SpriteGen.animationFps(playerSprite, 6)) % idleFrames.length;
       }
       drawSprite(ctx, playerSprite, pf, p.x, p.y, 1, p.face < 0, 1, p.hurtFlash > 0 ? '#ff4444' : null);
     }

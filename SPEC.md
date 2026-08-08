@@ -64,7 +64,7 @@ v0.19 精修覆盖 143 个运行时命名、336 帧:六名 `char_*` 均有四帧
 `boss_slimeking`(戴王冠巨型史莱姆) `boss_bonelord`(持杖骸骨领主) `boss_abysseye`(触手巨眼) `boss_darklord`(双角暗潮魔王)
 
 ### 弹体
-`p_slash`(16×16 弯月剑气,白青) `p_slash_big`(24×24 金色) `p_bolt`(8×8 紫色魔弹) `p_arrow`(16×8 箭) `p_axe`(16×16 斧) `p_dagger`(12×6 匕首) `p_orbitblade`(16×16 环绕刀) `p_book`(16×16 圣书) `p_fireflask`(12×12 火瓶) `p_firepool`(32×32 火焰地面,2帧) `p_spark`(8×8 电火花) `p_shadow`(10×10 暗影弹) `p_turret`(16×16 特斯拉塔,2帧) `p_enemy_bolt`(8×8 红色敌弹) `p_holy`(12×12 圣光球)
+`p_slash`(16×16 弯月剑气,白青) `p_slash_big`(24×24 金色) `p_bolt`(8×8 紫色魔弹) `p_arrow`(44×22 箭) `p_axe`(16×16 斧) `p_dagger`(12×6 匕首) `p_orbitblade`(16×16 环绕刀) `p_book`(16×16 圣书) `p_fireflask`(12×12 火瓶) `p_firepool`(32×32 火焰地面,2帧) `p_spark`(8×8 电火花) `p_shadow`(10×10 暗影弹) `p_turret`(16×16 特斯拉塔,2帧) `p_enemy_bolt`(8×8 红色敌弹) `p_holy`(12×12 圣光球)
 
 ### 拾取物
 `gem1`(蓝小晶) `gem2`(绿中晶) `gem3`(红大晶) `gem_big`(紫聚合晶) `coin`(金币,2帧闪) `chest`(宝箱,帧1关帧2开) `magnet`(磁铁) `bomb`(炸弹) `meat`(烤肉) `clock`(冰冻怀表)
