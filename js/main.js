@@ -592,6 +592,23 @@
     run.rerolls = run.player.stats.reroll || 0;
     run.banishes = run.player.stats.banish || 0;
     Weapons.addWeapon(run, charDef.weapon);
+    // 联机:给每个队友补上他们的初始武器(之前是空的,导致非主机打不了怪)
+    if (coop.on && Net.isHost()) {
+      for (var mi = 0; mi < coop.mates.length; mi++) {
+        var mt0 = coop.mates[mi];
+        if (!mt0.weapons || !mt0.weapons.length) {
+          var mcd = null;
+          for (var mci = 0; mci < CFG.CHARS.length; mci++) if (CFG.CHARS[mci].id === mt0.charId) mcd = CFG.CHARS[mci];
+          if (mcd) {
+            var sP = run.player, sW = run.weapons, sPs = run.passives;
+            run.player = mt0.player; run.weapons = mt0.weapons; run.passives = mt0.passives;
+            run.banished = mt0.banished || run.banished;
+            Weapons.addWeapon(run, mcd.weapon);
+            run.player = sP; run.weapons = sW; run.passives = sPs;
+          }
+        }
+      }
+    }
     Meta.track('run');
     Meta.seeCodex(charDef.sprite);
     Merchant.reset(run);   // 流浪商人摆摊
@@ -619,7 +636,7 @@
     // 关键结算只广播一次,避免逐客户端单发在对局切状态的瞬间丢失。
     // 消息内仍保留每位客户端自己的角色与 Build,由客户端按 peer id 取回。
     if (coop.on && Net.isHost()) {
-      Net.broadcast({
+      var overMsg = {
         t: 'over', victory: run.victory, dur: run.t, level: run.level,
         kills: run.kills, gold: run.gold, bossesKilled: run.bossesKilled,
         maxDps: run.maxDps || 0,
@@ -634,7 +651,17 @@
             passives: mate.passives
           };
         })
-      });
+      };
+      Net.broadcast(overMsg);
+      // 快照走 unreliable 通道(丢帧可接受),但 over 是结算信号不能丢。
+      // 重发 8 次(每次间隔 120ms)大幅提高送达率,否则客户端永远停在战斗画面卡死。
+      for (var ri = 1; ri <= 8; ri++) {
+        (function (n) {
+          setTimeout(function () {
+            if (coop.on && Net.isHost()) Net.broadcast(overMsg);
+          }, n * 120);
+        })(ri);
+      }
     }
     coop.active = false;
     coop.mates = [];
@@ -996,11 +1023,14 @@
     for (var cy = y0; cy <= y1; cy++) {
       for (var cx = x0; cx <= x1; cx++) {
         var n = Math.floor(E.hash2(cx * 3 + 1, cy * 3 + 1) * 3); // 0~2 个装饰
+        // 同一 cell 内按 n 均分横向区块,每块内留边距扰动,
+        // 避免两个装饰落在同一位置互相重叠
+        var cellW = cell / Math.max(1, n);
         for (var k = 0; k < n; k++) {
           var h1 = E.hash2(cx * 7 + k * 13, cy * 7 + k * 31);
           var h2 = E.hash2(cx * 11 + k * 17, cy * 11 + k * 41);
-          var wx = cx * cell + h1 * cell;
-          var wy = cy * cell + h2 * cell;
+          var wx = cx * cell + (k + 0.5) * cellW + (h1 - 0.5) * cellW * 0.35;
+          var wy = cy * cell + (0.25 + h2 * 0.5) * cell;
           // 行商浪人摊位清空区:摊位横跨约 ±160,避免装饰物与商人和商品贴图重合
           var MC = CFG.MERCHANT, clearance = 185;
           if (Math.abs(wx - MC.x) < clearance && Math.abs(wy - MC.y) < clearance) continue;

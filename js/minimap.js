@@ -90,6 +90,26 @@ window.Minimap = (function () {
       }
     }
 
+    // 流浪商人(地图中心,金色帐篷形标记,带名称缩写)
+    var MC = CFG.MERCHANT;
+    if (MC) {
+      var mpt = project(MC.x, MC.y, p, cx, cy, half);
+      if (mpt) {
+        // 帐篷形
+        ctx.fillStyle = '#ffd76b';
+        ctx.beginPath();
+        ctx.moveTo(mpt.x, mpt.y - 5);
+        ctx.lineTo(mpt.x - 4, mpt.y + 4);
+        ctx.lineTo(mpt.x + 4, mpt.y + 4);
+        ctx.closePath();
+        ctx.fill();
+        // 描边
+        ctx.strokeStyle = 'rgba(0,0,0,0.8)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+    }
+
     // Boss / 精英
     var pool = Entities.pool;
     for (var k = 0; k < pool.length; k++) {
