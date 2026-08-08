@@ -19,6 +19,8 @@ function assert(ok, message) {
 
 (async () => {
   if (!fs.existsSync(OUT)) fs.mkdirSync(OUT, { recursive: true });
+  const mainSource = fs.readFileSync(path.join(ROOT, 'js', 'main.js'), 'utf8');
+  assert(mainSource.includes("introImg.src = 'assets/intro.jpg';"), 'original Jade intro image is not configured');
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
   const errors = [];
@@ -31,19 +33,31 @@ function assert(ok, message) {
   await page.waitForFunction(() => window.SpriteGen && SpriteGen.atlasStatus().loaded, null, { timeout: 10000 });
   const atlas = await page.evaluate(() => ({
     status: SpriteGen.atlasStatus(),
-    knight: SpriteGen.frames('char_knight').map(c => [c.width, c.height]),
+    heroes: ['char_knight', 'char_mage', 'char_ranger', 'char_cleric', 'char_berserker', 'char_chrono']
+      .map(name => ({
+        name,
+        frames: SpriteGen.frames(name).map(c => [c.width, c.height]),
+        fps: SpriteGen.animationFps(name, 0)
+      })),
     skeleton: SpriteGen.frames('skeleton').map(c => [c.width, c.height]),
     slimeKing: SpriteGen.frames('boss_slimeking').map(c => [c.width, c.height]),
+    skeletonFps: SpriteGen.animationFps('skeleton', 0),
+    slimeKingFps: SpriteGen.animationFps('boss_slimeking', 0),
     knightScale: SpriteGen.renderScale('char_knight'),
     bossScale: SpriteGen.renderScale('boss_slimeking')
   }));
-  assert(atlas.status.count === 8, 'expected 8 atlas assets, got ' + atlas.status.count);
-  assert(JSON.stringify(atlas.knight) === '[[32,32],[32,32]]', 'knight atlas frames are incorrect');
-  assert(JSON.stringify(atlas.skeleton) === '[[32,32],[32,32]]', 'skeleton atlas frames are incorrect');
-  assert(JSON.stringify(atlas.slimeKing) === '[[48,48],[48,48]]', 'slime king atlas frames are incorrect');
+  assert(atlas.status.count === 13, 'expected 13 atlas assets, got ' + atlas.status.count);
+  for (const hero of atlas.heroes) {
+    assert(JSON.stringify(hero.frames) === '[[32,32],[32,32],[32,32],[32,32]]',
+      hero.name + ' atlas frames are incorrect');
+    assert(hero.fps === 8, hero.name + ' animation fps is incorrect');
+  }
+  assert(JSON.stringify(atlas.skeleton) === '[[32,32],[32,32],[32,32],[32,32]]', 'skeleton atlas frames are incorrect');
+  assert(JSON.stringify(atlas.slimeKing) === '[[48,48],[48,48],[48,48],[48,48]]', 'slime king atlas frames are incorrect');
+  assert(atlas.skeletonFps === 7 && atlas.slimeKingFps === 5, 'enemy animation fps values are incorrect');
   assert(atlas.knightScale === 0.75 && Math.abs(atlas.bossScale - 0.666667) < 0.00001,
     'atlas art scales are incorrect');
-  console.log('ATLAS OK  8 assets, correct frames and art scales');
+  console.log('ATLAS OK  13 assets, 37 frames, per-sprite timing and art scales');
 
   // Skip intro and start the default knight/graveyard run through the real UI.
   await page.mouse.click(640, 360);

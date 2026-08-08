@@ -2,79 +2,535 @@
   "ok": true,
   "atlas": {
     "width": 256,
-    "height": 128
+    "height": 256
   },
   "assets": {
     "char_knight": [
       {
         "index": 0,
-        "coverage": 0.3193,
-        "colors": 10,
-        "bbox": [
-          1,
-          7,
-          31,
-          31
-        ]
-      },
-      {
-        "index": 1,
-        "coverage": 0.3594,
+        "coverage": 0.3584,
         "colors": 10,
         "bbox": [
           1,
           4,
           31,
           31
-        ]
-      }
-    ],
-    "skeleton": [
+        ],
+        "centroid": [
+          14.365,
+          17.016
+        ],
+        "signature": "1bd8fd4d2189"
+      },
       {
-        "index": 0,
-        "coverage": 0.4014,
-        "colors": 9,
+        "index": 1,
+        "coverage": 0.3057,
+        "colors": 10,
+        "bbox": [
+          5,
+          5,
+          31,
+          31
+        ],
+        "centroid": [
+          15.45,
+          17.706
+        ],
+        "signature": "a45b67d9ac77"
+      },
+      {
+        "index": 2,
+        "coverage": 0.3457,
+        "colors": 10,
+        "bbox": [
+          1,
+          6,
+          31,
+          31
+        ],
+        "centroid": [
+          14.172,
+          18.703
+        ],
+        "signature": "4afac75fe51a"
+      },
+      {
+        "index": 3,
+        "coverage": 0.4072,
+        "colors": 10,
         "bbox": [
           1,
           1,
           31,
           31
-        ]
+        ],
+        "centroid": [
+          13.386,
+          15.674
+        ],
+        "signature": "fbe8485bc6c7"
+      }
+    ],
+    "char_mage": [
+      {
+        "index": 0,
+        "coverage": 0.3379,
+        "colors": 9,
+        "bbox": [
+          5,
+          1,
+          29,
+          31
+        ],
+        "centroid": [
+          16.023,
+          16.697
+        ],
+        "signature": "45ecaa4579fa"
       },
       {
         "index": 1,
-        "coverage": 0.3711,
+        "coverage": 0.3232,
         "colors": 9,
         "bbox": [
+          4,
           1,
+          29,
+          31
+        ],
+        "centroid": [
+          15.894,
+          16.012
+        ],
+        "signature": "a5cacccd6fd7"
+      },
+      {
+        "index": 2,
+        "coverage": 0.3379,
+        "colors": 9,
+        "bbox": [
+          4,
+          1,
+          29,
+          31
+        ],
+        "centroid": [
+          15.902,
+          16.543
+        ],
+        "signature": "e6607a17db19"
+      },
+      {
+        "index": 3,
+        "coverage": 0.3232,
+        "colors": 9,
+        "bbox": [
+          4,
+          1,
+          29,
+          31
+        ],
+        "centroid": [
+          15.752,
+          16.127
+        ],
+        "signature": "59d2e684505f"
+      }
+    ],
+    "char_ranger": [
+      {
+        "index": 0,
+        "coverage": 0.3145,
+        "colors": 9,
+        "bbox": [
+          5,
+          1,
+          29,
+          31
+        ],
+        "centroid": [
+          16.301,
+          15.699
+        ],
+        "signature": "08d64e0a744f"
+      },
+      {
+        "index": 1,
+        "coverage": 0.2656,
+        "colors": 9,
+        "bbox": [
+          7,
+          1,
+          28,
+          31
+        ],
+        "centroid": [
+          15.812,
+          14.515
+        ],
+        "signature": "c2e821ef9f61"
+      },
+      {
+        "index": 2,
+        "coverage": 0.3096,
+        "colors": 8,
+        "bbox": [
+          5,
+          1,
+          28,
+          31
+        ],
+        "centroid": [
+          15.864,
+          15.789
+        ],
+        "signature": "e457d0941e7a"
+      },
+      {
+        "index": 3,
+        "coverage": 0.2832,
+        "colors": 9,
+        "bbox": [
+          7,
+          1,
+          27,
+          31
+        ],
+        "centroid": [
+          15.762,
+          15.083
+        ],
+        "signature": "9e61ba28a6c4"
+      }
+    ],
+    "char_cleric": [
+      {
+        "index": 0,
+        "coverage": 0.4121,
+        "colors": 11,
+        "bbox": [
+          2,
+          1,
+          31,
+          31
+        ],
+        "centroid": [
+          15.661,
+          16.794
+        ],
+        "signature": "8027cdfeedbe"
+      },
+      {
+        "index": 1,
+        "coverage": 0.3633,
+        "colors": 11,
+        "bbox": [
+          6,
           1,
           30,
           31
-        ]
+        ],
+        "centroid": [
+          16.129,
+          16.196
+        ],
+        "signature": "db9a72b7c79c"
+      },
+      {
+        "index": 2,
+        "coverage": 0.4033,
+        "colors": 11,
+        "bbox": [
+          3,
+          1,
+          31,
+          31
+        ],
+        "centroid": [
+          16.08,
+          16.738
+        ],
+        "signature": "9e3d999f7856"
+      },
+      {
+        "index": 3,
+        "coverage": 0.3682,
+        "colors": 11,
+        "bbox": [
+          5,
+          1,
+          30,
+          31
+        ],
+        "centroid": [
+          15.658,
+          16.257
+        ],
+        "signature": "a936782fbb7e"
+      }
+    ],
+    "char_berserker": [
+      {
+        "index": 0,
+        "coverage": 0.3809,
+        "colors": 10,
+        "bbox": [
+          5,
+          1,
+          30,
+          31
+        ],
+        "centroid": [
+          16.105,
+          16.662
+        ],
+        "signature": "74d21ea48196"
+      },
+      {
+        "index": 1,
+        "coverage": 0.3418,
+        "colors": 10,
+        "bbox": [
+          6,
+          1,
+          30,
+          31
+        ],
+        "centroid": [
+          16.449,
+          15.929
+        ],
+        "signature": "90cab48f8c4b"
+      },
+      {
+        "index": 2,
+        "coverage": 0.373,
+        "colors": 9,
+        "bbox": [
+          5,
+          1,
+          30,
+          31
+        ],
+        "centroid": [
+          15.987,
+          16.843
+        ],
+        "signature": "ddc25e9a0d27"
+      },
+      {
+        "index": 3,
+        "coverage": 0.332,
+        "colors": 9,
+        "bbox": [
+          6,
+          1,
+          30,
+          31
+        ],
+        "centroid": [
+          16.294,
+          15.915
+        ],
+        "signature": "5aed28d0e978"
+      }
+    ],
+    "char_chrono": [
+      {
+        "index": 0,
+        "coverage": 0.3262,
+        "colors": 10,
+        "bbox": [
+          5,
+          1,
+          27,
+          31
+        ],
+        "centroid": [
+          16.114,
+          15.928
+        ],
+        "signature": "564d84c1d196"
+      },
+      {
+        "index": 1,
+        "coverage": 0.3047,
+        "colors": 10,
+        "bbox": [
+          6,
+          1,
+          26,
+          31
+        ],
+        "centroid": [
+          15.596,
+          15.481
+        ],
+        "signature": "fd17444b2651"
+      },
+      {
+        "index": 2,
+        "coverage": 0.3135,
+        "colors": 11,
+        "bbox": [
+          5,
+          1,
+          27,
+          31
+        ],
+        "centroid": [
+          16.019,
+          15.766
+        ],
+        "signature": "38f8b4ba4d00"
+      },
+      {
+        "index": 3,
+        "coverage": 0.3203,
+        "colors": 11,
+        "bbox": [
+          7,
+          1,
+          27,
+          31
+        ],
+        "centroid": [
+          16.43,
+          15.689
+        ],
+        "signature": "4503e2748cc7"
+      }
+    ],
+    "skeleton": [
+      {
+        "index": 0,
+        "coverage": 0.3301,
+        "colors": 10,
+        "bbox": [
+          2,
+          1,
+          28,
+          31
+        ],
+        "centroid": [
+          16.349,
+          15.574
+        ],
+        "signature": "f98bb11ef311"
+      },
+      {
+        "index": 1,
+        "coverage": 0.3047,
+        "colors": 9,
+        "bbox": [
+          3,
+          1,
+          27,
+          31
+        ],
+        "centroid": [
+          16.266,
+          15.157
+        ],
+        "signature": "0d466260273c"
+      },
+      {
+        "index": 2,
+        "coverage": 0.3369,
+        "colors": 10,
+        "bbox": [
+          1,
+          1,
+          28,
+          31
+        ],
+        "centroid": [
+          16.243,
+          15.243
+        ],
+        "signature": "15c67f72f4f9"
+      },
+      {
+        "index": 3,
+        "coverage": 0.3145,
+        "colors": 9,
+        "bbox": [
+          2,
+          1,
+          27,
+          31
+        ],
+        "centroid": [
+          15.727,
+          15.242
+        ],
+        "signature": "2282bfb021e6"
       }
     ],
     "boss_slimeking": [
       {
         "index": 0,
-        "coverage": 0.3676,
+        "coverage": 0.3511,
         "colors": 10,
         "bbox": [
           1,
-          17,
+          19,
           47,
           47
-        ]
+        ],
+        "centroid": [
+          24.491,
+          34.951
+        ],
+        "signature": "a381e5796d16"
       },
       {
         "index": 1,
-        "coverage": 0.533,
-        "colors": 11,
+        "coverage": 0.4614,
+        "colors": 10,
+        "bbox": [
+          4,
+          5,
+          44,
+          47
+        ],
+        "centroid": [
+          23.597,
+          28.327
+        ],
+        "signature": "1f8923ec6480"
+      },
+      {
+        "index": 2,
+        "coverage": 0.3615,
+        "colors": 9,
+        "bbox": [
+          10,
+          1,
+          38,
+          47
+        ],
+        "centroid": [
+          23.526,
+          26.736
+        ],
+        "signature": "e9edce9cb1a2"
+      },
+      {
+        "index": 3,
+        "coverage": 0.5278,
+        "colors": 10,
         "bbox": [
           3,
           1,
-          45,
+          46,
           47
-        ]
+        ],
+        "centroid": [
+          24.103,
+          27.144
+        ],
+        "signature": "de4417157e7e"
       }
     ],
     "p_slash_big": [
@@ -83,11 +539,16 @@
         "coverage": 0.4184,
         "colors": 9,
         "bbox": [
-          2,
+          3,
           1,
-          22,
+          23,
           23
-        ]
+        ],
+        "centroid": [
+          11.071,
+          12.552
+        ],
+        "signature": "ad1a4663c02a"
       }
     ],
     "w_crossblade": [
@@ -100,7 +561,12 @@
           1,
           23,
           23
-        ]
+        ],
+        "centroid": [
+          11.5,
+          11.5
+        ],
+        "signature": "9759b335732b"
       }
     ],
     "ps_core": [
@@ -109,11 +575,16 @@
         "coverage": 0.8021,
         "colors": 8,
         "bbox": [
+          2,
           1,
-          1,
-          22,
+          23,
           23
-        ]
+        ],
+        "centroid": [
+          12.0,
+          11.5
+        ],
+        "signature": "3c03da4b2883"
       }
     ],
     "deco_grave": [
@@ -126,7 +597,12 @@
           4,
           23,
           31
-        ]
+        ],
+        "centroid": [
+          11.507,
+          17.783
+        ],
+        "signature": "a1a16710fd82"
       }
     ],
     "deco_deadtree": [
@@ -139,7 +615,12 @@
           5,
           31,
           39
-        ]
+        ],
+        "centroid": [
+          15.453,
+          22.818
+        ],
+        "signature": "4006aca1f360"
       }
     ]
   },

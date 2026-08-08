@@ -45,20 +45,21 @@ SpriteGen.loadAtlas();            // → Promise|null;加载本地图集,失败�
 SpriteGen.get(name);              // → HTMLCanvasElement;未知名字返回 8×8 洋红占位并 console.warn(每名一次)
 SpriteGen.frames(name);           // → [canvas,...] 动画帧数组(≥1);单帧素材返回 [同一 canvas]
 SpriteGen.renderScale(name);       // → number;图集素材的显示缩放,程序素材为 1
+SpriteGen.animationFps(name, n);   // → number;图集逐素材帧率,缺失时使用回退值 n
 SpriteGen.atlasStatus();           // → {loaded,count,image,error};测试与诊断
 ```
 
-v0.16 垂直切片覆盖:`char_knight`、`skeleton`、`boss_slimeking`、`p_slash_big`、`w_crossblade`、`ps_core`、`deco_grave`、`deco_deadtree`。其余命名继续使用原程序素材。图集由 `node tools/art/build-atlas.js` 构建并通过 `quality-report.json` 门禁。
+v0.16.1 精修覆盖:六名 `char_*` 可玩角色、`skeleton`、`boss_slimeking`、`p_slash_big`、`w_crossblade`、`ps_core`、`deco_grave`、`deco_deadtree`,共 13 项 37 帧。六名角色与两类敌人均为四帧循环并使用逐素材帧率;其余命名继续使用原程序素材。图集由 `node tools/art/build-atlas.js` 构建并通过 `quality-report.json` 门禁。
 
 建议内部用调色板 + 小型绘图 DSL(plot/rect/outline/mirror)批量生产。**必须实现下表全部名字**:
 
-### 角色(程序素材 16×16;精修覆盖可为 32×32,各 2 帧)
+### 角色(程序素材 16×16;精修覆盖为 32×32 四帧,未覆盖项可用 2 帧兜底)
 `char_knight`(银甲蓝披风) `char_mage`(紫袍尖帽) `char_ranger`(绿兜帽) `char_cleric`(白金袍) `char_berserker`(红发裸上身双斧) `char_chrono`(青蓝长袍怀表)
 
-### 敌人(程序素材 16×16;精修覆盖可为 32×32,各 2 帧)
+### 敌人(程序素材 16×16;精修覆盖可为 32×32;骷髅为四帧,未覆盖项各 2 帧)
 `bat`(小蝙蝠) `slime`(绿史莱姆) `slime_big`(深绿大史莱姆) `zombie`(烂绿僵尸) `skeleton`(白骨) `ghost`(半透明幽灵,自带 alpha) `spider`(黑紫蜘蛛) `cultist`(暗红兜帽邪教徒) `orc`(墨绿兽人) `imp`(橙红小恶魔) `knight_armored`(黑甲骑士) `werewolf`(灰狼人) `mummy`(米色木乃伊) `gargoyle`(石像鬼) `bloodbat`(红大蝙蝠) `wraith`(暗影死灵)
 
-### Boss(32×32,各 2 帧)
+### Boss(程序素材 32×32;精修可为 48×48;史莱姆王为四帧,未覆盖项各 2 帧)
 `boss_slimeking`(戴王冠巨型史莱姆) `boss_bonelord`(持杖骸骨领主) `boss_abysseye`(触手巨眼) `boss_darklord`(双角暗潮魔王)
 
 ### 弹体

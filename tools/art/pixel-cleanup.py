@@ -93,7 +93,8 @@ def nearest_palette(color: tuple[int, int, int], palette: list[tuple[int, int, i
     return min(palette, key=lambda p: color_distance(color, p))
 
 
-def fit_and_quantize(frame: Image.Image, size: tuple[int, int], colors: list[str], outline: str | None) -> Image.Image:
+def fit_and_quantize(frame: Image.Image, size: tuple[int, int], anchor: tuple[int, int],
+                     colors: list[str], outline: str | None) -> Image.Image:
     bbox = frame.getchannel("A").getbbox()
     if not bbox:
         raise ValueError("source frame became empty after chroma removal")
@@ -129,8 +130,16 @@ def fit_and_quantize(frame: Image.Image, size: tuple[int, int], colors: list[str
                        for nx, ny in ((x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1))):
                     dst_px[x, y] = edge_color
 
+    final_bbox = mapped.getchannel("A").getbbox()
+    if final_bbox:
+        mapped = mapped.crop(final_bbox)
     canvas = Image.new("RGBA", size)
-    x = (target_w - mapped.width) // 2
+    alpha = mapped.getchannel("A")
+    points = [(px, py) for py in range(mapped.height) for px in range(mapped.width)
+              if alpha.getpixel((px, py))]
+    centroid_x = sum(px for px, _ in points) / len(points) if points else mapped.width / 2
+    x = round(anchor[0] - centroid_x)
+    x = max(1, min(target_w - mapped.width - 1, x))
     y = target_h - 1 - mapped.height
     canvas.alpha_composite(mapped, (x, y))
     return canvas
@@ -175,11 +184,18 @@ def pack(frames: dict[str, list[Image.Image]], manifest: dict, out_dir: Path) ->
     atlas.save(out_dir / "atlas.png", optimize=True)
 
     assets_by_name = {a["name"]: a for a in manifest["assets"]}
-    result = {"version": manifest["version"], "image": "assets/sprites/atlas.png", "frames": {}, "renderScale": {}}
+    result = {
+        "version": manifest["version"],
+        "image": "assets/sprites/atlas.png",
+        "frames": {},
+        "renderScale": {},
+        "animationFps": {},
+    }
     for name, items in placements.items():
         spec = assets_by_name[name]
         result["frames"][name] = [dict(item, anchor={"x": spec["anchor"][0], "y": spec["anchor"][1]}) for item in items]
         result["renderScale"][name] = spec.get("renderScale", 1)
+        result["animationFps"][name] = spec.get("fps", 0)
     return result
 
 
@@ -237,7 +253,8 @@ def build(manifest_path: Path) -> None:
         source = remove_key(source, rgb(spec["key"]))
         processed = []
         for index, raw_frame in enumerate(split_frames(source, spec.get("frames", 1))):
-            frame = fit_and_quantize(raw_frame, tuple(spec["size"]), spec["colors"], spec.get("outline"))
+            frame = fit_and_quantize(raw_frame, tuple(spec["size"]), tuple(spec["anchor"]),
+                                     spec["colors"], spec.get("outline"))
             processed.append(frame)
             checker_preview(frame, manifest.get("previewScale", 8)).save(preview_dir / f"{spec['name']}-{index}.png", optimize=True)
         frames[spec["name"]] = processed

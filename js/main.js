@@ -13,7 +13,7 @@
   var introImg = null, introT = 0, introDone = false, introSkipped = false;
   function bootIntro() {
     introImg = new Image();
-    introImg.src = 'assets/intro-v2.jpg';
+    introImg.src = 'assets/intro.jpg';
     introT = 0; introDone = false; introSkipped = false;
     // 隐藏所有 DOM 屏(title 屏会盖住 canvas 拦截点击),让开幕 canvas 独占画面
     UI.hideAllScreens();

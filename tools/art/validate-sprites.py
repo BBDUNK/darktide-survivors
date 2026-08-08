@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 
@@ -58,11 +59,30 @@ def validate(manifest_path: Path) -> int:
             bbox = alpha.getbbox()
             if bbox and (bbox[0] == 0 or bbox[1] == 0 or bbox[2] == w or bbox[3] == h):
                 warnings.append(f"{name}[{index}]: silhouette touches logical frame edge")
-            stats.append({"index": index, "coverage": round(coverage, 4), "colors": colors, "bbox": bbox})
+            points = [(px, py) for py in range(h) for px in range(w) if alpha.getpixel((px, py))]
+            centroid = None
+            if points:
+                centroid = [round(sum(px for px, _ in points) / len(points), 3),
+                            round(sum(py for _, py in points) / len(points), 3)]
+            stats.append({
+                "index": index,
+                "coverage": round(coverage, 4),
+                "colors": colors,
+                "bbox": bbox,
+                "centroid": centroid,
+                "signature": hashlib.sha256(crop.tobytes()).hexdigest()[:12],
+            })
         if len(stats) > 1:
             bottoms = [s["bbox"][3] for s in stats if s["bbox"]]
             if bottoms and max(bottoms) - min(bottoms) > 1:
                 errors.append(f"{name}: animation baselines differ by more than 1 pixel")
+            signatures = [s["signature"] for s in stats]
+            if len(set(signatures)) != len(signatures):
+                errors.append(f"{name}: animation contains duplicate frames")
+            centers = [s["centroid"][0] for s in stats if s["centroid"]]
+            max_drift = spec.get("maxCentroidDrift", 4)
+            if centers and max(centers) - min(centers) > max_drift:
+                errors.append(f"{name}: horizontal centroid drifts more than {max_drift} pixels")
         report_assets[name] = stats
 
     missing = sorted(set(specs) - set(meta["frames"]))

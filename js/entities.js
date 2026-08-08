@@ -1655,7 +1655,8 @@ window.Entities = (function () {
         ctx.rect(e.x - 24, e.y - 40, 48, 40 + 4);
         ctx.clip();
         var rise = (1 - prog) * 26;   // 未出土时整体下沉
-        drawSprite(ctx, e.id, animF + (e.animo | 0), e.x, e.y + rise, sc, e.face < 0, 1, '#8a7a5a');
+        var burrowF = Math.floor(run.t * SpriteGen.animationFps(e.id, 6));
+        drawSprite(ctx, e.id, burrowF + (e.animo | 0), e.x, e.y + rise, sc, e.face < 0, 1, '#8a7a5a');
         ctx.restore();
         // 飞溅的土屑
         if ((run.frame & 7) === 0) FX.trail(e.x + (Math.random() * 20 - 10), e.y, '#6b5a42', 2);
@@ -1672,7 +1673,9 @@ window.Entities = (function () {
       var wob = e.boss ? 0 : Math.sin(run.t * 8 + e.animo) * 1.5;
       // 史莱姆跳跃:hop 抬高机体,squash 做蓄力压扁/腾空拉伸
       var hop = e.hop || 0, sq = e.squash || 1;
-      drawSprite(ctx, e.boss ? e.bossType : e.id, animF + (e.animo | 0),
+      var enemySprite = e.boss ? e.bossType : e.id;
+      var enemyF = Math.floor(run.t * SpriteGen.animationFps(enemySprite, 6));
+      drawSprite(ctx, enemySprite, enemyF + (e.animo | 0),
                  e.x, e.y + wob - hop, sc * sq, e.face < 0, e.alpha, tint);
       if (e.elite) drawSprite(ctx, 'elite_crown', 0, e.x, e.y - e.r - 12, 1, false, 1, null);
       // 被强化的小怪:显示淡色光环表示受精英/Boss 增益
@@ -1749,7 +1752,7 @@ window.Entities = (function () {
         ctx.globalAlpha = 1;
       }
     } else if (!blink) {
-      var pf = p.moving ? Math.floor(p.animT * 8) : 0;
+      var pf = p.moving ? Math.floor(p.animT * SpriteGen.animationFps(p.char.sprite, 8)) : 0;
       drawSprite(ctx, p.char.sprite, pf, p.x, p.y, 1, p.face < 0, 1, p.hurtFlash > 0 ? '#ff4444' : null);
     }
     // 蛛网缠身:白色丝痕附着在角色身上,随减速结束而消失;硬控时整体被网包裹
@@ -1882,7 +1885,8 @@ window.Entities = (function () {
           ctx.stroke();
         }
       } else {
-        drawSprite(ctx, cd.sprite, m.moving ? animF : 0, m.x, m.y, 1, m.face < 0, 1, null);
+        var mateF = m.moving ? Math.floor(run.t * SpriteGen.animationFps(cd.sprite, 8)) : 0;
+        drawSprite(ctx, cd.sprite, mateF, m.x, m.y, 1, m.face < 0, 1, null);
         // 队友身上的光环增益提示
         if (m.buffed) {
           ctx.globalAlpha = 0.35 + Math.sin(run.t * 5) * 0.15;

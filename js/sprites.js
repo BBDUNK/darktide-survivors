@@ -1630,7 +1630,8 @@
     error: null,
     promise: null,
     names: {},
-    scales: {}
+    scales: {},
+    fps: {}
   };
 
   window.SpriteGen = {
@@ -1688,6 +1689,7 @@
               atlasState.names[key] = true;
             }
             atlasState.scales = cfg.renderScale || {};
+            atlasState.fps = cfg.animationFps || {};
             atlasState.count = names.length;
             atlasState.loaded = true;
             console.info('[SpriteGen] 本地图集已加载: ' + names.length + ' 项');
@@ -1709,6 +1711,7 @@
     },
     isAtlas: function (name) { return !!atlasState.names[name]; },
     renderScale: function (name) { return atlasState.scales[name] || 1; },
+    animationFps: function (name, fallback) { return atlasState.fps[name] || fallback || 6; },
     atlasStatus: function () {
       return {
         loaded: atlasState.loaded,
