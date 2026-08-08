@@ -333,6 +333,178 @@ try {
   }
   console.log('WEAPONS OK 全部 ' + allWeapons.length + ' 把武器满级/进化渲染无崩溃');
 
+  // 10. 联机核心链路:队友能被怪打、队友武器能打怪、客户端快照纯渲染
+  vm.runInContext(`UI.show('menu');`, context);
+  step(2, 'reset for coop');
+  findByText(uiRoot, '开始远征').click(); step(2, 'chars');
+  findByText(uiRoot, '下一步').click(); step(2, 'maps');
+  findByText(uiRoot, '出发').click(); step(2, 'coop run');
+  const coopSetup = vm.runInContext(`(function () {
+    var r = Debug.run();
+    var cd = CFG.CHARS[1];
+    var mp = Entities.makePlayer(cd);
+    mp.x = 60; mp.y = 0;
+    var mate = {
+      player: mp, weapons: [], passives: {}, isHost: false, downed: false, reviveT: 0,
+      peerId: 'mate', name: '测试队友', banished: new Set(),
+      pendingChest: 0, pendingLevels: 0, levelQueue: [], luOpen: false, luSeq: 0
+    };
+    r.coopPlayers = [{
+      player: r.player, weapons: r.weapons, passives: r.passives,
+      isHost: true, downed: false, reviveT: 0, peerId: 'host', name: '房主',
+      banished: r.banished, pendingChest: 0
+    }, mate];
+    Entities.recomputeStatsFor(r, mp, mate.passives);
+    mp.hp = mp.stats.hp;
+    window.__mate = mate;
+    return { mateHp: mp.hp, hostHp: r.player.hp };
+  })()`, context);
+  const mateHp0 = coopSetup.mateHp;
+  const hostHp0 = coopSetup.hostHp;
+
+  // 10a. 敌人贴着队友生成,应只打队友不打房主
+  vm.runInContext(`(function () {
+    var r = Debug.run(), m = window.__mate;
+    var e = Entities.spawnEnemy(r, 'slime', m.player.x, m.player.y, { allowNear: true });
+    return !!e;
+  })()`, context);
+  step(3, 'enemy hits mate');
+  const afterHit = vm.runInContext(`(function () {
+    var r = Debug.run(), m = window.__mate;
+    return { mateHp: m.player.hp, hostHp: r.player.hp, downed: m.downed };
+  })()`, context);
+  if (afterHit.mateHp >= mateHp0) throw new Error('队友未被敌人伤害');
+  if (afterHit.hostHp < hostHp0) throw new Error('敌人错误地伤害了房主');
+  if (afterHit.downed && !findByText(uiRoot, '倒下了')) throw new Error('队友倒地未提示');
+  console.log('COOP1 OK  敌人能攻击队友,房主不受波及 (队友 ' + mateHp0 + '→' + afterHit.mateHp + ')');
+
+  // 10a-2. 多人局房主受致命伤应进入可救援倒地,不能直接结束全队
+  const hostDown = vm.runInContext(`(function () {
+    var r = Debug.run(), h = r.coopPlayers[0], m = r.coopPlayers[1];
+    Entities.clearEnemies(r);
+    m.downed = false; m.player.downed = false; m.player.hp = m.player.stats.hp;
+    h.player.hp = 1; h.player.iframe = 0;
+    Entities.damagePlayer(r, 9999);
+    return { downed: h.downed, playerDowned: h.player.downed, over: r.over };
+  })()`, context);
+  if (!hostDown.downed || !hostDown.playerDowned) throw new Error('多人局房主未进入倒地状态');
+  if (hostDown.over) throw new Error('房主倒地错误地结束了仍有队友存活的对局');
+  vm.runInContext(`(function () {
+    var r = Debug.run(), h = r.coopPlayers[0];
+    h.downed = false; h.reviveT = 0; h.player.downed = false; h.player.reviveT = 0;
+    h.player.hp = h.player.stats.hp; r.over = false;
+  })()`, context);
+  console.log('COOP1B OK 房主致命伤进入可救援倒地,对局继续');
+
+  // 10b. 队友武器由房主代跑,能正常打怪
+  vm.runInContext(`(function () {
+    var r = Debug.run(), m = window.__mate;
+    var savedP = r.player, savedW = r.weapons, savedPs = r.passives;
+    r.player = m.player; r.weapons = m.weapons; r.passives = m.passives;
+    Weapons.addWeapon(r, 'crossblade');
+    r.player = savedP; r.weapons = savedW; r.passives = savedPs;
+    r.weapons.length = 0;   // 清空房主武器,确保伤害来自队友
+    Entities.clearEnemies(r);
+    var e = Entities.spawnEnemy(r, 'slime', m.player.x + 120, m.player.y, { allowNear: true });
+    window.__testEnemy = e;
+    return !!e;
+  })()`, context);
+  const eh0 = vm.runInContext('window.__testEnemy.hp', context);
+  for (let s = 0; s < 90; s++) {
+    vm.runInContext(`(function () {
+      var r = Debug.run(), m = window.__mate;
+      Weapons.updateFor(r, m.player, m.weapons, 1/60);
+      Weapons.update(r, 1/60);
+      Entities.updateEnemies(r, 1/60);
+    })()`, context);
+  }
+  const eh1 = vm.runInContext('window.__testEnemy.alive ? window.__testEnemy.hp : 0', context);
+  if (eh1 >= eh0) throw new Error('队友武器未对敌人造成伤害');
+  console.log('COOP2 OK  队友武器能打怪 (' + eh0 + '→' + eh1 + ')');
+
+  // 10b-2. 延迟箭与环绕武器必须保留各自所有者,不能从房主位置生成或被全局去重
+  const ownerWeapons = vm.runInContext(`(function () {
+    var r = Debug.run(), m = window.__mate;
+    Entities.clearEnemies(r);
+    Weapons.reset();
+    r.player.x = -400; r.player.y = 0; m.player.x = 400; m.player.y = 0;
+    r.weapons = [];
+    m.weapons = [{ id: 'windbow', lv: 4, cdT: 0, evolved: false, evoId: null, curR: 0 }];
+    Weapons.updateFor(r, m.player, m.weapons, 1/60);
+    for (var i = 0; i < 24; i++) Weapons.update(r, 1/60);
+    var arrows = Weapons.getBullets().filter(function (b) { return b.alive && b.spr === 'p_arrow' && b.owner === m.player; }).length;
+
+    Weapons.reset();
+    r.weapons = [{ id: 'orbitblade', lv: 1, cdT: 0, evolved: false, evoId: null, curR: 0 }];
+    m.weapons = [{ id: 'orbitblade', lv: 1, cdT: 0, evolved: false, evoId: null, curR: 0 }];
+    Weapons.updateFor(r, m.player, m.weapons, 1/60);
+    Weapons.update(r, 1/60);
+    var hostOrbit = 0, mateOrbit = 0;
+    Weapons.getBullets().forEach(function (b) {
+      if (!b.alive || b.kind !== 'orbit') return;
+      if (b.owner === r.player) hostOrbit++;
+      if (b.owner === m.player) mateOrbit++;
+    });
+    return { arrows: arrows, hostOrbit: hostOrbit, mateOrbit: mateOrbit };
+  })()`, context);
+  if (ownerWeapons.arrows < 2) throw new Error('队友连射箭丢失所有者或延迟队列未发射');
+  if (!ownerWeapons.hostOrbit || !ownerWeapons.mateOrbit) throw new Error('多名玩家的环绕武器被错误地全局去重');
+  console.log('COOP2B OK 延迟箭与环绕武器按玩家独立运行');
+
+  // 10c. 客户端快照池一致性:反复重建不漂移、不抛错
+  let snapAlive = 0;
+  for (let s = 0; s < 150; s++) {
+    snapAlive = 1 + (s % 5);
+    const arr = [];
+    for (let j = 0; j < snapAlive; j++) arr.push('{u:' + (j + 1) + ',i:"slime",x:' + (100 + j * 10) + ',y:0,h:10,m:10,el:0,f:1}');
+    vm.runInContext(`Entities.applySnapshot(Debug.run(), { t: ${s / 15}, e: [${arr.join(',')}], s: [], l: [], g: [], it: [], bh: -1 });`, context);
+  }
+  const aliveNow = vm.runInContext('Entities.countAlive()', context);
+  if (aliveNow !== snapAlive) throw new Error('快照重建后敌人池漂移: ' + aliveNow + ' != ' + snapAlive);
+  console.log('COOP3 OK  客户端快照池稳定,反复重建无漂移');
+
+  // 10d. 客户端纯视觉弹幕:会移动,但不扣敌人血
+  vm.runInContext(`Entities.applySnapshot(Debug.run(), { t: 1, e: [{ u: 99, i: 'slime', x: 200, y: 200, h: 10, m: 10, el: 0, f: 1 }], s: [], l: [], g: [], it: [], bh: -1 });`, context);
+  const enemyHpBeforeVisual = vm.runInContext(`(function () {
+    var r = Debug.run();
+    Weapons.reset();   // 覆盖"全新池 hitCd 为 null"的路径
+    Weapons.applyVisual(r, [{ k: 'straight', s: 'p_slash', x: 50, y: 50, vx: 120, vy: 0, a: 0, sp: 0, ph: 0, tt: 2, z: 16, ev: 0, bf: 0, o1: 0, o2: 0, ox: 0, oy: 0, or: 0, os: 0 }]);
+    var e = null;
+    for (var i = 0; i < Entities.pool.length; i++) if (Entities.pool[i].alive && Entities.pool[i].uid === 99) { e = Entities.pool[i]; break; }
+    return e ? e.hp : -1;
+  })()`, context);
+  for (let s = 0; s < 30; s++) vm.runInContext('Weapons.updateVisual(Debug.run(), 1/60)', context);
+  const bstate = vm.runInContext(`(function () {
+    var b = Weapons.getBullets()[0];
+    return { x: b.x, alive: b.alive };
+  })()`, context);
+  const enemyHpAfterVisual = vm.runInContext(`(function () {
+    for (var i = 0; i < Entities.pool.length; i++) if (Entities.pool[i].alive && Entities.pool[i].uid === 99) return Entities.pool[i].hp;
+    return -1;
+  })()`, context);
+  if (!bstate.alive || bstate.x <= 50) throw new Error('客户端视觉弹幕未移动');
+  if (enemyHpAfterVisual !== enemyHpBeforeVisual) throw new Error('客户端视觉弹幕错误地结算了伤害');
+  console.log('COOP4 OK  客户端弹幕纯视觉,不产生本地伤害');
+
+  // 10e. 队友能拾取道具与宝箱
+  vm.runInContext(`(function () {
+    var r = Debug.run(), m = window.__mate;
+    m.downed = false;
+    m.player.hp = m.player.stats.hp - 10;
+  })()`, context);
+  const meatBefore = vm.runInContext('window.__mate.player.hp', context);
+  vm.runInContext(`(function () {
+    var r = Debug.run(), m = window.__mate;
+    Entities.spawnItem(r, 'meat', m.player.x, m.player.y);
+    Entities.spawnItem(r, 'chest', m.player.x, m.player.y);
+    Entities.updateItems(r, 1/60);
+  })()`, context);
+  const meatAfter = vm.runInContext('window.__mate.player.hp', context);
+  const chestGot = vm.runInContext('window.__mate.pendingChest', context);
+  if (meatAfter <= meatBefore) throw new Error('队友未拾取烤肉');
+  if (chestGot !== 1) throw new Error('队友宝箱未计入 pendingChest');
+  console.log('COOP5 OK  队友可拾取烤肉/宝箱');
+
   console.log('\n=== 无头冒烟测试全部通过 ===');
 } catch (e) {
   console.error('\n!!! 冒烟测试失败: ' + e.stack);

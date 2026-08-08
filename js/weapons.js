@@ -15,6 +15,7 @@ window.Weapons = (function () {
         dmg: 0, pierce: 0, size: 16, knock: 0,
         angle: 0, spin: 0, phase: 0,
         ox: 0, oy: 0, orbitR: 0, orbitSpd: 0,
+        owner: null, ownerX: 0, ownerY: 0,
         slow: 0, slowDur: 0, stun: 0,
         aux: 0, aux2: 0, evolved: false,
         hitCd: null, // Map uid -> nextHitTime(run.t)
@@ -115,8 +116,10 @@ window.Weapons = (function () {
     b.ttl = ttl; b.born = run.t;
     b.dmg = st.dmg; b.pierce = st.pierce; b.size = st.size; b.knock = st.knock;
     b.angle = Math.atan2(vy, vx); b.spin = 0; b.phase = 0;
+    b.owner = run.player; b.ownerX = run.player.x; b.ownerY = run.player.y;
     b.slow = st.slow; b.slowDur = st.slowDur; b.stun = 0;
     b.aux = 0; b.aux2 = 0; b.evolved = w.evolved;
+    b.poolDmg = 0; b.poolR = 0; b.poolDur = 0; b.poolBurn = 0; b.poolBurnDur = 0;
     b.blessed = !!st.blessed;     // 受队友光环加持:绘制时加一层金光
     return b;
   }
@@ -127,7 +130,8 @@ window.Weapons = (function () {
   function initQueue() {
     queue.length = 0;
     for (var i = 0; i < QMAX; i++) {
-      queue.push({ alive: false, t: 0, wid: '', angle: 0, dmg: 0, speed: 0, size: 0, pierce: 0, knock: 0 });
+      queue.push({ alive: false, t: 0, wid: '', angle: 0, dmg: 0, speed: 0, size: 0,
+                   pierce: 0, knock: 0, owner: null, blessed: false });
     }
   }
   function queueShot(run, wid, delay, angle, st) {
@@ -137,6 +141,7 @@ window.Weapons = (function () {
       q.alive = true; q.t = delay; q.wid = wid; q.angle = angle;
       q.dmg = st.dmg; q.speed = st.speed; q.size = st.size;
       q.pierce = st.pierce; q.knock = st.knock;
+      q.owner = run.player; q.blessed = !!st.blessed;
       return;
     }
   }
@@ -147,9 +152,7 @@ window.Weapons = (function () {
       q.t -= dt;
       if (q.t > 0) continue;
       q.alive = false;
-      var w = findWeapon(run, q.wid);
-      if (!w) continue;            // 武器已进化/移除,丢弃这一发
-      var p = run.player;
+      var p = q.owner || run.player;
       var b = getBullet();
       b.alive = true; b.kind = 'straight'; b.spr = 'p_arrow'; b.wid = q.wid;
       b.x = p.x; b.y = p.y;
@@ -159,6 +162,7 @@ window.Weapons = (function () {
       b.angle = q.angle; b.spin = 0; b.phase = 0;
       b.slow = 0; b.slowDur = 0; b.stun = 0;
       b.aux = 0; b.aux2 = 0; b.evolved = false;
+      b.blessed = q.blessed; b.owner = p; b.ownerX = p.x; b.ownerY = p.y;
       AudioSys.play('shoot_arrow');
     }
   }
@@ -290,6 +294,11 @@ window.Weapons = (function () {
           b = spawn(run, w, st, 'lob', 'p_fireflask', p.x, p.y, 0, 0, 0.7);
           b.ox = p.x; b.oy = p.y; b.aux = tx; b.aux2 = ty;
           b.spin = 6;
+          b.poolDmg = st.poolDmg * (w.evolved ? 1.6 : 1);
+          b.poolR = st.poolR * 2;
+          b.poolDur = st.poolDur;
+          b.poolBurn = st.dmg * 0.35;
+          b.poolBurnDur = 5 + Math.min(5, w.lv - 1);
         }
         AudioSys.play('shoot_flask');
         break;
@@ -308,7 +317,7 @@ window.Weapons = (function () {
       }
       case 'orbitblade': {
         // 已有存活刀片则不重复生成
-        if (countKind(w.id) > 0) return;
+        if (countKind(w.id, p) > 0) return;
         for (i = 0; i < st.count; i++) {
           b = spawn(run, w, st, 'orbit', 'p_orbitblade', p.x, p.y, 0, 0,
             w.evolved ? 1e9 : st.dur);
@@ -346,9 +355,11 @@ window.Weapons = (function () {
     }
   }
 
-  function countKind(wid) {
+  function countKind(wid, owner) {
     var n = 0;
-    for (var i = 0; i < BMAX; i++) if (bullets[i].alive && bullets[i].wid === wid) n++;
+    for (var i = 0; i < BMAX; i++) {
+      if (bullets[i].alive && bullets[i].wid === wid && (!owner || bullets[i].owner === owner)) n++;
+    }
     return n;
   }
 
@@ -376,6 +387,8 @@ window.Weapons = (function () {
   var _hitBurn = 0, _hitBurnDur = 0;
   function hitCb(e) {
     var b = _hitB;
+    // 客户端纯视觉模式:只做运动与命中闪烁,不结算任何伤害
+    if (_hitRun._netVisual) return false;
     if (_hitCdSec > 0) {
       var next = b.hitCd.get(e.uid) || 0;
       if (_hitRun.t < next) return false;
@@ -409,6 +422,7 @@ window.Weapons = (function () {
   // 火池命中:解除冰霜减速 + 施加持续灼烧(与普通弹幕的 hitCb 分开,逻辑不同)
   var _poolHitCb = function (e) {
     var b = _hitB;
+    if (_hitRun._netVisual) return false;
     var next = b.hitCd.get(e.uid) || 0;
     if (_hitRun.t < next) return false;
     b.hitCd.set(e.uid, _hitRun.t + _hitCdSec);
@@ -425,6 +439,8 @@ window.Weapons = (function () {
     for (var i = 0; i < BMAX; i++) {
       var b = bullets[i];
       if (!b.alive) continue;
+      var ownerX = run._netVisual ? b.ownerX : (b.owner ? b.owner.x : p.x);
+      var ownerY = run._netVisual ? b.ownerY : (b.owner ? b.owner.y : p.y);
       b.ttl -= dt;
       if (b.ttl <= 0) {
         if (b.kind === 'lob') landFlask(run, b);
@@ -473,10 +489,12 @@ window.Weapons = (function () {
           if (before && !b.alive && b.evolved) { // 奥术爆炸
             FX.explosion(b.x, b.y, 40);
             var bb = b;
-            E.gridQuery(b.x, b.y, 52, function (e) {
-              Entities.damageEnemy(run, e, bb.dmg * 0.6, { noCrit: true });
-              return false;
-            });
+            if (!run._netVisual) {
+              E.gridQuery(b.x, b.y, 52, function (e) {
+                Entities.damageEnemy(run, e, bb.dmg * 0.6, { noCrit: true });
+                return false;
+              });
+            }
           }
           break;
         }
@@ -492,7 +510,7 @@ window.Weapons = (function () {
           if (b.kind === 'boomerang') {
             if (out) { b.x += b.vx * dt; b.y += b.vy * dt; }
             else { // 折返回玩家
-              var dxp = p.x - b.x, dyp = p.y - b.y;
+              var dxp = ownerX - b.x, dyp = ownerY - b.y;
               var dd = Math.hypot(dxp, dyp) || 1;
               var sp = b.aux * 1.25;
               b.x += dxp / dd * sp * dt; b.y += dyp / dd * sp * dt;
@@ -513,10 +531,12 @@ window.Weapons = (function () {
             if (dd2 < (r + 8) * (r + 8) && dd2 > (r - 26) * (r - 26)) {
               bn.hitSet.add(e.uid);
               var kills = bn.evolved && Math.random() < 0.12 && !e.boss && !e.elite;
-              Entities.damageEnemy(run, e, kills ? e.hp + 999 : bn.dmg, {
-                slow: bn.slow, slowDur: bn.slowDur,
-                kx: (e.x - bn.x) * 0.8, ky: (e.y - bn.y) * 0.8
-              });
+              if (!run._netVisual) {
+                Entities.damageEnemy(run, e, kills ? e.hp + 999 : bn.dmg, {
+                  slow: bn.slow, slowDur: bn.slowDur,
+                  kx: (e.x - bn.x) * 0.8, ky: (e.y - bn.y) * 0.8
+                });
+              }
               if (kills) FX.burst(e.x, e.y, { color: '#bff', n: 10, speed: 120, life: 0.4, size: 2 });
             }
             return false;
@@ -542,8 +562,8 @@ window.Weapons = (function () {
         }
         case 'orbit': {
           b.phase += b.orbitSpd * dt;
-          b.x = p.x + Math.cos(b.phase) * b.orbitR;
-          b.y = p.y + Math.sin(b.phase) * b.orbitR;
+          b.x = ownerX + Math.cos(b.phase) * b.orbitR;
+          b.y = ownerY + Math.sin(b.phase) * b.orbitR;
           b.angle = b.phase + Math.PI / 2;
           hitEnemiesAlong(run, b, b.size * 0.62, 0.4);
           break;
@@ -561,14 +581,14 @@ window.Weapons = (function () {
               if (!te) break;
               _zapHit.add(te.uid);
               FX.lightning(b.x, b.y - 10, te.x, te.y, '#8ef');
-              Entities.damageEnemy(run, te, b.dmg, {});
+              if (!run._netVisual) Entities.damageEnemy(run, te, b.dmg, {});
               zapped++;
               if (b.evolved) { // 天网:每道再链一跳
                 var t2 = nearestEnemy(te.x, te.y, 150, _zapHit);
                 if (t2) {
                   _zapHit.add(t2.uid);
                   FX.lightning(te.x, te.y, t2.x, t2.y, '#8ef');
-                  Entities.damageEnemy(run, t2, b.dmg * 0.7, {});
+                  if (!run._netVisual) Entities.damageEnemy(run, t2, b.dmg * 0.7, {});
                 }
               }
             }
@@ -587,7 +607,7 @@ window.Weapons = (function () {
                 E.gridQuery(ax, ay, 26, function (en) {
                   if (_zapHit.has(en.uid)) return false;
                   _zapHit.add(en.uid);
-                  Entities.damageEnemy(run, en, b.dmg * 0.5, { stun: 0.1 });
+                  if (!run._netVisual) Entities.damageEnemy(run, en, b.dmg * 0.5, { stun: 0.1 });
                   return false;
                 });
               }
@@ -609,10 +629,12 @@ window.Weapons = (function () {
     AudioSys.play('bomb');
     // 命中直伤(fire 标记:对蛛类双倍)
     var bb = b;
-    E.gridQuery(b.x, b.y, 40, function (e) {
-      Entities.damageEnemy(run, e, bb.dmg, { fire: true });
-      return false;
-    });
+    if (!run._netVisual) {
+      E.gridQuery(b.x, b.y, 40, function (e) {
+        Entities.damageEnemy(run, e, bb.dmg, { fire: true });
+        return false;
+      });
+    }
     // 火焰净化:烧掉角色身上的蛛网,并清掉爆点附近飞行中的蛛网弹
     Entities.cleanseWebs(run, b.x, b.y, 120);
     // 燃烧地面
@@ -620,17 +642,16 @@ window.Weapons = (function () {
     pool.alive = true; pool.kind = 'pool'; pool.spr = 'p_firepool'; pool.wid = b.wid;
     pool.x = b.x; pool.y = b.y; pool.vx = 0; pool.vy = 0;
     pool.born = run.t;
-    // 从武器当前数值重建池伤害
-    var w = findWeapon(runRef, b.wid);
-    var st = w ? wStats(runRef, w) : null;
-    pool.dmg = st ? st.poolDmg * (b.evolved ? 1.6 : 1) : b.dmg * 0.8;
-    pool.size = st ? st.poolR * 2 : 90;
-    pool.ttl = st ? st.poolDur : 3;
+    pool.owner = b.owner; pool.ownerX = b.ownerX; pool.ownerY = b.ownerY;
+    // 发射时已把所属玩家的火池数值固化进弹体,落地时不再误读房主 Build。
+    pool.dmg = b.poolDmg || b.dmg * 0.8;
+    pool.size = b.poolR || 90;
+    pool.ttl = b.poolDur || 3;
     pool.pierce = 9999; pool.knock = 0; pool.slow = 0; pool.stun = 0;
     pool.evolved = b.evolved;
     // 灼烧:初始 5 秒,随武器等级成长到 10 秒(每次命中重置,持续伤害)
-    pool.poolBurn = st ? st.dmg * 0.35 : b.dmg * 0.3;
-    pool.poolBurnDur = 5 + Math.min(5, (st ? w.lv : 1) - 1);   // 5 → 10 秒
+    pool.poolBurn = b.poolBurn || b.dmg * 0.3;
+    pool.poolBurnDur = b.poolBurnDur || 5;
   }
 
   function findWeapon(run, wid) {
@@ -656,7 +677,7 @@ window.Weapons = (function () {
           var st = wStats(run, w);
           w.cdT = st.cd;
           if (w.id === 'orbitblade') {
-            if (countKind('orbitblade') === 0) fire(run, w);
+            if (countKind('orbitblade', owner) === 0) fire(run, w);
             else w.cdT = 0.5;
           } else fire(run, w);
         }
@@ -678,7 +699,7 @@ window.Weapons = (function () {
         var st = wStats(run, w);
         w.cdT = st.cd;
         if (w.id === 'orbitblade') {
-          if (countKind('orbitblade') === 0) fire(run, w);
+          if (countKind('orbitblade', p) === 0) fire(run, w);
           else w.cdT = 0.5;
         } else fire(run, w);
       }
@@ -686,6 +707,42 @@ window.Weapons = (function () {
     updateQueue(run, dt);
     updateBullets(run, dt);
   }
+
+  // 联机客户端:用房主快照重建本地弹幕池(纯视觉,不产生伤害)
+  function applyVisual(run, arr) {
+    run._netVisual = true;
+    for (var i = 0; i < BMAX; i++) bullets[i].alive = false;
+    if (!arr) return;
+    for (var j = 0; j < arr.length && j < BMAX; j++) {
+      var s = arr[j], b = bullets[j];
+      b.alive = true;
+      b.kind = s.k || 'straight';
+      b.spr = s.s || 'p_slash';
+      b.x = s.x || 0; b.y = s.y || 0;
+      b.vx = s.vx || 0; b.vy = s.vy || 0;
+      b.angle = s.a || 0; b.spin = s.sp || 0; b.phase = s.ph || 0;
+      b.ttl = s.tt !== undefined ? s.tt : 1;
+      b.born = run.t;
+      b.dmg = 0; b.pierce = 9999; b.size = s.z || 16;
+      b.evolved = !!s.ev; b.blessed = !!s.bf;
+      b.aux = s.o1 || 0; b.aux2 = s.o2 || 0;
+      b.ox = s.ox || 0; b.oy = s.oy || 0;
+      b.orbitR = s.or || 0; b.orbitSpd = s.os || 0;
+      b.owner = null; b.ownerX = s.cx !== undefined ? s.cx : b.x; b.ownerY = s.cy !== undefined ? s.cy : b.y;
+      b.slow = 0; b.slowDur = 0; b.stun = 0; b.zapN = 1;
+      if (!b.hitCd) { b.hitCd = new Map(); b.hitSet = new Set(); }
+      b.hitCd.clear(); b.hitSet.clear();
+    }
+    var wA = findWeapon(run, 'holyaura');
+    if (wA && run.player && run.player.stats) wA.curR = wStats(run, wA).size;
+  }
+
+  function updateVisual(run, dt) {
+    if (!run._netVisual) return;
+    updateBullets(run, dt);
+  }
+
+  function getBullets() { return bullets; }
 
   function updateAura(run, w, dt) {
     var p = run.player;
@@ -1016,7 +1073,8 @@ window.Weapons = (function () {
   function reset() { initPool(); initQueue(); runRef = null; }
 
   return {
-    update: update, updateFor: updateFor, draw: draw, drawGround: drawGround, reset: reset,
+    update: update, updateFor: updateFor, updateVisual: updateVisual, applyVisual: applyVisual,
+    getBullets: getBullets, draw: draw, drawGround: drawGround, reset: reset,
     cycleTargetMode: cycleTargetMode, getTargetModeName: getTargetModeName,
     addWeapon: addWeapon, addPassive: addPassive,
     getLevelUpChoices: getLevelUpChoices, applyChoice: applyChoice,

@@ -218,7 +218,9 @@ window.Net = (function () {
     } else if (m.t === 'input') {
       if (cb.onClientInput) cb.onClientInput(c.peer, m);
     } else if (m.t === 'pickup') {
-      if (cb.onClientPick) cb.onClientPick(c.peer, m.optIdx);
+      if (cb.onClientPick) cb.onClientPick(c.peer, m.optIdx, m.seq);
+    } else if (m.t === 'pauseReq' || m.t === 'resumeReq' || m.t === 'giveup') {
+      if (cb.onHostCommand) cb.onHostCommand(c.peer, m);
     }
   }
 
@@ -274,6 +276,8 @@ window.Net = (function () {
     else if (m.t === 'snap' && cb.onSnap) cb.onSnap(m);
     else if (m.t === 'levelup' && cb.onRemoteLevelUp) cb.onRemoteLevelUp(m);
     else if (m.t === 'pickdone' && cb.onPickDone) cb.onPickDone(m);
+    else if (m.t === 'pause' && cb.onPauseSync) cb.onPauseSync(m);
+    else if (m.t === 'chest' && cb.onChest) cb.onChest(m);
     else if (m.t === 'over' && cb.onOver) cb.onOver(m);
   }
 

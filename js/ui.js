@@ -924,10 +924,10 @@ window.UI = (function () {
     screens.cooplu = s; root.appendChild(s);
     coopLu = s;
   }
-  // 联机模式下弹出升级选择;选择后立即结算并隐藏,不影响主循环
-  function coopLevelUp(run, level) {
+  // 联机模式下弹出升级选择;选择后由调用方结算并隐藏,不影响主循环
+  function coopLevelUp(choices, onPick) {
     if (!coopLu) return;
-    coopLuChoices = Weapons.getLevelUpChoices(run);
+    coopLuChoices = choices || [];
     coopLuBody.innerHTML = '';
     coopLuChoices.forEach(function (opt, idx) {
       var card = h('div', 'coop-lu-card');
@@ -937,20 +937,19 @@ window.UI = (function () {
       mid.appendChild(h('div', 'coop-lu-desc', opt.desc));
       card.appendChild(mid);
       card.addEventListener('click', function () {
-        // 本地立即应用,保证手感;房主再代跑结算
-        Weapons.applyChoice(run, opt);
-        if (run.onCoopPick) run.onCoopPick(opt);
         overlay('cooplu', false);
+        if (onPick) onPick(opt, idx);
       });
       coopLuBody.appendChild(card);
     });
     overlay('cooplu', true);
   }
   // 客户端收到房主推送的升级选项,弹出同样的非阻塞卡
-  function remoteLevelUp(choices) {
+  function remoteLevelUp(choices, onPick) {
     if (!coopLu) return;
+    coopLuChoices = choices || [];
     coopLuBody.innerHTML = '';
-    choices.forEach(function (opt, idx) {
+    coopLuChoices.forEach(function (opt, idx) {
       var card = h('div', 'coop-lu-card');
       card.appendChild(iconCanvas(opt.icon, 30));
       var mid = h('div', '');
@@ -959,18 +958,11 @@ window.UI = (function () {
       card.appendChild(mid);
       card.addEventListener('click', function () {
         overlay('cooplu', false);
-        Net.toHost({ t: 'pickup', optIdx: idx });
+        if (onPick) onPick(opt, idx);
       });
       coopLuBody.appendChild(card);
     });
     overlay('cooplu', true);
-  }
-  // 客户端收到房主代选结果:本地应用到自己的快照世界
-  function remoteAppliedChoice(opt) {
-    if (!window.Debug || !window.Debug.run) return;
-    var r = window.Debug.run();
-    if (r) Weapons.applyChoice(r, opt);
-    overlay('cooplu', false);
   }
 
   // 客户端:房主宣布本档升级已解决,隐藏悬浮卡

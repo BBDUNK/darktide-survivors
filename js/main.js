@@ -114,7 +114,9 @@
     remote: [],       // client: 从快照解出的其他玩家渲染数据
     snapAcc: 0,       // host: 广播计时
     inputAcc: 0,      // client: 上报计时
-    myId: ''          // client: 自己的 peer id,用于从快照里剔除自己
+    myId: '',         // client: 自己的 peer id,用于从快照里剔除自己
+    hostLuOpen: false, // host: 自己的联机升级悬浮卡是否已打开
+    active: false      // 联机对局是否真正开始(结算后清除,防止"再来一局"带旧队友)
   };
 
   function coopPlayerCount() {
@@ -142,8 +144,27 @@
       coop.mates.push({
         peerId: r.id, name: r.name, charId: r.charId,
         player: pl, input: { x: 0, y: 0 }, weapons: [], passives: {},
-        xp: 0, level: 1, xpNeed: CFG.XP_NEED(1), pendingLevels: 0, downed: false, reviveT: 0
+        xp: 0, level: 1, xpNeed: CFG.XP_NEED(1), pendingLevels: 0, downed: false, reviveT: 0,
+        banished: new Set(), pendingChest: 0, levelQueue: [], luSeq: 0, luOpen: false
       });
+    }
+  }
+
+  // 把"所有可被战斗系统索敌的玩家"挂到 run 上:单机只有房主,联机房主再挂队友
+  function bindCoopPlayers() {
+    run.coopPlayers = [{
+      player: run.player, weapons: run.weapons, passives: run.passives,
+      isHost: true, downed: false, reviveT: 0,
+      peerId: 'host', name: '房主', pendingLevels: 0, pendingChest: 0,
+      banished: run.banished
+    }];
+    if (coop.on && Net.isHost()) {
+      for (var i = 0; i < coop.mates.length; i++) {
+        var m = coop.mates[i];
+        if (!m.banished) m.banished = new Set();
+        if (!m.levelQueue) m.levelQueue = [];
+        run.coopPlayers.push(m);
+      }
     }
   }
 
@@ -189,6 +210,24 @@
       if (!items[i].alive) continue;
       its.push({ k: items[i].type, x: Math.round(items[i].x), y: Math.round(items[i].y) });
     }
+    // 玩家弹幕:客户端需要看到所有参战者的投射物
+    var wbs = Weapons.getBullets(), bs = [];
+    for (i = 0; i < wbs.length; i++) {
+      var wb = wbs[i];
+      if (!wb.alive) continue;
+      bs.push({
+        k: wb.kind, s: wb.spr, x: Math.round(wb.x), y: Math.round(wb.y),
+        vx: Math.round(wb.vx), vy: Math.round(wb.vy),
+        a: +wb.angle.toFixed(2), sp: +wb.spin.toFixed(2), ph: +wb.phase.toFixed(2),
+        tt: +wb.ttl.toFixed(2), z: Math.round(wb.size),
+        ev: wb.evolved ? 1 : 0, bf: wb.blessed ? 1 : 0,
+        o1: +wb.aux.toFixed(2), o2: +wb.aux2.toFixed(2),
+        ox: Math.round(wb.ox), oy: Math.round(wb.oy),
+        or: Math.round(wb.orbitR), os: +wb.orbitSpd.toFixed(2),
+        cx: Math.round(wb.owner ? wb.owner.x : wb.ownerX),
+        cy: Math.round(wb.owner ? wb.owner.y : wb.ownerY)
+      });
+    }
     // 全体玩家状态(房主自己 + 各客户端),客户端用它渲染队友
     var ps = [{
       id: 'host', name: '房主', charId: run.player.char.id,
@@ -196,7 +235,12 @@
       f: run.player.face, mv: run.player.moving ? 1 : 0,
       hp: +(run.player.hp / run.player.stats.hp).toFixed(2),
       dn: run.player.downed ? 1 : 0, rv: +(run.player.reviveT || 0).toFixed(2),
-      bf: run.player.auraBuff ? 1 : 0
+      bf: run.player.auraBuff ? 1 : 0,
+      lvl: run.level, xp: +(run.coopXp !== null ? run.coopXp : run.xp).toFixed(1), xn: run.xpNeed,
+      wp: run.weapons.map(function (w) { return [w.id, w.lv, w.evolved ? 1 : 0]; }),
+      ps: Object.keys(run.passives).map(function (k) { return [k, run.passives[k]]; }),
+      sl: +(run.player.slow || 0).toFixed(2), rt: run.player.rootT > 0 ? 1 : 0,
+      ws: run.player.webStacks || 0
     }];
     for (i = 0; i < coop.mates.length; i++) {
       var mt = coop.mates[i], mp = mt.player;
@@ -206,14 +250,21 @@
         f: mp.face, mv: mp.moving ? 1 : 0,
         hp: mp.stats ? +(mp.hp / mp.stats.hp).toFixed(2) : 1,
         dn: mt.downed ? 1 : 0, rv: +(mt.reviveT || 0).toFixed(2),
-        bf: mp.auraBuff ? 1 : 0
+        bf: mp.auraBuff ? 1 : 0,
+        lvl: run.level, xp: +(run.coopXp !== null ? run.coopXp : run.xp).toFixed(1), xn: run.xpNeed,
+        wp: mt.weapons.map(function (w) { return [w.id, w.lv, w.evolved ? 1 : 0]; }),
+        ps: Object.keys(mt.passives).map(function (k) { return [k, mt.passives[k]]; }),
+        sl: +(mp.slow || 0).toFixed(2), rt: mp.rootT > 0 ? 1 : 0,
+        ws: mp.webStacks || 0
       });
     }
     return {
       t: 'snap', ti: +run.t.toFixed(2),
-      e: es, s: ss, l: ls, g: gs, it: its, p: ps,
+      e: es, s: ss, l: ls, g: gs, it: its, b: bs, p: ps,
       bh: run.boss && run.boss.alive ? +(run.boss.hp / run.boss.maxHp).toFixed(3) : -1,
-      kl: run.kills
+      bi: run.boss && run.boss.alive ? run.boss.bossType : '',
+      kl: run.kills, gd: run.gold, bk: run.bossesKilled,
+      fz: +(run.freezeT || 0).toFixed(2), en: run.endless ? 1 : 0
     };
   }
 
@@ -224,22 +275,7 @@
     for (var i = 0; i < coop.mates.length; i++) {
       var m = coop.mates[i], p = m.player;
       if (!p.stats) { Entities.recomputeStatsFor(run, p, m.passives); p.hp = p.stats.hp; }
-      if (m.downed) {
-        // 倒地:检查是否有活着的队友在旁边救援
-        var rescuer = nearestAlivePlayer(p, A.reviveRadius, m);
-        if (rescuer) {
-          m.reviveT = (m.reviveT || 0) + dt;
-          if (m.reviveT >= A.reviveTime) {
-            m.downed = false; m.reviveT = 0;
-            p.hp = p.stats.hp * A.downedHp;
-            p.iframe = 2.0;
-            FX.ring(p.x, p.y, { r: 60, color: '#7ce87c', life: 0.5, width: 3 });
-          }
-        } else {
-          m.reviveT = Math.max(0, (m.reviveT || 0) - dt * 0.5);
-        }
-        continue;
-      }
+      if (m.downed) continue;
       // 应用输入移动
       var iv = m.input, s = p.stats;
       var spd = s.speed * (1 - (p.slow || 0)) * (1 + (p.auraBuff || 0));
@@ -259,9 +295,19 @@
       Weapons.updateFor(run, p, m.weapons, dt);
       // 队友倒地判定
       if (p.hp <= 0 && !m.downed) {
-        m.downed = true; m.reviveT = 0; p.hp = 0;
-        FX.ring(p.x, p.y, { r: 50, color: '#ff5964', life: 0.6, width: 3 });
-        UI.warn('⚠ ' + m.name + ' 倒下了!');
+        if (p.stats && p.stats.revive > 0) {
+          p.stats.revive--;
+          p.hp = p.stats.hp * 0.5;
+          p.iframe = 2.5;
+          FX.levelBeam(p.x, p.y);
+          FX.ring(p.x, p.y, { r: 120, color: '#ffd76b', life: 0.6, width: 4 });
+          AudioSys.play('levelup');
+          Entities.bombBlast(run, 150, p.x, p.y);
+        } else {
+          m.downed = true; m.reviveT = 0; p.hp = 0;
+          FX.ring(p.x, p.y, { r: 50, color: '#ff5964', life: 0.6, width: 3 });
+          UI.warn('⚠ ' + m.name + ' 倒下了!');
+        }
       }
     }
   }
@@ -284,13 +330,42 @@
   // 找一个能救援目标的存活玩家(房主自己或其他队友)
   function nearestAlivePlayer(target, radius, exclude) {
     var r2 = radius * radius;
-    if (!run.player.downed && E.dist2(run.player.x, run.player.y, target.x, target.y) < r2) return run.player;
-    for (var i = 0; i < coop.mates.length; i++) {
-      var m = coop.mates[i];
-      if (m === exclude || m.downed) continue;
-      if (E.dist2(m.player.x, m.player.y, target.x, target.y) < r2) return m.player;
+    var all = run.coopPlayers || [];
+    for (var i = 0; i < all.length; i++) {
+      var w = all[i];
+      if (w === exclude || w.downed || w.player.hp <= 0) continue;
+      if (E.dist2(w.player.x, w.player.y, target.x, target.y) < r2) return w.player;
     }
     return null;
+  }
+
+  // 房主和客户端一视同仁地进入倒地状态;只要还有队友存活,靠近即可救援。
+  function updateTeamRevives(dt) {
+    if (!coop.on || !Net.isHost() || !run.coopPlayers) return;
+    var A = CFG.COOP;
+    for (var i = 0; i < run.coopPlayers.length; i++) {
+      var w = run.coopPlayers[i];
+      if (!w.downed) continue;
+      var p = w.player;
+      var rescuer = nearestAlivePlayer(p, A.reviveRadius, w);
+      if (rescuer) {
+        w.reviveT = (w.reviveT || 0) + dt;
+        if (w.reviveT >= A.reviveTime) {
+          w.downed = false;
+          w.reviveT = 0;
+          p.downed = false;
+          p.reviveT = 0;
+          p.hp = p.stats.hp * A.downedHp;
+          p.iframe = 2.0;
+          FX.ring(p.x, p.y, { r: 60, color: '#7ce87c', life: 0.5, width: 3 });
+          FX.heal(p.x, p.y);
+          if (run.cb && run.cb.onWarn) run.cb.onWarn('✚ ' + (w.name || '队友') + ' 已被救起!');
+        }
+      } else {
+        w.reviveT = Math.max(0, (w.reviveT || 0) - dt * 0.5);
+      }
+      p.reviveT = w.reviveT;
+    }
   }
 
   // 队友光环互益:圣光环持有者为半径内队友回血、提升属性与弹幕
@@ -305,12 +380,14 @@
     }
     for (var s = 0; s < all.length; s++) {
       var src = all[s];
+      if (src.downed || src.player.downed || src.player.hp <= 0) continue;
       var hasAura = false;
       for (var w = 0; w < src.weapons.length; w++) if (src.weapons[w].id === 'holyaura') hasAura = true;
       if (!hasAura) continue;
       for (var t = 0; t < all.length; t++) {
         if (t === s) continue;                    // 只增益队友
         var tp = all[t].player;
+        if (all[t].downed || tp.downed || tp.hp <= 0) continue;
         if (E.dist2(tp.x, tp.y, src.player.x, src.player.y) > A.radius * A.radius) continue;
         tp.auraBuff = A.statBoost;
         tp.auraProjSpd = A.projSpd;
@@ -319,6 +396,73 @@
           tp.hp = Math.min(tp.stats.hp, tp.hp + A.regen * (1 / 60));
         }
       }
+    }
+  }
+
+  // ---------- 联机升级:每个玩家独立选项,非阻塞悬浮卡 ----------
+  function makeChoicesFor(w) {
+    var savedP = run.player, savedW = run.weapons, savedPs = run.passives, savedB = run.banished;
+    run.player = w.player; run.weapons = w.weapons; run.passives = w.passives;
+    run.banished = w.banished || run.banished;
+    try { return Weapons.getLevelUpChoices(run); }
+    finally { run.player = savedP; run.weapons = savedW; run.passives = savedPs; run.banished = savedB; }
+  }
+
+  function applyChoiceFor(w, opt) {
+    var savedP = run.player, savedW = run.weapons, savedPs = run.passives, savedB = run.banished;
+    run.player = w.player; run.weapons = w.weapons; run.passives = w.passives;
+    run.banished = w.banished || run.banished;
+    try { Weapons.applyChoice(run, opt); }
+    finally { run.player = savedP; run.weapons = savedW; run.passives = savedPs; run.banished = savedB; }
+  }
+
+  function queueCoopLevel(w) {
+    if (!w || !run || !coop.on) return;
+    w.pendingLevels = (w.pendingLevels || 0) + 1;
+    if (w.isHost) {
+      if (!coop.hostLuOpen) showHostLevelUp(w);
+    } else if (!w.luOpen) {
+      sendMateLevelUp(w);
+    }
+  }
+
+  function showHostLevelUp(w) {
+    coop.hostLuOpen = true;
+    UI.coopLevelUp(makeChoicesFor(w), function (opt) {
+      coop.hostLuOpen = false;
+      applyChoiceFor(w, opt);
+      w.pendingLevels = Math.max(0, (w.pendingLevels || 0) - 1);
+      if (w.pendingLevels > 0) showHostLevelUp(w);
+    });
+  }
+
+  function sendMateLevelUp(w) {
+    w.luOpen = true;
+    w.luSeq = (w.luSeq || 0) + 1;
+    var seq = w.luSeq;
+    var choices = makeChoicesFor(w);
+    w.luChoices = choices;
+    Net.sendTo(w.peerId, { t: 'levelup', seq: seq, choices: choices });
+  }
+
+  // 房主代跑队友宝箱(自动随机升级,结果推给客户端展示)
+  function processMateChests() {
+    for (var i = 0; i < coop.mates.length; i++) {
+      var m = coop.mates[i];
+      if (!m.pendingChest) continue;
+      m.pendingChest--;
+      var savedP = run.player, savedW = run.weapons, savedPs = run.passives, savedB = run.banished;
+      run.player = m.player; run.weapons = m.weapons; run.passives = m.passives;
+      run.banished = m.banished || run.banished;
+      var results = [];
+      try { results = Weapons.chestLoot(run); }
+      finally { run.player = savedP; run.weapons = savedW; run.passives = savedPs; run.banished = savedB; }
+      Net.sendTo(m.peerId, {
+        t: 'chest',
+        results: results.map(function (r) {
+          return { name: r.name, icon: r.icon, desc: r.desc, evolved: !!r.evolved };
+        })
+      });
     }
   }
 
@@ -345,19 +489,23 @@
         v.gold = Math.min(100, v.gold + 20 * (add - v.picked));
         v.picked = add;
       }
-      // 走到宝箱旁自动拾取
-      var p = run.player;
-      if (E.dist2(p.x, p.y, v.x, v.y) < 40 * 40) {
-        if (v.gold > 0) {
-          var g = v.gold;
-          run.gold += g;
-          Meta.track('gold', g);
-          FX.burst(v.x, v.y, { color: '#ffd76b', n: 14, speed: 110, life: 0.5, size: 2 });
-          FX.ring(v.x, v.y, { r: 34, color: '#ffd76b', life: 0.4, width: 3 });
-          AudioSys.play('coin');
-          // 重置累积
-          v.gold = 20; v.t = 0; v.picked = 0;
-        }
+      // 任意参战玩家走到宝箱旁都能拾取
+      var ents = run.coopPlayers || [{ player: run.player, downed: false }];
+      var got = false;
+      for (var ei = 0; ei < ents.length && !got; ei++) {
+        var w = ents[ei];
+        if (w.downed || w.player.hp <= 0) continue;
+        if (E.dist2(w.player.x, w.player.y, v.x, v.y) < 40 * 40) got = true;
+      }
+      if (got && v.gold > 0) {
+        var g = v.gold;
+        run.gold += g;
+        Meta.track('gold', g);
+        FX.burst(v.x, v.y, { color: '#ffd76b', n: 14, speed: 110, life: 0.5, size: 2 });
+        FX.ring(v.x, v.y, { r: 34, color: '#ffd76b', life: 0.4, width: 3 });
+        AudioSys.play('coin');
+        // 重置累积
+        v.gold = 20; v.t = 0; v.picked = 0;
       }
     }
   }
@@ -394,6 +542,11 @@
 
   // ================= 开局 =================
   function newRun(charId, mapId) {
+    // 结算后再开新局:残留的联机状态按单人局处理
+    if (coop.on && !coop.active) {
+      coop.on = false;
+      coop.mates = [];
+    }
     var charDef = null, mapDef = null, i;
     for (i = 0; i < CFG.CHARS.length; i++) if (CFG.CHARS[i].id === charId) charDef = CFG.CHARS[i];
     for (i = 0; i < CFG.MAPS.length; i++) if (CFG.MAPS[i].id === mapId) mapDef = CFG.MAPS[i];
@@ -420,20 +573,13 @@
       coopHpMul: coopMul(CFG.COOP.hpMulByPlayers),
       coopRateMul: coopMul(CFG.COOP.rateMulByPlayers),
       coopXpMul: coopMul(CFG.COOP.xpMulByPlayers),
-      onCoopLevel: coop.on ? function (lv) {
-        // 联机非阻塞升级:弹出悬浮卡片,游戏不暂停,选完继续
-        UI.coopLevelUp(run, lv);
-        // 房主把同样的升级选项推给客户端,让大家同步选
-        if (Net.isHost()) {
-          var opts = Weapons.getLevelUpChoices(run);
-          Net.broadcast({ t: 'levelup', choices: opts });
+      onCoopLevel: coop.on ? function () {
+        // 共享经验池每升一级,给每位参战者各发一次独立选项
+        if (Net.isHost() && run.coopPlayers) {
+          for (var qi = 0; qi < run.coopPlayers.length; qi++) queueCoopLevel(run.coopPlayers[qi]);
         }
       } : null,
-      onCoopPick: coop.on ? function (opt) {
-        // 房主:把自己的选择应用到自己的 run(已应用),无需额外处理;
-        // 但要把"当前共享升级已解决"广播,客户端隐藏悬浮卡。
-        if (Net.isHost()) Net.broadcast({ t: 'pickdone' });
-      } : null,
+      onCoopPick: null,
       cb: {
         onBoss: function (bd) { UI.bossBanner(bd); },
         onWarn: function (msg) { UI.warn(msg); },
@@ -450,6 +596,7 @@
     Meta.seeCodex(charDef.sprite);
     Merchant.reset(run);   // 流浪商人摆摊
     initVaults(run);       // 四角金库
+    bindCoopPlayers();     // 把全部参战玩家挂到战斗系统
 
     lastDmg = 0; dpsTimer = 0; achvTimer = 0;
 
@@ -469,9 +616,111 @@
     var fresh = Meta.checkAchv();
     AudioSys.setIntensity(0);
     AudioSys.play(run.victory ? 'victory' : 'gameover');
+    // 关键结算只广播一次,避免逐客户端单发在对局切状态的瞬间丢失。
+    // 消息内仍保留每位客户端自己的角色与 Build,由客户端按 peer id 取回。
+    if (coop.on && Net.isHost()) {
+      Net.broadcast({
+        t: 'over', victory: run.victory, dur: run.t, level: run.level,
+        kills: run.kills, gold: run.gold, bossesKilled: run.bossesKilled,
+        maxDps: run.maxDps || 0,
+        mapId: run.map.id,
+        bestSurvive: Math.floor(run.t), bestLevel: run.level, bestKillsRun: run.kills,
+        players: coop.mates.map(function (mate) {
+          return {
+            id: mate.peerId, charId: mate.charId,
+            weapons: mate.weapons.map(function (w) {
+              return { id: w.id, lv: w.lv, evolved: !!w.evolved, evoId: w.evoId || null };
+            }),
+            passives: mate.passives
+          };
+        })
+      });
+    }
+    coop.active = false;
+    coop.mates = [];
     state = 'result';
     UI.showHud(false);
     UI.showResult(run, fresh, run.victory);
+  }
+
+  // 客户端:房主宣布本局结束,按快照结果结算存档并展示
+  function clientEndRun(m) {
+    if (!run || !coop.on) return;
+    var own = null;
+    if (m.players) {
+      for (var oi = 0; oi < m.players.length; oi++) {
+        if (m.players[oi].id === coop.myId) { own = m.players[oi]; break; }
+      }
+    }
+    run.victory = !!m.victory;
+    run.t = m.dur !== undefined ? m.dur : run.t;
+    run.level = m.level || 1;
+    run.kills = m.kills || 0;
+    run.gold = m.gold || 0;
+    run.bossesKilled = m.bossesKilled || 0;
+    run.maxDps = m.maxDps || 0;
+    run.weapons = ((own && own.weapons) || m.weapons || []).map(function (w) {
+      return { id: w.id, lv: w.lv || 1, evolved: !!w.evolved, evoId: w.evoId, cdT: 0.2, curR: 0 };
+    });
+    run.passives = (own && own.passives) || m.passives || {};
+    for (var i = 0; i < CFG.MAPS.length; i++) if (CFG.MAPS[i].id === m.mapId) run.map = CFG.MAPS[i];
+    var ownCharId = (own && own.charId) || m.charId;
+    for (var k = 0; k < CFG.CHARS.length; k++) if (CFG.CHARS[k].id === ownCharId) run.player.char = CFG.CHARS[k];
+    // 客户端没有本地模拟,整局统计在这里一次性补账
+    if (run.kills > 0) Meta.track('kill', run.kills);
+    if (run.gold > 0) Meta.track('gold', run.gold);
+    if (run.bossesKilled > 0) Meta.track('bossKill', run.bossesKilled);
+    if (run.victory) Meta.track('win'); else Meta.track('death');
+    Meta.trackBest('survive', m.bestSurvive || Math.floor(run.t), m.mapId);
+    Meta.trackBest('level', m.bestLevel || run.level);
+    Meta.trackBest('weapons', run.weapons.length);
+    Meta.trackBest('killsRun', m.bestKillsRun || run.kills);
+    Meta.persist();
+    var fresh = Meta.checkAchv();
+    AudioSys.setIntensity(0);
+    AudioSys.play(run.victory ? 'victory' : 'gameover');
+    state = 'result';
+    UI.showHud(false);
+    UI.showResult(run, fresh, false);
+    coop.on = false;
+    coop.active = false;
+    coop.mates = [];
+  }
+
+  // 客户端:用房主权威数据覆盖自己的显示状态(位置做平滑,不在本地积分)
+  function syncOwnPlayer(ps) {
+    var p = run.player;
+    var prevHp = p.hp, prevStatsHp = p.stats ? p.stats.hp : 1;
+    p.netX = ps.x; p.netY = ps.y;
+    p.netFace = ps.f || 1; p.netMoving = !!ps.mv;
+    p.downed = !!ps.dn;
+    p.reviveT = ps.rv || 0;
+    p.slow = ps.sl || 0;
+    p.rootT = ps.rt ? 1 : 0;
+    p.webStacks = ps.ws || 0;
+    if (ps.lvl !== undefined) {
+      run.level = ps.lvl;
+      run.xp = ps.xp || 0;
+      run.xpNeed = ps.xn || 1;
+    }
+    if (ps.wp) {
+      run.weapons = ps.wp.map(function (w) {
+        var def = CFG.WEAPONS[w[0]];
+        return { id: w[0], lv: w[1], evolved: !!w[2], evoId: def ? def.evo : null, cdT: 0.2, curR: 0 };
+      });
+      run.passives = {};
+      if (ps.ps) ps.ps.forEach(function (x) { run.passives[x[0]] = x[1]; });
+      Entities.recomputeStats(run);
+    }
+    if (p.stats) {
+      p.hp = ps.hp * p.stats.hp;
+      // 血量下降时给客户端受击反馈(实际伤害判定在房主)
+      if (ps.hp < prevHp / prevStatsHp - 0.02) {
+        p.hurtFlash = 0.25;
+        FX.flash('#ff2233', 0.14, 0.2);
+        AudioSys.play('player_hurt');
+      }
+    }
   }
 
   // ================= 升级 / 宝箱流程 =================
@@ -514,15 +763,23 @@
   }
 
   function togglePause() {
+    // 客户端不自己暂停:把请求发给房主,由房主统一暂停/恢复并广播
+    if (coop.on && Net.isClient()) {
+      if (state === 'run') Net.toHost({ t: 'pauseReq' });
+      else if (state === 'pause') Net.toHost({ t: 'resumeReq' });
+      return;
+    }
     if (state === 'run') {
       state = 'pause';
       UI.showPause(run);
+      if (coop.on && Net.isHost()) Net.broadcast({ t: 'pause', paused: true });
     } else if (state === 'pause') {
       // 局内百科是盖在暂停之上的覆盖层。此时按 ESC 应该只退回暂停菜单,
       // 否则会关掉暂停层却留下百科层,表现为卡在百科界面出不来。
       if (UI.isCodexOpen()) { UI.closeCodexOverlay(); return; }
       state = 'run';
       UI.hidePause();
+      if (coop.on && Net.isHost()) Net.broadcast({ t: 'pause', paused: false });
     }
   }
 
@@ -536,30 +793,56 @@
     run.frame++;
     if (run.freezeT > 0) run.freezeT -= dt;
 
-    Merchant.update(run, dt);   // 流浪商人:定时补货 + 走上自动购买
-    updateVaults(run, dt);      // 四角金库:金币随时间增长 + 走到自动拾取
-    applyCoopAuras();    // 队友光环互益:圣光环持有者为附近队友回血与加成
-
-    // 联机客户端:只上报输入 + 渲染房主快照,不跑本地模拟(避免两端分歧)
+    // 联机客户端:纯渲染。不跑本地模拟/伤害/拾取,只上报输入并播放房主快照,
+    // 彻底消除本地模拟与快照互相覆盖导致的"几分钟后卡死/打不到怪"。
     if (coop.on && Net.isClient()) {
-      Entities.updatePlayer(run, dt);        // 本地预测,手感不卡
       var iv = E.readInput();
       coop.inputAcc += dt;
       if (coop.inputAcc >= 1 / 30) {         // 30Hz 上报足够
         coop.inputAcc = 0;
         Net.toHost({ t: 'input', x: +iv.x.toFixed(2), y: +iv.y.toFixed(2) });
       }
-      Weapons.update(run, dt);               // 本地弹幕仅作视觉,伤害由房主结算
+      var cp = run.player;
+      // 位置跟随房主权威坐标,做轻量平滑(本地不积分位移,判定与画面一致)
+      if (cp.netX !== undefined) {
+        var ck = Math.min(1, dt * 12);
+        cp.x += (cp.netX - cp.x) * ck;
+        cp.y += (cp.netY - cp.y) * ck;
+        if (cp.netFace > 0.01) cp.face = 1; else if (cp.netFace < -0.01) cp.face = -1;
+        cp.moving = !!cp.netMoving;
+      }
+      if (cp.iframe > 0) cp.iframe -= dt;
+      if (cp.hurtFlash > 0) cp.hurtFlash -= dt;
+      // 相机跟随自己的权威位置
+      E.cam.x = E.lerp(E.cam.x, cp.x, 1 - Math.pow(0.001, dt));
+      E.cam.y = E.lerp(E.cam.y, cp.y, 1 - Math.pow(0.001, dt));
+      var cmX = Math.max(0, CFG.GAME.MAP_R - CFG.GAME.W / 2 + 90);
+      var cmY = Math.max(0, CFG.GAME.MAP_R - CFG.GAME.H / 2 + 90);
+      E.cam.x = E.clamp(E.cam.x, -cmX, cmX);
+      E.cam.y = E.clamp(E.cam.y, -cmY, cmY);
+      Weapons.updateVisual(run, dt);         // 纯视觉弹幕运动,不结算伤害
       UI.updateHUD(run);
       return;
     }
 
-    Entities.updatePlayer(run, dt);
+    Merchant.update(run, dt);   // 流浪商人:定时补货 + 走上自动购买
+    updateVaults(run, dt);      // 四角金库:金币随时间增长 + 走到自动拾取
+    updateTeamRevives(dt);      // 全体倒地/救援,包括房主
+    applyCoopAuras();    // 队友光环互益:圣光环持有者为附近队友回血与加成
+    var hostEntry = run.coopPlayers && run.coopPlayers[0];
+    if (!hostEntry || !hostEntry.downed) Entities.updatePlayer(run, dt);
     updateMates(dt);                         // 房主代跑队友移动与武器
     // 环境氛围粒子:贴合相机视野的浮游尘埃/萤火
     FX.ambient(E.cam.x - CFG.GAME.W / 2, E.cam.y - CFG.GAME.H / 2, CFG.GAME.W, CFG.GAME.H,
       { color: run.map.palette.ambient || '#ffe9a3', glow: true, rate: 46, dt: dt });
-    Weapons.update(run, dt);
+    if (!hostEntry || !hostEntry.downed) Weapons.update(run, dt);
+    else {
+      // 仍推进已存在的共享弹幕与延迟射击,但倒地房主不再产生新攻击。
+      var hostWeapons = run.weapons;
+      run.weapons = [];
+      try { Weapons.update(run, dt); }
+      finally { run.weapons = hostWeapons; }
+    }
     Entities.updateEnemies(run, dt);
     Entities.updateGems(run, dt);
     Entities.updateItems(run, dt);
@@ -610,7 +893,11 @@
 
     if (run.over) { finalizeRun(); return; }
     // 联机:升级用非阻塞悬浮卡,不暂停;pendingLevels 由悬浮卡结算
-    if (coop.on) { if (run.pendingLevels > 0) run.pendingLevels = 0; return; }
+    if (coop.on) {
+      run.pendingLevels = 0;
+      processMateChests();                   // 队友捡到的宝箱由房主代开
+      return;
+    }
     if (run.pendingChest) { enterChest(); return; }
     if (run.pendingLevels > 0) { enterLevelUp(); return; }
   }
@@ -1004,9 +1291,19 @@
 
     UI.init({
       onStartRun: function (charId, mapId) { newRun(charId, mapId); },
-      onResume: function () { if (state === 'pause') togglePause(); },
+      onResume: function () {
+        if (coop.on && Net.isClient()) {
+          Net.toHost({ t: 'resumeReq' });
+          return;
+        }
+        if (state === 'pause') togglePause();
+      },
       onPauseToggle: togglePause,
       onGiveUp: function () {
+        if (coop.on && Net.isClient()) {
+          Net.toHost({ t: 'giveup' });
+          return;
+        }
         UI.hidePause();
         run.over = true; run.victory = false;
         state = 'run'; // 让 update 走 finalize
@@ -1029,6 +1326,7 @@
         var ok = roster.length >= 2 && roster.every(function (r) { return r.ready && r.charId; });
         if (!ok) { UI.warn('等待全员准备…'); return; }
         var mapId = Net.getMap() || CFG.MAPS[0].id;   // 房主选定,不再固定第一张
+        coop.active = true;
         setupCoopHost(roster, mapId);
         Net.broadcast({ t: 'start', mapId: mapId, roster: roster });
         newRun(roster[0].charId, mapId);
@@ -1048,27 +1346,44 @@
         coop.mates = [];
         coop.remote = [];
         coop.myId = Net.selfId();
+        coop.active = true;
         newRun(mine, m.mapId);
       },
       // 客户端:收到房主快照,重建世界并解出队友
-      onSnap: function (m) {        if (!run || !coop.on) return;
-        Entities.applySnapshot(run, { t: m.ti, e: m.e, s: m.s, l: m.l, g: m.g, it: m.it, bh: m.bh });
-        run.kills = m.kl || run.kills;
-        coop.remote = [];
-        for (var i = 0; i < m.p.length; i++) {
-          var ps = m.p[i];
-          if (ps.id === coop.myId) {
-            // 房主对我的权威状态:血量与倒地由它说了算,位置保留本地预测
-            if (run.player.stats) run.player.hp = ps.hp * run.player.stats.hp;
-            run.player.downed = !!ps.dn;
-            run.player.reviveT = ps.rv;
-            continue;
+      onSnap: function (m) {
+        if (!run || !coop.on) return;
+        try {
+          Entities.applySnapshot(run, { t: m.ti, e: m.e, s: m.s, l: m.l, g: m.g, it: m.it, bh: m.bh, bi: m.bi });
+          run.kills = m.kl || 0;
+          run.gold = m.gd || 0;
+          run.bossesKilled = m.bk || 0;
+          run.freezeT = m.fz || 0;
+          run.endless = !!m.en;
+          if (m.bi) {
+            run.boss = run.boss || {};
+            run.boss.alive = m.bh > 0;
+            run.boss.bossType = m.bi;
+            run.boss.hp = m.bh;
+            run.boss.maxHp = 1;
+          } else {
+            run.boss = null;
           }
-          coop.remote.push({
-            name: ps.name, charId: ps.charId, x: ps.x, y: ps.y,
-            face: ps.f, moving: !!ps.mv, hpPct: ps.hp,
-            downed: !!ps.dn, reviveT: ps.rv, buffed: !!ps.bf
-          });
+          coop.remote = [];
+          for (var i = 0; i < m.p.length; i++) {
+            var ps = m.p[i];
+            if (ps.id === coop.myId) {
+              syncOwnPlayer(ps);
+              continue;
+            }
+            coop.remote.push({
+              name: ps.name, charId: ps.charId, x: ps.x, y: ps.y,
+              face: ps.f, moving: !!ps.mv, hpPct: ps.hp,
+              downed: !!ps.dn, reviveT: ps.rv, buffed: !!ps.bf
+            });
+          }
+          Weapons.applyVisual(run, m.b || []);
+        } catch (e) {
+          console.error('[联机] 快照应用失败:', e);
         }
       },
       // 房主:收到客户端输入
@@ -1083,6 +1398,13 @@
       onHostLost: function () {
         UI.warn('⚠ 房主已断开');
         coop.on = false;
+        coop.active = false;
+        coop.mates = [];
+        if (run && state !== 'result') {
+          run.over = true;
+          run.victory = false;
+          state = 'run';
+        }
       },
       // 网络状态反馈:掉线自动重连时给出提示,避免玩家以为游戏卡死
       onNetStatus: function (status, tries) {
@@ -1094,28 +1416,60 @@
           UI.warn('⚠ 连接中断,正在重连…');
         }
       },
-      // 客户端:收到房主推送的升级选项,弹出非阻塞悬浮卡
+      // 客户端:收到房主为自己生成的独立升级选项
       onRemoteLevelUp: function (m) {
-        UI.remoteLevelUp(m.choices);
+        if (!coop.on || !run) return;
+        UI.remoteLevelUp(m.choices, function (opt, idx) {
+          Net.toHost({ t: 'pickup', seq: m.seq, optIdx: idx });
+        });
       },
       // 客户端:房主宣布本档升级已解决,隐藏悬浮卡
-      onPickDone: function () { UI.hideCoopLevelUp(); },
-      // 房主:客户端上报升级选择,代它应用到对应队友
-      onClientPick: function (peerId, optIdx) {
+      onPickDone: function (m) { UI.hideCoopLevelUp(); },
+      // 房主:客户端上报升级选择,代它应用到对应队友(选项按该队友的 Build 生成)
+      onClientPick: function (peerId, optIdx, seq) {
         for (var i = 0; i < coop.mates.length; i++) {
           if (coop.mates[i].peerId !== peerId) continue;
           var mt = coop.mates[i];
-          var opts = Weapons.getLevelUpChoices(run);
-          if (opts[optIdx]) {
-            // 切到该队友的 run 视角应用,再切回
-            var savedP = run.player, savedPs = run.passives;
-            run.player = mt.player; run.passives = mt.passives;
-            Weapons.applyChoice(run, opts[optIdx]);
-            run.player = savedP; run.passives = savedPs;
-          }
-          mt.pendingLevels = 0;
+          if (seq !== undefined && mt.luSeq !== seq) return;
+          var opts = mt.luChoices;
+          if (opts[optIdx]) applyChoiceFor(mt, opts[optIdx]);
+          mt.luChoices = null;
+          mt.pendingLevels = Math.max(0, (mt.pendingLevels || 0) - 1);
+          mt.luOpen = false;
+          Net.sendTo(peerId, { t: 'pickdone', seq: seq });
+          if (mt.pendingLevels > 0) sendMateLevelUp(mt);
           return;
         }
+      },
+      // 房主:客户端申请暂停/恢复/放弃
+      onHostCommand: function (peerId, m) {
+        if (m.t === 'pauseReq' && state === 'run') togglePause();
+        else if (m.t === 'resumeReq' && state === 'pause') togglePause();
+        else if (m.t === 'giveup' && (state === 'run' || state === 'pause')) {
+          UI.hidePause();
+          run.over = true; run.victory = false;
+          state = 'run';
+        }
+      },
+      // 客户端:房主暂停/恢复
+      onPauseSync: function (m) {
+        if (!run || !coop.on) return;
+        if (m.paused && state === 'run') {
+          state = 'pause';
+          UI.showPause(run);
+        } else if (!m.paused && state === 'pause') {
+          state = 'run';
+          UI.hidePause();
+        }
+      },
+      // 客户端:队友宝箱由房主代开的结果
+      onChest: function (m) {
+        if (!run || !coop.on) return;
+        UI.showChest(m.results || [], function () {});
+      },
+      // 客户端:房主宣布本局结束
+      onOver: function (m) {
+        clientEndRun(m);
       },
       onError: function (e) {
         UI.warn('联机异常: ' + (e && e.type ? e.type : '未知'));
@@ -1133,7 +1487,8 @@
 
   window.Debug = {
     run: function () { return run; },
-    state: function () { return state; }
+    state: function () { return state; },
+    coop: function () { return coop; }
   };
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);

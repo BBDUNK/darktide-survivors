@@ -98,64 +98,80 @@ window.Merchant = (function () {
       roll(run);
       if (run.cb && run.cb.onWarn) run.cb.onWarn('🛒 商人补货了!');
     }
-    // 走到商品上自动购买
-    var p = run.player;
+    // 走到商品上自动购买(任意参战玩家都可购买)
+    var ents = run.coopPlayers || [{ player: run.player, downed: false }];
     for (var i = 0; i < slots.length; i++) {
       var s = slots[i];
       if (!s || s.bought) continue;
-      if (E.dist2(p.x, p.y, s.x, s.y) > M.pickR * M.pickR) continue;
+      var owner = null;
+      for (var ei = 0; ei < ents.length; ei++) {
+        var ew = ents[ei];
+        if (ew.downed || ew.player.hp <= 0) continue;
+        if (E.dist2(ew.player.x, ew.player.y, s.x, s.y) <= M.pickR * M.pickR) {
+          owner = ew; break;
+        }
+      }
+      if (!owner) continue;
       if (run.gold < s.good.cost) {
         // 钱不够:每秒最多提示一次,避免刷屏
         if (!s.warnT || run.t - s.warnT > 1.5) {
           s.warnT = run.t;
-          FX.dmgText(s.x, s.y - 30, '金币不足', { crit: false });
+          FX.dmgText(owner.player.x, owner.player.y - 30, '金币不足', { crit: false });
         }
         continue;
       }
       run.gold -= s.good.cost;
-      buy(run, s.good);
+      buy(run, s.good, owner);
       s.bought = true;
-      FX.burst(s.x, s.y, { color: '#ffd76b', n: 14, speed: 100, life: 0.5, size: 2 });
-      FX.ring(s.x, s.y, { r: 34, color: '#ffd76b', life: 0.4, width: 3 });
+      FX.burst(owner.player.x, owner.player.y, { color: '#ffd76b', n: 14, speed: 100, life: 0.5, size: 2 });
+      FX.ring(owner.player.x, owner.player.y, { r: 34, color: '#ffd76b', life: 0.4, width: 3 });
       AudioSys.play('upgrade_pick');
     }
   }
 
-  function buy(run, g) {
+  function buy(run, g, w) {
+    var savedP = run.player, savedW = run.weapons, savedPs = run.passives;
+    run.player = w ? w.player : run.player;
+    run.weapons = w ? w.weapons : run.weapons;
+    run.passives = w ? w.passives : run.passives;
     var p = run.player;
-    switch (g.kind) {
-      case 'heal':
-        p.hp = Math.min(p.stats.hp, p.hp + 60);
-        FX.heal(p.x, p.y);
-        break;
-      case 'shield':
-        p.shield = (p.shield || 0) + 30;
-        FX.ring(p.x, p.y, { r: 30, color: '#7af', life: 0.4, width: 3 });
-        break;
-      case 'bomb':
-        Entities.bombBlast(run, 260);
-        break;
-      case 'magnet':
-        var gems = Entities.getGems();
-        for (var i = 0; i < gems.length; i++) if (gems[i].alive) gems[i].pull = true;
-        break;
-      case 'clock':
-        run.freezeT = Math.max(run.freezeT, 4);
-        break;
-      case 'reroll':
-        run.rerolls++;
-        break;
-      case 'banish':
-        run.banishes++;
-        break;
-      case 'weapon':
-        var have = Weapons.findWeapon(run, g.id);
-        if (have) have.lv++;
-        else Weapons.addWeapon(run, g.id);
-        break;
-      case 'passive':
-        Weapons.addPassive(run, g.id);
-        break;
+    try {
+      switch (g.kind) {
+        case 'heal':
+          p.hp = Math.min(p.stats.hp, p.hp + 60);
+          FX.heal(p.x, p.y);
+          break;
+        case 'shield':
+          p.shield = (p.shield || 0) + 30;
+          FX.ring(p.x, p.y, { r: 30, color: '#7af', life: 0.4, width: 3 });
+          break;
+        case 'bomb':
+          Entities.bombBlast(run, 260, p.x, p.y);
+          break;
+        case 'magnet':
+          var gems = Entities.getGems();
+          for (var i = 0; i < gems.length; i++) if (gems[i].alive) gems[i].pull = true;
+          break;
+        case 'clock':
+          run.freezeT = Math.max(run.freezeT, 4);
+          break;
+        case 'reroll':
+          run.rerolls++;
+          break;
+        case 'banish':
+          run.banishes++;
+          break;
+        case 'weapon':
+          var have = Weapons.findWeapon(run, g.id);
+          if (have) have.lv++;
+          else Weapons.addWeapon(run, g.id);
+          break;
+        case 'passive':
+          Weapons.addPassive(run, g.id);
+          break;
+      }
+    } finally {
+      run.player = savedP; run.weapons = savedW; run.passives = savedPs;
     }
   }
 

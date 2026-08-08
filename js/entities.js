@@ -19,6 +19,60 @@ window.Entities = (function () {
     };
   }
 
+  // 联机玩家列表:每个条目是 { player, weapons, passives, downed, reviveT, peerId, name, isHost }。
+  // 单机模式只有一个"房主"条目,联机房主由 main.js 填充完整列表。
+  function playerEntries(run) {
+    return run.coopPlayers || [{
+      player: run.player, weapons: run.weapons, passives: run.passives,
+      isHost: true, downed: false, reviveT: 0, peerId: 'host', name: ''
+    }];
+  }
+
+  function alivePlayers(run) {
+    var ents = playerEntries(run), out = [];
+    for (var i = 0; i < ents.length; i++) {
+      if (!ents[i].downed && ents[i].player.hp > 0) out.push(ents[i]);
+    }
+    return out;
+  }
+
+  // 敌人 AI 的索敌目标:最近的存活玩家
+  function nearestPlayer(run, x, y) {
+    var ents = playerEntries(run), best = null, bd = 1e18;
+    for (var i = 0; i < ents.length; i++) {
+      var w = ents[i];
+      if (w.downed || w.player.hp <= 0) continue;
+      var d = E.dist2(w.player.x, w.player.y, x, y);
+      if (d < bd) { bd = d; best = w; }
+    }
+    return best || (ents.length ? ents[0] : null);
+  }
+
+  function randomPlayer(run) {
+    var alive = alivePlayers(run);
+    var pool = alive.length ? alive : playerEntries(run);
+    return pool.length ? pool[Math.floor(Math.random() * pool.length)] : null;
+  }
+
+  function markTeamDowned(run, w) {
+    if (!w) return false;
+    var p = w.player;
+    p.hp = 0;
+    p.downed = true;
+    p.reviveT = 0;
+    w.downed = true;
+    w.reviveT = 0;
+    if (run.cb && run.cb.onWarn) run.cb.onWarn('⚠ ' + (w.name || '队友') + ' 倒下了!');
+
+    var ents = playerEntries(run);
+    for (var i = 0; i < ents.length; i++) {
+      if (!ents[i].downed && ents[i].player.hp > 0) return true;
+    }
+    run.over = true;
+    run.victory = false;
+    return true;
+  }
+
   // 联机:为任意 player 对象算属性(房主要给每个队友各算一份)
   function recomputeStatsFor(run, p, passives) {
     var saved = run.player, savedP = run.passives;
@@ -139,8 +193,51 @@ window.Entities = (function () {
         AudioSys.play('levelup');
         bombBlast(run, 150); // 复活冲击波清场
       } else {
-        p.hp = 0;
-        run.over = true; run.victory = false;
+        var host = null;
+        if (run.coopPlayers && run.coopPlayers.length > 1) {
+          for (var i = 0; i < run.coopPlayers.length; i++) {
+            if (run.coopPlayers[i].isHost) { host = run.coopPlayers[i]; break; }
+          }
+        }
+        if (!markTeamDowned(run, host)) {
+          p.hp = 0;
+          run.over = true; run.victory = false;
+        }
+      }
+    }
+  }
+
+  // 对任意玩家条目结算伤害:房主直接走 run.over 流程,队友走倒地/救援流程
+  function damagePlayerAt(run, w, dmg) {
+    if (!w || w.downed) return;
+    if (w.isHost) { damagePlayer(run, dmg); return; }
+    var p = w.player;
+    if (p.iframe > 0 || run.over || !p.stats) return;
+    var real = Math.max(1, dmg - p.stats.armor);
+    if (p.shield > 0) {
+      var absorbed = Math.min(p.shield, real);
+      p.shield -= absorbed;
+      real -= absorbed;
+      p.shieldRegenT = p.stats.shieldCd;
+      if (real <= 0) { p.iframe = 0.12; p.hurtFlash = 0.12; AudioSys.play('player_hurt'); return; }
+    }
+    p.hp -= real;
+    p.iframe = 0.3;
+    p.hurtFlash = 0.25;
+    AudioSys.play('player_hurt');
+    FX.shake(4, 0.2);
+    if (p.hp <= 0) {
+      if (p.stats.revive > 0) {
+        p.stats.revive--;
+        p.hp = p.stats.hp * 0.5;
+        p.iframe = 2.5;
+        FX.levelBeam(p.x, p.y);
+        FX.ring(p.x, p.y, { r: 120, color: '#ffd76b', life: 0.6, width: 4 });
+        AudioSys.play('levelup');
+        bombBlast(run, 150, p.x, p.y);
+      } else {
+        markTeamDowned(run, w);
+        FX.ring(p.x, p.y, { r: 50, color: '#ff5964', life: 0.6, width: 3 });
       }
     }
   }
@@ -233,10 +330,12 @@ window.Entities = (function () {
     return e;
   }
 
-  // 在玩家周围环上取点。硬约束:结果必须在地图内,且离玩家不近于 SAFE_R。
+  // 在某个玩家周围环上取点。硬约束:结果必须在地图内,且离所有玩家不近于 SAFE_R。
   // 靠墙时沿环遍历角度找可行位置;真的无解就把点推到安全半径之外(绝不落在玩家身上)。
   function ringPoint(run, radius) {
-    var R = CFG.GAME.MAP_R, p = run.player;
+    var R = CFG.GAME.MAP_R;
+    var w = randomPlayer(run) || { player: run.player };
+    var p = w.player;
     var safe = CFG.GAME.SAFE_R;
     var rad = Math.max(radius, safe + 40);
     var a0 = Math.random() * Math.PI * 2;
@@ -257,22 +356,28 @@ window.Entities = (function () {
 
   // 生成前的最后一道闸:任何落在安全区内的坐标都推到安全半径之外
   function pushOutOfSafeZone(run, x, y) {
-    var p = run.player, safe = CFG.GAME.SAFE_R, R = CFG.GAME.MAP_R;
-    var dx = x - p.x, dy = y - p.y;
-    var d = Math.hypot(dx, dy);
-    if (d >= safe) return { x: x, y: y };
-    var a = d > 0.01 ? Math.atan2(dy, dx) : Math.random() * Math.PI * 2;
-    return {
-      x: E.clamp(p.x + Math.cos(a) * (safe + 30), -R, R),
-      y: E.clamp(p.y + Math.sin(a) * (safe + 30), -R, R)
-    };
+    var ents = playerEntries(run), safe = CFG.GAME.SAFE_R, R = CFG.GAME.MAP_R;
+    for (var i = 0; i < ents.length; i++) {
+      var w = ents[i];
+      if (w.downed || w.player.hp <= 0) continue;
+      var p = w.player;
+      var dx = x - p.x, dy = y - p.y;
+      var d = Math.hypot(dx, dy);
+      if (d >= safe) continue;
+      var a = d > 0.01 ? Math.atan2(dy, dx) : Math.random() * Math.PI * 2;
+      x = E.clamp(p.x + Math.cos(a) * (safe + 30), -R, R);
+      y = E.clamp(p.y + Math.sin(a) * (safe + 30), -R, R);
+    }
+    return { x: x, y: y };
   }
 
   function spawnAtRing(run, id, opts) {
     var def = CFG.ENEMIES[id] || CFG.BOSSES[id];
     // 破土怪不走出生环:直接在玩家周围较近处冒出,用出土前摇代替距离作为公平性保证
     if (def && def.burrow) {
-      var R = CFG.GAME.MAP_R, p = run.player;
+      var R = CFG.GAME.MAP_R;
+      var w = randomPlayer(run) || { player: run.player };
+      var p = w.player;
       var ba = Math.random() * Math.PI * 2;
       var bd = 150 + Math.random() * 190;
       return spawnEnemy(run, id,
@@ -447,7 +552,7 @@ window.Entities = (function () {
       if (run.freezeT > 0 || e.frozen > 0 || e.stun > 0) {
         e.frozen = Math.max(0, e.frozen - dt);
         e.stun = Math.max(0, e.stun - dt);
-        contactCheck(run, e, p);
+        contactCheckAll(run, e);
         continue;
       }
       if (e.slowT > 0) { e.slowT -= dt; if (e.slowT <= 0) e.slow = 0; }
@@ -459,16 +564,19 @@ window.Entities = (function () {
         if (!e.alive) continue;
       }
       var spd = e.spd * (1 - e.slow) * (e.buffSpd || 1);
+      var tgt = nearestPlayer(run, e.x, e.y);
+      if (!tgt) continue;
+      p = tgt.player;
       var dx = p.x - e.x, dy = p.y - e.y;
       var dist = Math.hypot(dx, dy) || 1;
       var nx = dx / dist, ny = dy / dist;
 
       // 精英专属技能:近战连续冲撞 / 远程瞬移(瞬移后僵直)
-      if (e.elite && e.eliteSkill && eliteSkill(run, e, dt, nx, ny, dist)) {
+      if (e.elite && e.eliteSkill && eliteSkill(run, e, dt, nx, ny, dist, tgt)) {
         e.x += (e.vx + e.kx) * dt;
         e.y += (e.vy + e.ky) * dt;
         e.kx *= Math.pow(0.002, dt); e.ky *= Math.pow(0.002, dt);
-        contactCheck(run, e, p);
+        contactCheckAll(run, e);
         continue;
       }
       e.face = nx >= 0 ? 1 : -1;
@@ -550,7 +658,7 @@ window.Entities = (function () {
           }
           break;
         case 'boss':
-          bossAI(run, e, dt, nx, ny, dist, spd);
+          bossAI(run, e, dt, nx, ny, dist, spd, tgt);
           break;
       }
 
@@ -565,7 +673,7 @@ window.Entities = (function () {
         E.gridQuery(e.x, e.y, e.r + 8, sepCb);
       }
 
-      contactCheck(run, e, p);
+      contactCheckAll(run, e);
 
       // 敌人也不能越出结界
       var eR = CFG.GAME.MAP_R;
@@ -612,32 +720,41 @@ window.Entities = (function () {
         sh.vy = (sh.vy / Math.hypot(sh.vx, sh.vy) || 0) * sh.spd0 * decay;
       }
       sh.x += sh.vx * dt; sh.y += sh.vy * dt;
-      if (E.dist2(sh.x, sh.y, p.x, p.y) < (p.r + 5) * (p.r + 5)) {
+      var hitEntry = null, ents2 = playerEntries(run);
+      for (var hi = 0; hi < ents2.length; hi++) {
+        var hw = ents2[hi];
+        if (hw.downed || hw.player.hp <= 0) continue;
+        if (E.dist2(sh.x, sh.y, hw.player.x, hw.player.y) < (hw.player.r + 5) * (hw.player.r + 5)) {
+          hitEntry = hw; break;
+        }
+      }
+      if (hitEntry) {
+        var hp = hitEntry.player;
         sh.alive = false;
-        damagePlayer(run, sh.dmg);
+        damagePlayerAt(run, hitEntry, sh.dmg);
         // 蛛网弹:叠层减速,叠满两层则被完全包裹硬控 1 秒;触发后角色获得 5 秒蛛网免疫
         if (sh.webType) {
-          if (p.webImmune > 0) {
-            FX.burst(p.x, p.y, { color: '#ffaa22', n: 8, speed: 70, life: 0.3, size: 2 });
+          if (hp.webImmune > 0) {
+            FX.burst(hp.x, hp.y, { color: '#ffaa22', n: 8, speed: 70, life: 0.3, size: 2 });
             continue;
           }
-          if (p.webStacks < 2) p.webStacks++;
-          p.slow = sh.slow * (p.webStacks === 2 ? 1.6 : 1);
-          p.slowT = Math.max(p.slowT, sh.slowDur);
-          p.webT = p.slowT;
-          if (p.webStacks >= 2 && p.rootT <= 0) {
-            p.rootT = 1.0;              // 硬控:原地无法移动
-            p.webStacks = 0;            // 触发后清空,需重新叠
-            p.webImmune = 5.0;          // 5 秒免疫
-            FX.ring(p.x, p.y, { r: 34, color: '#f4f6ff', life: 0.5, width: 4 });
-            FX.burst(p.x, p.y, { color: '#e8ecff', n: 14, speed: 90, life: 0.5, size: 2 });
+          if (hp.webStacks < 2) hp.webStacks++;
+          hp.slow = sh.slow * (hp.webStacks === 2 ? 1.6 : 1);
+          hp.slowT = Math.max(hp.slowT, sh.slowDur);
+          hp.webT = hp.slowT;
+          if (hp.webStacks >= 2 && hp.rootT <= 0) {
+            hp.rootT = 1.0;             // 硬控:原地无法移动
+            hp.webStacks = 0;           // 触发后清空,需重新叠
+            hp.webImmune = 5.0;         // 5 秒免疫
+            FX.ring(hp.x, hp.y, { r: 34, color: '#f4f6ff', life: 0.5, width: 4 });
+            FX.burst(hp.x, hp.y, { color: '#e8ecff', n: 14, speed: 90, life: 0.5, size: 2 });
             AudioSys.play('freeze');
           } else {
-            FX.ring(p.x, p.y, { r: 22, color: '#dfe4ff', life: 0.3, width: 2 });
+            FX.ring(hp.x, hp.y, { r: 22, color: '#dfe4ff', life: 0.3, width: 2 });
           }
         } else if (sh.slow > 0) {
-          p.slow = Math.max(p.slow, sh.slow);
-          p.slowT = Math.max(p.slowT, sh.slowDur);
+          hp.slow = Math.max(hp.slow, sh.slow);
+          hp.slowT = Math.max(hp.slowT, sh.slowDur);
         }
       }
     }
@@ -660,7 +777,8 @@ window.Entities = (function () {
 
   // 精英专属技能。返回 true 表示本帧已由技能接管移动,跳过常规 AI。
   var ELITE_COL = '#ff9d5c';
-  function eliteSkill(run, e, dt, nx, ny, dist) {
+  function eliteSkill(run, e, dt, nx, ny, dist, tgt) {
+    var p = tgt ? tgt.player : run.player;
     // 瞬移后僵直:输出窗口
     if (e.stiffT > 0) {
       e.stiffT -= dt;
@@ -703,7 +821,6 @@ window.Entities = (function () {
       e.blinkT -= dt;
       if (e.blinkT <= 0 && dist < 460) {            // 瞬移到玩家背后
         e.blinkT = 6 + Math.random() * 3;
-        var p = run.player;
         FX.burst(e.x, e.y, { color: ELITE_COL, n: 12, speed: 130, life: 0.4, size: 2 });
         var pa = Math.atan2(p.lastVy || 0, p.lastVx || 1);
         if (!p.lastVx && !p.lastVy) pa = Math.random() * Math.PI * 2;
@@ -774,6 +891,19 @@ window.Entities = (function () {
     if (E.dist2(e.x, e.y, p.x, p.y) < rr * rr) damagePlayer(run, e.dmg * (e.buffDmg || 1));
   }
 
+  function contactCheckAll(run, e) {
+    var ents = playerEntries(run);
+    for (var i = 0; i < ents.length; i++) {
+      var w = ents[i];
+      if (w.downed) continue;
+      var p = w.player;
+      var rr = e.r + p.r;
+      if (E.dist2(e.x, e.y, p.x, p.y) < rr * rr) {
+        damagePlayerAt(run, w, e.dmg * (e.buffDmg || 1));
+      }
+    }
+  }
+
   var shots = [];
   function fireShot(x, y, nx, ny, spd, dmg, slow, slowDur, webType, col, size, maxRange) {
     for (var i = 0; i < shots.length; i++) {
@@ -809,7 +939,6 @@ window.Entities = (function () {
   }
 
   function updateLobs(run, dt) {
-    var p = run.player;
     for (var i = 0; i < lobs.length; i++) {
       var l = lobs[i];
       if (!l.alive) continue;
@@ -822,15 +951,24 @@ window.Entities = (function () {
           AudioSys.play('bomb');
         }
         // dmg 为 0 的是纯预警标记(史莱姆跳跃),伤害由 Boss 自己结算
-        if (l.dmg > 0 && E.dist2(p.x, p.y, l.tx, l.ty) < l.r * l.r) damagePlayer(run, l.dmg);
+        if (l.dmg > 0) {
+          var ents = playerEntries(run);
+          for (var j = 0; j < ents.length; j++) {
+            var w = ents[j];
+            if (w.downed || w.player.hp <= 0) continue;
+            if (E.dist2(w.player.x, w.player.y, l.tx, l.ty) < l.r * l.r) {
+              damagePlayerAt(run, w, l.dmg);
+            }
+          }
+        }
       }
     }
   }
 
   // ================= Boss AI =================
-  function bossAI(run, e, dt, nx, ny, dist, spd) {
+  function bossAI(run, e, dt, nx, ny, dist, spd, tgt) {
     e.aiT -= dt;
-    var p = run.player;
+    var p = tgt ? tgt.player : run.player;
     var bdef = CFG.BOSSES[e.bossType] || {};
     var enrage = (e.bossType === 'boss_darklord' && run.t >= CFG.GAME.RUN_TIME);
     var sMul = enrage ? 1.6 : 1, dMul = enrage ? 2 : 1;
@@ -873,9 +1011,14 @@ window.Entities = (function () {
             FX.explosion(e.x, e.y, LEAP_R);
             FX.shake(8, 0.35);
             AudioSys.play('splat');
-            // 落地范围伤害
-            if (E.dist2(p.x, p.y, e.x, e.y) < LEAP_R * LEAP_R) {
-              damagePlayer(run, e.dmg * 1.2 * dMul);
+            // 落地范围伤害:覆盖所有存活玩家
+            var ents = playerEntries(run);
+            for (var ei2 = 0; ei2 < ents.length; ei2++) {
+              var ew = ents[ei2];
+              if (ew.downed || ew.player.hp <= 0) continue;
+              if (E.dist2(ew.player.x, ew.player.y, e.x, e.y) < LEAP_R * LEAP_R) {
+                damagePlayerAt(run, ew, e.dmg * 1.2 * dMul);
+              }
             }
             // 落地释放一圈腐液弹
             for (var sj = 0; sj < 12; sj++) {
@@ -1074,12 +1217,14 @@ window.Entities = (function () {
   }
 
   function updateGems(run, dt) {
-    var p = run.player, s = p.stats;
-    var mr2 = s.magnet * s.magnet;
     for (var i = 0; i < gems.length; i++) {
       var g = gems[i];
       if (!g.alive) continue;
       g.t += dt;
+      var w = nearestPlayer(run, g.x, g.y);
+      if (!w) continue;
+      var p = w.player, s = p.stats;
+      var mr2 = s.magnet * s.magnet;
       var dx = p.x - g.x, dy = p.y - g.y;
       var d2 = dx * dx + dy * dy;
       if (g.pull || d2 < mr2) {
@@ -1090,16 +1235,17 @@ window.Entities = (function () {
       }
       if (d2 < 26 * 26) {
         g.alive = false; freeGem.push(i);
-        addXp(run, g.v);
+        addXp(run, g.v, s);
         FX.pickup(p.x, p.y - 14, '#59c2ff');
         AudioSys.play('gem');
       }
     }
   }
 
-  function addXp(run, v) {
+  function addXp(run, v, ownerStats) {
     // 联机时经验按人数稀释,保证升级节奏不因多人分摊而失控
-    var gain = v * run.player.stats.growth * (run.coopXpMul || 1);
+    var st = ownerStats || run.player.stats;
+    var gain = v * st.growth * (run.coopXpMul || 1);
     // 联机共享经验池:加给所有人,升级节奏一致
     if (run.coopXp) {
       run.coopXp += gain;
@@ -1138,11 +1284,13 @@ window.Entities = (function () {
   }
 
   function updateItems(run, dt) {
-    var p = run.player;
     for (var i = 0; i < items.length; i++) {
       var it = items[i];
       if (!it.alive) continue;
       it.t += dt;
+      var w = nearestPlayer(run, it.x, it.y);
+      if (!w) continue;
+      var p = w.player;
       var pr = (it.type === 'coin') ? Math.max(30, p.stats.magnet * 0.7) : 30;
       var d2 = E.dist2(it.x, it.y, p.x, p.y);
       if (it.pull || (it.type === 'coin' && d2 < pr * pr && d2 > 24 * 24)) {
@@ -1153,13 +1301,13 @@ window.Entities = (function () {
       }
       if (d2 < 26 * 26) {
         it.alive = false;
-        collectItem(run, it);
+        collectItem(run, it, w);
       }
     }
   }
 
-  function collectItem(run, it) {
-    var p = run.player;
+  function collectItem(run, it, w) {
+    var p = w ? w.player : run.player;
     switch (it.type) {
       case 'coin':
         var v = Math.round(it.v * p.stats.greed);
@@ -1184,7 +1332,7 @@ window.Entities = (function () {
         AudioSys.play('magnet');
         break;
       case 'bomb':
-        bombBlast(run, 260);
+        bombBlast(run, 260, p.x, p.y);
         Meta.track('bomb');
         AudioSys.play('bomb');
         break;
@@ -1194,21 +1342,23 @@ window.Entities = (function () {
         AudioSys.play('freeze');
         break;
       case 'chest':
-        run.pendingChest++;
+        if (w && w.isHost) run.pendingChest++;
+        else if (w) w.pendingChest = (w.pendingChest || 0) + 1;
         AudioSys.play('chest_open');
         break;
     }
   }
 
-  function bombBlast(run, dmg) {
+  function bombBlast(run, dmg, cx, cy) {
     var p = run.player;
+    var bx = cx === undefined ? p.x : cx, by = cy === undefined ? p.y : cy;
     FX.flash('#fff2b0', 0.5, 0.4);
     FX.shake(10, 0.5);
-    FX.explosion(p.x, p.y, 200);
+    FX.explosion(bx, by, 200);
     for (var i = 0; i < POOL; i++) {
       var e = enemies[i];
       if (!e.alive) continue;
-      if (E.dist2(e.x, e.y, p.x, p.y) < 560 * 560) {
+      if (E.dist2(e.x, e.y, bx, by) < 560 * 560) {
         damageEnemy(run, e, e.boss ? dmg * 2 : dmg + e.maxHp * 0.5, { noCrit: true });
       }
     }
@@ -1224,12 +1374,16 @@ window.Entities = (function () {
       sh.alive = false; burned++;
       FX.burst(sh.x, sh.y, { color: '#ffaa44', n: 5, speed: 60, life: 0.28, size: 2 });
     }
-    var p = run.player;
-    if (E.dist2(p.x, p.y, x, y) <= r2 && (p.webStacks > 0 || p.rootT > 0)) {
-      p.webStacks = 0; p.webT = 0; p.rootT = 0;
-      if (p.slow > 0) { p.slow = 0; p.slowT = 0; }
-      FX.burst(p.x, p.y, { color: '#ffbb55', n: 12, speed: 90, life: 0.4, size: 2 });
-      burned++;
+    var ents = playerEntries(run);
+    for (var pi = 0; pi < ents.length; pi++) {
+      var p = ents[pi].player;
+      if (E.dist2(p.x, p.y, x, y) > r2) continue;
+      if (p.webStacks > 0 || p.rootT > 0 || p.slow > 0) {
+        p.webStacks = 0; p.webT = 0; p.rootT = 0;
+        p.slow = 0; p.slowT = 0;
+        FX.burst(p.x, p.y, { color: '#ffbb55', n: 12, speed: 90, life: 0.4, size: 2 });
+        burned++;
+      }
     }
     return burned;
   }
@@ -1302,7 +1456,8 @@ window.Entities = (function () {
   }
 
   function execEvent(run, ev) {
-    var p = run.player, i, a;
+    var w = randomPlayer(run) || { player: run.player };
+    var p = w.player, i, a;
     switch (ev.type) {
       case 'ring': // 包围圈
         var evR = CFG.GAME.MAP_R;
@@ -1576,7 +1731,23 @@ window.Entities = (function () {
     ctx.drawImage(shadow, p.x - 12, p.y + 8, 24, 8);
     ctx.globalAlpha = 1;
     var blink = p.iframe > 0 && (Math.floor(run.t * 14) & 1);
-    if (!blink) {
+    if (p.downed) {
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(Math.PI / 2);
+      drawSprite(ctx, p.char.sprite, 0, 0, 0, 1, false, 0.55, '#ff6688');
+      ctx.restore();
+      if (p.reviveT > 0) {
+        var revivePct = E.clamp(p.reviveT / CFG.COOP.reviveTime, 0, 1);
+        ctx.globalAlpha = 0.9;
+        ctx.strokeStyle = '#7ce87c';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 21, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * revivePct);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+    } else if (!blink) {
       var pf = p.moving ? Math.floor(p.animT * 8) : 0;
       drawSprite(ctx, p.char.sprite, pf, p.x, p.y, 1, p.face < 0, 1, p.hurtFlash > 0 ? '#ff4444' : null);
     }
@@ -1622,10 +1793,10 @@ window.Entities = (function () {
   // 客户端不跑敌人 AI,直接用房主快照重建世界。位置做插值以掩盖 15Hz 的快照间隔。
   function applySnapshot(run, snap) {
     var i, s, e;
-    // 敌人:按快照重建(超出快照数量的槽位回收)
-    for (i = 0; i < POOL; i++) {
-      if (enemies[i].alive) { enemies[i].alive = false; freeIdx.push(i); }
-    }
+    // 敌人:按快照重建。每次从完整的空池重建,彻底消除本地模拟残留导致的池漂移。
+    for (i = 0; i < POOL; i++) enemies[i].alive = false;
+    freeIdx.length = 0;
+    for (i = 0; i < POOL; i++) freeIdx.push(i);
     for (i = 0; i < snap.e.length && freeIdx.length; i++) {
       s = snap.e[i];
       e = enemies[freeIdx.pop()];
@@ -1642,6 +1813,9 @@ window.Entities = (function () {
       e.buffed = !!s.bf; e.buffSpd = 1; e.buffDmg = 1;
       e.slow = 0; e.slowT = 0; e.stun = 0; e.frozen = 0; e.kx = 0; e.ky = 0;
     }
+    // 客户端视觉索敌也要能用:为快照敌人重建空间哈希
+    E.gridClear();
+    for (i = 0; i < POOL; i++) if (enemies[i].alive) E.gridInsert(enemies[i]);
     // 敌方弹幕
     for (i = 0; i < shots.length; i++) shots[i].alive = false;
     for (i = 0; i < snap.s.length && i < shots.length; i++) {
@@ -1660,7 +1834,9 @@ window.Entities = (function () {
       lobs[i].t = s.t; lobs[i].dur = s.d; lobs[i].dmg = 0;
     }
     // 经验宝石与掉落物
-    for (i = 0; i < gems.length; i++) { if (gems[i].alive) { gems[i].alive = false; freeGem.push(i); } }
+    for (i = 0; i < gems.length; i++) gems[i].alive = false;
+    freeGem.length = 0;
+    for (i = 0; i < gems.length; i++) freeGem.push(i);
     for (i = 0; i < snap.g.length && freeGem.length; i++) {
       s = snap.g[i];
       var g = gems[freeGem.pop()];

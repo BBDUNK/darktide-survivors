@@ -43,6 +43,7 @@ async function enterMenu(pg) {
   const srv = await serve();
   const browser = await chromium.launch();
   const errs = [];
+  const problems = [];
   const mkPage = async (tag) => {
     const pg = await browser.newPage({ viewport: { width: 1280, height: 720 } });
     pg.on('pageerror', e => errs.push(tag + ' pageerror: ' + e.message));
@@ -103,10 +104,6 @@ async function enterMenu(pg) {
   console.log('进入战斗: host=' + hostIn + ' client=' + cliIn);
 
   // 客户端移动,看房主那边队友是否跟着动
-  const before = await host.evaluate(() => {
-    const r = window.Debug.run();
-    return r && window.__mates ? 0 : 0;
-  });
   await client.keyboard.down('KeyD');
   await client.waitForTimeout(2200);
   await client.keyboard.up('KeyD');
@@ -122,13 +119,87 @@ async function enterMenu(pg) {
   });
   console.log('客户端世界: ' + JSON.stringify(cliState));
 
+  // 客户端应能看到房主/队友的玩家弹幕(快照带弹幕池)
+  const cliBullets = await client.evaluate(() => {
+    const r = window.Debug.run();
+    if (!r) return -1;
+    let n = 0;
+    const bs = Weapons.getBullets();
+    for (let i = 0; i < bs.length; i++) if (bs[i].alive) n++;
+    return n;
+  });
+  console.log('客户端弹幕数: ' + cliBullets);
+
+  // 房主暂停,客户端应同步弹出暂停界面;恢复后时间继续推进
+  await host.keyboard.press('Escape');
+  await host.waitForTimeout(700);
+  const hostPaused = await host.evaluate(() =>
+    [...document.querySelectorAll('.modal')].some(m => !m.classList.contains('hidden') && m.querySelector('.pause-menu')));
+  const cliPaused = await client.evaluate(() =>
+    [...document.querySelectorAll('.modal')].some(m => !m.classList.contains('hidden') && m.querySelector('.pause-menu')));
+  console.log('暂停同步: host=' + hostPaused + ' client=' + cliPaused);
+  if (!hostPaused || !cliPaused) problems.push('房主暂停未同步到客户端');
+  await host.keyboard.press('Escape');
+  await host.waitForTimeout(700);
+  const cliT2 = await client.evaluate(() => window.Debug.run() ? +window.Debug.run().t.toFixed(1) : -1);
+  await host.waitForTimeout(1800);
+  const cliT3 = await client.evaluate(() => window.Debug.run() ? +window.Debug.run().t.toFixed(1) : -1);
+  console.log('恢复后时间推进: ' + cliT2 + '→' + cliT3);
+  if (cliT3 <= cliT2) problems.push('恢复后客户端时间未推进');
+
+  // 房主也应像普通队员一样倒地,而不是立即结束全队;活着的客户端靠近后可以救起。
+  const hostDown = await host.evaluate(() => {
+    const r = window.Debug.run();
+    const h = r && r.coopPlayers && r.coopPlayers[0];
+    const m = r && r.coopPlayers && r.coopPlayers[1];
+    if (!h || !m) return null;
+    Entities.clearEnemies(r);
+    m.player.x = h.player.x;
+    m.player.y = h.player.y;
+    h.player.hp = 1;
+    h.player.iframe = 0;
+    Entities.damagePlayer(r, 9999);
+    return { downed: h.downed, over: r.over, hp: h.player.hp };
+  });
+  console.log('房主倒地: ' + JSON.stringify(hostDown));
+  if (!hostDown || !hostDown.downed || hostDown.over) problems.push('房主倒地错误地结束了全队');
+  await host.waitForTimeout(3600);
+  const hostRevived = await host.evaluate(() => {
+    const r = window.Debug.run();
+    const h = r && r.coopPlayers && r.coopPlayers[0];
+    return h ? { downed: h.downed, hp: Math.round(h.player.hp) } : null;
+  });
+  console.log('房主救援: ' + JSON.stringify(hostRevived));
+  if (!hostRevived || hostRevived.downed || hostRevived.hp <= 0) problems.push('客户端未能救起房主');
+
+  // 客户端从同步暂停菜单放弃时,房主应结束对局并给客户端发送它自己的角色/Build。
+  const clientChar = await client.evaluate(() => window.Debug.run().player.char.id);
+  await host.evaluate(() => {
+    const send = Net.broadcast;
+    window.__broadcastTypes = [];
+    Net.broadcast = function (m) { window.__broadcastTypes.push(m && m.t); return send(m); };
+  });
+  await host.keyboard.press('Escape');
+  await host.waitForTimeout(700);
+  await client.locator('.pause-menu button', { hasText: '放弃' }).click();
+  await host.waitForTimeout(1800);
+  const giveupState = {
+    host: await host.evaluate(() => window.Debug.state()),
+    client: await client.evaluate(() => window.Debug.state()),
+    clientChar: await client.evaluate(() => window.Debug.run().player.char.id),
+    hostBroadcasts: await host.evaluate(() => window.__broadcastTypes),
+    clientCoop: await client.evaluate(() => ({ on: Debug.coop().on, active: Debug.coop().active, mode: Net.mode() }))
+  };
+  console.log('客户端放弃结算: ' + JSON.stringify(giveupState));
+  if (giveupState.host !== 'result' || giveupState.client !== 'result') problems.push('客户端放弃未同步结束对局');
+  if (giveupState.clientChar !== clientChar) problems.push('客户端结算被错误替换成房主角色');
+
   await host.screenshot({ path: path.join(ROOT, 'shots', '90-coop-host.png') });
   await client.screenshot({ path: path.join(ROOT, 'shots', '91-coop-client.png') });
 
   await browser.close();
   srv.close();
 
-  const problems = [];
   if (roster < 2) problems.push('房主未看到客户端加入');
   if (!hostIn || !cliIn) problems.push('未能双方同时进入战斗');
   if (cliState && cliState.enemies === 0) problems.push('客户端没有收到敌人快照');
