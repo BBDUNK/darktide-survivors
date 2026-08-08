@@ -114,6 +114,30 @@ const URL = 'file://' + path.join(ROOT, 'index.html').replace(/\\/g, '/');
   await page.waitForTimeout(2400);
   await shot('12b-frostnova-sustained');
 
+  // 若中途弹出升级/宝箱,先结算回 run 状态,避免按 ESC 停在升级界面
+  await page.evaluate(async () => {
+    const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+    for (let i = 0; i < 40; i++) {
+      if (Debug.state() === 'run') return true;
+      const card = document.querySelector('.modal:not(.hidden) .lu-card');
+      if (card) {
+        card.click();
+        await wait(150);
+        continue;
+      }
+      const take = [...document.querySelectorAll('.modal:not(.hidden) button')]
+        .find((b) => b.textContent.includes('收下'));
+      if (take) {
+        take.click();
+        await wait(150);
+        continue;
+      }
+      await wait(200);
+    }
+    return Debug.state() === 'run';
+  });
+  await page.waitForFunction(() => Debug.state() === 'run', null, { timeout: 15000 });
+
   // 走到地图边界看结界
   await page.evaluate(() => {
     const r = window.Debug.run();
@@ -128,6 +152,8 @@ const URL = 'file://' + path.join(ROOT, 'index.html').replace(/\\/g, '/');
   await page.keyboard.press('Escape');
   await page.waitForTimeout(600);
   await shot('14-pause');
+  await page.locator('.modal:not(.hidden) button', { hasText: '百科全书' }).first()
+    .waitFor({ state: 'visible', timeout: 10000 });
   await page.locator('.modal:not(.hidden) button', { hasText: '百科全书' }).first().click();
   await page.waitForTimeout(700);
   await shot('15-enc-in-game');
