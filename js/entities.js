@@ -1679,7 +1679,8 @@ window.Entities = (function () {
       // 史莱姆跳跃:hop 抬高机体,squash 做蓄力压扁/腾空拉伸
       var hop = e.hop || 0, sq = e.squash || 1;
       var enemySprite = e.boss ? e.bossType : e.id;
-      var enemyF = Math.floor(run.t * SpriteGen.animationFps(enemySprite, 6));
+      // 静止的敌人固定帧(修复原地站立还不停播走路动画的"旋转"感),移动时才循环
+      var enemyF = (e.vx === 0 && e.vy === 0) ? 0 : Math.floor(run.t * SpriteGen.animationFps(enemySprite, 6));
       drawSprite(ctx, enemySprite, enemyF + (e.animo | 0),
                  e.x, e.y + wob - hop, sc * sq, e.face < 0, e.alpha, tint);
       if (e.elite) drawSprite(ctx, 'elite_crown', 0, e.x, e.y - e.r - 12, 1, false, 1, null);
@@ -1758,15 +1759,14 @@ window.Entities = (function () {
       }
     } else if (!blink) {
       var playerSprite = p.char.sprite;
-      var playerClock = run.t;
+      var pf = 0;   // 静止:固定帧 0,不循环(修复空闲时角色不停原地动画/旋转感)
       if (p.attackAnimT > 0) {
         playerSprite += '_attack';
-        playerClock = p.attackAnimAge;
+        pf = Math.floor(p.attackAnimAge * SpriteGen.animationFps(playerSprite, 13));
       } else if (p.moving) {
         playerSprite += '_walk';
-        playerClock = p.animT;
+        pf = Math.floor(p.animT * SpriteGen.animationFps(playerSprite, 10));
       }
-      var pf = Math.floor(playerClock * SpriteGen.animationFps(playerSprite, p.moving ? 10 : 8));
       drawSprite(ctx, playerSprite, pf, p.x, p.y, 1, p.face < 0, 1, p.hurtFlash > 0 ? '#ff4444' : null);
     }
     // 蛛网缠身:白色丝痕附着在角色身上,随减速结束而消失;硬控时整体被网包裹
@@ -1899,8 +1899,15 @@ window.Entities = (function () {
           ctx.stroke();
         }
       } else {
-        var mateSprite = cd.sprite + (m.attacking ? '_attack' : (m.moving ? '_walk' : ''));
-        var mateF = Math.floor(run.t * SpriteGen.animationFps(mateSprite, m.attacking ? 13 : (m.moving ? 10 : 8)));
+        var mateSprite = cd.sprite;
+        var mateF = 0;   // 静止:固定帧 0(修复队友空闲不停动画)
+        if (m.attacking) {
+          mateSprite += '_attack';
+          mateF = Math.floor(run.t * SpriteGen.animationFps(mateSprite, 13));
+        } else if (m.moving) {
+          mateSprite += '_walk';
+          mateF = Math.floor(run.t * SpriteGen.animationFps(mateSprite, 10));
+        }
         drawSprite(ctx, mateSprite, mateF, m.x, m.y, 1, m.face < 0, 1, null);
         // 队友身上的光环增益提示
         if (m.buffed) {
