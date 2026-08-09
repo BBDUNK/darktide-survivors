@@ -234,7 +234,7 @@
     var ps = [{
       id: 'host', name: '房主', charId: run.player.char.id,
       x: Math.round(run.player.x), y: Math.round(run.player.y),
-      f: run.player.face, mv: run.player.moving ? 1 : 0, at: run.player.attackAnimT > 0 ? 1 : 0,
+      f: run.player.face, d: run.player.dir, mv: run.player.moving ? 1 : 0, at: run.player.attackAnimT > 0 ? 1 : 0,
       hp: +(run.player.hp / run.player.stats.hp).toFixed(2),
       dn: run.player.downed ? 1 : 0, rv: +(run.player.reviveT || 0).toFixed(2),
       bf: run.player.auraBuff ? 1 : 0,
@@ -249,7 +249,7 @@
       ps.push({
         id: mt.peerId, name: mt.name, charId: mt.charId,
         x: Math.round(mp.x), y: Math.round(mp.y),
-        f: mp.face, mv: mp.moving ? 1 : 0, at: mp.attackAnimT > 0 ? 1 : 0,
+        f: mp.face, d: mp.dir, mv: mp.moving ? 1 : 0, at: mp.attackAnimT > 0 ? 1 : 0,
         hp: mp.stats ? +(mp.hp / mp.stats.hp).toFixed(2) : 1,
         dn: mt.downed ? 1 : 0, rv: +(mt.reviveT || 0).toFixed(2),
         bf: mp.auraBuff ? 1 : 0,
@@ -286,6 +286,8 @@
         var l = Math.hypot(iv.x, iv.y) || 1;
         p.x += (iv.x / l) * spd * dt;
         p.y += (iv.y / l) * spd * dt;
+        if (Math.abs(iv.x) > Math.abs(iv.y)) p.dir = iv.x >= 0 ? 'right' : 'left';
+        else p.dir = iv.y >= 0 ? 'down' : 'up';
         if (iv.x > 0.01) p.face = 1; else if (iv.x < -0.01) p.face = -1;
         p.animT += dt;
       }
@@ -325,7 +327,7 @@
       var m = coop.mates[i], p = m.player;
       out.push({
         name: m.name, charId: m.charId, x: p.x, y: p.y,
-        face: p.face, moving: p.moving, attacking: p.attackAnimT > 0,
+        face: p.face, dir: p.dir, moving: p.moving, attacking: p.attackAnimT > 0,
         hpPct: p.stats ? p.hp / p.stats.hp : 1,
         downed: m.downed, reviveT: m.reviveT || 0, buffed: !!p.auraBuff
       });
@@ -725,7 +727,7 @@
     var p = run.player;
     var prevHp = p.hp, prevStatsHp = p.stats ? p.stats.hp : 1;
     p.netX = ps.x; p.netY = ps.y;
-    p.netFace = ps.f || 1; p.netMoving = !!ps.mv; p.netAttacking = !!ps.at;
+    p.netFace = ps.f || 1; p.netDir = ps.d || 'down'; p.netMoving = !!ps.mv; p.netAttacking = !!ps.at;
     p.downed = !!ps.dn;
     p.reviveT = ps.rv || 0;
     p.slow = ps.sl || 0;
@@ -842,6 +844,7 @@
         cp.x += (cp.netX - cp.x) * ck;
         cp.y += (cp.netY - cp.y) * ck;
         if (cp.netFace > 0.01) cp.face = 1; else if (cp.netFace < -0.01) cp.face = -1;
+        cp.dir = cp.netDir || cp.dir || 'down';
         cp.moving = !!cp.netMoving;
         cp.attackAnimT = cp.netAttacking ? 0.12 : 0;
         if (cp.netAttacking) cp.attackAnimAge += dt;
@@ -1455,7 +1458,7 @@
             }
             coop.remote.push({
               name: ps.name, charId: ps.charId, x: ps.x, y: ps.y,
-              face: ps.f, moving: !!ps.mv, attacking: !!ps.at, hpPct: ps.hp,
+              face: ps.f, dir: ps.d || 'down', moving: !!ps.mv, attacking: !!ps.at, hpPct: ps.hp,
               downed: !!ps.dn, reviveT: ps.rv, buffed: !!ps.bf
             });
           }

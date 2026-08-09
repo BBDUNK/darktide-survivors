@@ -314,7 +314,10 @@ def build(manifest_path: Path) -> None:
     if manifest.get("externalManifest"):
         external = json.loads((root / manifest["externalManifest"]).read_text(encoding="utf-8"))
         defaults = external.get("defaults", {})
-        manifest["assets"].extend([{**defaults, **asset} for asset in external["assets"]])
+        local_names = {asset["name"] for asset in manifest["assets"]}
+        manifest["assets"].extend(
+            {**defaults, **asset} for asset in external["assets"] if asset["name"] not in local_names
+        )
     out_dir = root / "assets" / "sprites"
     preview_dir = out_dir / "previews"
     preview_dir.mkdir(parents=True, exist_ok=True)

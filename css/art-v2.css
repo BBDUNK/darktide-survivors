@@ -1,0 +1,115 @@
+/* V2 ImageGen art skin: weathered silver, old brass, navy cloth, hard pixels. */
+:root {
+  --font-pix: "Darktide Gothic", "Fusion Pixel", "SimSun", monospace;
+  --font-cn: "Darktide Gothic", "Fusion Pixel", "SimSun", monospace;
+}
+
+html, body, button, input, select, textarea,
+.hud, .screen, .modal, .card, .slot, .toast {
+  font-family: var(--font-cn);
+}
+
+body, #game { image-rendering: pixelated; }
+
+.xp-wrap {
+  height: 18px;
+  padding: 5px 18px 6px;
+  box-sizing: border-box;
+  background: url('../assets/art-v2/ui/hud_xp_frame.png') center / 100% 100% no-repeat;
+  border: 0;
+  box-shadow: none;
+}
+.xp-fill { height: 7px; margin: 0; background: linear-gradient(90deg, #274d80, #78b8e0 65%, #d7eff1); }
+.lv-text { top: 2px; right: 24px; font-family: var(--font-pix); color: #f4ddaa; }
+
+.hud-tl {
+  top: 28px;
+  background: linear-gradient(180deg, rgba(11, 13, 18, .88), rgba(5, 7, 10, .82));
+  border-color: #1a1d22;
+  outline-color: #8d7044;
+  box-shadow: inset 0 0 0 2px #394047, 5px 6px 0 rgba(0, 0, 0, .5);
+}
+.hud-tl::before { content: '⚔ VITALS & RELICS'; font-family: var(--font-pix); color: #d5bd83; }
+.hp-wrap {
+  width: 244px;
+  height: 42px;
+  padding: 13px 19px 14px;
+  box-sizing: border-box;
+  background: url('../assets/art-v2/ui/hud_hp_frame.png') center / 100% 100% no-repeat;
+  border: 0;
+  box-shadow: none;
+}
+.hp-wrap::after { border: 0; }
+.hp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #5c1727, #b13a43 55%, #dc6a5f);
+  box-shadow: inset 0 1px 0 rgba(255, 220, 187, .28), 0 0 7px rgba(176, 47, 56, .38);
+}
+.hp-fill.low { background: linear-gradient(90deg, #42101b, #d42f42); }
+.shield-fill { top: 13px; left: 19px; height: 15px; }
+.hp-text { line-height: 40px; font-family: var(--font-pix); font-size: 11px; }
+
+.slot {
+  width: 38px;
+  height: 38px;
+  padding: 7px;
+  box-sizing: border-box;
+  background: url('../assets/art-v2/ui/hud_weapon_slot.png') center / 100% 100% no-repeat;
+  border: 0;
+  outline: 0;
+  box-shadow: none;
+}
+.slots.small .slot { background-image: url('../assets/art-v2/ui/hud_passive_slot.png'); }
+
+.hud-timer {
+  top: 22px;
+  min-width: 150px;
+  padding: 14px 25px 13px;
+  background: url('../assets/art-v2/ui/hud_timer_frame.png') center / 100% 100% no-repeat;
+  border: 0;
+  outline: 0;
+  box-shadow: none;
+  font-family: var(--font-pix);
+  letter-spacing: 2px;
+}
+.hud-timer::before, .hud-timer::after { content: ''; margin: 0; }
+
+.hud-stat {
+  min-width: 112px;
+  height: 42px;
+  padding: 11px 15px;
+  background: url('../assets/art-v2/ui/hud_coin_frame.png') center / 100% 100% no-repeat;
+  border: 0 !important;
+  font-family: var(--font-pix);
+}
+.hud-stat + .hud-stat { background-image: url('../assets/art-v2/ui/hud_kill_frame.png'); }
+.hud-tr { background: transparent; border: 0; outline: 0; box-shadow: none; }
+
+.boss-wrap { width: min(620px, 66vw); }
+.boss-bar {
+  height: 34px;
+  padding: 11px 21px 12px;
+  box-sizing: border-box;
+  background: url('../assets/art-v2/ui/hud_boss_frame.png') center / 100% 100% no-repeat;
+  border: 0;
+  outline: 0;
+  box-shadow: none;
+}
+.boss-bar::after { border: 0; }
+.boss-fill { background: linear-gradient(90deg, #551422, #b52a3d 55%, #df594f); }
+
+.hud-warn {
+  padding: 19px 34px;
+  background: url('../assets/art-v2/ui/hud_elite_frame.png') center / 100% 100% no-repeat;
+  border: 0;
+  font-family: var(--font-cn);
+  text-shadow: 2px 2px 0 #000;
+}
+
+@media (max-width: 700px), (max-height: 430px) {
+  .hud-tl { top: 20px; padding: 5px; }
+  .hp-wrap { width: 190px; height: 34px; padding: 10px 15px 11px; }
+  .hp-text { line-height: 32px; }
+  .slot { width: 31px; height: 31px; padding: 5px; }
+  .hud-stat { min-width: 84px; height: 34px; padding: 8px 11px; }
+}

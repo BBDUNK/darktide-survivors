@@ -103,4 +103,4 @@ node test/art-probe.js
 
 ## 版权与免责声明
 
-本作是个人自制的**非商业同人项目**,与 Fatshark 或 Games Workshop 无任何隶属关系;游戏不包含任何官方素材。美术由原创程序素材及 CC0/OFL 开放授权资源组成,完整作者、来源和许可证见 `assets/THIRD_PARTY_ASSETS.md`;音频由代码生成。"Darktide" 等相关名称与设定归原权利方所有。
+本作是个人自制的**非商业同人项目**,与 Fatshark 或 Games Workshop 无任何隶属关系;游戏不包含任何官方素材。美术由原创程序素材、AI 辅助原创像素素材及 CC0/OFL 开放授权资源组成,完整作者、来源和许可证见 `assets/THIRD_PARTY_ASSETS.md`;音频由代码生成。"Darktide" 等相关名称与设定归原权利方所有。

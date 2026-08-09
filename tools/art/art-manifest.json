@@ -1,6 +1,6 @@
 {
-  "version": 1,
-  "atlasWidth": 512,
+  "version": 2,
+  "atlasWidth": 2048,
   "atlasPadding": 2,
   "previewScale": 8,
   "externalManifest": "tools/art/open-assets-manifest.json",
@@ -36,577 +36,6 @@
   ],
   "backgrounds": [],
   "assets": [
-    {
-      "name": "char_knight",
-      "source": "assets/sprites/sources/chars/char_knight_idle.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "preservePixels": true,
-      "pixelScale": 1,
-      "frames": 4,
-      "fps": 8,
-      "maxCentroidDrift": 8,
-      "size": [
-        34,
-        34
-      ],
-      "anchor": [
-        17,
-        33
-      ],
-      "renderScale": 0.72,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.015,
-      "frameRow": 0,
-      "maxBaselineDrift": 3
-    },
-    {
-      "name": "char_mage",
-      "source": "assets/sprites/sources/chars/char_mage_idle.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "preservePixels": true,
-      "pixelScale": 1,
-      "frames": 4,
-      "fps": 8,
-      "maxCentroidDrift": 8,
-      "size": [
-        34,
-        34
-      ],
-      "anchor": [
-        17,
-        33
-      ],
-      "renderScale": 0.72,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.015,
-      "frameRow": 0,
-      "maxBaselineDrift": 3
-    },
-    {
-      "name": "char_ranger",
-      "source": "assets/sprites/sources/chars/char_ranger_idle.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "preservePixels": true,
-      "pixelScale": 1,
-      "frames": 4,
-      "fps": 8,
-      "maxCentroidDrift": 8,
-      "size": [
-        34,
-        34
-      ],
-      "anchor": [
-        17,
-        33
-      ],
-      "renderScale": 0.72,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.015,
-      "frameRow": 0,
-      "maxBaselineDrift": 3
-    },
-    {
-      "name": "char_cleric",
-      "source": "assets/sprites/sources/chars/char_cleric_idle.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "preservePixels": true,
-      "pixelScale": 1,
-      "frames": 4,
-      "fps": 8,
-      "maxCentroidDrift": 8,
-      "size": [
-        34,
-        34
-      ],
-      "anchor": [
-        17,
-        33
-      ],
-      "renderScale": 0.72,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.015,
-      "frameRow": 0,
-      "maxBaselineDrift": 3
-    },
-    {
-      "name": "char_berserker",
-      "source": "assets/sprites/sources/chars/char_berserker_idle.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "preservePixels": true,
-      "pixelScale": 1,
-      "frames": 4,
-      "fps": 8,
-      "maxCentroidDrift": 8,
-      "size": [
-        34,
-        34
-      ],
-      "anchor": [
-        17,
-        33
-      ],
-      "renderScale": 0.72,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.015,
-      "frameRow": 0,
-      "maxBaselineDrift": 3
-    },
-    {
-      "name": "char_chrono",
-      "source": "assets/sprites/sources/chars/char_chrono_idle.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "preservePixels": true,
-      "pixelScale": 1,
-      "frames": 4,
-      "fps": 8,
-      "maxCentroidDrift": 8,
-      "size": [
-        34,
-        34
-      ],
-      "anchor": [
-        17,
-        33
-      ],
-      "renderScale": 0.72,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.015,
-      "frameRow": 0,
-      "maxBaselineDrift": 3
-    },
-    {
-      "name": "char_knight_walk",
-      "source": "assets/sprites/sources/chars/char_knight_walk.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "frameRow": 0,
-      "preservePixels": true,
-      "pixelScale": 1,
-      "frames": 9,
-      "fps": 10,
-      "maxCentroidDrift": 8,
-      "maxBaselineDrift": 3,
-      "size": [
-        34,
-        34
-      ],
-      "anchor": [
-        17,
-        33
-      ],
-      "renderScale": 0.72,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.015
-    },
-    {
-      "name": "char_knight_attack",
-      "source": "assets/sprites/sources/chars/char_knight_attack.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "preservePixels": true,
-      "pixelScale": 1,
-      "frames": 4,
-      "fps": 13,
-      "maxCentroidDrift": 8,
-      "size": [
-        34,
-        34
-      ],
-      "anchor": [
-        17,
-        33
-      ],
-      "renderScale": 0.72,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.015,
-      "frameRow": 0,
-      "maxBaselineDrift": 3
-    },
-    {
-      "name": "char_mage_walk",
-      "source": "assets/sprites/sources/chars/char_mage_walk.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "frameRow": 0,
-      "preservePixels": true,
-      "pixelScale": 1,
-      "frames": 9,
-      "fps": 10,
-      "maxCentroidDrift": 8,
-      "maxBaselineDrift": 3,
-      "size": [
-        34,
-        34
-      ],
-      "anchor": [
-        17,
-        33
-      ],
-      "renderScale": 0.72,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.015
-    },
-    {
-      "name": "char_mage_attack",
-      "source": "assets/sprites/sources/chars/char_mage_attack.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "preservePixels": true,
-      "pixelScale": 1,
-      "frames": 4,
-      "fps": 13,
-      "maxCentroidDrift": 8,
-      "size": [
-        34,
-        34
-      ],
-      "anchor": [
-        17,
-        33
-      ],
-      "renderScale": 0.72,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.015,
-      "frameRow": 0,
-      "maxBaselineDrift": 3
-    },
-    {
-      "name": "char_ranger_walk",
-      "source": "assets/sprites/sources/chars/char_ranger_walk.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "frameRow": 0,
-      "preservePixels": true,
-      "pixelScale": 1,
-      "frames": 9,
-      "fps": 10,
-      "maxCentroidDrift": 8,
-      "maxBaselineDrift": 3,
-      "size": [
-        34,
-        34
-      ],
-      "anchor": [
-        17,
-        33
-      ],
-      "renderScale": 0.72,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.015
-    },
-    {
-      "name": "char_ranger_attack",
-      "source": "assets/sprites/sources/chars/char_ranger_attack.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "preservePixels": true,
-      "pixelScale": 1,
-      "frames": 4,
-      "fps": 13,
-      "maxCentroidDrift": 8,
-      "size": [
-        34,
-        34
-      ],
-      "anchor": [
-        17,
-        33
-      ],
-      "renderScale": 0.72,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.015,
-      "frameRow": 0,
-      "maxBaselineDrift": 3
-    },
-    {
-      "name": "char_cleric_walk",
-      "source": "assets/sprites/sources/chars/char_cleric_walk.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "frameRow": 0,
-      "preservePixels": true,
-      "pixelScale": 1,
-      "frames": 9,
-      "fps": 10,
-      "maxCentroidDrift": 8,
-      "maxBaselineDrift": 3,
-      "size": [
-        34,
-        34
-      ],
-      "anchor": [
-        17,
-        33
-      ],
-      "renderScale": 0.72,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.015
-    },
-    {
-      "name": "char_cleric_attack",
-      "source": "assets/sprites/sources/chars/char_cleric_attack.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "preservePixels": true,
-      "pixelScale": 1,
-      "frames": 4,
-      "fps": 13,
-      "maxCentroidDrift": 8,
-      "size": [
-        34,
-        34
-      ],
-      "anchor": [
-        17,
-        33
-      ],
-      "renderScale": 0.72,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.015,
-      "frameRow": 0,
-      "maxBaselineDrift": 3
-    },
-    {
-      "name": "char_berserker_walk",
-      "source": "assets/sprites/sources/chars/char_berserker_walk.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "frameRow": 0,
-      "preservePixels": true,
-      "pixelScale": 1,
-      "frames": 9,
-      "fps": 10,
-      "maxCentroidDrift": 8,
-      "maxBaselineDrift": 3,
-      "size": [
-        34,
-        34
-      ],
-      "anchor": [
-        17,
-        33
-      ],
-      "renderScale": 0.72,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.015
-    },
-    {
-      "name": "char_berserker_attack",
-      "source": "assets/sprites/sources/chars/char_berserker_attack.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "preservePixels": true,
-      "pixelScale": 1,
-      "frames": 4,
-      "fps": 13,
-      "maxCentroidDrift": 8,
-      "size": [
-        34,
-        34
-      ],
-      "anchor": [
-        17,
-        33
-      ],
-      "renderScale": 0.72,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.015,
-      "frameRow": 0,
-      "maxBaselineDrift": 3
-    },
-    {
-      "name": "char_chrono_walk",
-      "source": "assets/sprites/sources/chars/char_chrono_walk.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "frameRow": 0,
-      "preservePixels": true,
-      "pixelScale": 1,
-      "frames": 9,
-      "fps": 10,
-      "maxCentroidDrift": 8,
-      "maxBaselineDrift": 3,
-      "size": [
-        34,
-        34
-      ],
-      "anchor": [
-        17,
-        33
-      ],
-      "renderScale": 0.72,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.015
-    },
-    {
-      "name": "char_chrono_attack",
-      "source": "assets/sprites/sources/chars/char_chrono_attack.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "preservePixels": true,
-      "pixelScale": 1,
-      "frames": 4,
-      "fps": 13,
-      "maxCentroidDrift": 8,
-      "size": [
-        34,
-        34
-      ],
-      "anchor": [
-        17,
-        33
-      ],
-      "renderScale": 0.72,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.015,
-      "frameRow": 0,
-      "maxBaselineDrift": 3
-    },
-    {
-      "name": "skeleton",
-      "source": "assets/sprites/sources/dcss-derived/skeleton.png",
-      "frames": 4,
-      "fps": 7,
-      "maxCentroidDrift": 20,
-      "size": [
-        32,
-        32
-      ],
-      "anchor": [
-        16,
-        31
-      ],
-      "renderScale": 0.75,
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.015,
-      "frameSize": [
-        32,
-        32
-      ]
-    },
-    {
-      "name": "boss_slimeking",
-      "source": "assets/sprites/sources/dcss-derived/boss_slimeking.png",
-      "frames": 4,
-      "fps": 5,
-      "maxCentroidDrift": 20,
-      "size": [
-        48,
-        48
-      ],
-      "anchor": [
-        24,
-        47
-      ],
-      "renderScale": 0.666667,
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.015,
-      "frameSize": [
-        32,
-        32
-      ],
-      "pixelScale": 2
-    },
-    {
-      "name": "p_slash_big",
-      "source": "assets/sprites/vendor/ninja-adventure/FX/SlashFx/CircularSlash/SpriteSheet.png",
-      "frameSize": [
-        32,
-        32
-      ],
-      "frames": 4,
-      "fps": 14,
-      "size": [
-        34,
-        34
-      ],
-      "anchor": [
-        17,
-        33
-      ],
-      "pixelScale": 1,
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "maxBaselineDrift": 8,
-      "maxCentroidDrift": 16,
-      "minCoverage": 0.015
-    },
-    {
-      "name": "w_crossblade",
-      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/weapon/greatsword_1_new.png",
-      "frames": 1,
-      "size": [
-        24,
-        24
-      ],
-      "anchor": [
-        12,
-        12
-      ],
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.015
-    },
-    {
-      "name": "ps_core",
-      "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/item/misc/misc_orb.png",
-      "frames": 1,
-      "size": [
-        24,
-        24
-      ],
-      "anchor": [
-        12,
-        12
-      ],
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.015
-    },
     {
       "name": "deco_grave",
       "source": "assets/sprites/vendor/dcss-crawl/Dungeon Crawl Stone Soup Full/dungeon/statues/granite_statue.png",
@@ -652,22 +81,7733 @@
       ]
     },
     {
-      "name": "tesla_tower",
-      "source": "assets/sprites/sources/tesla_tower_128.png",
-      "frames": 1,
-      "fps": 1,
-      "size": [
-        128,
-        128
-      ],
-      "anchor": [
-        64,
-        127
-      ],
       "preservePixels": true,
       "allowDuplicateFrames": true,
-      "minCoverage": 0.015,
-      "maxColors": 5000
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "merchant",
+      "source": "assets/art-v2/sprites/npcs/merchant_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        62
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_knight_idle_down",
+      "source": "assets/art-v2/sprites/characters/char_knight_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_knight_idle_left",
+      "source": "assets/art-v2/sprites/characters/char_knight_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_knight_idle_right",
+      "source": "assets/art-v2/sprites/characters/char_knight_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_knight_idle_up",
+      "source": "assets/art-v2/sprites/characters/char_knight_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_knight",
+      "source": "assets/art-v2/sprites/characters/char_knight_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_knight_walk_down",
+      "source": "assets/art-v2/sprites/characters/char_knight_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_knight_walk_left",
+      "source": "assets/art-v2/sprites/characters/char_knight_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_knight_walk_right",
+      "source": "assets/art-v2/sprites/characters/char_knight_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_knight_walk_up",
+      "source": "assets/art-v2/sprites/characters/char_knight_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_knight_walk",
+      "source": "assets/art-v2/sprites/characters/char_knight_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_knight_attack_down",
+      "source": "assets/art-v2/sprites/characters/char_knight_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_knight_attack_left",
+      "source": "assets/art-v2/sprites/characters/char_knight_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_knight_attack_right",
+      "source": "assets/art-v2/sprites/characters/char_knight_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_knight_attack_up",
+      "source": "assets/art-v2/sprites/characters/char_knight_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_knight_attack",
+      "source": "assets/art-v2/sprites/characters/char_knight_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_knight_hurt_down",
+      "source": "assets/art-v2/sprites/characters/char_knight_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 3,
+      "fps": 10,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_knight_death_down",
+      "source": "assets/art-v2/sprites/characters/char_knight_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 3,
+      "frames": 5,
+      "fps": 8,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_knight_hurt_left",
+      "source": "assets/art-v2/sprites/characters/char_knight_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 3,
+      "fps": 10,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_knight_death_left",
+      "source": "assets/art-v2/sprites/characters/char_knight_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frameStart": 3,
+      "frames": 5,
+      "fps": 8,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_knight_hurt_right",
+      "source": "assets/art-v2/sprites/characters/char_knight_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 3,
+      "fps": 10,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_knight_death_right",
+      "source": "assets/art-v2/sprites/characters/char_knight_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frameStart": 3,
+      "frames": 5,
+      "fps": 8,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_knight_hurt_up",
+      "source": "assets/art-v2/sprites/characters/char_knight_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 3,
+      "fps": 10,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_knight_death_up",
+      "source": "assets/art-v2/sprites/characters/char_knight_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frameStart": 3,
+      "frames": 5,
+      "fps": 8,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_mage_idle_down",
+      "source": "assets/art-v2/sprites/characters/char_mage_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_mage_idle_left",
+      "source": "assets/art-v2/sprites/characters/char_mage_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_mage_idle_right",
+      "source": "assets/art-v2/sprites/characters/char_mage_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_mage_idle_up",
+      "source": "assets/art-v2/sprites/characters/char_mage_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_mage",
+      "source": "assets/art-v2/sprites/characters/char_mage_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_mage_walk_down",
+      "source": "assets/art-v2/sprites/characters/char_mage_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_mage_walk_left",
+      "source": "assets/art-v2/sprites/characters/char_mage_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_mage_walk_right",
+      "source": "assets/art-v2/sprites/characters/char_mage_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_mage_walk_up",
+      "source": "assets/art-v2/sprites/characters/char_mage_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_mage_walk",
+      "source": "assets/art-v2/sprites/characters/char_mage_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_mage_attack_down",
+      "source": "assets/art-v2/sprites/characters/char_mage_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_mage_attack_left",
+      "source": "assets/art-v2/sprites/characters/char_mage_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_mage_attack_right",
+      "source": "assets/art-v2/sprites/characters/char_mage_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_mage_attack_up",
+      "source": "assets/art-v2/sprites/characters/char_mage_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_mage_attack",
+      "source": "assets/art-v2/sprites/characters/char_mage_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_mage_hurt_down",
+      "source": "assets/art-v2/sprites/characters/char_mage_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 3,
+      "fps": 10,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_mage_death_down",
+      "source": "assets/art-v2/sprites/characters/char_mage_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 3,
+      "frames": 5,
+      "fps": 8,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_mage_hurt_left",
+      "source": "assets/art-v2/sprites/characters/char_mage_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 3,
+      "fps": 10,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_mage_death_left",
+      "source": "assets/art-v2/sprites/characters/char_mage_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frameStart": 3,
+      "frames": 5,
+      "fps": 8,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_mage_hurt_right",
+      "source": "assets/art-v2/sprites/characters/char_mage_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 3,
+      "fps": 10,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_mage_death_right",
+      "source": "assets/art-v2/sprites/characters/char_mage_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frameStart": 3,
+      "frames": 5,
+      "fps": 8,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_mage_hurt_up",
+      "source": "assets/art-v2/sprites/characters/char_mage_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 3,
+      "fps": 10,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_mage_death_up",
+      "source": "assets/art-v2/sprites/characters/char_mage_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frameStart": 3,
+      "frames": 5,
+      "fps": 8,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_ranger_idle_down",
+      "source": "assets/art-v2/sprites/characters/char_ranger_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_ranger_idle_left",
+      "source": "assets/art-v2/sprites/characters/char_ranger_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_ranger_idle_right",
+      "source": "assets/art-v2/sprites/characters/char_ranger_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_ranger_idle_up",
+      "source": "assets/art-v2/sprites/characters/char_ranger_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_ranger",
+      "source": "assets/art-v2/sprites/characters/char_ranger_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_ranger_walk_down",
+      "source": "assets/art-v2/sprites/characters/char_ranger_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_ranger_walk_left",
+      "source": "assets/art-v2/sprites/characters/char_ranger_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_ranger_walk_right",
+      "source": "assets/art-v2/sprites/characters/char_ranger_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_ranger_walk_up",
+      "source": "assets/art-v2/sprites/characters/char_ranger_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_ranger_walk",
+      "source": "assets/art-v2/sprites/characters/char_ranger_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_ranger_attack_down",
+      "source": "assets/art-v2/sprites/characters/char_ranger_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_ranger_attack_left",
+      "source": "assets/art-v2/sprites/characters/char_ranger_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_ranger_attack_right",
+      "source": "assets/art-v2/sprites/characters/char_ranger_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_ranger_attack_up",
+      "source": "assets/art-v2/sprites/characters/char_ranger_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_ranger_attack",
+      "source": "assets/art-v2/sprites/characters/char_ranger_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_ranger_hurt_down",
+      "source": "assets/art-v2/sprites/characters/char_ranger_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 3,
+      "fps": 10,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_ranger_death_down",
+      "source": "assets/art-v2/sprites/characters/char_ranger_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 3,
+      "frames": 5,
+      "fps": 8,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_ranger_hurt_left",
+      "source": "assets/art-v2/sprites/characters/char_ranger_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 3,
+      "fps": 10,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_ranger_death_left",
+      "source": "assets/art-v2/sprites/characters/char_ranger_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frameStart": 3,
+      "frames": 5,
+      "fps": 8,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_ranger_hurt_right",
+      "source": "assets/art-v2/sprites/characters/char_ranger_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 3,
+      "fps": 10,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_ranger_death_right",
+      "source": "assets/art-v2/sprites/characters/char_ranger_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frameStart": 3,
+      "frames": 5,
+      "fps": 8,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_ranger_hurt_up",
+      "source": "assets/art-v2/sprites/characters/char_ranger_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 3,
+      "fps": 10,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_ranger_death_up",
+      "source": "assets/art-v2/sprites/characters/char_ranger_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frameStart": 3,
+      "frames": 5,
+      "fps": 8,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_cleric_idle_down",
+      "source": "assets/art-v2/sprites/characters/char_cleric_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_cleric_idle_left",
+      "source": "assets/art-v2/sprites/characters/char_cleric_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_cleric_idle_right",
+      "source": "assets/art-v2/sprites/characters/char_cleric_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_cleric_idle_up",
+      "source": "assets/art-v2/sprites/characters/char_cleric_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_cleric",
+      "source": "assets/art-v2/sprites/characters/char_cleric_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_cleric_walk_down",
+      "source": "assets/art-v2/sprites/characters/char_cleric_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_cleric_walk_left",
+      "source": "assets/art-v2/sprites/characters/char_cleric_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_cleric_walk_right",
+      "source": "assets/art-v2/sprites/characters/char_cleric_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_cleric_walk_up",
+      "source": "assets/art-v2/sprites/characters/char_cleric_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_cleric_walk",
+      "source": "assets/art-v2/sprites/characters/char_cleric_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_cleric_attack_down",
+      "source": "assets/art-v2/sprites/characters/char_cleric_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_cleric_attack_left",
+      "source": "assets/art-v2/sprites/characters/char_cleric_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_cleric_attack_right",
+      "source": "assets/art-v2/sprites/characters/char_cleric_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_cleric_attack_up",
+      "source": "assets/art-v2/sprites/characters/char_cleric_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_cleric_attack",
+      "source": "assets/art-v2/sprites/characters/char_cleric_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_cleric_hurt_down",
+      "source": "assets/art-v2/sprites/characters/char_cleric_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 3,
+      "fps": 10,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_cleric_death_down",
+      "source": "assets/art-v2/sprites/characters/char_cleric_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 3,
+      "frames": 5,
+      "fps": 8,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_cleric_hurt_left",
+      "source": "assets/art-v2/sprites/characters/char_cleric_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 3,
+      "fps": 10,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_cleric_death_left",
+      "source": "assets/art-v2/sprites/characters/char_cleric_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frameStart": 3,
+      "frames": 5,
+      "fps": 8,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_cleric_hurt_right",
+      "source": "assets/art-v2/sprites/characters/char_cleric_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 3,
+      "fps": 10,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_cleric_death_right",
+      "source": "assets/art-v2/sprites/characters/char_cleric_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frameStart": 3,
+      "frames": 5,
+      "fps": 8,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_cleric_hurt_up",
+      "source": "assets/art-v2/sprites/characters/char_cleric_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 3,
+      "fps": 10,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_cleric_death_up",
+      "source": "assets/art-v2/sprites/characters/char_cleric_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frameStart": 3,
+      "frames": 5,
+      "fps": 8,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_berserker_idle_down",
+      "source": "assets/art-v2/sprites/characters/char_berserker_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_berserker_idle_left",
+      "source": "assets/art-v2/sprites/characters/char_berserker_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_berserker_idle_right",
+      "source": "assets/art-v2/sprites/characters/char_berserker_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_berserker_idle_up",
+      "source": "assets/art-v2/sprites/characters/char_berserker_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_berserker",
+      "source": "assets/art-v2/sprites/characters/char_berserker_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_berserker_walk_down",
+      "source": "assets/art-v2/sprites/characters/char_berserker_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_berserker_walk_left",
+      "source": "assets/art-v2/sprites/characters/char_berserker_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_berserker_walk_right",
+      "source": "assets/art-v2/sprites/characters/char_berserker_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_berserker_walk_up",
+      "source": "assets/art-v2/sprites/characters/char_berserker_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_berserker_walk",
+      "source": "assets/art-v2/sprites/characters/char_berserker_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_berserker_attack_down",
+      "source": "assets/art-v2/sprites/characters/char_berserker_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_berserker_attack_left",
+      "source": "assets/art-v2/sprites/characters/char_berserker_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_berserker_attack_right",
+      "source": "assets/art-v2/sprites/characters/char_berserker_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_berserker_attack_up",
+      "source": "assets/art-v2/sprites/characters/char_berserker_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_berserker_attack",
+      "source": "assets/art-v2/sprites/characters/char_berserker_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_berserker_hurt_down",
+      "source": "assets/art-v2/sprites/characters/char_berserker_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 3,
+      "fps": 10,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_berserker_death_down",
+      "source": "assets/art-v2/sprites/characters/char_berserker_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 3,
+      "frames": 5,
+      "fps": 8,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_berserker_hurt_left",
+      "source": "assets/art-v2/sprites/characters/char_berserker_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 3,
+      "fps": 10,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_berserker_death_left",
+      "source": "assets/art-v2/sprites/characters/char_berserker_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frameStart": 3,
+      "frames": 5,
+      "fps": 8,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_berserker_hurt_right",
+      "source": "assets/art-v2/sprites/characters/char_berserker_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 3,
+      "fps": 10,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_berserker_death_right",
+      "source": "assets/art-v2/sprites/characters/char_berserker_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frameStart": 3,
+      "frames": 5,
+      "fps": 8,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_berserker_hurt_up",
+      "source": "assets/art-v2/sprites/characters/char_berserker_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 3,
+      "fps": 10,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_berserker_death_up",
+      "source": "assets/art-v2/sprites/characters/char_berserker_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frameStart": 3,
+      "frames": 5,
+      "fps": 8,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_chrono_idle_down",
+      "source": "assets/art-v2/sprites/characters/char_chrono_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_chrono_idle_left",
+      "source": "assets/art-v2/sprites/characters/char_chrono_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_chrono_idle_right",
+      "source": "assets/art-v2/sprites/characters/char_chrono_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_chrono_idle_up",
+      "source": "assets/art-v2/sprites/characters/char_chrono_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_chrono",
+      "source": "assets/art-v2/sprites/characters/char_chrono_idle_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_chrono_walk_down",
+      "source": "assets/art-v2/sprites/characters/char_chrono_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_chrono_walk_left",
+      "source": "assets/art-v2/sprites/characters/char_chrono_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_chrono_walk_right",
+      "source": "assets/art-v2/sprites/characters/char_chrono_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_chrono_walk_up",
+      "source": "assets/art-v2/sprites/characters/char_chrono_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_chrono_walk",
+      "source": "assets/art-v2/sprites/characters/char_chrono_run_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_chrono_attack_down",
+      "source": "assets/art-v2/sprites/characters/char_chrono_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_chrono_attack_left",
+      "source": "assets/art-v2/sprites/characters/char_chrono_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_chrono_attack_right",
+      "source": "assets/art-v2/sprites/characters/char_chrono_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_chrono_attack_up",
+      "source": "assets/art-v2/sprites/characters/char_chrono_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_chrono_attack",
+      "source": "assets/art-v2/sprites/characters/char_chrono_attack_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 13,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_chrono_hurt_down",
+      "source": "assets/art-v2/sprites/characters/char_chrono_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 3,
+      "fps": 10,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_chrono_death_down",
+      "source": "assets/art-v2/sprites/characters/char_chrono_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 3,
+      "frames": 5,
+      "fps": 8,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_chrono_hurt_left",
+      "source": "assets/art-v2/sprites/characters/char_chrono_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 3,
+      "fps": 10,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_chrono_death_left",
+      "source": "assets/art-v2/sprites/characters/char_chrono_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frameStart": 3,
+      "frames": 5,
+      "fps": 8,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_chrono_hurt_right",
+      "source": "assets/art-v2/sprites/characters/char_chrono_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 3,
+      "fps": 10,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_chrono_death_right",
+      "source": "assets/art-v2/sprites/characters/char_chrono_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frameStart": 3,
+      "frames": 5,
+      "fps": 8,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_chrono_hurt_up",
+      "source": "assets/art-v2/sprites/characters/char_chrono_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 3,
+      "fps": 10,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "char_chrono_death_up",
+      "source": "assets/art-v2/sprites/characters/char_chrono_reaction_4dir.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frameStart": 3,
+      "frames": 5,
+      "fps": 8,
+      "size": [
+        48,
+        64
+      ],
+      "anchor": [
+        24,
+        62
+      ],
+      "renderScale": 0.42
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "bat",
+      "source": "assets/art-v2/sprites/enemies/bat_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "bat_walk",
+      "source": "assets/art-v2/sprites/enemies/bat_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "bat_attack",
+      "source": "assets/art-v2/sprites/enemies/bat_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "bat_death",
+      "source": "assets/art-v2/sprites/enemies/bat_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "slime",
+      "source": "assets/art-v2/sprites/enemies/slime_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "slime_walk",
+      "source": "assets/art-v2/sprites/enemies/slime_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "slime_attack",
+      "source": "assets/art-v2/sprites/enemies/slime_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "slime_death",
+      "source": "assets/art-v2/sprites/enemies/slime_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "slime_big",
+      "source": "assets/art-v2/sprites/enemies/slime_big_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "slime_big_walk",
+      "source": "assets/art-v2/sprites/enemies/slime_big_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "slime_big_attack",
+      "source": "assets/art-v2/sprites/enemies/slime_big_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "slime_big_death",
+      "source": "assets/art-v2/sprites/enemies/slime_big_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "zombie",
+      "source": "assets/art-v2/sprites/enemies/zombie_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "zombie_walk",
+      "source": "assets/art-v2/sprites/enemies/zombie_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "zombie_attack",
+      "source": "assets/art-v2/sprites/enemies/zombie_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "zombie_death",
+      "source": "assets/art-v2/sprites/enemies/zombie_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "skeleton",
+      "source": "assets/art-v2/sprites/enemies/skeleton_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "skeleton_walk",
+      "source": "assets/art-v2/sprites/enemies/skeleton_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "skeleton_attack",
+      "source": "assets/art-v2/sprites/enemies/skeleton_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "skeleton_death",
+      "source": "assets/art-v2/sprites/enemies/skeleton_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "ghost",
+      "source": "assets/art-v2/sprites/enemies/ghost_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "ghost_walk",
+      "source": "assets/art-v2/sprites/enemies/ghost_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "ghost_attack",
+      "source": "assets/art-v2/sprites/enemies/ghost_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "ghost_death",
+      "source": "assets/art-v2/sprites/enemies/ghost_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "spider",
+      "source": "assets/art-v2/sprites/enemies/spider_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "spider_walk",
+      "source": "assets/art-v2/sprites/enemies/spider_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "spider_attack",
+      "source": "assets/art-v2/sprites/enemies/spider_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "spider_death",
+      "source": "assets/art-v2/sprites/enemies/spider_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "cultist",
+      "source": "assets/art-v2/sprites/enemies/cultist_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "cultist_walk",
+      "source": "assets/art-v2/sprites/enemies/cultist_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "cultist_attack",
+      "source": "assets/art-v2/sprites/enemies/cultist_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "cultist_death",
+      "source": "assets/art-v2/sprites/enemies/cultist_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "orc",
+      "source": "assets/art-v2/sprites/enemies/orc_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "orc_walk",
+      "source": "assets/art-v2/sprites/enemies/orc_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "orc_attack",
+      "source": "assets/art-v2/sprites/enemies/orc_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "orc_death",
+      "source": "assets/art-v2/sprites/enemies/orc_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "imp",
+      "source": "assets/art-v2/sprites/enemies/imp_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "imp_walk",
+      "source": "assets/art-v2/sprites/enemies/imp_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "imp_attack",
+      "source": "assets/art-v2/sprites/enemies/imp_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "imp_death",
+      "source": "assets/art-v2/sprites/enemies/imp_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "knight_armored",
+      "source": "assets/art-v2/sprites/enemies/knight_armored_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "knight_armored_walk",
+      "source": "assets/art-v2/sprites/enemies/knight_armored_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "knight_armored_attack",
+      "source": "assets/art-v2/sprites/enemies/knight_armored_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "knight_armored_death",
+      "source": "assets/art-v2/sprites/enemies/knight_armored_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "werewolf",
+      "source": "assets/art-v2/sprites/enemies/werewolf_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "werewolf_walk",
+      "source": "assets/art-v2/sprites/enemies/werewolf_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "werewolf_attack",
+      "source": "assets/art-v2/sprites/enemies/werewolf_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "werewolf_death",
+      "source": "assets/art-v2/sprites/enemies/werewolf_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "mummy",
+      "source": "assets/art-v2/sprites/enemies/mummy_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "mummy_walk",
+      "source": "assets/art-v2/sprites/enemies/mummy_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "mummy_attack",
+      "source": "assets/art-v2/sprites/enemies/mummy_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "mummy_death",
+      "source": "assets/art-v2/sprites/enemies/mummy_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "gargoyle",
+      "source": "assets/art-v2/sprites/enemies/gargoyle_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "gargoyle_walk",
+      "source": "assets/art-v2/sprites/enemies/gargoyle_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "gargoyle_attack",
+      "source": "assets/art-v2/sprites/enemies/gargoyle_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "gargoyle_death",
+      "source": "assets/art-v2/sprites/enemies/gargoyle_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "bloodbat",
+      "source": "assets/art-v2/sprites/enemies/bloodbat_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "bloodbat_walk",
+      "source": "assets/art-v2/sprites/enemies/bloodbat_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "bloodbat_attack",
+      "source": "assets/art-v2/sprites/enemies/bloodbat_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "bloodbat_death",
+      "source": "assets/art-v2/sprites/enemies/bloodbat_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "wraith",
+      "source": "assets/art-v2/sprites/enemies/wraith_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "wraith_walk",
+      "source": "assets/art-v2/sprites/enemies/wraith_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "wraith_attack",
+      "source": "assets/art-v2/sprites/enemies/wraith_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "wraith_death",
+      "source": "assets/art-v2/sprites/enemies/wraith_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        48,
+        56
+      ],
+      "anchor": [
+        24,
+        54
+      ],
+      "renderScale": 0.45
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "boss_slimeking",
+      "source": "assets/art-v2/sprites/bosses/boss_slimeking_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 6,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        93
+      ],
+      "renderScale": 0.27
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "boss_slimeking_walk",
+      "source": "assets/art-v2/sprites/bosses/boss_slimeking_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 8,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        93
+      ],
+      "renderScale": 0.27
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "boss_slimeking_charge",
+      "source": "assets/art-v2/sprites/bosses/boss_slimeking_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        93
+      ],
+      "renderScale": 0.27
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "boss_slimeking_attack",
+      "source": "assets/art-v2/sprites/bosses/boss_slimeking_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        93
+      ],
+      "renderScale": 0.27
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "boss_slimeking_death",
+      "source": "assets/art-v2/sprites/bosses/boss_slimeking_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 4,
+      "frames": 8,
+      "fps": 8,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        93
+      ],
+      "renderScale": 0.27
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "boss_bonelord",
+      "source": "assets/art-v2/sprites/bosses/boss_bonelord_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 6,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        93
+      ],
+      "renderScale": 0.27
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "boss_bonelord_walk",
+      "source": "assets/art-v2/sprites/bosses/boss_bonelord_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 8,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        93
+      ],
+      "renderScale": 0.27
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "boss_bonelord_charge",
+      "source": "assets/art-v2/sprites/bosses/boss_bonelord_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        93
+      ],
+      "renderScale": 0.27
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "boss_bonelord_attack",
+      "source": "assets/art-v2/sprites/bosses/boss_bonelord_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        93
+      ],
+      "renderScale": 0.27
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "boss_bonelord_death",
+      "source": "assets/art-v2/sprites/bosses/boss_bonelord_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 4,
+      "frames": 8,
+      "fps": 8,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        93
+      ],
+      "renderScale": 0.27
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "boss_abysseye",
+      "source": "assets/art-v2/sprites/bosses/boss_abysseye_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 6,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        93
+      ],
+      "renderScale": 0.27
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "boss_abysseye_walk",
+      "source": "assets/art-v2/sprites/bosses/boss_abysseye_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 8,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        93
+      ],
+      "renderScale": 0.27
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "boss_abysseye_charge",
+      "source": "assets/art-v2/sprites/bosses/boss_abysseye_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        93
+      ],
+      "renderScale": 0.27
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "boss_abysseye_attack",
+      "source": "assets/art-v2/sprites/bosses/boss_abysseye_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        93
+      ],
+      "renderScale": 0.27
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "boss_abysseye_death",
+      "source": "assets/art-v2/sprites/bosses/boss_abysseye_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 4,
+      "frames": 8,
+      "fps": 8,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        93
+      ],
+      "renderScale": 0.27
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "boss_darklord",
+      "source": "assets/art-v2/sprites/bosses/boss_darklord_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 6,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        93
+      ],
+      "renderScale": 0.27
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "boss_darklord_walk",
+      "source": "assets/art-v2/sprites/bosses/boss_darklord_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 8,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        93
+      ],
+      "renderScale": 0.27
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "boss_darklord_charge",
+      "source": "assets/art-v2/sprites/bosses/boss_darklord_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        93
+      ],
+      "renderScale": 0.27
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "boss_darklord_attack",
+      "source": "assets/art-v2/sprites/bosses/boss_darklord_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        93
+      ],
+      "renderScale": 0.27
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "boss_darklord_death",
+      "source": "assets/art-v2/sprites/bosses/boss_darklord_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 4,
+      "frames": 8,
+      "fps": 8,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        93
+      ],
+      "renderScale": 0.27
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "p_slash",
+      "source": "assets/art-v2/sprites/vfx/projectiles_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 15,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "p_slash_big",
+      "source": "assets/art-v2/sprites/vfx/projectiles_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 15,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "p_arrow",
+      "source": "assets/art-v2/sprites/vfx/projectiles_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 14,
+      "size": [
+        32,
+        24
+      ],
+      "anchor": [
+        16,
+        22
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "p_axe",
+      "source": "assets/art-v2/sprites/vfx/projectiles_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "p_dagger",
+      "source": "assets/art-v2/sprites/vfx/projectiles_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 15,
+      "size": [
+        28,
+        24
+      ],
+      "anchor": [
+        14,
+        22
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "p_shadow",
+      "source": "assets/art-v2/sprites/vfx/projectiles_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 15,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "p_fireflask",
+      "source": "assets/art-v2/sprites/vfx/projectiles_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 4,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "p_bolt",
+      "source": "assets/art-v2/sprites/vfx/projectiles_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 5,
+      "frames": 8,
+      "fps": 14,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "p_enemy_bolt",
+      "source": "assets/art-v2/sprites/vfx/projectiles_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 5,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "p_book",
+      "source": "assets/art-v2/sprites/vfx/projectiles_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 6,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "p_holy",
+      "source": "assets/art-v2/sprites/vfx/projectiles_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 6,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "p_web",
+      "source": "assets/art-v2/sprites/vfx/projectiles_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 7,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "vfx_lightning",
+      "source": "assets/art-v2/sprites/vfx/attack_effects.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 15,
+      "size": [
+        48,
+        48
+      ],
+      "anchor": [
+        24,
+        46
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "p_spark",
+      "source": "assets/art-v2/sprites/vfx/attack_effects.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 15,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "p_firepool",
+      "source": "assets/art-v2/sprites/vfx/attack_effects.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        48,
+        32
+      ],
+      "anchor": [
+        24,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "vfx_explosion",
+      "source": "assets/art-v2/sprites/vfx/attack_effects.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 14,
+      "size": [
+        48,
+        48
+      ],
+      "anchor": [
+        24,
+        46
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "vfx_ice",
+      "source": "assets/art-v2/sprites/vfx/attack_effects.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 14,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "vfx_slash",
+      "source": "assets/art-v2/sprites/vfx/attack_effects.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 4,
+      "frames": 8,
+      "fps": 15,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "vfx_heal",
+      "source": "assets/art-v2/sprites/vfx/attack_effects.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 5,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        48,
+        48
+      ],
+      "anchor": [
+        24,
+        46
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "vfx_shield",
+      "source": "assets/art-v2/sprites/vfx/attack_effects.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 5,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        48,
+        48
+      ],
+      "anchor": [
+        24,
+        46
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "vfx_shadow",
+      "source": "assets/art-v2/sprites/vfx/attack_effects.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 6,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        48,
+        48
+      ],
+      "anchor": [
+        24,
+        46
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "vfx_spirit",
+      "source": "assets/art-v2/sprites/vfx/attack_effects.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 6,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "vfx_smoke",
+      "source": "assets/art-v2/sprites/vfx/attack_effects.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 6,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "p_dragon",
+      "source": "assets/art-v2/sprites/vfx/attack_effects.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 7,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        48,
+        32
+      ],
+      "anchor": [
+        24,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "p_orbitblade",
+      "source": "assets/art-v2/sprites/weapons/orbitblade_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        40,
+        40
+      ],
+      "anchor": [
+        20,
+        38
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "p_orbitblade_fly",
+      "source": "assets/art-v2/sprites/weapons/orbitblade_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 14,
+      "size": [
+        40,
+        32
+      ],
+      "anchor": [
+        20,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "vfx_orbitblade_hit",
+      "source": "assets/art-v2/sprites/weapons/orbitblade_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 15,
+      "size": [
+        48,
+        48
+      ],
+      "anchor": [
+        24,
+        46
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "tesla_tower",
+      "source": "assets/art-v2/sprites/weapons/tesla_tower_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 8,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        94
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "tesla_tower_deploy",
+      "source": "assets/art-v2/sprites/weapons/tesla_tower_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        94
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "p_turret",
+      "source": "assets/art-v2/sprites/weapons/tesla_tower_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        62
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "w_crossblade",
+      "source": "assets/art-v2/sprites/icons/weapon_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 0,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "w_arcanebolt",
+      "source": "assets/art-v2/sprites/icons/weapon_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 1,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "w_windbow",
+      "source": "assets/art-v2/sprites/icons/weapon_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 2,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "w_holyaura",
+      "source": "assets/art-v2/sprites/icons/weapon_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 3,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "w_whirlaxe",
+      "source": "assets/art-v2/sprites/icons/weapon_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frameStart": 0,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "w_chainlight",
+      "source": "assets/art-v2/sprites/icons/weapon_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frameStart": 1,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "w_frostnova",
+      "source": "assets/art-v2/sprites/icons/weapon_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frameStart": 2,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "w_fireflask",
+      "source": "assets/art-v2/sprites/icons/weapon_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frameStart": 3,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "w_shadowdagger",
+      "source": "assets/art-v2/sprites/icons/weapon_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frameStart": 0,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "w_orbitblade",
+      "source": "assets/art-v2/sprites/icons/weapon_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frameStart": 1,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "w_holytome",
+      "source": "assets/art-v2/sprites/icons/weapon_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frameStart": 2,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "w_teslacoil",
+      "source": "assets/art-v2/sprites/icons/weapon_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frameStart": 3,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "we_crossjudge",
+      "source": "assets/art-v2/sprites/icons/evolution_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 0,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "we_arcanestorm",
+      "source": "assets/art-v2/sprites/icons/evolution_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 1,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "we_featherstorm",
+      "source": "assets/art-v2/sprites/icons/evolution_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 2,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "we_sanctuary",
+      "source": "assets/art-v2/sprites/icons/evolution_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 3,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "we_worldender",
+      "source": "assets/art-v2/sprites/icons/evolution_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frameStart": 0,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "we_thorwrath",
+      "source": "assets/art-v2/sprites/icons/evolution_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frameStart": 1,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "we_absolutezero",
+      "source": "assets/art-v2/sprites/icons/evolution_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frameStart": 2,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "we_infernosea",
+      "source": "assets/art-v2/sprites/icons/evolution_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frameStart": 3,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "we_thousandcuts",
+      "source": "assets/art-v2/sprites/icons/evolution_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frameStart": 0,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "we_bladestorm",
+      "source": "assets/art-v2/sprites/icons/evolution_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frameStart": 1,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "we_forbidden",
+      "source": "assets/art-v2/sprites/icons/evolution_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frameStart": 2,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "we_skynet",
+      "source": "assets/art-v2/sprites/icons/evolution_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frameStart": 3,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "ps_power",
+      "source": "assets/art-v2/sprites/icons/passive_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 0,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "ps_core",
+      "source": "assets/art-v2/sprites/icons/passive_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 1,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "ps_eagle",
+      "source": "assets/art-v2/sprites/icons/passive_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 2,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "ps_pendant",
+      "source": "assets/art-v2/sprites/icons/passive_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frameStart": 0,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "ps_belt",
+      "source": "assets/art-v2/sprites/icons/passive_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frameStart": 1,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "ps_boots",
+      "source": "assets/art-v2/sprites/icons/passive_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frameStart": 2,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "ps_magnetstone",
+      "source": "assets/art-v2/sprites/icons/passive_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frameStart": 0,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "ps_clover",
+      "source": "assets/art-v2/sprites/icons/passive_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frameStart": 1,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "ps_barrier",
+      "source": "assets/art-v2/sprites/icons/passive_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frameStart": 2,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "coin",
+      "source": "assets/art-v2/sprites/icons/pickup_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 0,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "meat",
+      "source": "assets/art-v2/sprites/icons/pickup_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 1,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "chest",
+      "source": "assets/art-v2/sprites/icons/pickup_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 2,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "magnet",
+      "source": "assets/art-v2/sprites/icons/pickup_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 3,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "heart",
+      "source": "assets/art-v2/sprites/icons/pickup_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frameStart": 0,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "gem1",
+      "source": "assets/art-v2/sprites/icons/pickup_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frameStart": 1,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "chest_boss",
+      "source": "assets/art-v2/sprites/icons/pickup_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frameStart": 2,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "merchant_token",
+      "source": "assets/art-v2/sprites/icons/pickup_icons.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frameStart": 3,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "hud_minimap_frame",
+      "source": "assets/art-v2/ui/hud_minimap_frame.png",
+      "frames": 1,
+      "size": [
+        132,
+        132
+      ],
+      "anchor": [
+        66,
+        66
+      ],
+      "renderScale": 1
     }
   ]
 }

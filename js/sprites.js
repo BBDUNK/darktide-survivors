@@ -1883,11 +1883,13 @@
     },
     isAtlas: function (name) { return !!atlasState.names[name]; },
     renderScale: function (name) {
-      var base = /_(walk|attack)$/.test(name) ? name.replace(/_(walk|attack)$/, '') : name;
+      var base = name.replace(/_(idle|walk|attack|hurt|death)_(down|left|right|up)$/, '')
+        .replace(/_(walk|attack|death|charge)$/, '');
       return atlasState.scales[name] || atlasState.scales[base] || 1;
     },
     animationFps: function (name, fallback) {
-      var base = /_(walk|attack)$/.test(name) ? name.replace(/_(walk|attack)$/, '') : name;
+      var base = name.replace(/_(idle|walk|attack|hurt|death)_(down|left|right|up)$/, '')
+        .replace(/_(walk|attack|death|charge)$/, '');
       return atlasState.fps[name] || atlasState.fps[base] || fallback || 6;
     },
     atlasStatus: function () {
@@ -1903,7 +1905,8 @@
       if (!store) this.init();
       var arr = store[name];
       // 动作图集缺失时退回角色基础帧，离线/图集加载失败也不会显示占位块。
-      if (!arr && /_(walk|attack)$/.test(name)) arr = store[name.replace(/_(walk|attack)$/, '')];
+      if (!arr) arr = store[name.replace(/_(idle|walk|attack|hurt|death)_(down|left|right|up)$/, '')
+        .replace(/_(walk|attack|death|charge)$/, '')];
       if (!arr) arr = fallback(name);
       return arr[0];
     },
@@ -1929,7 +1932,8 @@
     frames: function (name) {
       if (!store) this.init();
       var arr = store[name];
-      if (!arr && /_(walk|attack)$/.test(name)) arr = store[name.replace(/_(walk|attack)$/, '')];
+      if (!arr) arr = store[name.replace(/_(idle|walk|attack|hurt|death)_(down|left|right|up)$/, '')
+        .replace(/_(walk|attack|death|charge)$/, '')];
       if (!arr) arr = fallback(name);
       return arr;
     }

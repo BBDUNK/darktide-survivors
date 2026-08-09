@@ -98,32 +98,34 @@ function assert(ok, message) {
     knightScale: SpriteGen.renderScale('char_knight'),
     bossScale: SpriteGen.renderScale('boss_slimeking')
   }));
-  assert(atlas.status.count === 144, 'expected 144 atlas assets, got ' + atlas.status.count);
+  const totalFrames = Object.values(atlasMeta.frames).reduce((sum, frames) => sum + frames.length, 0);
+  assert(atlas.status.count >= 336, 'expected at least 336 atlas assets, got ' + atlas.status.count);
+  assert(totalFrames >= 1922, 'expected at least 1922 atlas frames, got ' + totalFrames);
   for (const hero of atlas.heroes) {
-    assert(JSON.stringify(hero.frames) === '[[34,34],[34,34],[34,34],[34,34]]',
+    assert(JSON.stringify(hero.frames) === '[[48,64],[48,64],[48,64],[48,64],[48,64],[48,64],[48,64],[48,64]]',
       hero.name + ' atlas frames are incorrect');
     assert(JSON.stringify(hero.walk) ===
-      '[[34,34],[34,34],[34,34],[34,34],[34,34],[34,34],[34,34],[34,34],[34,34]]',
+      '[[48,64],[48,64],[48,64],[48,64],[48,64],[48,64],[48,64],[48,64]]',
       hero.name + ' walk frames are incorrect');
-    assert(JSON.stringify(hero.attack) === '[[34,34],[34,34],[34,34],[34,34]]',
+    assert(JSON.stringify(hero.attack) === '[[48,64],[48,64],[48,64],[48,64],[48,64],[48,64],[48,64],[48,64]]',
       hero.name + ' attack frames are incorrect');
-    assert(hero.fps === 8, hero.name + ' idle animation fps is incorrect');
-    assert(hero.walkFps === 10, hero.name + ' walk animation fps is incorrect');
+    assert(hero.fps === 7, hero.name + ' idle animation fps is incorrect');
+    assert(hero.walkFps === 11, hero.name + ' walk animation fps is incorrect');
     assert(hero.attackFps === 13, hero.name + ' attack animation fps is incorrect');
   }
-  assert(JSON.stringify(atlas.skeleton) === '[[32,32],[32,32],[32,32],[32,32]]', 'skeleton atlas frames are incorrect');
-  assert(JSON.stringify(atlas.slimeKing) === '[[48,48],[48,48],[48,48],[48,48]]', 'slime king atlas frames are incorrect');
-  assert(JSON.stringify(atlas.arrow) === '[[24,10]]', 'arrow atlas frames are incorrect');
-  assert(JSON.stringify(atlas.tesla) === '[[128,128]]', 'tesla tower atlas frame is incorrect');
-  assert(atlas.skeletonFps === 7 && atlas.slimeKingFps === 5, 'enemy animation fps values are incorrect');
-  assert(atlas.arrowFps === 12, 'arrow animation fps is incorrect');
-  assert(atlas.teslaFps === 1, 'tesla tower animation fps is incorrect');
-  assert(atlas.knightScale === 0.72 && Math.abs(atlas.bossScale - 0.666667) < 0.00001,
+  assert(atlas.skeleton.length === 8 && atlas.skeleton.every(frame => JSON.stringify(frame) === '[48,56]'), 'skeleton atlas frames are incorrect');
+  assert(atlas.slimeKing.length === 8 && atlas.slimeKing.every(frame => JSON.stringify(frame) === '[96,96]'), 'slime king atlas frames are incorrect');
+  assert(atlas.arrow.length === 8 && atlas.arrow.every(frame => JSON.stringify(frame) === '[32,24]'), 'arrow atlas frames are incorrect');
+  assert(atlas.tesla.length === 8 && atlas.tesla.every(frame => JSON.stringify(frame) === '[96,96]'), 'tesla tower atlas frame is incorrect');
+  assert(atlas.skeletonFps === 7 && atlas.slimeKingFps === 6, 'enemy animation fps values are incorrect');
+  assert(atlas.arrowFps === 14, 'arrow animation fps is incorrect');
+  assert(atlas.teslaFps === 8, 'tesla tower animation fps is incorrect');
+  assert(atlas.knightScale === 0.42 && Math.abs(atlas.bossScale - 0.27) < 0.00001,
     'atlas art scales are incorrect');
-  assert(JSON.stringify(atlas.explosion) === '[[32,32],[32,32],[32,32],[32,32],[32,32]]',
+  assert(atlas.explosion.length === 8 && atlas.explosion.every(frame => JSON.stringify(frame) === '[48,48]'),
     'explosion VFX atlas frames are incorrect');
   assert(JSON.stringify(atlas.terrain) === '[[16,16]]', 'graveyard terrain tile is incorrect');
-  console.log('ATLAS OK  144 assets, 374 frames, complete hero actions, VFX and art scales');
+  console.log(`ATLAS OK  ${atlas.status.count} assets, ${totalFrames} frames, four-direction hero actions, VFX and art scales`);
 
   const animStats = await page.evaluate(() => {
     function stats(name) {

@@ -62,6 +62,8 @@ window.Minimap = (function () {
       ctx.fillStyle = '#241a32'; ctx.fillRect(corners[i][0], corners[i][1], 7, 7);
       ctx.fillStyle = '#c89c55'; ctx.fillRect(corners[i][0] + 2, corners[i][1] + 2, 3, 3);
     }
+    var artFrame = SpriteGen.get('hud_minimap_frame');
+    ctx.drawImage(artFrame, x - 5, y - 5, SIZE + 10, SIZE + 10);
   }
 
   function draw(ctx, run) {

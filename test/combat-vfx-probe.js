@@ -252,9 +252,9 @@ function colorCount(fg, w, h, match) {
     frames: SpriteGen.frames('p_arrow').length,
     angle: Weapons.getBullets()[0].angle
   }));
-  assert(arrowMeta.frames === 1, 'arrow must be a single real sprite, got ' + arrowMeta.frames + ' frames');
+  assert(arrowMeta.frames === 8, 'arrow must use the complete 8-frame flight/impact sheet, got ' + arrowMeta.frames + ' frames');
   assert(Math.abs(arrowMeta.angle - 1.0) < 0.001, 'arrow angle was rewritten during flight');
-  console.log(`VFX ARROW OK   horizontal ${arrowH.box.w}x${arrowH.box.h} (${arrowH.box.count}px), vertical ${arrowV.box.w}x${arrowV.box.h} (${arrowV.box.count}px), 1 frame`);
+  console.log(`VFX ARROW OK   horizontal ${arrowH.box.w}x${arrowH.box.h} (${arrowH.box.count}px), vertical ${arrowV.box.w}x${arrowV.box.h} (${arrowV.box.count}px), 8 frames`);
 
   await browser.close();
   await new Promise(resolve => server.close(resolve));

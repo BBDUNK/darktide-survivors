@@ -21,7 +21,10 @@ def validate(manifest_path: Path) -> int:
     if manifest.get("externalManifest"):
         external = json.loads((root / manifest["externalManifest"]).read_text(encoding="utf-8"))
         defaults = external.get("defaults", {})
-        manifest["assets"].extend([{**defaults, **asset} for asset in external["assets"]])
+        local_names = {asset["name"] for asset in manifest["assets"]}
+        manifest["assets"].extend(
+            {**defaults, **asset} for asset in external["assets"] if asset["name"] not in local_names
+        )
     out_dir = root / "assets" / "sprites"
     meta = json.loads((out_dir / "atlas.json").read_text(encoding="utf-8"))
     atlas = Image.open(out_dir / "atlas.png").convert("RGBA")

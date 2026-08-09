@@ -160,7 +160,7 @@ window.CFG = {
       apply: function (s, lv) { s.magnet += 25 * lv; } },
     ps_clover:      { name: '幸运草', icon: 'ps_clover', maxLv: 5, desc: '幸运 +12%/级,出门捡钱,回头捡命。',
       apply: function (s, lv) { s.luck += 0.12 * lv; } },
-    ps_barrier:     { name: '护盾符文', icon: 'ps_core', maxLv: 3, desc: '每 12 秒恢复护盾,每级+5。',
+    ps_barrier:     { name: '护盾符文', icon: 'ps_barrier', maxLv: 3, desc: '每 12 秒恢复护盾,每级+5。',
       apply: function (s, lv) { s.shieldMax = (s.shieldMax || 0) + (5 + 5 * lv); s.shieldCd = 12; } }
   },
 

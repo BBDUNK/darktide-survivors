@@ -8,7 +8,7 @@ window.Entities = (function () {
     return {
       x: 0, y: 0, r: 10,
       hp: 100, iframe: 0, hurtFlash: 0,
-      face: 1, moving: false, animT: 0,
+      face: 1, dir: 'down', moving: false, animT: 0,
       attackAnimT: 0, attackAnimAge: 0,
       char: charDef,
       shield: 0, shieldRegenT: 0,  // 护盾当前值 / 下次恢复计时
@@ -135,6 +135,11 @@ window.Entities = (function () {
       p.y += iv.y * mspd * dt;
       // 脚步尘土(隔帧少量,避免粒子池被占满)
       if ((run.frame & 3) === 0) FX.step(p.x, p.y + 20, '#b9b0c8');
+      if (Math.abs(iv.x) > Math.abs(iv.y)) {
+        p.dir = iv.x >= 0 ? 'right' : 'left';
+      } else {
+        p.dir = iv.y >= 0 ? 'down' : 'up';
+      }
       if (iv.x > 0.01) p.face = 1; else if (iv.x < -0.01) p.face = -1;
       p.animT += dt;
     }
@@ -1695,8 +1700,8 @@ window.Entities = (function () {
       // 史莱姆跳跃:hop 抬高机体,squash 做蓄力压扁/腾空拉伸
       var hop = e.hop || 0, sq = e.squash || 1;
       var enemySprite = e.boss ? e.bossType : e.id;
-      // 静止的敌人固定帧(修复原地站立还不停播走路动画的"旋转"感),移动时才循环
-      var enemyF = (e.vx === 0 && e.vy === 0) ? 0 : Math.floor(run.t * animFps(enemySprite, 6));
+      if (e.vx !== 0 || e.vy !== 0) enemySprite += '_walk';
+      var enemyF = Math.floor(run.t * animFps(enemySprite, (e.vx === 0 && e.vy === 0) ? 6 : 10));
       drawSprite(ctx, enemySprite, enemyF + (e.animo | 0),
                  e.x, e.y + wob - hop, sc * sq, e.face < 0, e.alpha, tint);
       if (e.elite) drawSprite(ctx, 'elite_crown', 0, e.x, e.y - e.r - 12, 1, false, 1, null);
@@ -1763,11 +1768,10 @@ window.Entities = (function () {
     ctx.globalAlpha = 1;
     var blink = p.iframe > 0 && (Math.floor(run.t * 14) & 1);
     if (p.downed) {
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(Math.PI / 2);
-      drawSprite(ctx, p.char.sprite, 0, 0, 0, 1, false, 0.55, '#ff6688');
-      ctx.restore();
+      var downDir = p.dir || 'down';
+      var downSprite = p.char.sprite + '_death_' + downDir;
+      var downFrames = getFrames(downSprite, false);
+      drawSprite(ctx, downSprite, downFrames.length - 1, p.x, p.y, 1, false, 0.55, '#ff6688');
       if (p.reviveT > 0) {
         var revivePct = E.clamp(p.reviveT / CFG.COOP.reviveTime, 0, 1);
         ctx.globalAlpha = 0.9;
@@ -1779,13 +1783,17 @@ window.Entities = (function () {
         ctx.globalAlpha = 1;
       }
     } else if (!blink) {
-      var playerSprite = p.char.sprite;
+      var playerDir = p.dir || (p.face < 0 ? 'left' : 'right');
+      var playerSprite = p.char.sprite + '_idle_' + playerDir;
       var pf = 0;
-      if (p.attackAnimT > 0) {
-        playerSprite += '_attack';
+      if (p.hurtFlash > 0 && p.attackAnimT <= 0) {
+        playerSprite = p.char.sprite + '_hurt_' + playerDir;
+        pf = Math.floor((0.18 - Math.min(0.18, p.hurtFlash)) * animFps(playerSprite, 10));
+      } else if (p.attackAnimT > 0) {
+        playerSprite = p.char.sprite + '_attack_' + playerDir;
         pf = Math.floor(p.attackAnimAge * animFps(playerSprite, 13));
       } else if (p.moving) {
-        playerSprite += '_walk';
+        playerSprite = p.char.sprite + '_walk_' + playerDir;
         pf = Math.floor(p.animT * animFps(playerSprite, 10));
       } else {
         // 待机固定第一帧,不做旋转动画
@@ -1912,11 +1920,10 @@ window.Entities = (function () {
       ctx.globalAlpha = 1;
       if (m.downed) {
         // 倒地:横躺 + 救援进度环
-        ctx.save();
-        ctx.translate(m.x, m.y);
-        ctx.rotate(Math.PI / 2);
-        drawSprite(ctx, cd.sprite, 0, 0, 0, 1, false, 0.55, '#ff6688');
-        ctx.restore();
+        var mateDownDir = m.dir || (m.face < 0 ? 'left' : 'right');
+        var mateDownSprite = cd.sprite + '_death_' + mateDownDir;
+        var mateDownFrames = getFrames(mateDownSprite, false);
+        drawSprite(ctx, mateDownSprite, mateDownFrames.length - 1, m.x, m.y, 1, false, 0.55, '#ff6688');
         if (m.reviveT > 0) {
           var pr = E.clamp(m.reviveT / CFG.COOP.reviveTime, 0, 1);
           ctx.strokeStyle = '#7ce87c'; ctx.lineWidth = 3;
@@ -1925,13 +1932,14 @@ window.Entities = (function () {
           ctx.stroke();
         }
       } else {
-        var mateSprite = cd.sprite;
+        var mateDir = m.dir || (m.face < 0 ? 'left' : 'right');
+        var mateSprite = cd.sprite + '_idle_' + mateDir;
         var mateF = 0;   // 静止:固定帧 0(修复队友空闲不停动画)
         if (m.attacking) {
-          mateSprite += '_attack';
+          mateSprite = cd.sprite + '_attack_' + mateDir;
           mateF = Math.floor(run.t * animFps(mateSprite, 13));
         } else if (m.moving) {
-          mateSprite += '_walk';
+          mateSprite = cd.sprite + '_walk_' + mateDir;
           mateF = Math.floor(run.t * animFps(mateSprite, 10));
         }
         drawSprite(ctx, mateSprite, mateF, m.x, m.y, 1, m.face < 0, 1, null);

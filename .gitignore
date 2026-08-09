@@ -16,3 +16,6 @@ shots/
 # 归档的未使用素材
 _unused/
 __pycache__/
+
+# Regenerable chroma-key intermediates; masters and final pixel sheets are versioned.
+assets/art-v2/work/

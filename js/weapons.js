@@ -904,11 +904,12 @@ window.Weapons = (function () {
 
     // 塔身:使用复古像素电塔素材,底部锚定在地面
     var towerImg = cachedFrames('tesla_tower')[0];
-    var towerW = 96, towerH = 96;
+    // ImageGen authored a tall coil with a wide mechanical base; keep it clearly larger than enemies.
+    var towerW = 160, towerH = 112;
     ctx.drawImage(towerImg, bx - towerW / 2, baseY - towerH, towerW, towerH);
 
     // 顶部电球与脉冲辉光
-    var orbY = baseY - towerH - 8;
+    var orbY = baseY - towerH + 8;
     var glowR = 17 + pulse * 6;
     var glow = ctx.createRadialGradient(bx, orbY, 1, bx, orbY, glowR);
     glow.addColorStop(0, 'rgba(140,235,255,' + (0.42 + pulse * 0.18).toFixed(3) + ')');
