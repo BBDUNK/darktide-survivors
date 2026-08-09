@@ -126,7 +126,10 @@ window.Entities = (function () {
     if (p.webT > 0) { p.webT -= dt; if (p.webT <= 0) p.webStacks = 0; }
     if (p.webImmune > 0) p.webImmune -= dt;
     if (p.rootT > 0) { p.rootT -= dt; iv.x = 0; iv.y = 0; p.moving = false; }
-    var mspd = s.speed * (1 - (p.slow || 0));
+    var terrain = E.terrainEffect ? E.terrainEffect(run.map, p.x, p.y) : { mul: 1, type: 'ground' };
+    p.terrainType = terrain.type;
+    p.terrainMul = terrain.mul;
+    var mspd = s.speed * (1 - (p.slow || 0)) * terrain.mul;
     // 记录当前速度矢量,供敌人抛击预判落点
     p.lastVx = iv.x * mspd;
     p.lastVy = iv.y * mspd;
@@ -134,7 +137,11 @@ window.Entities = (function () {
       p.x += iv.x * mspd * dt;
       p.y += iv.y * mspd * dt;
       // 脚步尘土(隔帧少量,避免粒子池被占满)
-      if ((run.frame & 3) === 0) FX.step(p.x, p.y + 20, '#b9b0c8');
+      if ((run.frame & 3) === 0) {
+        var stepCol = terrain.type === 'swamp' ? '#60764b' :
+          (terrain.type === 'road' ? '#a49272' : (terrain.type === 'water' ? '#4f8295' : '#8f8295'));
+        FX.step(p.x, p.y + 20, stepCol);
+      }
       if (Math.abs(iv.x) > Math.abs(iv.y)) {
         p.dir = iv.x >= 0 ? 'right' : 'left';
       } else {
@@ -147,6 +154,7 @@ window.Entities = (function () {
     var R = CFG.GAME.MAP_R;
     p.x = E.clamp(p.x, -R, R);
     p.y = E.clamp(p.y, -R, R);
+    if (E.resolveDecorCollision) E.resolveDecorCollision(run.map, p);
     if (p.iframe > 0) p.iframe -= dt;
     if (p.hurtFlash > 0) p.hurtFlash -= dt;
     if (p.attackAnimT > 0) {
@@ -1636,10 +1644,13 @@ window.Entities = (function () {
       // 大颗经验加一圈微光(用缓存贴图,不再每帧建渐变)
       if (g.v >= 10) {
         ctx.globalAlpha = 0.55;
-        ctx.drawImage(SpriteGen.glow('#59c2ff'), g.x - 16, g.y - 16, 32, 32);
+        var gemGlow = g.v >= 30 ? 28 : 20;
+        ctx.drawImage(SpriteGen.glow(g.v >= 30 ? '#b96cff' : '#59c2ff'),
+          g.x - gemGlow, g.y - gemGlow, gemGlow * 2, gemGlow * 2);
         ctx.globalAlpha = 1;
       }
-      drawSprite(ctx, gname, 0, g.x, g.y + bob, g.v >= 30 ? 0.58 : 0.44, false, 1, null);
+      var gemScale = g.v >= 30 ? 1.06 : (g.v >= 10 ? 0.86 : (g.v >= 3 ? 0.70 : 0.56));
+      drawSprite(ctx, gname, 0, g.x, g.y + bob, gemScale, false, 1, null);
     }
     // 道具
     for (i = 0; i < items.length; i++) {
@@ -1651,13 +1662,14 @@ window.Entities = (function () {
       var glowCol = it.type === 'chest' ? '#ffd76b'
         : (it.type === 'coin' ? '#ffeb78'
         : (it.type === 'meat' ? '#ff788c' : '#78c8ff'));
-      var gr = it.type === 'chest' ? 32 : 14;
+      var gr = it.type === 'chest' ? 38 : 24;
       var pulse = 0.5 + Math.sin(it.t * 4) * 0.5;
       // 拾取物地面柔光:缓存贴图,不再每帧建渐变
       ctx.globalAlpha = 0.45 + pulse * 0.30;
       ctx.drawImage(SpriteGen.glow(glowCol), it.x - gr, it.y - gr, gr * 2, gr * 2);
       ctx.globalAlpha = 1;
-      var itemScale = it.type === 'chest' ? 1.0 : (it.type === 'coin' ? 0.62 : 0.56);
+      // 普通掉落从原来的约 0.56 提升为 1.1，辨识面积接近四倍。
+      var itemScale = it.type === 'chest' ? 1.16 : (it.type === 'coin' ? 0.94 : 1.10);
       drawSprite(ctx, nm, it.type === 'coin' ? animF : 0, it.x, it.y + bob2, itemScale, false, 1, null);
       if (it.type === 'chest') { // 宝箱额外上升光柱
         ctx.globalAlpha = 0.10 + pulse * 0.10;
@@ -1715,12 +1727,22 @@ window.Entities = (function () {
       var enemyF = Math.floor(run.t * animFps(enemySprite, (e.vx === 0 && e.vy === 0) ? 6 : 10));
       drawSprite(ctx, enemySprite, enemyF + (e.animo | 0),
                  e.x, e.y + wob - hop, sc * sq, e.face < 0, e.alpha, tint);
-      // 被强化的小怪:显示淡色光环表示受精英/Boss 增益
+      // 被强化的小怪：血气贴着身体向外逸散，不再画一圈廉价的黄色圆环。
       if (e.buffed && !e.elite && !e.boss) {
-        ctx.globalAlpha = 0.28 + Math.sin(run.t * 5 + e.animo) * 0.12;
-        ctx.strokeStyle = '#ffdd66';
-        ctx.lineWidth = 1.5;
-        ctx.beginPath(); ctx.arc(e.x, e.y, e.r * sc + 6, 0, Math.PI * 2); ctx.stroke();
+        var mistFrames = getFrames('vfx_smoke', false);
+        var mistF = (Math.floor(run.t * 7) + (e.animo | 0)) % mistFrames.length;
+        var mistSize = Math.max(30, e.r * sc * 3.3);
+        var mistScale = mistSize / Math.max(1, mistFrames[mistF].width * 2 * SpriteGen.renderScale('vfx_smoke'));
+        drawSprite(ctx, 'vfx_smoke', mistF, e.x, e.y - mistSize * 0.10, mistScale,
+          false, 0.20 + Math.sin(run.t * 4 + e.animo) * 0.035, '#a51f32');
+        ctx.globalAlpha = 0.28;
+        for (var bloodI = 0; bloodI < 3; bloodI++) {
+          var bloodA = run.t * (0.52 + bloodI * 0.09) + e.animo * 1.7 + bloodI * 2.1;
+          var bloodR = e.r * sc * (0.75 + bloodI * 0.18);
+          ctx.fillStyle = bloodI === 1 ? '#d34a4f' : '#7d1426';
+          ctx.fillRect(Math.round(e.x + Math.cos(bloodA) * bloodR),
+            Math.round(e.y - 3 + Math.sin(bloodA) * bloodR * 0.46), 2, 2);
+        }
         ctx.globalAlpha = 1;
       }
       // 举盾:画护罩表示当前免伤
@@ -1809,7 +1831,10 @@ window.Entities = (function () {
         // 待机固定第一帧,不做旋转动画
         pf = 0;
       }
-      drawSprite(ctx, playerSprite, pf, p.x, p.y, 1, p.face < 0, 1, p.hurtFlash > 0 ? '#ff4444' : null);
+      // Four-direction sheets already contain independent left and right art.
+      // Flipping the left row a second time was the root cause of missing and
+      // contradictory right-facing movement.
+      drawSprite(ctx, playerSprite, pf, p.x, p.y, 1, false, 1, p.hurtFlash > 0 ? '#ff4444' : null);
     }
     // 蛛网缠身:白色丝痕附着在角色身上,随减速结束而消失;硬控时整体被网包裹
     if (p.webStacks > 0 || p.rootT > 0) drawWebOnPlayer(ctx, run, p);

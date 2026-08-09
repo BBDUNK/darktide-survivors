@@ -91,7 +91,16 @@ function assert(ok, message) {
     deadTree: SpriteGen.frames('deco_deadtree_large1').map(c => [c.width, c.height]),
     slimeKing: SpriteGen.frames('boss_slimeking').map(c => [c.width, c.height]),
     explosion: SpriteGen.frames('vfx_explosion').map(c => [c.width, c.height]),
+    holyAura: SpriteGen.frames('vfx_holy_aura').map(c => [c.width, c.height]),
+    frostImpact: SpriteGen.frames('vfx_frost_impact').map(c => [c.width, c.height]),
     terrain: SpriteGen.frames('tile_graveyard').map(c => [c.width, c.height]),
+    terrainV4: ['terrain_grave_ground', 'terrain_grave_swamp', 'terrain_grave_road',
+      'terrain_wild_ground', 'terrain_wild_grass', 'terrain_wild_road',
+      'terrain_abyss_ground', 'terrain_abyss_water', 'terrain_abyss_road']
+      .map(name => SpriteGen.frames(name).map(c => [c.width, c.height])),
+    gems: ['gem1', 'gem2', 'gem3', 'gem_big'].map(name => SpriteGen.frames(name).map(c => [c.width, c.height])),
+    knightRight: SpriteGen.frames('char_knight_walk_right').map(c => [c.width, c.height]),
+    knightLeft: SpriteGen.frames('char_knight_walk_left').map(c => [c.width, c.height]),
     arrow: SpriteGen.frames('p_arrow').map(c => [c.width, c.height]),
     skeletonFps: SpriteGen.animationFps('skeleton', 0),
     slimeKingFps: SpriteGen.animationFps('boss_slimeking', 0),
@@ -102,8 +111,8 @@ function assert(ok, message) {
     bossScale: SpriteGen.renderScale('boss_slimeking')
   }));
   const totalFrames = Object.values(atlasMeta.frames).reduce((sum, frames) => sum + frames.length, 0);
-  assert(atlas.status.count >= 412, 'expected at least 412 atlas assets, got ' + atlas.status.count);
-  assert(totalFrames >= 2474, 'expected at least 2474 atlas frames, got ' + totalFrames);
+  assert(atlas.status.count >= 431, 'expected at least 431 atlas assets, got ' + atlas.status.count);
+  assert(totalFrames >= 2507, 'expected at least 2507 atlas frames, got ' + totalFrames);
   for (const hero of atlas.heroes) {
     assert(JSON.stringify(hero.frames) === '[[48,64],[48,64],[48,64],[48,64],[48,64],[48,64],[48,64],[48,64]]',
       hero.name + ' atlas frames are incorrect');
@@ -118,7 +127,7 @@ function assert(ok, message) {
   }
   assert(atlas.skeleton.length === 8 && atlas.skeleton.every(frame => JSON.stringify(frame) === '[48,56]'), 'skeleton atlas frames are incorrect');
   assert(atlas.eliteSkeleton.length === 8 && atlas.eliteSkeleton.every(frame => JSON.stringify(frame) === '[52,60]'), 'elite skeleton attack frames are incorrect');
-  assert(atlas.merchantProne.length === 8 && atlas.merchantProne.every(frame => JSON.stringify(frame) === '[80,80]'), 'merchant prone frames are incorrect');
+  assert(atlas.merchantProne.length === 8 && atlas.merchantProne.every(frame => JSON.stringify(frame) === '[96,96]'), 'merchant prone frames are incorrect');
   assert(JSON.stringify(atlas.deadTree) === '[[128,128]]', 'large dead tree frame is incorrect');
   assert(atlas.slimeKing.length === 8 && atlas.slimeKing.every(frame => JSON.stringify(frame) === '[96,96]'), 'slime king atlas frames are incorrect');
   assert(atlas.arrow.length === 8 && atlas.arrow.every(frame => JSON.stringify(frame) === '[32,24]'), 'arrow atlas frames are incorrect');
@@ -126,11 +135,21 @@ function assert(ok, message) {
   assert(atlas.skeletonFps === 7 && atlas.slimeKingFps === 6, 'enemy animation fps values are incorrect');
   assert(atlas.arrowFps === 14, 'arrow animation fps is incorrect');
   assert(atlas.teslaFps === 8, 'tesla tower animation fps is incorrect');
-  assert(atlas.knightScale === 0.56 && Math.abs(atlas.bossScale - 0.27) < 0.00001,
+  assert(atlas.knightScale === 0.58 && Math.abs(atlas.bossScale - 0.52) < 0.00001,
     'atlas art scales are incorrect');
   assert(atlas.explosion.length === 8 && atlas.explosion.every(frame => JSON.stringify(frame) === '[48,48]'),
     'explosion VFX atlas frames are incorrect');
   assert(JSON.stringify(atlas.terrain) === '[[16,16]]', 'graveyard terrain tile is incorrect');
+  assert(atlas.holyAura.length === 8 && atlas.holyAura.every(frame => JSON.stringify(frame) === '[96,96]'),
+    'holy aura V4 frames are incorrect');
+  assert(atlas.frostImpact.length === 8 && atlas.frostImpact.every(frame => JSON.stringify(frame) === '[96,96]'),
+    'frost impact V4 frames are incorrect');
+  assert(atlas.terrainV4.every(group => group.length === 1 && JSON.stringify(group[0]) === '[128,128]'),
+    'V4 terrain tiles are incorrect');
+  assert(atlas.gems.every(group => group.length === 1 && JSON.stringify(group[0]) === '[32,32]'),
+    'V4 experience gem tiers are incorrect');
+  assert(atlas.knightRight.length === 8 && atlas.knightLeft.length === 8,
+    'left/right player movement animations are incomplete');
   console.log(`ATLAS OK  ${atlas.status.count} assets, ${totalFrames} frames, four-direction hero actions, VFX and art scales`);
 
   const animStats = await page.evaluate(() => {

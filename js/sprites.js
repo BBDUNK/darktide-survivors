@@ -1667,6 +1667,23 @@
     return p;
   }));
 
+  // Atlas-free emergency terrain. The production build uses the authored V4
+  // 128px tiles; these tiny opaque patterns keep the game fully playable when
+  // atlas loading fails without exposing magenta placeholders or square gaps.
+  function fallbackTerrain(base, fleck) {
+    return one(function () {
+      var p = new Pix(16, 16);
+      p.rect(0, 0, 16, 16, base);
+      for (var y = 1; y < 16; y += 5) {
+        for (var x = (y * 3) % 5; x < 16; x += 7) p.rect(x, y, 1, 1, fleck);
+      }
+      return p;
+    });
+  }
+  def('tile_graveyard', fallbackTerrain('#201d25', '#39313b'));
+  def('tile_wilds', fallbackTerrain('#30251b', '#55412a'));
+  def('tile_abyss', fallbackTerrain('#151c2b', '#283651'));
+
   def('vfx_lightning', multi(5, function (f) {
     var p = new Pix(32, 32);
     var x = 16, y = 2;
@@ -1801,6 +1818,17 @@
     if (base.indexOf('deco_deadtree_large') === 0) return 'deco_deadtree';
     if (base === 'deco_deadstump' || base === 'deco_fallenlog' || base === 'deco_deadroots') return 'deco_deadtree';
     if (base === 'deco_deadreeds') return 'deco_bush';
+    if (base === 'deco_wither_cluster1' || base === 'deco_wither_cluster2' ||
+        base === 'deco_swamp_reeds' || base === 'deco_lilypad') return 'deco_bush';
+    if (base === 'deco_road_marker') return 'deco_grave';
+    if (base === 'deco_wagon_rut') return 'deco_deadtree';
+    if (base === 'deco_abyss_coral') return 'deco_crystal';
+    if (base === 'deco_rune_cluster') return 'deco_rune';
+    if (base.indexOf('terrain_grave_') === 0) return 'tile_graveyard';
+    if (base.indexOf('terrain_wild_') === 0) return 'tile_wilds';
+    if (base.indexOf('terrain_abyss_') === 0) return 'tile_abyss';
+    if (base === 'vfx_holy_aura') return 'vfx_circle';
+    if (base === 'vfx_frost_impact') return 'vfx_ice';
     if (base === 'ps_barrier') return 'ps_core';
     return base;
   }
@@ -1815,17 +1843,19 @@
     scales: {},
     fps: {}
   };
+  var proceduralReady = false;
 
   window.SpriteGen = {
     // 同步构建全部素材;启动时调用一次(重复调用无副作用)
     init: function () {
-      if (store) return;
-      store = {};
-      PLACEHOLDER = buildPlaceholder();
-      store.vfx_glow = buildGlowTexture();
-      store.hud_minimap_frame = [new Pix(8, 8).toCanvas()];
+      if (proceduralReady) return;
+      if (!store) store = {};
+      if (!PLACEHOLDER) PLACEHOLDER = buildPlaceholder();
+      if (!store.vfx_glow) store.vfx_glow = buildGlowTexture();
+      if (!store.hud_minimap_frame) store.hud_minimap_frame = [new Pix(8, 8).toCanvas()];
       var name, i;
       for (name in defs) {
+        if (store[name]) continue;
         if (typeof defs[name] !== 'function') {
           throw new Error('SpriteGen bad def: ' + name + ' -> ' + typeof defs[name]);
         }
@@ -1834,6 +1864,7 @@
         for (i = 0; i < pxFrames.length; i++) cs.push(pxFrames[i].toCanvas());
         store[name] = cs;
       }
+      proceduralReady = true;
       // 覆盖率自检:对照 SPEC 清单逐一核对
       var missing = 0;
       for (i = 0; i < NAMES.length; i++) {
@@ -1847,7 +1878,12 @@
       var cfg = window.SPRITE_ATLAS;
       if (!cfg || !cfg.image || !cfg.frames) return null;
       if (atlasState.promise) return atlasState.promise;
-      if (!store) this.init();
+      // 正常路径只准备三个轻量兜底，不再先生成整套程序精灵再立刻被图集覆盖。
+      // 图集失败时才惰性构建完整程序素材，显著缩短首屏前的主线程阻塞。
+      if (!store) store = {};
+      if (!PLACEHOLDER) PLACEHOLDER = buildPlaceholder();
+      if (!store.vfx_glow) store.vfx_glow = buildGlowTexture();
+      if (!store.hud_minimap_frame) store.hud_minimap_frame = [new Pix(8, 8).toCanvas()];
       atlasState.image = cfg.image;
       atlasState.promise = new Promise(function (resolve) {
         var image = new Image();
@@ -1883,14 +1919,18 @@
           } catch (err) {
             atlasState.error = String(err && err.message ? err.message : err);
             console.warn('[SpriteGen] 图集切片失败,继续使用程序素材:', err);
+            window.SpriteGen.init();
             resolve(false);
           }
         };
         image.onerror = function () {
           atlasState.error = 'image load failed: ' + cfg.image;
           console.warn('[SpriteGen] 图集加载失败,继续使用程序素材: ' + cfg.image);
+          window.SpriteGen.init();
           resolve(false);
         };
+        image.decoding = 'async';
+        image.fetchPriority = 'high';
         image.src = cfg.image;
       });
       return atlasState.promise;

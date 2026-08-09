@@ -27,7 +27,20 @@ window.UI = (function () {
   }
   function btn(text, cls, onClick) {
     var b = h('button', 'btn ' + (cls || ''), text);
-    b.addEventListener('click', function () { AudioSys.play('ui_click'); onClick(); });
+    var lastTouch = 0;
+    function activate() { AudioSys.play('ui_click'); onClick(); }
+    // 触摸使用 pointerdown 立即响应。这样左拇指持续操控画布时，右拇指仍能
+    // 暂停或切换索敌；随后浏览器合成的 click 会被去重。
+    b.addEventListener('pointerdown', function (ev) {
+      if (ev.pointerType !== 'touch') return;
+      ev.preventDefault(); ev.stopPropagation();
+      lastTouch = Date.now();
+      activate();
+    });
+    b.addEventListener('click', function (ev) {
+      if (Date.now() - lastTouch < 700) { ev.preventDefault(); return; }
+      activate();
+    });
     b.addEventListener('mouseenter', function () { AudioSys.play('ui_hover'); });
     return b;
   }
@@ -59,7 +72,7 @@ window.UI = (function () {
     var s = h('div', 'screen center-col');
     var logo = h('div', 'logo');
     logo.appendChild(h('div', 'logo-main gothic-title', 'DarkEscaper'));
-    logo.appendChild(h('div', 'logo-sub', '暗黑逃跑神 · MEDIEVAL SURVIVAL'));
+    logo.appendChild(h('div', 'logo-sub', '暗黑逃跑神'));
     s.appendChild(logo);
     s.appendChild(h('div', 'blink hint', L.t('title_click')));
     s.appendChild(h('div', 'credits', L.t('title_credit')));
@@ -79,6 +92,7 @@ window.UI = (function () {
     // 大标题:居中偏上
     var logo = h('div', 'logo menu-logo');
     logo.appendChild(h('div', 'logo-main menu-big gothic-title', 'DarkEscaper'));
+    logo.appendChild(h('div', 'menu-tagline', '暗黑逃跑神'));
     s.appendChild(logo);
     // 三列主体:左右侧栏对称,中间按钮列
     var body = h('div', 'menu-body');
@@ -774,6 +788,7 @@ window.UI = (function () {
     s.appendChild(xpWrap);
     // 左上生命
     var tl = h('div', 'hud-tl');
+    tl.appendChild(h('div', 'hud-tl-title', '生命 · 装备'));
     var hpWrap = h('div', 'hp-wrap');
     hudRefs.hpFill = h('div', 'hp-fill');
     hpWrap.appendChild(hudRefs.hpFill);

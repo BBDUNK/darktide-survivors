@@ -333,7 +333,13 @@ def build(manifest_path: Path) -> None:
         processed = []
         for index, raw_frame in enumerate(extract_frames(source, spec)):
             try:
-                if spec.get("preservePixels"):
+                if spec.get("seamlessTile"):
+                    # Repeatable terrain must cover all four edges. The usual
+                    # sprite safety padding would repeat as a large square grid.
+                    frame = hard_alpha(raw_frame)
+                    if frame.size != tuple(spec["size"]):
+                        frame = frame.resize(tuple(spec["size"]), Image.Resampling.NEAREST)
+                elif spec.get("preservePixels"):
                     frame = fit_pixel_art(raw_frame, tuple(spec["size"]), tuple(spec["anchor"]),
                                           spec.get("pixelScale"))
                 else:

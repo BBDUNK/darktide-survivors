@@ -88,21 +88,21 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "merchant",
-      "source": "assets/art-v3/sprites/npcs/merchant_actions.png",
+      "source": "assets/art-v4/sprites/npcs/merchant_actions.png",
       "frameSize": [
-        80,
-        80
+        96,
+        96
       ],
       "frameRow": 0,
       "frames": 8,
       "fps": 7,
       "size": [
-        80,
-        80
+        96,
+        96
       ],
       "anchor": [
-        40,
-        77
+        48,
+        93
       ],
       "renderScale": 1
     },
@@ -114,21 +114,21 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "merchant_attack",
-      "source": "assets/art-v3/sprites/npcs/merchant_actions.png",
+      "source": "assets/art-v4/sprites/npcs/merchant_actions.png",
       "frameSize": [
-        80,
-        80
+        96,
+        96
       ],
       "frameRow": 1,
       "frames": 8,
       "fps": 12,
       "size": [
-        80,
-        80
+        96,
+        96
       ],
       "anchor": [
-        40,
-        77
+        48,
+        93
       ],
       "renderScale": 1
     },
@@ -140,21 +140,21 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "merchant_prone",
-      "source": "assets/art-v3/sprites/npcs/merchant_actions.png",
+      "source": "assets/art-v4/sprites/npcs/merchant_actions.png",
       "frameSize": [
-        80,
-        80
+        96,
+        96
       ],
       "frameRow": 2,
       "frames": 8,
       "fps": 10,
       "size": [
-        80,
-        80
+        96,
+        96
       ],
       "anchor": [
-        40,
-        77
+        48,
+        93
       ],
       "renderScale": 1
     },
@@ -166,7 +166,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_knight_idle_down",
-      "source": "assets/art-v2/sprites/characters/char_knight_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_knight_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -182,7 +182,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -192,7 +192,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_knight_idle_left",
-      "source": "assets/art-v2/sprites/characters/char_knight_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_knight_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -208,7 +208,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -218,7 +218,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_knight_idle_right",
-      "source": "assets/art-v2/sprites/characters/char_knight_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_knight_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -234,7 +234,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -244,7 +244,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_knight_idle_up",
-      "source": "assets/art-v2/sprites/characters/char_knight_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_knight_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -260,7 +260,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -270,7 +270,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_knight",
-      "source": "assets/art-v2/sprites/characters/char_knight_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_knight_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -286,7 +286,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -296,7 +296,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_knight_walk_down",
-      "source": "assets/art-v2/sprites/characters/char_knight_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_knight_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -312,7 +312,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -322,7 +322,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_knight_walk_left",
-      "source": "assets/art-v2/sprites/characters/char_knight_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_knight_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -338,7 +338,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -348,7 +348,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_knight_walk_right",
-      "source": "assets/art-v2/sprites/characters/char_knight_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_knight_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -364,7 +364,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -374,7 +374,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_knight_walk_up",
-      "source": "assets/art-v2/sprites/characters/char_knight_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_knight_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -390,7 +390,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -400,7 +400,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_knight_walk",
-      "source": "assets/art-v2/sprites/characters/char_knight_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_knight_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -416,7 +416,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -426,7 +426,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_knight_attack_down",
-      "source": "assets/art-v2/sprites/characters/char_knight_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_knight_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -442,7 +442,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -452,7 +452,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_knight_attack_left",
-      "source": "assets/art-v2/sprites/characters/char_knight_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_knight_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -468,7 +468,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -478,7 +478,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_knight_attack_right",
-      "source": "assets/art-v2/sprites/characters/char_knight_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_knight_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -494,7 +494,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -504,7 +504,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_knight_attack_up",
-      "source": "assets/art-v2/sprites/characters/char_knight_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_knight_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -520,7 +520,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -530,7 +530,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_knight_attack",
-      "source": "assets/art-v2/sprites/characters/char_knight_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_knight_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -546,7 +546,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -556,7 +556,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_knight_hurt_down",
-      "source": "assets/art-v2/sprites/characters/char_knight_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_knight_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -572,7 +572,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -582,7 +582,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_knight_death_down",
-      "source": "assets/art-v2/sprites/characters/char_knight_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_knight_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -599,7 +599,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -609,7 +609,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_knight_hurt_left",
-      "source": "assets/art-v2/sprites/characters/char_knight_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_knight_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -625,7 +625,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -635,7 +635,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_knight_death_left",
-      "source": "assets/art-v2/sprites/characters/char_knight_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_knight_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -652,7 +652,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -662,7 +662,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_knight_hurt_right",
-      "source": "assets/art-v2/sprites/characters/char_knight_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_knight_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -678,7 +678,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -688,7 +688,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_knight_death_right",
-      "source": "assets/art-v2/sprites/characters/char_knight_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_knight_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -705,7 +705,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -715,7 +715,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_knight_hurt_up",
-      "source": "assets/art-v2/sprites/characters/char_knight_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_knight_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -731,7 +731,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -741,7 +741,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_knight_death_up",
-      "source": "assets/art-v2/sprites/characters/char_knight_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_knight_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -758,7 +758,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -768,7 +768,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_mage_idle_down",
-      "source": "assets/art-v2/sprites/characters/char_mage_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_mage_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -784,7 +784,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -794,7 +794,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_mage_idle_left",
-      "source": "assets/art-v2/sprites/characters/char_mage_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_mage_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -810,7 +810,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -820,7 +820,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_mage_idle_right",
-      "source": "assets/art-v2/sprites/characters/char_mage_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_mage_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -836,7 +836,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -846,7 +846,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_mage_idle_up",
-      "source": "assets/art-v2/sprites/characters/char_mage_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_mage_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -862,7 +862,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -872,7 +872,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_mage",
-      "source": "assets/art-v2/sprites/characters/char_mage_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_mage_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -888,7 +888,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -898,7 +898,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_mage_walk_down",
-      "source": "assets/art-v2/sprites/characters/char_mage_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_mage_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -914,7 +914,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -924,7 +924,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_mage_walk_left",
-      "source": "assets/art-v2/sprites/characters/char_mage_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_mage_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -940,7 +940,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -950,7 +950,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_mage_walk_right",
-      "source": "assets/art-v2/sprites/characters/char_mage_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_mage_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -966,7 +966,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -976,7 +976,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_mage_walk_up",
-      "source": "assets/art-v2/sprites/characters/char_mage_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_mage_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -992,7 +992,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -1002,7 +1002,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_mage_walk",
-      "source": "assets/art-v2/sprites/characters/char_mage_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_mage_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -1018,7 +1018,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -1028,7 +1028,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_mage_attack_down",
-      "source": "assets/art-v2/sprites/characters/char_mage_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_mage_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -1044,7 +1044,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -1054,7 +1054,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_mage_attack_left",
-      "source": "assets/art-v2/sprites/characters/char_mage_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_mage_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -1070,7 +1070,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -1080,7 +1080,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_mage_attack_right",
-      "source": "assets/art-v2/sprites/characters/char_mage_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_mage_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -1096,7 +1096,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -1106,7 +1106,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_mage_attack_up",
-      "source": "assets/art-v2/sprites/characters/char_mage_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_mage_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -1122,7 +1122,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -1132,7 +1132,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_mage_attack",
-      "source": "assets/art-v2/sprites/characters/char_mage_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_mage_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -1148,7 +1148,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -1158,7 +1158,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_mage_hurt_down",
-      "source": "assets/art-v2/sprites/characters/char_mage_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_mage_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -1174,7 +1174,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -1184,7 +1184,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_mage_death_down",
-      "source": "assets/art-v2/sprites/characters/char_mage_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_mage_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -1201,7 +1201,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -1211,7 +1211,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_mage_hurt_left",
-      "source": "assets/art-v2/sprites/characters/char_mage_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_mage_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -1227,7 +1227,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -1237,7 +1237,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_mage_death_left",
-      "source": "assets/art-v2/sprites/characters/char_mage_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_mage_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -1254,7 +1254,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -1264,7 +1264,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_mage_hurt_right",
-      "source": "assets/art-v2/sprites/characters/char_mage_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_mage_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -1280,7 +1280,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -1290,7 +1290,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_mage_death_right",
-      "source": "assets/art-v2/sprites/characters/char_mage_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_mage_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -1307,7 +1307,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -1317,7 +1317,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_mage_hurt_up",
-      "source": "assets/art-v2/sprites/characters/char_mage_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_mage_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -1333,7 +1333,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -1343,7 +1343,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_mage_death_up",
-      "source": "assets/art-v2/sprites/characters/char_mage_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_mage_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -1360,7 +1360,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -1370,7 +1370,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_ranger_idle_down",
-      "source": "assets/art-v2/sprites/characters/char_ranger_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_ranger_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -1386,7 +1386,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -1396,7 +1396,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_ranger_idle_left",
-      "source": "assets/art-v2/sprites/characters/char_ranger_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_ranger_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -1412,7 +1412,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -1422,7 +1422,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_ranger_idle_right",
-      "source": "assets/art-v2/sprites/characters/char_ranger_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_ranger_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -1438,7 +1438,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -1448,7 +1448,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_ranger_idle_up",
-      "source": "assets/art-v2/sprites/characters/char_ranger_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_ranger_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -1464,7 +1464,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -1474,7 +1474,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_ranger",
-      "source": "assets/art-v2/sprites/characters/char_ranger_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_ranger_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -1490,7 +1490,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -1500,7 +1500,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_ranger_walk_down",
-      "source": "assets/art-v2/sprites/characters/char_ranger_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_ranger_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -1516,7 +1516,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -1526,7 +1526,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_ranger_walk_left",
-      "source": "assets/art-v2/sprites/characters/char_ranger_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_ranger_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -1542,7 +1542,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -1552,7 +1552,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_ranger_walk_right",
-      "source": "assets/art-v2/sprites/characters/char_ranger_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_ranger_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -1568,7 +1568,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -1578,7 +1578,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_ranger_walk_up",
-      "source": "assets/art-v2/sprites/characters/char_ranger_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_ranger_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -1594,7 +1594,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -1604,7 +1604,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_ranger_walk",
-      "source": "assets/art-v2/sprites/characters/char_ranger_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_ranger_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -1620,7 +1620,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -1630,7 +1630,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_ranger_attack_down",
-      "source": "assets/art-v2/sprites/characters/char_ranger_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_ranger_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -1646,7 +1646,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -1656,7 +1656,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_ranger_attack_left",
-      "source": "assets/art-v2/sprites/characters/char_ranger_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_ranger_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -1672,7 +1672,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -1682,7 +1682,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_ranger_attack_right",
-      "source": "assets/art-v2/sprites/characters/char_ranger_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_ranger_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -1698,7 +1698,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -1708,7 +1708,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_ranger_attack_up",
-      "source": "assets/art-v2/sprites/characters/char_ranger_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_ranger_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -1724,7 +1724,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -1734,7 +1734,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_ranger_attack",
-      "source": "assets/art-v2/sprites/characters/char_ranger_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_ranger_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -1750,7 +1750,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -1760,7 +1760,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_ranger_hurt_down",
-      "source": "assets/art-v2/sprites/characters/char_ranger_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_ranger_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -1776,7 +1776,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -1786,7 +1786,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_ranger_death_down",
-      "source": "assets/art-v2/sprites/characters/char_ranger_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_ranger_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -1803,7 +1803,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -1813,7 +1813,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_ranger_hurt_left",
-      "source": "assets/art-v2/sprites/characters/char_ranger_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_ranger_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -1829,7 +1829,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -1839,7 +1839,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_ranger_death_left",
-      "source": "assets/art-v2/sprites/characters/char_ranger_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_ranger_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -1856,7 +1856,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -1866,7 +1866,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_ranger_hurt_right",
-      "source": "assets/art-v2/sprites/characters/char_ranger_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_ranger_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -1882,7 +1882,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -1892,7 +1892,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_ranger_death_right",
-      "source": "assets/art-v2/sprites/characters/char_ranger_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_ranger_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -1909,7 +1909,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -1919,7 +1919,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_ranger_hurt_up",
-      "source": "assets/art-v2/sprites/characters/char_ranger_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_ranger_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -1935,7 +1935,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -1945,7 +1945,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_ranger_death_up",
-      "source": "assets/art-v2/sprites/characters/char_ranger_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_ranger_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -1962,7 +1962,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -1972,7 +1972,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_cleric_idle_down",
-      "source": "assets/art-v2/sprites/characters/char_cleric_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_cleric_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -1988,7 +1988,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -1998,7 +1998,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_cleric_idle_left",
-      "source": "assets/art-v2/sprites/characters/char_cleric_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_cleric_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -2014,7 +2014,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -2024,7 +2024,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_cleric_idle_right",
-      "source": "assets/art-v2/sprites/characters/char_cleric_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_cleric_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -2040,7 +2040,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -2050,7 +2050,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_cleric_idle_up",
-      "source": "assets/art-v2/sprites/characters/char_cleric_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_cleric_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -2066,7 +2066,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -2076,7 +2076,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_cleric",
-      "source": "assets/art-v2/sprites/characters/char_cleric_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_cleric_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -2092,7 +2092,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -2102,7 +2102,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_cleric_walk_down",
-      "source": "assets/art-v2/sprites/characters/char_cleric_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_cleric_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -2118,7 +2118,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -2128,7 +2128,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_cleric_walk_left",
-      "source": "assets/art-v2/sprites/characters/char_cleric_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_cleric_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -2144,7 +2144,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -2154,7 +2154,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_cleric_walk_right",
-      "source": "assets/art-v2/sprites/characters/char_cleric_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_cleric_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -2170,7 +2170,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -2180,7 +2180,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_cleric_walk_up",
-      "source": "assets/art-v2/sprites/characters/char_cleric_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_cleric_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -2196,7 +2196,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -2206,7 +2206,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_cleric_walk",
-      "source": "assets/art-v2/sprites/characters/char_cleric_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_cleric_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -2222,7 +2222,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -2232,7 +2232,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_cleric_attack_down",
-      "source": "assets/art-v2/sprites/characters/char_cleric_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_cleric_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -2248,7 +2248,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -2258,7 +2258,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_cleric_attack_left",
-      "source": "assets/art-v2/sprites/characters/char_cleric_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_cleric_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -2274,7 +2274,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -2284,7 +2284,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_cleric_attack_right",
-      "source": "assets/art-v2/sprites/characters/char_cleric_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_cleric_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -2300,7 +2300,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -2310,7 +2310,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_cleric_attack_up",
-      "source": "assets/art-v2/sprites/characters/char_cleric_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_cleric_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -2326,7 +2326,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -2336,7 +2336,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_cleric_attack",
-      "source": "assets/art-v2/sprites/characters/char_cleric_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_cleric_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -2352,7 +2352,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -2362,7 +2362,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_cleric_hurt_down",
-      "source": "assets/art-v2/sprites/characters/char_cleric_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_cleric_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -2378,7 +2378,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -2388,7 +2388,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_cleric_death_down",
-      "source": "assets/art-v2/sprites/characters/char_cleric_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_cleric_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -2405,7 +2405,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -2415,7 +2415,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_cleric_hurt_left",
-      "source": "assets/art-v2/sprites/characters/char_cleric_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_cleric_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -2431,7 +2431,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -2441,7 +2441,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_cleric_death_left",
-      "source": "assets/art-v2/sprites/characters/char_cleric_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_cleric_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -2458,7 +2458,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -2468,7 +2468,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_cleric_hurt_right",
-      "source": "assets/art-v2/sprites/characters/char_cleric_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_cleric_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -2484,7 +2484,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -2494,7 +2494,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_cleric_death_right",
-      "source": "assets/art-v2/sprites/characters/char_cleric_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_cleric_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -2511,7 +2511,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -2521,7 +2521,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_cleric_hurt_up",
-      "source": "assets/art-v2/sprites/characters/char_cleric_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_cleric_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -2537,7 +2537,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -2547,7 +2547,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_cleric_death_up",
-      "source": "assets/art-v2/sprites/characters/char_cleric_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_cleric_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -2564,7 +2564,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -2574,7 +2574,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_berserker_idle_down",
-      "source": "assets/art-v2/sprites/characters/char_berserker_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_berserker_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -2590,7 +2590,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -2600,7 +2600,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_berserker_idle_left",
-      "source": "assets/art-v2/sprites/characters/char_berserker_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_berserker_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -2616,7 +2616,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -2626,7 +2626,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_berserker_idle_right",
-      "source": "assets/art-v2/sprites/characters/char_berserker_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_berserker_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -2642,7 +2642,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -2652,7 +2652,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_berserker_idle_up",
-      "source": "assets/art-v2/sprites/characters/char_berserker_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_berserker_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -2668,7 +2668,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -2678,7 +2678,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_berserker",
-      "source": "assets/art-v2/sprites/characters/char_berserker_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_berserker_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -2694,7 +2694,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -2704,7 +2704,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_berserker_walk_down",
-      "source": "assets/art-v2/sprites/characters/char_berserker_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_berserker_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -2720,7 +2720,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -2730,7 +2730,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_berserker_walk_left",
-      "source": "assets/art-v2/sprites/characters/char_berserker_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_berserker_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -2746,7 +2746,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -2756,7 +2756,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_berserker_walk_right",
-      "source": "assets/art-v2/sprites/characters/char_berserker_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_berserker_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -2772,7 +2772,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -2782,7 +2782,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_berserker_walk_up",
-      "source": "assets/art-v2/sprites/characters/char_berserker_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_berserker_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -2798,7 +2798,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -2808,7 +2808,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_berserker_walk",
-      "source": "assets/art-v2/sprites/characters/char_berserker_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_berserker_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -2824,7 +2824,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -2834,7 +2834,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_berserker_attack_down",
-      "source": "assets/art-v2/sprites/characters/char_berserker_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_berserker_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -2850,7 +2850,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -2860,7 +2860,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_berserker_attack_left",
-      "source": "assets/art-v2/sprites/characters/char_berserker_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_berserker_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -2876,7 +2876,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -2886,7 +2886,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_berserker_attack_right",
-      "source": "assets/art-v2/sprites/characters/char_berserker_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_berserker_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -2902,7 +2902,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -2912,7 +2912,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_berserker_attack_up",
-      "source": "assets/art-v2/sprites/characters/char_berserker_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_berserker_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -2928,7 +2928,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -2938,7 +2938,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_berserker_attack",
-      "source": "assets/art-v2/sprites/characters/char_berserker_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_berserker_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -2954,7 +2954,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -2964,7 +2964,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_berserker_hurt_down",
-      "source": "assets/art-v2/sprites/characters/char_berserker_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_berserker_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -2980,7 +2980,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -2990,7 +2990,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_berserker_death_down",
-      "source": "assets/art-v2/sprites/characters/char_berserker_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_berserker_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -3007,7 +3007,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -3017,7 +3017,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_berserker_hurt_left",
-      "source": "assets/art-v2/sprites/characters/char_berserker_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_berserker_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -3033,7 +3033,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -3043,7 +3043,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_berserker_death_left",
-      "source": "assets/art-v2/sprites/characters/char_berserker_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_berserker_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -3060,7 +3060,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -3070,7 +3070,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_berserker_hurt_right",
-      "source": "assets/art-v2/sprites/characters/char_berserker_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_berserker_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -3086,7 +3086,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -3096,7 +3096,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_berserker_death_right",
-      "source": "assets/art-v2/sprites/characters/char_berserker_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_berserker_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -3113,7 +3113,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -3123,7 +3123,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_berserker_hurt_up",
-      "source": "assets/art-v2/sprites/characters/char_berserker_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_berserker_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -3139,7 +3139,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -3149,7 +3149,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_berserker_death_up",
-      "source": "assets/art-v2/sprites/characters/char_berserker_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_berserker_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -3166,7 +3166,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.64
     },
     {
       "preservePixels": true,
@@ -3176,7 +3176,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_chrono_idle_down",
-      "source": "assets/art-v2/sprites/characters/char_chrono_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_chrono_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -3192,7 +3192,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -3202,7 +3202,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_chrono_idle_left",
-      "source": "assets/art-v2/sprites/characters/char_chrono_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_chrono_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -3218,7 +3218,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -3228,7 +3228,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_chrono_idle_right",
-      "source": "assets/art-v2/sprites/characters/char_chrono_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_chrono_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -3244,7 +3244,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -3254,7 +3254,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_chrono_idle_up",
-      "source": "assets/art-v2/sprites/characters/char_chrono_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_chrono_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -3270,7 +3270,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -3280,7 +3280,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_chrono",
-      "source": "assets/art-v2/sprites/characters/char_chrono_idle_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_chrono_idle_4dir.png",
       "frameSize": [
         64,
         64
@@ -3296,7 +3296,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -3306,7 +3306,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_chrono_walk_down",
-      "source": "assets/art-v2/sprites/characters/char_chrono_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_chrono_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -3322,7 +3322,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -3332,7 +3332,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_chrono_walk_left",
-      "source": "assets/art-v2/sprites/characters/char_chrono_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_chrono_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -3348,7 +3348,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -3358,7 +3358,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_chrono_walk_right",
-      "source": "assets/art-v2/sprites/characters/char_chrono_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_chrono_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -3374,7 +3374,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -3384,7 +3384,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_chrono_walk_up",
-      "source": "assets/art-v2/sprites/characters/char_chrono_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_chrono_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -3400,7 +3400,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -3410,7 +3410,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_chrono_walk",
-      "source": "assets/art-v2/sprites/characters/char_chrono_run_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_chrono_run_4dir.png",
       "frameSize": [
         64,
         64
@@ -3426,7 +3426,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -3436,7 +3436,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_chrono_attack_down",
-      "source": "assets/art-v2/sprites/characters/char_chrono_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_chrono_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -3452,7 +3452,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -3462,7 +3462,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_chrono_attack_left",
-      "source": "assets/art-v2/sprites/characters/char_chrono_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_chrono_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -3478,7 +3478,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -3488,7 +3488,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_chrono_attack_right",
-      "source": "assets/art-v2/sprites/characters/char_chrono_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_chrono_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -3504,7 +3504,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -3514,7 +3514,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_chrono_attack_up",
-      "source": "assets/art-v2/sprites/characters/char_chrono_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_chrono_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -3530,7 +3530,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -3540,7 +3540,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_chrono_attack",
-      "source": "assets/art-v2/sprites/characters/char_chrono_attack_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_chrono_attack_4dir.png",
       "frameSize": [
         64,
         64
@@ -3556,7 +3556,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -3566,7 +3566,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_chrono_hurt_down",
-      "source": "assets/art-v2/sprites/characters/char_chrono_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_chrono_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -3582,7 +3582,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -3592,7 +3592,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_chrono_death_down",
-      "source": "assets/art-v2/sprites/characters/char_chrono_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_chrono_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -3609,7 +3609,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -3619,7 +3619,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_chrono_hurt_left",
-      "source": "assets/art-v2/sprites/characters/char_chrono_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_chrono_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -3635,7 +3635,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -3645,7 +3645,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_chrono_death_left",
-      "source": "assets/art-v2/sprites/characters/char_chrono_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_chrono_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -3662,7 +3662,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -3672,7 +3672,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_chrono_hurt_right",
-      "source": "assets/art-v2/sprites/characters/char_chrono_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_chrono_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -3688,7 +3688,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -3698,7 +3698,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_chrono_death_right",
-      "source": "assets/art-v2/sprites/characters/char_chrono_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_chrono_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -3715,7 +3715,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -3725,7 +3725,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_chrono_hurt_up",
-      "source": "assets/art-v2/sprites/characters/char_chrono_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_chrono_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -3741,7 +3741,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -3751,7 +3751,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "char_chrono_death_up",
-      "source": "assets/art-v2/sprites/characters/char_chrono_reaction_4dir.png",
+      "source": "assets/art-v4/repaired/characters/char_chrono_reaction_4dir.png",
       "frameSize": [
         64,
         64
@@ -3768,7 +3768,7 @@
         24,
         62
       ],
-      "renderScale": 0.56
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,
@@ -3778,7 +3778,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "bat",
-      "source": "assets/art-v2/sprites/enemies/bat_actions.png",
+      "source": "assets/art-v4/repaired/enemies/bat_actions.png",
       "frameSize": [
         64,
         64
@@ -3804,7 +3804,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "bat_walk",
-      "source": "assets/art-v2/sprites/enemies/bat_actions.png",
+      "source": "assets/art-v4/repaired/enemies/bat_actions.png",
       "frameSize": [
         64,
         64
@@ -3830,7 +3830,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "bat_attack",
-      "source": "assets/art-v2/sprites/enemies/bat_actions.png",
+      "source": "assets/art-v4/repaired/enemies/bat_actions.png",
       "frameSize": [
         64,
         64
@@ -3856,7 +3856,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "bat_death",
-      "source": "assets/art-v2/sprites/enemies/bat_actions.png",
+      "source": "assets/art-v4/repaired/enemies/bat_actions.png",
       "frameSize": [
         64,
         64
@@ -3882,7 +3882,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime",
-      "source": "assets/art-v3/sprites/enemies/slime_actions.png",
+      "source": "assets/art-v4/repaired/enemies/slime_actions.png",
       "frameSize": [
         64,
         64
@@ -3908,7 +3908,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime_walk",
-      "source": "assets/art-v3/sprites/enemies/slime_actions.png",
+      "source": "assets/art-v4/repaired/enemies/slime_actions.png",
       "frameSize": [
         64,
         64
@@ -3934,7 +3934,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime_attack",
-      "source": "assets/art-v3/sprites/enemies/slime_actions.png",
+      "source": "assets/art-v4/repaired/enemies/slime_actions.png",
       "frameSize": [
         64,
         64
@@ -3960,7 +3960,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime_death",
-      "source": "assets/art-v3/sprites/enemies/slime_actions.png",
+      "source": "assets/art-v4/repaired/enemies/slime_actions.png",
       "frameSize": [
         64,
         64
@@ -3986,7 +3986,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime_big",
-      "source": "assets/art-v2/sprites/enemies/slime_big_actions.png",
+      "source": "assets/art-v4/repaired/enemies/slime_big_actions.png",
       "frameSize": [
         64,
         64
@@ -4012,7 +4012,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime_big_walk",
-      "source": "assets/art-v2/sprites/enemies/slime_big_actions.png",
+      "source": "assets/art-v4/repaired/enemies/slime_big_actions.png",
       "frameSize": [
         64,
         64
@@ -4038,7 +4038,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime_big_attack",
-      "source": "assets/art-v2/sprites/enemies/slime_big_actions.png",
+      "source": "assets/art-v4/repaired/enemies/slime_big_actions.png",
       "frameSize": [
         64,
         64
@@ -4064,7 +4064,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime_big_death",
-      "source": "assets/art-v2/sprites/enemies/slime_big_actions.png",
+      "source": "assets/art-v4/repaired/enemies/slime_big_actions.png",
       "frameSize": [
         64,
         64
@@ -4090,7 +4090,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "zombie",
-      "source": "assets/art-v2/sprites/enemies/zombie_actions.png",
+      "source": "assets/art-v4/repaired/enemies/zombie_actions.png",
       "frameSize": [
         64,
         64
@@ -4116,7 +4116,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "zombie_walk",
-      "source": "assets/art-v2/sprites/enemies/zombie_actions.png",
+      "source": "assets/art-v4/repaired/enemies/zombie_actions.png",
       "frameSize": [
         64,
         64
@@ -4142,7 +4142,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "zombie_attack",
-      "source": "assets/art-v2/sprites/enemies/zombie_actions.png",
+      "source": "assets/art-v4/repaired/enemies/zombie_actions.png",
       "frameSize": [
         64,
         64
@@ -4168,7 +4168,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "zombie_death",
-      "source": "assets/art-v2/sprites/enemies/zombie_actions.png",
+      "source": "assets/art-v4/repaired/enemies/zombie_actions.png",
       "frameSize": [
         64,
         64
@@ -4194,7 +4194,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "skeleton",
-      "source": "assets/art-v2/sprites/enemies/skeleton_actions.png",
+      "source": "assets/art-v4/repaired/enemies/skeleton_actions.png",
       "frameSize": [
         64,
         64
@@ -4220,7 +4220,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "skeleton_walk",
-      "source": "assets/art-v2/sprites/enemies/skeleton_actions.png",
+      "source": "assets/art-v4/repaired/enemies/skeleton_actions.png",
       "frameSize": [
         64,
         64
@@ -4246,7 +4246,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "skeleton_attack",
-      "source": "assets/art-v2/sprites/enemies/skeleton_actions.png",
+      "source": "assets/art-v4/repaired/enemies/skeleton_actions.png",
       "frameSize": [
         64,
         64
@@ -4272,7 +4272,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "skeleton_death",
-      "source": "assets/art-v2/sprites/enemies/skeleton_actions.png",
+      "source": "assets/art-v4/repaired/enemies/skeleton_actions.png",
       "frameSize": [
         64,
         64
@@ -4298,7 +4298,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "ghost",
-      "source": "assets/art-v2/sprites/enemies/ghost_actions.png",
+      "source": "assets/art-v4/repaired/enemies/ghost_actions.png",
       "frameSize": [
         64,
         64
@@ -4324,7 +4324,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "ghost_walk",
-      "source": "assets/art-v2/sprites/enemies/ghost_actions.png",
+      "source": "assets/art-v4/repaired/enemies/ghost_actions.png",
       "frameSize": [
         64,
         64
@@ -4350,7 +4350,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "ghost_attack",
-      "source": "assets/art-v2/sprites/enemies/ghost_actions.png",
+      "source": "assets/art-v4/repaired/enemies/ghost_actions.png",
       "frameSize": [
         64,
         64
@@ -4376,7 +4376,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "ghost_death",
-      "source": "assets/art-v2/sprites/enemies/ghost_actions.png",
+      "source": "assets/art-v4/repaired/enemies/ghost_actions.png",
       "frameSize": [
         64,
         64
@@ -4402,7 +4402,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "spider",
-      "source": "assets/art-v2/sprites/enemies/spider_actions.png",
+      "source": "assets/art-v4/repaired/enemies/spider_actions.png",
       "frameSize": [
         64,
         64
@@ -4428,7 +4428,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "spider_walk",
-      "source": "assets/art-v2/sprites/enemies/spider_actions.png",
+      "source": "assets/art-v4/repaired/enemies/spider_actions.png",
       "frameSize": [
         64,
         64
@@ -4454,7 +4454,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "spider_attack",
-      "source": "assets/art-v2/sprites/enemies/spider_actions.png",
+      "source": "assets/art-v4/repaired/enemies/spider_actions.png",
       "frameSize": [
         64,
         64
@@ -4480,7 +4480,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "spider_death",
-      "source": "assets/art-v2/sprites/enemies/spider_actions.png",
+      "source": "assets/art-v4/repaired/enemies/spider_actions.png",
       "frameSize": [
         64,
         64
@@ -4506,7 +4506,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "cultist",
-      "source": "assets/art-v2/sprites/enemies/cultist_actions.png",
+      "source": "assets/art-v4/repaired/enemies/cultist_actions.png",
       "frameSize": [
         64,
         64
@@ -4532,7 +4532,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "cultist_walk",
-      "source": "assets/art-v2/sprites/enemies/cultist_actions.png",
+      "source": "assets/art-v4/repaired/enemies/cultist_actions.png",
       "frameSize": [
         64,
         64
@@ -4558,7 +4558,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "cultist_attack",
-      "source": "assets/art-v2/sprites/enemies/cultist_actions.png",
+      "source": "assets/art-v4/repaired/enemies/cultist_actions.png",
       "frameSize": [
         64,
         64
@@ -4584,7 +4584,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "cultist_death",
-      "source": "assets/art-v2/sprites/enemies/cultist_actions.png",
+      "source": "assets/art-v4/repaired/enemies/cultist_actions.png",
       "frameSize": [
         64,
         64
@@ -4610,7 +4610,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "orc",
-      "source": "assets/art-v2/sprites/enemies/orc_actions.png",
+      "source": "assets/art-v4/repaired/enemies/orc_actions.png",
       "frameSize": [
         64,
         64
@@ -4636,7 +4636,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "orc_walk",
-      "source": "assets/art-v2/sprites/enemies/orc_actions.png",
+      "source": "assets/art-v4/repaired/enemies/orc_actions.png",
       "frameSize": [
         64,
         64
@@ -4662,7 +4662,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "orc_attack",
-      "source": "assets/art-v2/sprites/enemies/orc_actions.png",
+      "source": "assets/art-v4/repaired/enemies/orc_actions.png",
       "frameSize": [
         64,
         64
@@ -4688,7 +4688,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "orc_death",
-      "source": "assets/art-v2/sprites/enemies/orc_actions.png",
+      "source": "assets/art-v4/repaired/enemies/orc_actions.png",
       "frameSize": [
         64,
         64
@@ -4714,7 +4714,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "imp",
-      "source": "assets/art-v2/sprites/enemies/imp_actions.png",
+      "source": "assets/art-v4/repaired/enemies/imp_actions.png",
       "frameSize": [
         64,
         64
@@ -4740,7 +4740,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "imp_walk",
-      "source": "assets/art-v2/sprites/enemies/imp_actions.png",
+      "source": "assets/art-v4/repaired/enemies/imp_actions.png",
       "frameSize": [
         64,
         64
@@ -4766,7 +4766,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "imp_attack",
-      "source": "assets/art-v2/sprites/enemies/imp_actions.png",
+      "source": "assets/art-v4/repaired/enemies/imp_actions.png",
       "frameSize": [
         64,
         64
@@ -4792,7 +4792,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "imp_death",
-      "source": "assets/art-v2/sprites/enemies/imp_actions.png",
+      "source": "assets/art-v4/repaired/enemies/imp_actions.png",
       "frameSize": [
         64,
         64
@@ -4818,7 +4818,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "knight_armored",
-      "source": "assets/art-v2/sprites/enemies/knight_armored_actions.png",
+      "source": "assets/art-v4/repaired/enemies/knight_armored_actions.png",
       "frameSize": [
         64,
         64
@@ -4844,7 +4844,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "knight_armored_walk",
-      "source": "assets/art-v2/sprites/enemies/knight_armored_actions.png",
+      "source": "assets/art-v4/repaired/enemies/knight_armored_actions.png",
       "frameSize": [
         64,
         64
@@ -4870,7 +4870,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "knight_armored_attack",
-      "source": "assets/art-v2/sprites/enemies/knight_armored_actions.png",
+      "source": "assets/art-v4/repaired/enemies/knight_armored_actions.png",
       "frameSize": [
         64,
         64
@@ -4896,7 +4896,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "knight_armored_death",
-      "source": "assets/art-v2/sprites/enemies/knight_armored_actions.png",
+      "source": "assets/art-v4/repaired/enemies/knight_armored_actions.png",
       "frameSize": [
         64,
         64
@@ -4922,7 +4922,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "werewolf",
-      "source": "assets/art-v2/sprites/enemies/werewolf_actions.png",
+      "source": "assets/art-v4/repaired/enemies/werewolf_actions.png",
       "frameSize": [
         64,
         64
@@ -4948,7 +4948,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "werewolf_walk",
-      "source": "assets/art-v2/sprites/enemies/werewolf_actions.png",
+      "source": "assets/art-v4/repaired/enemies/werewolf_actions.png",
       "frameSize": [
         64,
         64
@@ -4974,7 +4974,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "werewolf_attack",
-      "source": "assets/art-v2/sprites/enemies/werewolf_actions.png",
+      "source": "assets/art-v4/repaired/enemies/werewolf_actions.png",
       "frameSize": [
         64,
         64
@@ -5000,7 +5000,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "werewolf_death",
-      "source": "assets/art-v2/sprites/enemies/werewolf_actions.png",
+      "source": "assets/art-v4/repaired/enemies/werewolf_actions.png",
       "frameSize": [
         64,
         64
@@ -5026,7 +5026,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "mummy",
-      "source": "assets/art-v2/sprites/enemies/mummy_actions.png",
+      "source": "assets/art-v4/repaired/enemies/mummy_actions.png",
       "frameSize": [
         64,
         64
@@ -5052,7 +5052,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "mummy_walk",
-      "source": "assets/art-v2/sprites/enemies/mummy_actions.png",
+      "source": "assets/art-v4/repaired/enemies/mummy_actions.png",
       "frameSize": [
         64,
         64
@@ -5078,7 +5078,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "mummy_attack",
-      "source": "assets/art-v2/sprites/enemies/mummy_actions.png",
+      "source": "assets/art-v4/repaired/enemies/mummy_actions.png",
       "frameSize": [
         64,
         64
@@ -5104,7 +5104,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "mummy_death",
-      "source": "assets/art-v2/sprites/enemies/mummy_actions.png",
+      "source": "assets/art-v4/repaired/enemies/mummy_actions.png",
       "frameSize": [
         64,
         64
@@ -5130,7 +5130,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "gargoyle",
-      "source": "assets/art-v2/sprites/enemies/gargoyle_actions.png",
+      "source": "assets/art-v4/repaired/enemies/gargoyle_actions.png",
       "frameSize": [
         64,
         64
@@ -5156,7 +5156,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "gargoyle_walk",
-      "source": "assets/art-v2/sprites/enemies/gargoyle_actions.png",
+      "source": "assets/art-v4/repaired/enemies/gargoyle_actions.png",
       "frameSize": [
         64,
         64
@@ -5182,7 +5182,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "gargoyle_attack",
-      "source": "assets/art-v2/sprites/enemies/gargoyle_actions.png",
+      "source": "assets/art-v4/repaired/enemies/gargoyle_actions.png",
       "frameSize": [
         64,
         64
@@ -5208,7 +5208,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "gargoyle_death",
-      "source": "assets/art-v2/sprites/enemies/gargoyle_actions.png",
+      "source": "assets/art-v4/repaired/enemies/gargoyle_actions.png",
       "frameSize": [
         64,
         64
@@ -5234,7 +5234,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "bloodbat",
-      "source": "assets/art-v2/sprites/enemies/bloodbat_actions.png",
+      "source": "assets/art-v4/repaired/enemies/bloodbat_actions.png",
       "frameSize": [
         64,
         64
@@ -5260,7 +5260,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "bloodbat_walk",
-      "source": "assets/art-v2/sprites/enemies/bloodbat_actions.png",
+      "source": "assets/art-v4/repaired/enemies/bloodbat_actions.png",
       "frameSize": [
         64,
         64
@@ -5286,7 +5286,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "bloodbat_attack",
-      "source": "assets/art-v2/sprites/enemies/bloodbat_actions.png",
+      "source": "assets/art-v4/repaired/enemies/bloodbat_actions.png",
       "frameSize": [
         64,
         64
@@ -5312,7 +5312,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "bloodbat_death",
-      "source": "assets/art-v2/sprites/enemies/bloodbat_actions.png",
+      "source": "assets/art-v4/repaired/enemies/bloodbat_actions.png",
       "frameSize": [
         64,
         64
@@ -5338,7 +5338,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "wraith",
-      "source": "assets/art-v2/sprites/enemies/wraith_actions.png",
+      "source": "assets/art-v4/repaired/enemies/wraith_actions.png",
       "frameSize": [
         64,
         64
@@ -5364,7 +5364,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "wraith_walk",
-      "source": "assets/art-v2/sprites/enemies/wraith_actions.png",
+      "source": "assets/art-v4/repaired/enemies/wraith_actions.png",
       "frameSize": [
         64,
         64
@@ -5390,7 +5390,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "wraith_attack",
-      "source": "assets/art-v2/sprites/enemies/wraith_actions.png",
+      "source": "assets/art-v4/repaired/enemies/wraith_actions.png",
       "frameSize": [
         64,
         64
@@ -5416,7 +5416,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "wraith_death",
-      "source": "assets/art-v2/sprites/enemies/wraith_actions.png",
+      "source": "assets/art-v4/repaired/enemies/wraith_actions.png",
       "frameSize": [
         64,
         64
@@ -7106,7 +7106,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "boss_slimeking",
-      "source": "assets/art-v2/sprites/bosses/boss_slimeking_actions.png",
+      "source": "assets/art-v4/repaired/bosses/boss_slimeking_actions.png",
       "frameSize": [
         96,
         96
@@ -7122,7 +7122,7 @@
         48,
         93
       ],
-      "renderScale": 0.27
+      "renderScale": 0.52
     },
     {
       "preservePixels": true,
@@ -7132,7 +7132,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "boss_slimeking_walk",
-      "source": "assets/art-v2/sprites/bosses/boss_slimeking_actions.png",
+      "source": "assets/art-v4/repaired/bosses/boss_slimeking_actions.png",
       "frameSize": [
         96,
         96
@@ -7148,7 +7148,7 @@
         48,
         93
       ],
-      "renderScale": 0.27
+      "renderScale": 0.52
     },
     {
       "preservePixels": true,
@@ -7158,7 +7158,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "boss_slimeking_charge",
-      "source": "assets/art-v2/sprites/bosses/boss_slimeking_actions.png",
+      "source": "assets/art-v4/repaired/bosses/boss_slimeking_actions.png",
       "frameSize": [
         96,
         96
@@ -7174,7 +7174,7 @@
         48,
         93
       ],
-      "renderScale": 0.27
+      "renderScale": 0.52
     },
     {
       "preservePixels": true,
@@ -7184,7 +7184,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "boss_slimeking_attack",
-      "source": "assets/art-v2/sprites/bosses/boss_slimeking_actions.png",
+      "source": "assets/art-v4/repaired/bosses/boss_slimeking_actions.png",
       "frameSize": [
         96,
         96
@@ -7200,7 +7200,7 @@
         48,
         93
       ],
-      "renderScale": 0.27
+      "renderScale": 0.52
     },
     {
       "preservePixels": true,
@@ -7210,7 +7210,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "boss_slimeking_death",
-      "source": "assets/art-v2/sprites/bosses/boss_slimeking_actions.png",
+      "source": "assets/art-v4/repaired/bosses/boss_slimeking_actions.png",
       "frameSize": [
         96,
         96
@@ -7226,7 +7226,7 @@
         48,
         93
       ],
-      "renderScale": 0.27
+      "renderScale": 0.52
     },
     {
       "preservePixels": true,
@@ -7236,7 +7236,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "boss_bonelord",
-      "source": "assets/art-v2/sprites/bosses/boss_bonelord_actions.png",
+      "source": "assets/art-v4/repaired/bosses/boss_bonelord_actions.png",
       "frameSize": [
         96,
         96
@@ -7252,7 +7252,7 @@
         48,
         93
       ],
-      "renderScale": 0.27
+      "renderScale": 0.52
     },
     {
       "preservePixels": true,
@@ -7262,7 +7262,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "boss_bonelord_walk",
-      "source": "assets/art-v2/sprites/bosses/boss_bonelord_actions.png",
+      "source": "assets/art-v4/repaired/bosses/boss_bonelord_actions.png",
       "frameSize": [
         96,
         96
@@ -7278,7 +7278,7 @@
         48,
         93
       ],
-      "renderScale": 0.27
+      "renderScale": 0.52
     },
     {
       "preservePixels": true,
@@ -7288,7 +7288,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "boss_bonelord_charge",
-      "source": "assets/art-v2/sprites/bosses/boss_bonelord_actions.png",
+      "source": "assets/art-v4/repaired/bosses/boss_bonelord_actions.png",
       "frameSize": [
         96,
         96
@@ -7304,7 +7304,7 @@
         48,
         93
       ],
-      "renderScale": 0.27
+      "renderScale": 0.52
     },
     {
       "preservePixels": true,
@@ -7314,7 +7314,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "boss_bonelord_attack",
-      "source": "assets/art-v2/sprites/bosses/boss_bonelord_actions.png",
+      "source": "assets/art-v4/repaired/bosses/boss_bonelord_actions.png",
       "frameSize": [
         96,
         96
@@ -7330,7 +7330,7 @@
         48,
         93
       ],
-      "renderScale": 0.27
+      "renderScale": 0.52
     },
     {
       "preservePixels": true,
@@ -7340,7 +7340,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "boss_bonelord_death",
-      "source": "assets/art-v2/sprites/bosses/boss_bonelord_actions.png",
+      "source": "assets/art-v4/repaired/bosses/boss_bonelord_actions.png",
       "frameSize": [
         96,
         96
@@ -7356,7 +7356,7 @@
         48,
         93
       ],
-      "renderScale": 0.27
+      "renderScale": 0.52
     },
     {
       "preservePixels": true,
@@ -7366,7 +7366,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "boss_abysseye",
-      "source": "assets/art-v2/sprites/bosses/boss_abysseye_actions.png",
+      "source": "assets/art-v4/repaired/bosses/boss_abysseye_actions.png",
       "frameSize": [
         96,
         96
@@ -7382,7 +7382,7 @@
         48,
         93
       ],
-      "renderScale": 0.27
+      "renderScale": 0.52
     },
     {
       "preservePixels": true,
@@ -7392,7 +7392,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "boss_abysseye_walk",
-      "source": "assets/art-v2/sprites/bosses/boss_abysseye_actions.png",
+      "source": "assets/art-v4/repaired/bosses/boss_abysseye_actions.png",
       "frameSize": [
         96,
         96
@@ -7408,7 +7408,7 @@
         48,
         93
       ],
-      "renderScale": 0.27
+      "renderScale": 0.52
     },
     {
       "preservePixels": true,
@@ -7418,7 +7418,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "boss_abysseye_charge",
-      "source": "assets/art-v2/sprites/bosses/boss_abysseye_actions.png",
+      "source": "assets/art-v4/repaired/bosses/boss_abysseye_actions.png",
       "frameSize": [
         96,
         96
@@ -7434,7 +7434,7 @@
         48,
         93
       ],
-      "renderScale": 0.27
+      "renderScale": 0.52
     },
     {
       "preservePixels": true,
@@ -7444,7 +7444,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "boss_abysseye_attack",
-      "source": "assets/art-v2/sprites/bosses/boss_abysseye_actions.png",
+      "source": "assets/art-v4/repaired/bosses/boss_abysseye_actions.png",
       "frameSize": [
         96,
         96
@@ -7460,7 +7460,7 @@
         48,
         93
       ],
-      "renderScale": 0.27
+      "renderScale": 0.52
     },
     {
       "preservePixels": true,
@@ -7470,7 +7470,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "boss_abysseye_death",
-      "source": "assets/art-v2/sprites/bosses/boss_abysseye_actions.png",
+      "source": "assets/art-v4/repaired/bosses/boss_abysseye_actions.png",
       "frameSize": [
         96,
         96
@@ -7486,7 +7486,7 @@
         48,
         93
       ],
-      "renderScale": 0.27
+      "renderScale": 0.52
     },
     {
       "preservePixels": true,
@@ -7496,7 +7496,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "boss_darklord",
-      "source": "assets/art-v2/sprites/bosses/boss_darklord_actions.png",
+      "source": "assets/art-v4/repaired/bosses/boss_darklord_actions.png",
       "frameSize": [
         96,
         96
@@ -7512,7 +7512,7 @@
         48,
         93
       ],
-      "renderScale": 0.27
+      "renderScale": 0.52
     },
     {
       "preservePixels": true,
@@ -7522,7 +7522,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "boss_darklord_walk",
-      "source": "assets/art-v2/sprites/bosses/boss_darklord_actions.png",
+      "source": "assets/art-v4/repaired/bosses/boss_darklord_actions.png",
       "frameSize": [
         96,
         96
@@ -7538,7 +7538,7 @@
         48,
         93
       ],
-      "renderScale": 0.27
+      "renderScale": 0.52
     },
     {
       "preservePixels": true,
@@ -7548,7 +7548,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "boss_darklord_charge",
-      "source": "assets/art-v2/sprites/bosses/boss_darklord_actions.png",
+      "source": "assets/art-v4/repaired/bosses/boss_darklord_actions.png",
       "frameSize": [
         96,
         96
@@ -7564,7 +7564,7 @@
         48,
         93
       ],
-      "renderScale": 0.27
+      "renderScale": 0.52
     },
     {
       "preservePixels": true,
@@ -7574,7 +7574,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "boss_darklord_attack",
-      "source": "assets/art-v2/sprites/bosses/boss_darklord_actions.png",
+      "source": "assets/art-v4/repaired/bosses/boss_darklord_actions.png",
       "frameSize": [
         96,
         96
@@ -7590,7 +7590,7 @@
         48,
         93
       ],
-      "renderScale": 0.27
+      "renderScale": 0.52
     },
     {
       "preservePixels": true,
@@ -7600,7 +7600,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "boss_darklord_death",
-      "source": "assets/art-v2/sprites/bosses/boss_darklord_actions.png",
+      "source": "assets/art-v4/repaired/bosses/boss_darklord_actions.png",
       "frameSize": [
         96,
         96
@@ -7616,7 +7616,7 @@
         48,
         93
       ],
-      "renderScale": 0.27
+      "renderScale": 0.52
     },
     {
       "preservePixels": true,
@@ -8239,6 +8239,58 @@
       "anchor": [
         24,
         30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 96,
+      "name": "vfx_holy_aura",
+      "source": "assets/art-v4/sprites/vfx/holy_frost_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        48
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 96,
+      "name": "vfx_frost_impact",
+      "source": "assets/art-v4/sprites/vfx/holy_frost_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 14,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        48
       ],
       "renderScale": 1
     },
@@ -9564,60 +9616,6 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "coin",
-      "source": "assets/art-v2/sprites/icons/pickup_icons.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "frameRow": 0,
-      "frameStart": 0,
-      "frames": 1,
-      "fps": 0,
-      "size": [
-        32,
-        32
-      ],
-      "anchor": [
-        16,
-        30
-      ],
-      "renderScale": 1
-    },
-    {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
-      "name": "meat",
-      "source": "assets/art-v2/sprites/icons/pickup_icons.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "frameRow": 0,
-      "frameStart": 1,
-      "frames": 1,
-      "fps": 0,
-      "size": [
-        32,
-        32
-      ],
-      "anchor": [
-        16,
-        30
-      ],
-      "renderScale": 1
-    },
-    {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
       "name": "chest",
       "source": "assets/art-v2/sprites/icons/pickup_icons.png",
       "frameSize": [
@@ -9626,87 +9624,6 @@
       ],
       "frameRow": 0,
       "frameStart": 2,
-      "frames": 1,
-      "fps": 0,
-      "size": [
-        32,
-        32
-      ],
-      "anchor": [
-        16,
-        30
-      ],
-      "renderScale": 1
-    },
-    {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
-      "name": "magnet",
-      "source": "assets/art-v2/sprites/icons/pickup_icons.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "frameRow": 0,
-      "frameStart": 3,
-      "frames": 1,
-      "fps": 0,
-      "size": [
-        32,
-        32
-      ],
-      "anchor": [
-        16,
-        30
-      ],
-      "renderScale": 1
-    },
-    {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
-      "name": "heart",
-      "source": "assets/art-v2/sprites/icons/pickup_icons.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "frameRow": 1,
-      "frameStart": 0,
-      "frames": 1,
-      "fps": 0,
-      "size": [
-        32,
-        32
-      ],
-      "anchor": [
-        16,
-        30
-      ],
-      "renderScale": 1
-    },
-    {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
-      "name": "gem1",
-      "source": "assets/art-v2/sprites/icons/pickup_icons.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "frameRow": 1,
-      "frameStart": 1,
       "frames": 1,
       "fps": 0,
       "size": [
@@ -9772,6 +9689,744 @@
         30
       ],
       "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "clock",
+      "source": "assets/art-v4/sprites/pickups/pickup_gems.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 0,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "meat",
+      "source": "assets/art-v4/sprites/pickups/pickup_gems.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 1,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "bomb",
+      "source": "assets/art-v4/sprites/pickups/pickup_gems.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 2,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "magnet",
+      "source": "assets/art-v4/sprites/pickups/pickup_gems.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 3,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "heart",
+      "source": "assets/art-v4/sprites/pickups/pickup_gems.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 4,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "gem1",
+      "source": "assets/art-v4/sprites/pickups/pickup_gems.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frameStart": 0,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "gem2",
+      "source": "assets/art-v4/sprites/pickups/pickup_gems.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frameStart": 1,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "gem3",
+      "source": "assets/art-v4/sprites/pickups/pickup_gems.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frameStart": 2,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "gem_big",
+      "source": "assets/art-v4/sprites/pickups/pickup_gems.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frameStart": 3,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "coin",
+      "source": "assets/art-v4/sprites/pickups/pickup_gems.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frameStart": 4,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "terrain_grave_ground",
+      "source": "assets/art-v4/sprites/terrain/terrain_tiles.png",
+      "frameSize": [
+        128,
+        128
+      ],
+      "frameRow": 0,
+      "frameStart": 0,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        126
+      ],
+      "renderScale": 1,
+      "seamlessTile": true
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "terrain_grave_swamp",
+      "source": "assets/art-v4/sprites/terrain/terrain_tiles.png",
+      "frameSize": [
+        128,
+        128
+      ],
+      "frameRow": 0,
+      "frameStart": 1,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        126
+      ],
+      "renderScale": 1,
+      "seamlessTile": true
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "terrain_grave_road",
+      "source": "assets/art-v4/sprites/terrain/terrain_tiles.png",
+      "frameSize": [
+        128,
+        128
+      ],
+      "frameRow": 0,
+      "frameStart": 2,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        126
+      ],
+      "renderScale": 1,
+      "seamlessTile": true
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "terrain_wild_ground",
+      "source": "assets/art-v4/sprites/terrain/terrain_tiles.png",
+      "frameSize": [
+        128,
+        128
+      ],
+      "frameRow": 1,
+      "frameStart": 0,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        126
+      ],
+      "renderScale": 1,
+      "seamlessTile": true
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "terrain_wild_grass",
+      "source": "assets/art-v4/sprites/terrain/terrain_tiles.png",
+      "frameSize": [
+        128,
+        128
+      ],
+      "frameRow": 1,
+      "frameStart": 1,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        126
+      ],
+      "renderScale": 1,
+      "seamlessTile": true
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "terrain_wild_road",
+      "source": "assets/art-v4/sprites/terrain/terrain_tiles.png",
+      "frameSize": [
+        128,
+        128
+      ],
+      "frameRow": 1,
+      "frameStart": 2,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        126
+      ],
+      "renderScale": 1,
+      "seamlessTile": true
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "terrain_abyss_ground",
+      "source": "assets/art-v4/sprites/terrain/terrain_tiles.png",
+      "frameSize": [
+        128,
+        128
+      ],
+      "frameRow": 2,
+      "frameStart": 0,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        126
+      ],
+      "renderScale": 1,
+      "seamlessTile": true
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "terrain_abyss_water",
+      "source": "assets/art-v4/sprites/terrain/terrain_tiles.png",
+      "frameSize": [
+        128,
+        128
+      ],
+      "frameRow": 2,
+      "frameStart": 1,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        126
+      ],
+      "renderScale": 1,
+      "seamlessTile": true
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "terrain_abyss_road",
+      "source": "assets/art-v4/sprites/terrain/terrain_tiles.png",
+      "frameSize": [
+        128,
+        128
+      ],
+      "frameRow": 2,
+      "frameStart": 2,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        126
+      ],
+      "renderScale": 1,
+      "seamlessTile": true
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "deco_wither_cluster1",
+      "source": "assets/art-v4/sprites/environment/terrain_props.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 0,
+      "frameStart": 0,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        94
+      ],
+      "renderScale": 0.62
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "deco_wither_cluster2",
+      "source": "assets/art-v4/sprites/environment/terrain_props.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 0,
+      "frameStart": 1,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        94
+      ],
+      "renderScale": 0.62
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "deco_swamp_reeds",
+      "source": "assets/art-v4/sprites/environment/terrain_props.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 0,
+      "frameStart": 2,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        94
+      ],
+      "renderScale": 0.62
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "deco_lilypad",
+      "source": "assets/art-v4/sprites/environment/terrain_props.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 0,
+      "frameStart": 3,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        94
+      ],
+      "renderScale": 0.62
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "deco_road_marker",
+      "source": "assets/art-v4/sprites/environment/terrain_props.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 1,
+      "frameStart": 0,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        94
+      ],
+      "renderScale": 0.62
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "deco_wagon_rut",
+      "source": "assets/art-v4/sprites/environment/terrain_props.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 1,
+      "frameStart": 1,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        94
+      ],
+      "renderScale": 0.62
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "deco_abyss_coral",
+      "source": "assets/art-v4/sprites/environment/terrain_props.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 1,
+      "frameStart": 2,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        94
+      ],
+      "renderScale": 0.62
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "deco_rune_cluster",
+      "source": "assets/art-v4/sprites/environment/terrain_props.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 1,
+      "frameStart": 3,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        94
+      ],
+      "renderScale": 0.62
     },
     {
       "preservePixels": true,

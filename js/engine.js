@@ -236,6 +236,91 @@ window.Engine = (function () {
   }
   function refit() { if (resizeRef) resizeRef(); }
 
+  // ---------- 世界地形与装饰 ----------
+  // 绘制和移动判定共用同一组确定性函数；镜头移动或重新载入后地形不会漂移。
+  function terrainSeed(map) {
+    var id = map && map.id ? map.id : map;
+    return id === 'graveyard' ? 0.8 : (id === 'wilds' ? 2.4 : 4.1);
+  }
+  function roadBend(v, seed) {
+    return Math.sin(v * 0.0017 + seed) * 145 + Math.sin(v * 0.0041 + seed * 2) * 28;
+  }
+  function terrainEffect(map, x, y) {
+    var id = map && map.id ? map.id : map;
+    var seed = terrainSeed(map);
+    var roadHalf = id === 'wilds' ? 36 : (id === 'graveyard' ? 30 : 25);
+    if (Math.abs(y - roadBend(x, seed)) <= roadHalf ||
+        Math.abs(x - roadBend(y, seed)) <= roadHalf * 0.64) {
+      return { type: 'road', mul: 1.20 };
+    }
+    var region = 260;
+    var rx0 = Math.floor(x / region), ry0 = Math.floor(y / region);
+    for (var ry = ry0 - 1; ry <= ry0 + 1; ry++) {
+      for (var rx = rx0 - 1; rx <= rx0 + 1; rx++) {
+        var rh = hash2(rx * 61 + id.length * 13, ry * 67 - id.length * 7);
+        if (rh <= 0.79 || id === 'wilds') continue;
+        var wx = rx * region + 34 + hash2(rx * 73, ry * 79) * 190;
+        var wy = ry * region + 28 + hash2(rx * 83, ry * 89) * 194;
+        var rw = 36 + hash2(rx * 97, ry * 101) * 62;
+        var rhh = 14 + hash2(rx * 103, ry * 107) * 26;
+        var rot = rh * Math.PI, co = Math.cos(rot), si = Math.sin(rot);
+        var dx = x - wx, dy = y - wy;
+        var lx = dx * co + dy * si, ly = -dx * si + dy * co;
+        if ((lx * lx) / (rw * rw) + (ly * ly) / (rhh * rhh) <= 1) {
+          return id === 'graveyard' ? { type: 'swamp', mul: 0.60 }
+            : { type: 'water', mul: 0.75 };
+        }
+      }
+    }
+    return { type: id === 'wilds' ? 'grass' : 'ground', mul: 1 };
+  }
+
+  var DECOR_CELL = 252;
+  function decorEntry(map, cx, cy) {
+    if (!map || !map.decors || !map.decors.length) return null;
+    var density = hash2(cx * 3 + 1, cy * 3 + 1);
+    if (density < 0.23) return null;
+    var h1 = hash2(cx * 7 + 17, cy * 7 + 31);
+    var h2 = hash2(cx * 11 + 43, cy * 11 + 59);
+    var wx = cx * DECOR_CELL + DECOR_CELL * (0.24 + h1 * 0.52);
+    var wy = cy * DECOR_CELL + DECOR_CELL * (0.25 + h2 * 0.50);
+    if (Math.abs(wx - CFG.MERCHANT.x) < 190 && Math.abs(wy - CFG.MERCHANT.y) < 190) return null;
+    var name = map.decors[Math.floor(hash2(cx * 19 + 5, cy * 23 + 7) * map.decors.length)];
+    return { x: wx, y: wy, name: name, hash: h1 };
+  }
+  function forEachDecor(map, minX, minY, maxX, maxY, callback) {
+    var x0 = Math.floor(minX / DECOR_CELL), x1 = Math.floor(maxX / DECOR_CELL);
+    var y0 = Math.floor(minY / DECOR_CELL), y1 = Math.floor(maxY / DECOR_CELL);
+    for (var cy = y0; cy <= y1; cy++) {
+      for (var cx = x0; cx <= x1; cx++) {
+        var d = decorEntry(map, cx, cy);
+        if (d) callback(d);
+      }
+    }
+  }
+  function decorCollisionRadius(name) {
+    if (!name) return 0;
+    if (name.indexOf('tree') >= 0) return 31;
+    if (name === 'deco_deadstump') return 22;
+    if (name === 'deco_grave' || name === 'deco_pillar' || name === 'deco_stalag') return 18;
+    if (name === 'deco_fence' || name === 'deco_skullpost' || name === 'deco_road_marker') return 14;
+    if (name === 'deco_deadroots' || name === 'deco_fallenlog') return 13;
+    return 0;
+  }
+  function resolveDecorCollision(map, body) {
+    var br = body.r || 9;
+    forEachDecor(map, body.x - 80, body.y - 80, body.x + 80, body.y + 80, function (d) {
+      var dr = decorCollisionRadius(d.name);
+      if (!dr) return;
+      var dx = body.x - d.x, dy = body.y - d.y;
+      var minD = br + dr, d2 = dx * dx + dy * dy;
+      if (d2 >= minD * minD) return;
+      var len = Math.sqrt(d2) || 0.001;
+      body.x = d.x + dx / len * minD;
+      body.y = d.y + dy / len * minD;
+    });
+  }
+
   var uidCounter = 1;
 
   return {
@@ -247,6 +332,9 @@ window.Engine = (function () {
     cam: cam, start: start, fitCanvas: fitCanvas, refit: refit,
     isTouch: function () { return isTouch; },
     viewScale: function () { return viewScale; },
+    terrainEffect: terrainEffect, roadBend: roadBend,
+    forEachDecor: forEachDecor, decorCollisionRadius: decorCollisionRadius,
+    resolveDecorCollision: resolveDecorCollision,
     setTimeScale: function (s) { timeScale = s; },
     nextUid: function () { return uidCounter++; },
     onPause: null, onBlur: null, onToggleMap: null, onScroll: null, isOverMinimap: null

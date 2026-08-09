@@ -194,16 +194,16 @@ window.CFG = {
 
   // music: 专属战斗曲;shotCol: 弹幕配色(区分各 Boss);auraR: 强化小怪的光环半径
   BOSSES: {
-    boss_slimeking: { name: '腐液之王', hp: 3200, dmg: 20, spd: 46, r: 26, xp: 60,
+    boss_slimeking: { name: '腐液之王', hp: 3200, dmg: 20, spd: 46, r: 46, xp: 60,
       music: 'boss_slime', shotCol: '#7fd44f', auraR: 260,
       desc: '第 5 分钟:巨型史莱姆,跳劈并分裂出小史莱姆' },
-    boss_bonelord:  { name: '骸骨领主', hp: 10000, dmg: 26, spd: 50, r: 26, xp: 120,
+    boss_bonelord:  { name: '骸骨领主', hp: 10000, dmg: 26, spd: 50, r: 48, xp: 120,
       music: 'boss_bone', shotCol: '#e8e0c8', auraR: 280,
       desc: '第 10 分钟:环形骨矢弹幕,连续蓄力冲撞' },
-    boss_abysseye:  { name: '深渊之眼', hp: 24000, dmg: 30, spd: 42, r: 28, xp: 220,
+    boss_abysseye:  { name: '深渊之眼', hp: 24000, dmg: 30, spd: 42, r: 52, xp: 220,
       music: 'boss_abyss', shotCol: '#c46bff', auraR: 300,
       desc: '第 15 分钟:螺旋弹幕,瞬移到背后并召唤怨灵' },
-    boss_darklord:  { name: '暗潮魔王', hp: 52000, dmg: 36, spd: 55, r: 30, xp: 500,
+    boss_darklord:  { name: '暗潮魔王', hp: 52000, dmg: 36, spd: 55, r: 56, xp: 500,
       music: 'boss_dark', shotCol: '#ff4d7a', auraR: 340,
       desc: '第 18 分钟:最终决战,兼具冲撞与瞬移。20 分钟后狂暴!' }
   },
@@ -216,7 +216,8 @@ window.CFG = {
       palette: { ground: '#221c33', ground2: '#2b2445', decor: '#4d4270', fog: '#2b2247', vign: '#0a0714', ambient: '#b9a5ff' },
       decors: ['deco_grave', 'deco_deadtree_large1', 'deco_deadtree_large2',
                'deco_deadstump', 'deco_deadroots', 'deco_deadreeds',
-               'deco_bone', 'deco_fence', 'deco_skullpost'],
+               'deco_bone', 'deco_fence', 'deco_skullpost', 'deco_wither_cluster1',
+               'deco_wither_cluster2', 'deco_swamp_reeds', 'deco_lilypad', 'deco_road_marker'],
       music: 'graveyard',
       waves: [
         { t: 0,    ids: ['bat', 'slime'],                          rate: 1.3 },
@@ -254,7 +255,8 @@ window.CFG = {
       palette: { ground: '#2a1e16', ground2: '#35261a', decor: '#63452b', fog: '#4a201a', vign: '#120705', ambient: '#ff9d5c' },
       decors: ['deco_deadtree_large3', 'deco_deadtree_large4', 'deco_fallenlog',
                'deco_deadstump', 'deco_deadroots', 'deco_deadreeds',
-               'deco_rock', 'deco_bush', 'deco_mushroom'],
+               'deco_rock', 'deco_bush', 'deco_mushroom', 'deco_wither_cluster1',
+               'deco_wither_cluster2', 'deco_wagon_rut'],
       music: 'wilds',
       waves: [
         { t: 0,    ids: ['spider', 'bat'],                         rate: 1.6 },
@@ -287,7 +289,8 @@ window.CFG = {
       unlock: { achv: 'a_survive_10_wilds' }, hpMul: 1.8, rateMul: 1.4,
       palette: { ground: '#161c33', ground2: '#1e2447', decor: '#3a4480', fog: '#1e2750', vign: '#05070f', ambient: '#8ef' },
       decors: ['deco_pillar', 'deco_crystal', 'deco_rune', 'deco_stalag',
-               'deco_deadtree_large2', 'deco_deadroots', 'deco_deadreeds'],
+               'deco_deadtree_large2', 'deco_deadroots', 'deco_deadreeds',
+               'deco_abyss_coral', 'deco_rune_cluster'],
       music: 'abyss',
       waves: [
         { t: 0,    ids: ['ghost', 'skeleton'],                     rate: 1.8 },
@@ -340,11 +343,11 @@ window.CFG = {
     // 商品池:武器按当前是否已持有决定是新武器还是升级;道具立即生效
     // 价格:道具统一 10,武器/被动统一 20
     goods: [
-      { kind: 'heal',   name: '烤肉',     icon: 'meat',        cost: 10,  desc: '恢复 60 生命' },
+      { kind: 'heal',   name: '烤大腿肉', icon: 'meat',        cost: 10,  desc: '恢复 60 生命' },
       { kind: 'shield', name: '护盾符',   icon: 'ps_core',     cost: 10,  desc: '立刻获得 30 护盾' },
       { kind: 'bomb',   name: '炸弹',     icon: 'bomb',        cost: 10,  desc: '清场一次' },
       { kind: 'magnet', name: '吸铁石',   icon: 'magnet',      cost: 10,  desc: '吸取全场经验' },
-      { kind: 'clock',  name: '怀表',     icon: 'clock',       cost: 10,  desc: '冻结全场 4 秒' },
+      { kind: 'clock',  name: '凝时沙漏', icon: 'clock',       cost: 10,  desc: '冻结全场 4 秒' },
       { kind: 'reroll', name: '命运骰子', icon: 'icon_reroll', cost: 10,  desc: '本局刷新次数 +1' },
       { kind: 'banish', name: '丢弃之印', icon: 'icon_banish', cost: 10,  desc: '本局丢弃次数 +1' },
       { kind: 'weapon', name: '',         icon: '',            cost: 20,  desc: '' },  // 运行时抽武器

@@ -982,65 +982,53 @@
   }
 
   var groundPatterns = {};
-  function groundPattern(mapId) {
-    if (groundPatterns[mapId]) return groundPatterns[mapId];
-    var tile = SpriteGen.get('tile_' + mapId);
+  function terrainArtId(mapId) {
+    return mapId === 'graveyard' ? 'grave' : (mapId === 'wilds' ? 'wild' : 'abyss');
+  }
+  function groundPattern(name) {
+    if (groundPatterns[name]) return groundPatterns[name];
+    var tile = SpriteGen.get(name);
     if (!tile || tile.width < 2) return null;
+    // 2×2 镜像拼接消除大块纹理四边的接缝，同时保持最近邻硬像素。
     var patternTile = document.createElement('canvas');
-    patternTile.width = 32; patternTile.height = 32;
+    var tw = tile.width, th = tile.height;
+    patternTile.width = tw * 2; patternTile.height = th * 2;
     var pg = patternTile.getContext('2d');
     pg.imageSmoothingEnabled = false;
-    pg.drawImage(tile, 0, 0, 32, 32);
-    groundPatterns[mapId] = ctx.createPattern(patternTile, 'repeat');
-    return groundPatterns[mapId];
+    pg.drawImage(tile, 0, 0);
+    pg.save(); pg.translate(tw * 2, 0); pg.scale(-1, 1); pg.drawImage(tile, 0, 0); pg.restore();
+    pg.save(); pg.translate(0, th * 2); pg.scale(1, -1); pg.drawImage(tile, 0, 0); pg.restore();
+    pg.save(); pg.translate(tw * 2, th * 2); pg.scale(-1, -1); pg.drawImage(tile, 0, 0); pg.restore();
+    groundPatterns[name] = ctx.createPattern(patternTile, 'repeat');
+    return groundPatterns[name];
   }
 
   function drawGround(map, camX, camY) {
     var pal = map.palette;
     var W = CFG.GAME.W, H = CFG.GAME.H;
-    ctx.fillStyle = pal.ground;
-    ctx.fillRect(0, 0, W, H);
-
-    // 第一层：不规则土色斑。禁止重复地砖和方形色块，彻底消除可见网格。
-    var big = 184;
-    var bx0 = Math.floor((camX - W / 2) / big) - 1, bx1 = Math.floor((camX + W / 2) / big) + 1;
-    var by0 = Math.floor((camY - H / 2) / big) - 1, by1 = Math.floor((camY + H / 2) / big) + 1;
-    for (var by = by0; by <= by1; by++) {
-      for (var bx = bx0; bx <= bx1; bx++) {
-        var bh = E.hash2(bx * 17 + 5, by * 17 + 5);
-        if (bh < 0.28) continue;
-        var patchX = bx * big - camX + W / 2 + 28 + E.hash2(bx * 29, by * 31) * 128;
-        var patchY = by * big - camY + H / 2 + 24 + E.hash2(bx * 37, by * 41) * 132;
-        var patchW = 28 + E.hash2(bx * 43, by * 47) * 54;
-        var patchH = 12 + E.hash2(bx * 53, by * 59) * 28;
-        ctx.globalAlpha = 0.045 + bh * 0.055;
-        ctx.fillStyle = pal.ground2;
-        ctx.beginPath();
-        ctx.ellipse(patchX | 0, patchY | 0, patchW, patchH, bh * Math.PI, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-    ctx.globalAlpha = 1;
+    var art = terrainArtId(map.id);
+    var basePattern = groundPattern('terrain_' + art + '_ground');
+    ctx.fillStyle = basePattern || pal.ground;
+    ctx.save();
+    ctx.translate((W / 2 - camX) | 0, (H / 2 - camY) | 0);
+    ctx.fillRect((camX - W / 2 - 260) | 0, (camY - H / 2 - 260) | 0, W + 520, H + 520);
+    ctx.restore();
 
     drawTerrainFeatures(map, camX, camY);
 
-    // 第二层:细碎石砾(密度提高,尺寸分级)
-    var cell = 32;
+    // 少量世界坐标碎石打破大纹理规律；密度受控，避免此前“满地噪点”的脏感。
+    var cell = 72;
     var x0 = Math.floor((camX - W / 2) / cell) - 1, x1 = Math.floor((camX + W / 2) / cell) + 1;
     var y0 = Math.floor((camY - H / 2) / cell) - 1, y1 = Math.floor((camY + H / 2) / cell) + 1;
     for (var cy = y0; cy <= y1; cy++) {
       for (var cx = x0; cx <= x1; cx++) {
         var hsh = E.hash2(cx, cy);
-        if (hsh >= 0.62) continue;
-        var px = cx * cell - camX + W / 2 + (hsh * 991 % 1) * 22;
-        var py = cy * cell - camY + H / 2 + (hsh * 577 % 1) * 22;
-        var s, col;
-        if (hsh < 0.08) { s = 5; col = pal.decor; }
-        else if (hsh < 0.26) { s = 3; col = pal.ground2; }
-        else { s = 2; col = pal.ground2; }
-        ctx.globalAlpha = hsh < 0.08 ? 0.5 : 0.85;
-        ctx.fillStyle = col;
-        ctx.fillRect(px | 0, py | 0, s, s);
+        if (hsh >= 0.22) continue;
+        var px = cx * cell - camX + W / 2 + (hsh * 991 % 1) * 48;
+        var py = cy * cell - camY + H / 2 + (hsh * 577 % 1) * 48;
+        ctx.globalAlpha = 0.32;
+        ctx.fillStyle = pal.decor;
+        ctx.fillRect(px | 0, py | 0, hsh < 0.06 ? 3 : 2, hsh < 0.06 ? 3 : 2);
       }
     }
     ctx.globalAlpha = 1;
@@ -1051,6 +1039,9 @@
   function drawTerrainFeatures(map, camX, camY) {
     var W = CFG.GAME.W, H = CFG.GAME.H, R = CFG.GAME.MAP_R;
     var seed = map.id === 'graveyard' ? 0.8 : (map.id === 'wilds' ? 2.4 : 4.1);
+    var art = terrainArtId(map.id);
+    var roadPattern = groundPattern('terrain_' + art + '_road');
+    var regionPattern = groundPattern('terrain_' + art + '_' + (map.id === 'graveyard' ? 'swamp' : (map.id === 'wilds' ? 'grass' : 'water')));
     var road = map.id === 'graveyard' ? '#3a302c' : (map.id === 'wilds' ? '#4a3522' : '#242a3f');
     var roadEdge = map.id === 'graveyard' ? '#18151d' : (map.id === 'wilds' ? '#21170f' : '#0d1122');
     ctx.save();
@@ -1060,7 +1051,7 @@
     function roadPath(vertical) {
       ctx.beginPath();
       for (var v = -R - 120; v <= R + 120; v += 72) {
-        var bend = Math.sin(v * 0.0017 + seed) * 145 + Math.sin(v * 0.0041 + seed * 2) * 28;
+        var bend = E.roadBend ? E.roadBend(v, seed) : Math.sin(v * 0.0017 + seed) * 145 + Math.sin(v * 0.0041 + seed * 2) * 28;
         if (vertical) {
           if (v === -R - 120) ctx.moveTo(bend, v); else ctx.lineTo(bend, v);
         } else {
@@ -1071,12 +1062,12 @@
     ctx.globalAlpha = 0.55;
     ctx.strokeStyle = roadEdge; ctx.lineWidth = map.id === 'wilds' ? 92 : 78;
     roadPath(false); ctx.stroke();
-    ctx.strokeStyle = road; ctx.lineWidth = map.id === 'wilds' ? 72 : 60;
+    ctx.strokeStyle = roadPattern || road; ctx.lineWidth = map.id === 'wilds' ? 72 : 60;
     roadPath(false); ctx.stroke();
     ctx.globalAlpha = 0.38;
     ctx.strokeStyle = roadEdge; ctx.lineWidth = 54;
     roadPath(true); ctx.stroke();
-    ctx.strokeStyle = road; ctx.lineWidth = 38;
+    ctx.strokeStyle = roadPattern || road; ctx.lineWidth = 38;
     roadPath(true); ctx.stroke();
     ctx.restore();
 
@@ -1097,8 +1088,8 @@
         var rhh = 14 + E.hash2(rx * 103, ry * 107) * 26;
         var wet = map.id !== 'wilds' && rh > 0.79;
         ctx.globalAlpha = wet ? 0.62 : 0.32;
-        ctx.fillStyle = wet ? (map.id === 'abyss' ? '#101b2d' : '#26342a')
-                            : (map.id === 'wilds' ? '#4a4724' : map.palette.ground2);
+        ctx.fillStyle = regionPattern || (wet ? (map.id === 'abyss' ? '#101b2d' : '#26342a')
+                            : (map.id === 'wilds' ? '#4a4724' : map.palette.ground2));
         ctx.beginPath(); ctx.ellipse(sx | 0, sy | 0, rw, rhh, rh * Math.PI, 0, Math.PI * 2); ctx.fill();
         if (wet) {
           ctx.globalAlpha = 0.32;
@@ -1120,37 +1111,22 @@
 
   function isTallDecor(name) {
     return name.indexOf('tree') >= 0 || name === 'deco_grave' || name === 'deco_fence' ||
-      name === 'deco_skullpost' || name === 'deco_pillar' || name === 'deco_stalag';
+      name === 'deco_skullpost' || name === 'deco_pillar' || name === 'deco_stalag' ||
+      name === 'deco_road_marker';
   }
 
   // 装饰物按基座 y 排序绘制:pass='back' 画角色身后的,pass='front' 画角色身前的,
   // 这样墓碑/枯树能正确遮挡走到它后面的角色。refY 传玩家世界 y。
   function drawDecor(map, camX, camY, refY, pass) {
-    var cell = 200;
-    var x0 = Math.floor((camX - CFG.GAME.W / 2 - 60) / cell);
-    var x1 = Math.floor((camX + CFG.GAME.W / 2 + 60) / cell);
-    var y0 = Math.floor((camY - CFG.GAME.H / 2 - 80) / cell);
-    var y1 = Math.floor((camY + CFG.GAME.H / 2 + 40) / cell);
-    for (var cy = y0; cy <= y1; cy++) {
-      for (var cx = x0; cx <= x1; cx++) {
-        var n = Math.floor(E.hash2(cx * 3 + 1, cy * 3 + 1) * 4); // 0~3 个装饰
-        // 同一 cell 内按 n 均分横向区块,每块内留边距扰动,
-        // 避免两个装饰落在同一位置互相重叠
-        var cellW = cell / Math.max(1, n);
-        for (var k = 0; k < n; k++) {
-          var h1 = E.hash2(cx * 7 + k * 13, cy * 7 + k * 31);
-          var h2 = E.hash2(cx * 11 + k * 17, cy * 11 + k * 41);
-          var wx = cx * cell + (k + 0.5) * cellW + (h1 - 0.5) * cellW * 0.35;
-          var wy = cy * cell + (0.25 + h2 * 0.5) * cell;
-          // 行商浪人摊位清空区:摊位横跨约 ±160,避免装饰物与商人和商品贴图重合
-          var MC = CFG.MERCHANT, clearance = 185;
-          if (Math.abs(wx - MC.x) < clearance && Math.abs(wy - MC.y) < clearance) continue;
-          if (pass === 'back' && wy > refY) continue;
-          if (pass === 'front' && wy <= refY) continue;
-          var name = map.decors[Math.floor(h1 * map.decors.length)];
+    var minX = camX - CFG.GAME.W / 2 - 80, maxX = camX + CFG.GAME.W / 2 + 80;
+    var minY = camY - CFG.GAME.H / 2 - 100, maxY = camY + CFG.GAME.H / 2 + 60;
+    E.forEachDecor(map, minX, minY, maxX, maxY, function (d) {
+          var wx = d.x, wy = d.y, name = d.name;
+          if (pass === 'back' && wy > refY) return;
+          if (pass === 'front' && wy <= refY) return;
           var tall = isTallDecor(name);
-          if (pass === 'ground' && tall) continue;
-          if ((pass === 'back' || pass === 'front') && !tall) continue;
+          if (pass === 'ground' && tall) return;
+          if ((pass === 'back' || pass === 'front') && !tall) return;
           var img = SpriteGen.get(name);
           var sx = wx - camX + CFG.GAME.W / 2;
           var sy = wy - camY + CFG.GAME.H / 2;
@@ -1167,9 +1143,7 @@
           ctx.globalAlpha = 0.92;
           ctx.drawImage(img, (sx - dw / 2) | 0, (sy - dh) | 0, dw, dh);
           ctx.globalAlpha = 1;
-        }
-      }
-    }
+    });
   }
 
   // 隐形摇杆:仅在触摸按下时淡淡显现,松手即隐(屏幕坐标系)
@@ -1387,9 +1361,9 @@
     ctx = canvas.getContext('2d');
     ctx.imageSmoothingEnabled = false;
 
-    SpriteGen.init();
     var atlasReady = SpriteGen.loadAtlas();
     if (atlasReady) await atlasReady;
+    else SpriteGen.init();
     if (document.fonts && document.fonts.load) {
       await Promise.all([
         document.fonts.load('16px "Fusion Pixel"'),

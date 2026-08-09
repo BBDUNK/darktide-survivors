@@ -29,25 +29,30 @@ const characterActions = [
 ];
 
 add({
-  name: 'merchant', source: 'assets/art-v3/sprites/npcs/merchant_actions.png',
-  frameSize: [80, 80], frameRow: 0, frames: 8, fps: 7,
-  size: [80, 80], anchor: [40, 77], renderScale: 1
+  name: 'merchant', source: 'assets/art-v4/sprites/npcs/merchant_actions.png',
+  frameSize: [96, 96], frameRow: 0, frames: 8, fps: 7,
+  size: [96, 96], anchor: [48, 93], renderScale: 1
 });
-add({ name: 'merchant_attack', source: 'assets/art-v3/sprites/npcs/merchant_actions.png',
-  frameSize: [80, 80], frameRow: 1, frames: 8, fps: 12,
-  size: [80, 80], anchor: [40, 77], renderScale: 1 });
-add({ name: 'merchant_prone', source: 'assets/art-v3/sprites/npcs/merchant_actions.png',
-  frameSize: [80, 80], frameRow: 2, frames: 8, fps: 10,
-  size: [80, 80], anchor: [40, 77], renderScale: 1 });
+add({ name: 'merchant_attack', source: 'assets/art-v4/sprites/npcs/merchant_actions.png',
+  frameSize: [96, 96], frameRow: 1, frames: 8, fps: 12,
+  size: [96, 96], anchor: [48, 93], renderScale: 1 });
+add({ name: 'merchant_prone', source: 'assets/art-v4/sprites/npcs/merchant_actions.png',
+  frameSize: [96, 96], frameRow: 2, frames: 8, fps: 10,
+  size: [96, 96], anchor: [48, 93], renderScale: 1 });
+
+const characterScale = {
+  knight: 0.58, mage: 0.64, ranger: 0.62,
+  cleric: 0.62, berserker: 0.64, chrono: 0.62
+};
 
 for (const character of characters) {
   for (const [action, fileAction, frames, fps] of characterActions) {
-    const source = `assets/art-v2/sprites/characters/char_${character}_${fileAction}_4dir.png`;
+    const source = `assets/art-v4/repaired/characters/char_${character}_${fileAction}_4dir.png`;
     for (const [direction, row] of directions) {
       add({
         name: `char_${character}_${action}_${direction}`,
         source, frameSize: [64, 64], frameRow: row, frames, fps,
-        size: [48, 64], anchor: [24, 62], renderScale: 0.56
+        size: [48, 64], anchor: [24, 62], renderScale: characterScale[character]
       });
     }
     // Down-facing compatibility aliases keep old callers and offline fallbacks working.
@@ -55,20 +60,20 @@ for (const character of characters) {
     add({
       name: alias,
       source, frameSize: [64, 64], frameRow: 0, frames, fps,
-      size: [48, 64], anchor: [24, 62], renderScale: 0.56
+      size: [48, 64], anchor: [24, 62], renderScale: characterScale[character]
     });
   }
-  const reaction = `assets/art-v2/sprites/characters/char_${character}_reaction_4dir.png`;
+  const reaction = `assets/art-v4/repaired/characters/char_${character}_reaction_4dir.png`;
   for (const [direction, row] of directions) {
     add({
       name: `char_${character}_hurt_${direction}`,
       source: reaction, frameSize: [64, 64], frameRow: row, frames: 3, fps: 10,
-      size: [48, 64], anchor: [24, 62], renderScale: 0.56
+      size: [48, 64], anchor: [24, 62], renderScale: characterScale[character]
     });
     add({
       name: `char_${character}_death_${direction}`,
       source: reaction, frameSize: [64, 64], frameRow: row, frameStart: 3, frames: 5, fps: 8,
-      size: [48, 64], anchor: [24, 62], renderScale: 0.56
+      size: [48, 64], anchor: [24, 62], renderScale: characterScale[character]
     });
   }
 }
@@ -79,9 +84,7 @@ const enemies = [
 ];
 const enemyActions = [['', 0, 7], ['_walk', 1, 10], ['_attack', 2, 12], ['_death', 3, 9]];
 for (const enemy of enemies) {
-  const source = enemy === 'slime'
-    ? 'assets/art-v3/sprites/enemies/slime_actions.png'
-    : `assets/art-v2/sprites/enemies/${enemy}_actions.png`;
+  const source = `assets/art-v4/repaired/enemies/${enemy}_actions.png`;
   for (const [suffix, row, fps] of enemyActions) {
     add({
       name: `${enemy}${suffix}`, source, frameSize: [64, 64], frameRow: row, frames: 8, fps,
@@ -104,11 +107,11 @@ for (const enemy of enemies) {
 const bosses = ['boss_slimeking', 'boss_bonelord', 'boss_abysseye', 'boss_darklord'];
 const bossActions = [['', 0, 6], ['_walk', 1, 8], ['_charge', 2, 10], ['_attack', 3, 11], ['_death', 4, 8]];
 for (const boss of bosses) {
-  const source = `assets/art-v2/sprites/bosses/${boss}_actions.png`;
+  const source = `assets/art-v4/repaired/bosses/${boss}_actions.png`;
   for (const [suffix, row, fps] of bossActions) {
     add({
       name: `${boss}${suffix}`, source, frameSize: [96, 96], frameRow: row, frames: 8, fps,
-      size: [96, 96], anchor: [48, 93], renderScale: 0.27
+      size: [96, 96], anchor: [48, 93], renderScale: 0.52
     });
   }
 }
@@ -134,6 +137,16 @@ rowAnimations('assets/art-v2/sprites/vfx/attack_effects.png', [
   ['vfx_shadow', 6, 11, [48, 48]], ['vfx_spirit', 6, 11], ['vfx_smoke', 6, 10],
   ['p_dragon', 7, 12, [48, 32]]
 ]);
+
+for (const [name, row, fps] of [
+  ['vfx_holy_aura', 0, 12], ['vfx_frost_impact', 1, 14]
+]) {
+  add({ name, source: 'assets/art-v4/sprites/vfx/holy_frost_actions.png',
+    frameSize: [96, 96], frameRow: row, frames: 8, fps,
+    size: [96, 96], anchor: [48, 48], renderScale: 1,
+    // 环形冲击的上下缘随生命周期刻意扩张，不应用脚底基线规则。
+    maxBaselineDrift: 96 });
+}
 
 rowAnimations('assets/art-v2/sprites/weapons/orbitblade_actions.png', [
   ['p_orbitblade', 0, 12, [40, 40]], ['p_orbitblade_fly', 1, 14, [40, 32]],
@@ -171,6 +184,15 @@ function iconGrid(source, columns, names) {
   }));
 }
 
+function spriteGrid(source, frameSize, columns, names, outputSize, renderScale) {
+  names.forEach((name, index) => add({
+    name, source, frameSize: [frameSize, frameSize], frameRow: Math.floor(index / columns),
+    frameStart: index % columns, frames: 1, fps: 0,
+    size: [outputSize, outputSize], anchor: [Math.floor(outputSize / 2), outputSize - 2],
+    renderScale
+  }));
+}
+
 iconGrid('assets/art-v2/sprites/icons/weapon_icons.png', 4, [
   'w_crossblade', 'w_arcanebolt', 'w_windbow', 'w_holyaura',
   'w_whirlaxe', 'w_chainlight', 'w_frostnova', 'w_fireflask',
@@ -185,9 +207,29 @@ iconGrid('assets/art-v2/sprites/icons/passive_icons.png', 3, [
   'ps_power', 'ps_core', 'ps_eagle', 'ps_pendant', 'ps_belt',
   'ps_boots', 'ps_magnetstone', 'ps_clover', 'ps_barrier'
 ]);
-iconGrid('assets/art-v2/sprites/icons/pickup_icons.png', 4, [
-  'coin', 'meat', 'chest', 'magnet', 'heart', 'gem1', 'chest_boss', 'merchant_token'
+for (const [name, index] of [['chest', 2], ['chest_boss', 6], ['merchant_token', 7]]) {
+  add({ name, source: 'assets/art-v2/sprites/icons/pickup_icons.png',
+    frameSize: [64, 64], frameRow: Math.floor(index / 4), frameStart: index % 4,
+    frames: 1, fps: 0, size: [32, 32], anchor: [16, 30], renderScale: 1 });
+}
+
+iconGrid('assets/art-v4/sprites/pickups/pickup_gems.png', 5, [
+  'clock', 'meat', 'bomb', 'magnet', 'heart',
+  'gem1', 'gem2', 'gem3', 'gem_big', 'coin'
 ]);
+
+spriteGrid('assets/art-v4/sprites/terrain/terrain_tiles.png', 128, 3, [
+  'terrain_grave_ground', 'terrain_grave_swamp', 'terrain_grave_road',
+  'terrain_wild_ground', 'terrain_wild_grass', 'terrain_wild_road',
+  'terrain_abyss_ground', 'terrain_abyss_water', 'terrain_abyss_road'
+], 128, 1);
+// Transparent sprite padding on a repeated tile becomes a visible square grid.
+for (const asset of next.slice(-9)) asset.seamlessTile = true;
+
+spriteGrid('assets/art-v4/sprites/environment/terrain_props.png', 96, 4, [
+  'deco_wither_cluster1', 'deco_wither_cluster2', 'deco_swamp_reeds', 'deco_lilypad',
+  'deco_road_marker', 'deco_wagon_rut', 'deco_abyss_coral', 'deco_rune_cluster'
+], 96, 0.62);
 
 add({
   name: 'hud_minimap_frame', source: 'assets/art-v2/ui/hud_minimap_frame.png', frames: 1,

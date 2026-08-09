@@ -818,72 +818,20 @@ window.Weapons = (function () {
   // 地面火焰池/圣光环:画在地面层之上,角色与装饰物之下,避免遮挡
   function drawGround(ctx, run) {
     var p = run.player;
-    // 圣光环:呼吸透明度 + 流动金弧 + 旋转符文 + 环绕光点
+    // 圣女光环：使用清理后的八帧像素素材。只保留很淡的底光，避免程序线条
+    // 与贴图叠在一起变成一团发脏的亮色。
     var wAura = findWeapon(run, 'holyaura');
     if (wAura) {
       var r = wAura.curR || wStats(run, wAura).size;
       var auraT = run.t;
-      // 若隐若现的呼吸感:光环整体透明度随时间缓慢起伏
-      var breathe = 0.72 + 0.28 * Math.sin(auraT * 2.1);
-      ctx.globalAlpha = breathe;
-      var g = ctx.createRadialGradient(p.x, p.y, r * 0.3, p.x, p.y, r);
-      var col = wAura.evolved ? '255,240,150' : '255,235,170';
-      g.addColorStop(0, 'rgba(' + col + ',' + (0.12 + 0.05 * Math.sin(auraT * 3.2)).toFixed(3) + ')');
-      g.addColorStop(0.7, 'rgba(' + col + ',' + (0.22 + 0.08 * Math.sin(auraT * 2.6 + 1)).toFixed(3) + ')');
-      g.addColorStop(0.9, 'rgba(' + col + ',' + (0.46 + 0.10 * Math.sin(auraT * 2.1 + 2)).toFixed(3) + ')');
-      g.addColorStop(1, 'rgba(' + col + ',0)');
-      ctx.fillStyle = g;
-      ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2); ctx.fill();
-      // 流动金弧:三组金色光弧分段旋转,首尾渐隐,形成能量流动
-      for (var ai = 0; ai < 3; ai++) {
-        var aOff = ai * Math.PI * 2 / 3 + auraT * 0.32;
-        var aLen = Math.PI * (0.42 + 0.16 * Math.sin(auraT * 1.9 + ai * 2.4));
-        var aR = r * (0.30 + ai * 0.27) + Math.sin(auraT * 2.3 + ai * 1.3) * r * 0.025;
-        ctx.strokeStyle = 'rgba(' + col + ',' + (0.80 - ai * 0.12).toFixed(3) + ')';
-        ctx.lineWidth = ai === 1 ? 5 : 3;
-        ctx.lineCap = 'round';
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, Math.max(4, aR), aOff, aOff + aLen);
-        ctx.stroke();
-        ctx.lineCap = 'butt';
-      }
-      for (var ri = 0; ri < 3; ri++) {
-        var rr = r * (0.34 + ri * 0.23) + Math.sin(auraT * 1.7 + ri * 2.1) * r * 0.03;
-        ctx.strokeStyle = 'rgba(' + col + ',' + (0.42 - ri * 0.06).toFixed(3) + ')';
-        ctx.lineWidth = ri === 1 ? 4 : 2;
-        ctx.beginPath(); ctx.arc(p.x, p.y, Math.max(4, rr), 0, Math.PI * 2); ctx.stroke();
-      }
-      ctx.strokeStyle = 'rgba(255,250,215,0.55)';
-      ctx.lineWidth = 1.5;
-      ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.97, 0, Math.PI * 2); ctx.stroke();
-      for (var mk = 0; mk < 6; mk++) {
-        var ma = mk * Math.PI / 3 + auraT * 0.45;
-        var mr = r * (0.72 + Math.sin(auraT * 2.2 + mk) * 0.04);
-        var mx = p.x + Math.cos(ma) * mr;
-        var my = p.y + Math.sin(ma) * mr;
-        ctx.fillStyle = 'rgba(255,250,215,0.95)';
-        ctx.fillRect(mx - 2, my - 2, 5, 5);
-        ctx.fillStyle = 'rgba(' + col + ',0.65)';
-        ctx.fillRect(mx - 4, my - 1, 9, 3);
-        ctx.fillRect(mx - 1, my - 4, 3, 9);
-      }
-      // 上游飘散的光尘:沿光环切向缓慢流动,忽明忽暗
-      for (var mt = 0; mt < 5; mt++) {
-        var mta = mt * Math.PI / 2 - auraT * 0.75;
-        var mtr = r * (0.5 + Math.sin(auraT * 2.8 + mt * 1.9) * 0.08);
-        var mox = p.x + Math.cos(mta) * mtr;
-        var moy = p.y + Math.sin(mta) * mtr;
-        var dustA = 0.35 + 0.6 * (0.5 + 0.5 * Math.sin(auraT * 3.4 + mt * 2.1));
-        ctx.fillStyle = 'rgba(255,250,220,' + dustA.toFixed(3) + ')';
-        ctx.beginPath(); ctx.arc(mox, moy, 2 + (mt % 3), 0, Math.PI * 2); ctx.fill();
-      }
-      if (wAura.evolved) {
-        var core = ctx.createRadialGradient(p.x, p.y, 1, p.x, p.y, r * 0.24);
-        core.addColorStop(0, 'rgba(255,252,230,0.7)');
-        core.addColorStop(1, 'rgba(255,236,160,0)');
-        ctx.fillStyle = core;
-        ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.24, 0, Math.PI * 2); ctx.fill();
-      }
+      var auraFrames = cachedFrames('vfx_holy_aura');
+      var auraImg = auraFrames[Math.floor(auraT * cachedFps('vfx_holy_aura', 12)) % auraFrames.length];
+      var auraSize = r * (wAura.evolved ? 2.18 : 2.04);
+      ctx.globalAlpha = 0.16 + Math.sin(auraT * 2.1) * 0.035;
+      ctx.drawImage(SpriteGen.glow(wAura.evolved ? '#fff1a3' : '#e9c66f'),
+        p.x - r, p.y - r, r * 2, r * 2);
+      ctx.globalAlpha = wAura.evolved ? 0.92 : 0.78;
+      ctx.drawImage(auraImg, p.x - auraSize / 2, p.y - auraSize / 2, auraSize, auraSize);
       ctx.globalAlpha = 1;
     }
     // 火焰池
@@ -905,13 +853,14 @@ window.Weapons = (function () {
     ctx.globalAlpha = b.ttl < 1 ? E.clamp(b.ttl * 2, 0, 1) : 1;
 
     var age = Math.max(0, run.t - (b.born || run.t));
-    var action = 'tesla_tower';
-    if (b.ttl < 0.72) action = 'tesla_tower_overload';
-    else if (b.zapFlash > 0) action = 'tesla_tower_attack';
-    else if (age < 0.72) action = 'tesla_tower_deploy';
+    // 部署结束后塔身固定在同一帧；放电只叠加顶部闪电，彻底消除命中时
+    // 塔身来回换帧造成的“抽搐”。
+    var action = age < 0.72 ? 'tesla_tower_deploy' : 'tesla_tower';
     var towerFrames = cachedFrames(action);
-    var towerFps = cachedFps(action, action === 'tesla_tower_attack' ? 15 : 9);
-    var towerImg = towerFrames[Math.floor((action === 'tesla_tower_attack' ? 0.46 - b.zapFlash : age) * towerFps) % towerFrames.length];
+    var towerFps = cachedFps(action, 9);
+    var towerImg = action === 'tesla_tower'
+      ? towerFrames[0]
+      : towerFrames[Math.min(towerFrames.length - 1, Math.floor(age * towerFps))];
     // 正方形等比绘制并按底座锚定,不再把塔体横向拉扁或裁掉顶部。
     var towerSize = 128;
     ctx.globalAlpha *= 0.34;
@@ -927,6 +876,14 @@ window.Weapons = (function () {
     glow.addColorStop(1, 'rgba(140,235,255,0)');
     ctx.fillStyle = glow;
     ctx.beginPath(); ctx.arc(bx, orbY, glowR, 0, Math.PI * 2); ctx.fill();
+    if (b.zapFlash > 0) {
+      var zapFrames = cachedFrames('vfx_lightning');
+      var zapAge = Math.max(0, 0.46 - b.zapFlash);
+      var zapImg = zapFrames[Math.floor(zapAge * cachedFps('vfx_lightning', 18)) % zapFrames.length];
+      var zapSize = 68 + pulse * 10;
+      ctx.globalAlpha = E.clamp(b.zapFlash * 3.4, 0.45, 1);
+      ctx.drawImage(zapImg, bx - zapSize / 2, orbY - zapSize / 2, zapSize, zapSize);
+    }
     ctx.globalAlpha = 1;
   }
 
@@ -940,36 +897,11 @@ window.Weapons = (function () {
         if (rr < 1) continue;
         var novaAlpha = E.clamp(b.ttl * 3, 0, 1);
         ctx.globalAlpha = novaAlpha;
-        var iceFrames = cachedFrames('vfx_ice');
-        var iceImg = iceFrames[Math.floor(run.t * 16) % iceFrames.length];
-        var iceCount = b.evolved ? 8 : 5;
-        var flashR = Math.max(3, rr * 0.18);
-        var flash = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, flashR);
-        flash.addColorStop(0, 'rgba(255,255,255,' + (0.9 * novaAlpha).toFixed(3) + ')');
-        flash.addColorStop(1, 'rgba(185,242,255,0)');
-        ctx.fillStyle = flash;
-        ctx.beginPath(); ctx.arc(b.x, b.y, flashR, 0, Math.PI * 2); ctx.fill();
-        for (var ringI = 0; ringI < 3; ringI++) {
-          var ringR = rr * (0.32 + ringI * 0.34) + Math.sin(run.t * 5 + ringI * 2) * 3;
-          ctx.strokeStyle = ringI === 0 ? 'rgba(230,252,255,0.9)' :
-            (b.evolved ? 'rgba(135,235,255,0.66)' : 'rgba(95,195,235,0.58)');
-          ctx.lineWidth = ringI === 0 ? 6 : 2.6 - ringI * 0.7;
-          ctx.beginPath(); ctx.arc(b.x, b.y, Math.max(3, ringR), 0, Math.PI * 2); ctx.stroke();
-        }
-        for (var ni = 0; ni < iceCount; ni++) {
-          var na = ni * Math.PI * 2 / iceCount + run.t * 0.35;
-          var ns = b.evolved ? 26 : 20;
-          var nr = rr * (0.52 + 0.2 * Math.sin(run.t * 3 + ni * 1.7));
-          var ix = b.x + Math.cos(na) * nr;
-          var iy = b.y + Math.sin(na) * nr;
-          ctx.drawImage(iceImg, ix - ns / 2, iy - ns / 2, ns, ns);
-          ctx.strokeStyle = 'rgba(215,250,255,0.55)';
-          ctx.lineWidth = 1.5;
-          ctx.beginPath();
-          ctx.moveTo(ix, iy);
-          ctx.lineTo(b.x + Math.cos(na) * rr, b.y + Math.sin(na) * rr);
-          ctx.stroke();
-        }
+        var frostFrames = cachedFrames('vfx_frost_impact');
+        var frostProgress = E.clamp(rr / Math.max(1, b.aux2), 0, 0.999);
+        var frostImg = frostFrames[Math.min(frostFrames.length - 1, Math.floor(frostProgress * frostFrames.length))];
+        var frostSize = Math.max(72, rr * (b.evolved ? 2.34 : 2.14));
+        ctx.drawImage(frostImg, b.x - frostSize / 2, b.y - frostSize / 2, frostSize, frostSize);
         ctx.globalAlpha = 1;
         continue;
       }
@@ -1142,7 +1074,7 @@ window.Weapons = (function () {
     if (!pool.length) {
       return [
         { type: 'gold', id: 'gold', name: '金币 ×30', icon: 'icon_gold', desc: '立即获得 30 金币', isNew: false, curLv: 0, maxLv: 0 },
-        { type: 'heal', id: 'heal', name: '烤肉', icon: 'meat', desc: '恢复 50 点生命', isNew: false, curLv: 0, maxLv: 0 }
+        { type: 'heal', id: 'heal', name: '烤大腿肉', icon: 'meat', desc: '恢复 50 点生命', isNew: false, curLv: 0, maxLv: 0 }
       ];
     }
     // 加权抽取 3~4 个
