@@ -1131,7 +1131,11 @@
   function drawDecor(map, camX, camY, refY, pass) {
     var minX = camX - CFG.GAME.W / 2 - 80, maxX = camX + CFG.GAME.W / 2 + 80;
     var minY = camY - CFG.GAME.H / 2 - 100, maxY = camY + CFG.GAME.H / 2 + 60;
-    E.forEachDecor(map, minX, minY, maxX, maxY, function (d) {
+    var ordered = [];
+    E.forEachDecor(map, minX, minY, maxX, maxY, function (d) { ordered.push(d); });
+    // 同一层的物件也严格按落脚点排序，避免遍历格子的顺序造成装饰互相跳层。
+    ordered.sort(function (a, b) { return a.y === b.y ? a.x - b.x : a.y - b.y; });
+    ordered.forEach(function (d) {
           var wx = d.x, wy = d.y, name = d.name;
           if (pass === 'back' && wy > refY) return;
           if (pass === 'front' && wy <= refY) return;

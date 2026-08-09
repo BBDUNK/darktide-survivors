@@ -275,15 +275,18 @@ window.Engine = (function () {
     return { type: id === 'wilds' ? 'grass' : 'ground', mul: 1 };
   }
 
-  var DECOR_CELL = 252;
+  // 每格只放一件装饰并扩大安全间距；这样两棵大树/墓碑的实际轮廓
+  // 不会在相邻格随机偏移后相互叠穿。
+  var DECOR_CELL = 304;
   function decorEntry(map, cx, cy) {
     if (!map || !map.decors || !map.decors.length) return null;
     var density = hash2(cx * 3 + 1, cy * 3 + 1);
     if (density < 0.23) return null;
     var h1 = hash2(cx * 7 + 17, cy * 7 + 31);
     var h2 = hash2(cx * 11 + 43, cy * 11 + 59);
-    var wx = cx * DECOR_CELL + DECOR_CELL * (0.24 + h1 * 0.52);
-    var wy = cy * DECOR_CELL + DECOR_CELL * (0.25 + h2 * 0.50);
+    // 固定格心 + 很小的确定性偏移：不因相机、帧率或遍历顺序移动。
+    var wx = cx * DECOR_CELL + DECOR_CELL * 0.5 + (h1 - 0.5) * 28;
+    var wy = cy * DECOR_CELL + DECOR_CELL * 0.5 + (h2 - 0.5) * 24;
     if (Math.abs(wx - CFG.MERCHANT.x) < 190 && Math.abs(wy - CFG.MERCHANT.y) < 190) return null;
     var name = map.decors[Math.floor(hash2(cx * 19 + 5, cy * 23 + 7) * map.decors.length)];
     return { x: wx, y: wy, name: name, hash: h1 };
