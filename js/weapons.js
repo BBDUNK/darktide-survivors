@@ -867,9 +867,11 @@ window.Weapons = (function () {
       if (!b.alive || b.kind !== 'pool') continue;
       ctx.globalAlpha = 0.72 + Math.sin(run.t * 2.2 + i) * 0.07;
       var fr0 = cachedFrames(b.spr);
-      // 落地碎裂只在 projectile 的终点结算一次；火池固定为“碎瓶后的燃烧”
-      // 形态，绝不循环播放碎裂帧。
-      var img0 = fr0[Math.min(4, fr0.length - 1)];
+      // 落地碎裂只在 projectile 的终点结算一次；火池循环纯火焰帧（3～6），
+      // 保持火焰活性，却绝不把碎瓶帧重新播放出来。
+      var fireStart = Math.min(3, fr0.length - 1);
+      var fireCount = Math.max(1, Math.min(4, fr0.length - fireStart));
+      var img0 = fr0[fireStart + (Math.floor(run.t * 6 + i) % fireCount)];
       ctx.drawImage(img0, b.x - b.size / 2, b.y - b.size / 2, b.size, b.size);
       ctx.globalAlpha = 1;
     }

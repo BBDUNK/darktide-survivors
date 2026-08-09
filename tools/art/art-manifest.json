@@ -10464,20 +10464,20 @@
       "name": "terrain_grave_swamp_puddle1",
       "source": "assets/art-v4/sprites/terrain/swamp_puddles.png",
       "frameSize": [
-        160,
-        160
+        320,
+        224
       ],
       "frameRow": 0,
       "frameStart": 0,
       "frames": 1,
       "fps": 0,
       "size": [
-        160,
-        160
+        320,
+        224
       ],
       "anchor": [
-        80,
-        158
+        160,
+        112
       ],
       "renderScale": 1
     },
@@ -10491,20 +10491,20 @@
       "name": "terrain_grave_swamp_puddle2",
       "source": "assets/art-v4/sprites/terrain/swamp_puddles.png",
       "frameSize": [
-        160,
-        160
+        320,
+        224
       ],
       "frameRow": 0,
       "frameStart": 1,
       "frames": 1,
       "fps": 0,
       "size": [
-        160,
-        160
+        320,
+        224
       ],
       "anchor": [
-        80,
-        158
+        160,
+        112
       ],
       "renderScale": 1
     },
@@ -10518,20 +10518,20 @@
       "name": "terrain_grave_swamp_puddle3",
       "source": "assets/art-v4/sprites/terrain/swamp_puddles.png",
       "frameSize": [
-        160,
-        160
+        320,
+        224
       ],
       "frameRow": 1,
       "frameStart": 0,
       "frames": 1,
       "fps": 0,
       "size": [
-        160,
-        160
+        320,
+        224
       ],
       "anchor": [
-        80,
-        158
+        160,
+        112
       ],
       "renderScale": 1
     },
@@ -10545,20 +10545,20 @@
       "name": "terrain_grave_swamp_puddle4",
       "source": "assets/art-v4/sprites/terrain/swamp_puddles.png",
       "frameSize": [
-        160,
-        160
+        320,
+        224
       ],
       "frameRow": 1,
       "frameStart": 1,
       "frames": 1,
       "fps": 0,
       "size": [
-        160,
-        160
+        320,
+        224
       ],
       "anchor": [
-        80,
-        158
+        160,
+        112
       ],
       "renderScale": 1
     },

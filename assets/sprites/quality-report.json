@@ -37922,87 +37922,87 @@
     "vfx_frost_radial": [
       {
         "index": 0,
-        "coverage": 0.3092,
-        "colors": 57,
+        "coverage": 0.3477,
+        "colors": 43,
         "bbox": [
-          6,
+          9,
           0,
-          91,
+          87,
           90
         ],
         "centroid": [
-          48.395,
-          43.272
+          48.444,
+          49.893
         ],
-        "signature": "21ec9a760bbb"
+        "signature": "6eb31e906d09"
       },
       {
         "index": 1,
-        "coverage": 0.1408,
+        "coverage": 0.0952,
         "colors": 63,
         "bbox": [
           13,
-          4,
+          5,
           83,
           49
         ],
         "centroid": [
-          41.988,
-          26.857
+          41.748,
+          27.083
         ],
-        "signature": "e9fe018820b2"
+        "signature": "0d0a614d8e58"
       },
       {
         "index": 2,
-        "coverage": 0.2934,
+        "coverage": 0.1887,
         "colors": 63,
         "bbox": [
           12,
           0,
           83,
-          71
+          72
         ],
         "centroid": [
-          38.62,
-          35.954
+          38.244,
+          35.518
         ],
-        "signature": "781f9c89ef8d"
+        "signature": "4d43bcd5c1cd"
       },
       {
         "index": 3,
-        "coverage": 0.3784,
+        "coverage": 0.2476,
         "colors": 63,
         "bbox": [
           12,
           0,
-          83,
-          88
+          84,
+          87
         ],
         "centroid": [
-          42.129,
-          43.335
+          42.567,
+          43.119
         ],
-        "signature": "82a232f53810"
+        "signature": "8f64856dc541"
       },
       {
         "index": 4,
-        "coverage": 0.4974,
+        "coverage": 0.3808,
         "colors": 63,
         "bbox": [
           12,
           0,
-          83,
+          84,
           92
         ],
         "centroid": [
-          48.235,
-          46.216
+          48.51,
+          46.449
         ],
-        "signature": "29d08843db3c"
+        "signature": "c386ecf03775"
       },
       {
         "index": 5,
-        "coverage": 0.0821,
+        "coverage": 0.05,
         "colors": 63,
         "bbox": [
           12,
@@ -38011,49 +38011,85 @@
           76
         ],
         "centroid": [
-          51.107,
-          37.11
+          49.469,
+          37.306
         ],
-        "signature": "358a66648fc5"
+        "signature": "c7b515a1b4c4"
       },
       {
         "index": 6,
-        "coverage": 0.0275,
-        "colors": 63,
+        "coverage": 0.0137,
+        "colors": 48,
         "bbox": [
           12,
           0,
-          83,
+          84,
           68
         ],
         "centroid": [
-          48.561,
-          32.664
+          45.698,
+          32.706
         ],
-        "signature": "1ed22467732d"
+        "signature": "91c44995dadb"
       },
       {
         "index": 7,
-        "coverage": 0.0275,
-        "colors": 63,
+        "coverage": 0.0137,
+        "colors": 48,
         "bbox": [
           12,
           0,
-          83,
+          84,
           68
         ],
         "centroid": [
-          48.561,
-          32.664
+          45.698,
+          32.706
         ],
-        "signature": "1ed22467732d"
+        "signature": "91c44995dadb"
       }
     ],
     "p_enemy_toxic": [
       {
         "index": 0,
-        "coverage": 0.3037,
-        "colors": 54,
+        "coverage": 0.2793,
+        "colors": 50,
+        "bbox": [
+          5,
+          0,
+          27,
+          30
+        ],
+        "centroid": [
+          15.668,
+          14.476
+        ],
+        "signature": "7d9923d9937d"
+      }
+    ],
+    "p_enemy_arcane": [
+      {
+        "index": 0,
+        "coverage": 0.2695,
+        "colors": 23,
+        "bbox": [
+          3,
+          3,
+          29,
+          30
+        ],
+        "centroid": [
+          15.641,
+          16.12
+        ],
+        "signature": "322510c4c119"
+      }
+    ],
+    "p_enemy_blood": [
+      {
+        "index": 0,
+        "coverage": 0.3027,
+        "colors": 41,
         "bbox": [
           5,
           0,
@@ -38061,53 +38097,17 @@
           29
         ],
         "centroid": [
-          15.492,
-          14.473
+          15.513,
+          13.694
         ],
-        "signature": "c50633e690b9"
-      }
-    ],
-    "p_enemy_arcane": [
-      {
-        "index": 0,
-        "coverage": 0.4072,
-        "colors": 54,
-        "bbox": [
-          3,
-          0,
-          29,
-          30
-        ],
-        "centroid": [
-          15.482,
-          15.578
-        ],
-        "signature": "09e84ad69fba"
-      }
-    ],
-    "p_enemy_blood": [
-      {
-        "index": 0,
-        "coverage": 0.3232,
-        "colors": 47,
-        "bbox": [
-          5,
-          0,
-          27,
-          30
-        ],
-        "centroid": [
-          15.486,
-          13.725
-        ],
-        "signature": "5320269ce109"
+        "signature": "73169d95b9e4"
       }
     ],
     "p_enemy_bone": [
       {
         "index": 0,
-        "coverage": 0.2627,
-        "colors": 56,
+        "coverage": 0.2412,
+        "colors": 50,
         "bbox": [
           4,
           0,
@@ -38115,17 +38115,17 @@
           30
         ],
         "centroid": [
-          14.602,
-          15.375
+          14.328,
+          15.417
         ],
-        "signature": "7a78a7671424"
+        "signature": "11a254e457e4"
       }
     ],
     "p_enemy_hellfire": [
       {
         "index": 0,
-        "coverage": 0.3701,
-        "colors": 56,
+        "coverage": 0.3438,
+        "colors": 59,
         "bbox": [
           4,
           0,
@@ -38133,64 +38133,64 @@
           30
         ],
         "centroid": [
-          14.401,
-          16.71
+          14.267,
+          17.026
         ],
-        "signature": "8ded6ae87c17"
+        "signature": "87980659ffc9"
       }
     ],
     "p_enemy_ice": [
       {
         "index": 0,
-        "coverage": 0.2168,
+        "coverage": 0.1836,
         "colors": 57,
         "bbox": [
           4,
           0,
           29,
-          30
+          29
         ],
         "centroid": [
-          14.387,
-          16.5
+          14.255,
+          16.468
         ],
-        "signature": "143eab6dfd1c"
+        "signature": "2dacf6a14d59"
       }
     ],
     "p_enemy_electric": [
       {
         "index": 0,
-        "coverage": 0.3711,
-        "colors": 59,
+        "coverage": 0.3135,
+        "colors": 58,
         "bbox": [
-          4,
+          5,
           0,
           29,
           30
         ],
         "centroid": [
-          15.921,
-          14.726
+          16.383,
+          14.508
         ],
-        "signature": "39f6b0c5f9b4"
+        "signature": "247f5c737979"
       }
     ],
     "p_enemy_eye": [
       {
         "index": 0,
-        "coverage": 0.3525,
-        "colors": 58,
+        "coverage": 0.3154,
+        "colors": 57,
         "bbox": [
           5,
-          0,
+          1,
           27,
           29
         ],
         "centroid": [
-          15.474,
-          14.859
+          15.226,
+          15.019
         ],
-        "signature": "fe4f4d95a66f"
+        "signature": "46f82aaf4f77"
       }
     ],
     "p_orbitblade": [
@@ -40370,73 +40370,73 @@
     "terrain_grave_swamp_puddle1": [
       {
         "index": 0,
-        "coverage": 0.5528,
-        "colors": 118,
+        "coverage": 0.5504,
+        "colors": 63,
         "bbox": [
-          14,
-          1,
-          145,
-          159
+          2,
+          0,
+          318,
+          189
         ],
         "centroid": [
-          78.975,
-          80.515
+          160.915,
+          96.084
         ],
-        "signature": "83c8bdca0212"
+        "signature": "fac77cdd8379"
       }
     ],
     "terrain_grave_swamp_puddle2": [
       {
         "index": 0,
-        "coverage": 0.2482,
-        "colors": 109,
+        "coverage": 0.5504,
+        "colors": 63,
         "bbox": [
-          36,
-          1,
-          124,
-          159
+          2,
+          0,
+          318,
+          189
         ],
         "centroid": [
-          80.818,
-          73.006
+          158.085,
+          96.084
         ],
-        "signature": "fe943324e526"
+        "signature": "5069498bdbb1"
       }
     ],
     "terrain_grave_swamp_puddle3": [
       {
         "index": 0,
-        "coverage": 0.2374,
+        "coverage": 0.5504,
         "colors": 63,
         "bbox": [
-          14,
-          97,
-          145,
-          159
+          2,
+          0,
+          318,
+          189
         ],
         "centroid": [
-          82.242,
-          123.117
+          160.915,
+          91.916
         ],
-        "signature": "8a9161c8ace1"
+        "signature": "5d1fda0b4042"
       }
     ],
     "terrain_grave_swamp_puddle4": [
       {
         "index": 0,
-        "coverage": 0.0752,
-        "colors": 60,
+        "coverage": 0.5504,
+        "colors": 63,
         "bbox": [
-          38,
-          97,
-          123,
-          159
+          2,
+          0,
+          318,
+          189
         ],
         "centroid": [
-          98.392,
-          124.444
+          158.085,
+          91.916
         ],
-        "signature": "e2aa44b33d20"
+        "signature": "7604e1d81458"
       }
     ],
     "deco_wither_cluster1": [
@@ -41354,13 +41354,11 @@
     "vfx_frost_radial[6]: silhouette touches logical frame edge",
     "vfx_frost_radial[7]: silhouette touches logical frame edge",
     "p_enemy_toxic[0]: silhouette touches logical frame edge",
-    "p_enemy_arcane[0]: silhouette touches logical frame edge",
     "p_enemy_blood[0]: silhouette touches logical frame edge",
     "p_enemy_bone[0]: silhouette touches logical frame edge",
     "p_enemy_hellfire[0]: silhouette touches logical frame edge",
     "p_enemy_ice[0]: silhouette touches logical frame edge",
     "p_enemy_electric[0]: silhouette touches logical frame edge",
-    "p_enemy_eye[0]: silhouette touches logical frame edge",
     "terrain_grave_ground[0]: little transparent padding (100.0%)",
     "terrain_grave_ground[0]: silhouette touches logical frame edge",
     "terrain_grave_swamp[0]: little transparent padding (100.0%)",
@@ -41379,6 +41377,10 @@
     "terrain_abyss_water[0]: silhouette touches logical frame edge",
     "terrain_abyss_road[0]: little transparent padding (100.0%)",
     "terrain_abyss_road[0]: silhouette touches logical frame edge",
+    "terrain_grave_swamp_puddle1[0]: silhouette touches logical frame edge",
+    "terrain_grave_swamp_puddle2[0]: silhouette touches logical frame edge",
+    "terrain_grave_swamp_puddle3[0]: silhouette touches logical frame edge",
+    "terrain_grave_swamp_puddle4[0]: silhouette touches logical frame edge",
     "hud_minimap_frame[0]: silhouette touches logical frame edge",
     "vault_chest[0]: silhouette touches logical frame edge",
     "vault_chest[1]: silhouette touches logical frame edge",

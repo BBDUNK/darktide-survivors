@@ -1084,16 +1084,16 @@
         var wx = rx * region + 34 + E.hash2(rx * 73, ry * 79) * 190;
         var wy = ry * region + 28 + E.hash2(rx * 83, ry * 89) * 194;
         var sx = wx - camX + W / 2, sy = wy - camY + H / 2;
-        var rw = 58 + E.hash2(rx * 97, ry * 101) * 76;
-        var rhh = 24 + E.hash2(rx * 103, ry * 107) * 36;
+        var rw = 116 + E.hash2(rx * 97, ry * 101) * 152;
+        var rhh = 48 + E.hash2(rx * 103, ry * 107) * 72;
         var wet = map.id !== 'wilds' && rh > 0.87;
         // 墓园沼泽用固定的泥边水坑精灵，而不是随缩放变形的程序椭圆；
         // 世界坐标由 rx/ry 决定，镜头移动时水坑不会游移。
         if (wet && map.id === 'graveyard') {
           var puddleId = 'terrain_grave_swamp_puddle' + (1 + Math.floor(E.hash2(rx * 109, ry * 113) * 4));
           var puddle = SpriteGen.get(puddleId);
-          var pw = 116 + Math.floor(E.hash2(rx * 127, ry * 131) * 54);
-          var ph = 74 + Math.floor(E.hash2(rx * 137, ry * 139) * 32);
+          var pw = 248 + Math.floor(E.hash2(rx * 127, ry * 131) * 116);
+          var ph = 150 + Math.floor(E.hash2(rx * 137, ry * 139) * 68);
           ctx.globalAlpha = 0.94;
           ctx.drawImage(puddle, (sx - pw / 2) | 0, (sy - ph / 2) | 0, pw, ph);
         } else {

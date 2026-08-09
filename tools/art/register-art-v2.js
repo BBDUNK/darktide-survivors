@@ -238,10 +238,12 @@ spriteGrid('assets/art-v4/sprites/terrain/terrain_tiles.png', 128, 3, [
 // Transparent sprite padding on a repeated tile becomes a visible square grid.
 for (const asset of next.slice(-9)) asset.seamlessTile = true;
 
-spriteGrid('assets/art-v4/sprites/terrain/swamp_puddles.png', 160, 2, [
-  'terrain_grave_swamp_puddle1', 'terrain_grave_swamp_puddle2',
-  'terrain_grave_swamp_puddle3', 'terrain_grave_swamp_puddle4'
-], 160, 1);
+['terrain_grave_swamp_puddle1', 'terrain_grave_swamp_puddle2',
+  'terrain_grave_swamp_puddle3', 'terrain_grave_swamp_puddle4'].forEach((name, index) => add({
+    name, source: 'assets/art-v4/sprites/terrain/swamp_puddles.png',
+    frameSize: [320, 224], frameRow: Math.floor(index / 2), frameStart: index % 2,
+    frames: 1, fps: 0, size: [320, 224], anchor: [160, 112], renderScale: 1
+  }));
 
 spriteGrid('assets/art-v4/sprites/environment/terrain_props.png', 96, 4, [
   'deco_wither_cluster1', 'deco_wither_cluster2', 'deco_swamp_reeds', 'deco_lilypad',

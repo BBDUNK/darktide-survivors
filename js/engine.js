@@ -261,8 +261,8 @@ window.Engine = (function () {
         if (rh <= 0.87 || id === 'wilds') continue;
         var wx = rx * region + 34 + hash2(rx * 73, ry * 79) * 190;
         var wy = ry * region + 28 + hash2(rx * 83, ry * 89) * 194;
-        var rw = 58 + hash2(rx * 97, ry * 101) * 76;
-        var rhh = 24 + hash2(rx * 103, ry * 107) * 36;
+        var rw = 116 + hash2(rx * 97, ry * 101) * 152;
+        var rhh = 48 + hash2(rx * 103, ry * 107) * 72;
         var rot = rh * Math.PI, co = Math.cos(rot), si = Math.sin(rot);
         var dx = x - wx, dy = y - wy;
         var lx = dx * co + dy * si, ly = -dx * si + dy * co;

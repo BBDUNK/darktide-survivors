@@ -26,7 +26,8 @@ def remove_magenta(image: Image.Image) -> Image.Image:
     for y in range(out.height):
         for x in range(out.width):
             r, g, b, a = px[x, y]
-            if r > 205 and b > 155 and g < 95:
+            # Cover both pure key pixels and ImageGen's dark magenta halo.
+            if (r > 205 and b > 155 and g < 95) or (r > 115 and b > 80 and r > g * 1.65 and b > g * 1.35):
                 px[x, y] = (0, 0, 0, 0)
     return hard_alpha(out)
 
@@ -104,8 +105,28 @@ def build_frost_and_enemy_projectiles() -> None:
 
 
 def build_swamp_puddles() -> None:
-    source = remove_magenta(Image.open(SOURCE / "terrain" / "swamp_puddles_master.png"))
-    save(fitted_sheet(grid_cells(source, 2, 2), (160, 112), 64, False), "terrain/swamp_puddles.png")
+    # One deliberately isolated source avoids the prior grid-crossing crop bug.
+    # Four hard-pixel transforms provide orientation variety without cutting a
+    # silhouette at a cell boundary.
+    source = remove_magenta(Image.open(SOURCE / "terrain" / "swamp_puddle_large_master.png"))
+    bbox = source.getchannel("A").getbbox()
+    puddle = source.crop(bbox)
+    variants = [
+        puddle,
+        puddle.transpose(Image.Transpose.FLIP_LEFT_RIGHT),
+        puddle.transpose(Image.Transpose.FLIP_TOP_BOTTOM),
+        puddle.transpose(Image.Transpose.ROTATE_180),
+    ]
+    cells = []
+    for variant in variants:
+        # Keep the oversized water pool intact; nearest neighbour retains the
+        # authored pixel edge and no cell can leak into its neighbour.
+        cell = fitted_sheet([[variant]], (320, 224), 64, False)
+        cells.append(cell)
+    sheet = Image.new("RGBA", (640, 448))
+    for index, cell in enumerate(cells):
+        sheet.alpha_composite(cell, ((index % 2) * 320, (index // 2) * 224))
+    save(sheet, "terrain/swamp_puddles.png")
 
 
 def build_pickups() -> None:
@@ -148,8 +169,9 @@ def build_frame() -> None:
 
 
 def main() -> None:
-    subprocess.run([sys.executable, str(ROOT / "tools" / "art" / "repair-sprite-grids.py")],
-                   cwd=ROOT, check=True)
+    if "--skip-repair" not in sys.argv:
+        subprocess.run([sys.executable, str(ROOT / "tools" / "art" / "repair-sprite-grids.py")],
+                       cwd=ROOT, check=True)
     build_vfx()
     build_frost_and_enemy_projectiles()
     build_pickups()
