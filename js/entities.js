@@ -255,6 +255,7 @@ window.Entities = (function () {
     enemies.length = 0; freeIdx.length = 0;
     for (var i = 0; i < POOL; i++) {
       enemies.push({
+        poolIdx: i,
         alive: false, uid: 0, id: '', def: null,
         x: 0, y: 0, vx: 0, vy: 0, hp: 0, maxHp: 0,
         r: 10, dmg: 0, spd: 0, armor: 0,
@@ -292,7 +293,9 @@ window.Entities = (function () {
       var sp = pushOutOfSafeZone(run, x, y);
       x = sp.x; y = sp.y;
     }
-    var e = enemies[freeIdx.pop()];
+    var idx = freeIdx.pop();
+    var e = enemies[idx];
+    e.poolIdx = idx;
     var isBoss = !!CFG.BOSSES[id];
     // 联机时按人数放大血量(非线性,避免 2 人难度暴涨)
     var coopHp = run.coopHpMul || 1;
@@ -443,7 +446,7 @@ window.Entities = (function () {
   function killEnemy(run, e, opts) {
     if (!e.alive) return;
     e.alive = false;
-    freeIdx.push(enemies.indexOf(e));
+    freeIdx.push(e.poolIdx !== undefined ? e.poolIdx : enemies.indexOf(e));
     run.kills++;
     Meta.track('kill');
     var col = e.boss ? '#ffd76b' : '#8a1f2d';
@@ -1505,12 +1508,17 @@ window.Entities = (function () {
   }
 
   // ================= 绘制 =================
+  var framesCache = {};
   var flipCache = {};
   function getFrames(name, flip) {
-    if (!flip) return SpriteGen.frames(name);
+    if (!flip) {
+      var c0 = framesCache[name];
+      if (!c0) { c0 = SpriteGen.frames(name); framesCache[name] = c0; }
+      return c0;
+    }
     var c = flipCache[name];
     if (!c) {
-      var src = SpriteGen.frames(name);
+      var src = getFrames(name, false);
       c = [];
       for (var i = 0; i < src.length; i++) {
         var cv = document.createElement('canvas');
@@ -1523,6 +1531,14 @@ window.Entities = (function () {
       flipCache[name] = c;
     }
     return c;
+  }
+
+  var fpsCache = {};
+  function animFps(name, fallback) {
+    var key = name + '|' + fallback;
+    var f = fpsCache[key];
+    if (f === undefined) { f = SpriteGen.animationFps(name, fallback); fpsCache[key] = f; }
+    return f;
   }
 
   var tintCache = {};
@@ -1660,7 +1676,7 @@ window.Entities = (function () {
         ctx.rect(e.x - 24, e.y - 40, 48, 40 + 4);
         ctx.clip();
         var rise = (1 - prog) * 26;   // 未出土时整体下沉
-        var burrowF = Math.floor(run.t * SpriteGen.animationFps(e.id, 6));
+        var burrowF = Math.floor(run.t * animFps(e.id, 6));
         drawSprite(ctx, e.id, burrowF + (e.animo | 0), e.x, e.y + rise, sc, e.face < 0, 1, '#8a7a5a');
         ctx.restore();
         // 飞溅的土屑
@@ -1680,7 +1696,7 @@ window.Entities = (function () {
       var hop = e.hop || 0, sq = e.squash || 1;
       var enemySprite = e.boss ? e.bossType : e.id;
       // 静止的敌人固定帧(修复原地站立还不停播走路动画的"旋转"感),移动时才循环
-      var enemyF = (e.vx === 0 && e.vy === 0) ? 0 : Math.floor(run.t * SpriteGen.animationFps(enemySprite, 6));
+      var enemyF = (e.vx === 0 && e.vy === 0) ? 0 : Math.floor(run.t * animFps(enemySprite, 6));
       drawSprite(ctx, enemySprite, enemyF + (e.animo | 0),
                  e.x, e.y + wob - hop, sc * sq, e.face < 0, e.alpha, tint);
       if (e.elite) drawSprite(ctx, 'elite_crown', 0, e.x, e.y - e.r - 12, 1, false, 1, null);
@@ -1715,8 +1731,8 @@ window.Entities = (function () {
       }
     }
     // 敌方子弹
-    var shotFrames = SpriteGen.frames('p_enemy_bolt');
-    var webFrames = SpriteGen.frames('p_web');
+    var shotFrames = getFrames('p_enemy_bolt', false);
+    var webFrames = getFrames('p_web', false);
     for (i = 0; i < shots.length; i++) {
       var sh = shots[i];
       if (!sh.alive) continue;
@@ -1767,10 +1783,10 @@ window.Entities = (function () {
       var pf = 0;
       if (p.attackAnimT > 0) {
         playerSprite += '_attack';
-        pf = Math.floor(p.attackAnimAge * SpriteGen.animationFps(playerSprite, 13));
+        pf = Math.floor(p.attackAnimAge * animFps(playerSprite, 13));
       } else if (p.moving) {
         playerSprite += '_walk';
-        pf = Math.floor(p.animT * SpriteGen.animationFps(playerSprite, 10));
+        pf = Math.floor(p.animT * animFps(playerSprite, 10));
       } else {
         // 待机固定第一帧,不做旋转动画
         pf = 0;
@@ -1825,7 +1841,9 @@ window.Entities = (function () {
     for (i = 0; i < POOL; i++) freeIdx.push(i);
     for (i = 0; i < snap.e.length && freeIdx.length; i++) {
       s = snap.e[i];
-      e = enemies[freeIdx.pop()];
+      var idx = freeIdx.pop();
+      e = enemies[idx];
+      e.poolIdx = idx;
       var def = CFG.ENEMIES[s.i] || CFG.BOSSES[s.i];
       if (!def) continue;
       e.alive = true; e.uid = s.u; e.id = s.i; e.def = def;
@@ -1911,10 +1929,10 @@ window.Entities = (function () {
         var mateF = 0;   // 静止:固定帧 0(修复队友空闲不停动画)
         if (m.attacking) {
           mateSprite += '_attack';
-          mateF = Math.floor(run.t * SpriteGen.animationFps(mateSprite, 13));
+          mateF = Math.floor(run.t * animFps(mateSprite, 13));
         } else if (m.moving) {
           mateSprite += '_walk';
-          mateF = Math.floor(run.t * SpriteGen.animationFps(mateSprite, 10));
+          mateF = Math.floor(run.t * animFps(mateSprite, 10));
         }
         drawSprite(ctx, mateSprite, mateF, m.x, m.y, 1, m.face < 0, 1, null);
         // 队友身上的光环增益提示

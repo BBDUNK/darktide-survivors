@@ -185,9 +185,9 @@ window.CFG = {
                       guardOnHit: true, guardDur: 1.8 },
     werewolf:       { name: '血月狼人', hp: 95, dmg: 20, spd: 72, r: 12, xp: 6, ai: 'charge', chargeSpd: 240, chargeCd: 3.5 },
     mummy:          { name: '尘缚木乃伊', hp: 130, dmg: 14, spd: 34, r: 12, xp: 6, ai: 'chase' },
-    // 石像鬼:远程抛物线砸击,落点有红圈预警 —— 攻击间隔延长
+    // 石像鬼:远程抛物线砸击,落点有红圈预警 —— 攻击间隔拉长,避免连续砸脸
     gargoyle:       { name: '石像鬼', hp: 150, dmg: 18, spd: 64, r: 13, xp: 8, ai: 'lobber', armor: 2,
-                      lobDmg: 22, lobCd: 5.2, lobRange: 420, lobR: 60, lobTravel: 1.5, ranged: true },
+                      lobDmg: 22, lobCd: 8.0, lobRange: 420, lobR: 60, lobTravel: 1.5, ranged: true },
     bloodbat:       { name: '血蝠', hp: 48, dmg: 12, spd: 112, r: 11, xp: 3, ai: 'chase' },
     wraith:         { name: '暗潮死灵', hp: 210, dmg: 22, spd: 58, r: 13, xp: 10, ai: 'phase' }
   },

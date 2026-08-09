@@ -474,11 +474,20 @@
       "name": "p_slash",
       "category": "projectile",
       "source": "assets/sprites/vendor/ninja-adventure/FX/SlashFx/SlashDoubleCurved/SpriteSheet.png",
-      "frameSize": [32, 32],
+      "frameSize": [
+        32,
+        32
+      ],
       "frames": 4,
       "fps": 14,
-      "size": [34, 34],
-      "anchor": [17, 33],
+      "size": [
+        34,
+        34
+      ],
+      "anchor": [
+        17,
+        33
+      ],
       "pixelScale": 1,
       "allowDuplicateFrames": true,
       "maxBaselineDrift": 8,
@@ -514,8 +523,14 @@
       "name": "p_arrow",
       "category": "projectile",
       "source": "assets/sprites/sources/props/p_arrow_small.png",
-      "size": [24, 10],
-      "anchor": [12, 9],
+      "size": [
+        24,
+        10
+      ],
+      "anchor": [
+        12,
+        9
+      ],
       "frames": 1,
       "fps": 12,
       "pixelScale": 1,
@@ -2258,7 +2273,7 @@
     {
       "name": "vfx_ice",
       "category": "vfx",
-      "source": "assets/sprites/sources/dcss-derived/vfx_ice.png",
+      "source": "assets/sprites/sources/chars/vfx_ice_burst.png",
       "frameSize": [
         32,
         32

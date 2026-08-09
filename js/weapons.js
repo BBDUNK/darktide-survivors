@@ -3,11 +3,33 @@ window.Weapons = (function () {
   'use strict';
   var E = Engine;
 
+  // 精灵帧/帧率缓存:绘制路径不再每帧重复解析动作图集
+  var _framesCache = {};
+  var _fpsCache = {};
+  function cachedFrames(name) {
+    var c = _framesCache[name];
+    if (!c) { c = SpriteGen.frames(name); _framesCache[name] = c; }
+    return c;
+  }
+  function cachedFps(name, fallback) {
+    var key = name + '|' + fallback;
+    var f = _fpsCache[key];
+    if (f === undefined) { f = SpriteGen.animationFps(name, fallback); _fpsCache[key] = f; }
+    return f;
+  }
+
   // ================= 子弹池 =================
   var BMAX = 320;
   var bullets = [];
+  var turretList = [];
+  function removeTurret(b) {
+    for (var i = 0; i < turretList.length; i++) {
+      if (turretList[i] === b) { turretList.splice(i, 1); return; }
+    }
+  }
   function initPool() {
     bullets.length = 0;
+    turretList.length = 0;
     for (var i = 0; i < BMAX; i++) {
       bullets.push({
         alive: false, kind: '', spr: '', wid: '',
@@ -29,12 +51,14 @@ window.Weapons = (function () {
     for (var i = 0; i < BMAX; i++) {
       var b = bullets[i];
       if (!b.alive) {
+        if (b.kind === 'turret') removeTurret(b);
         if (!b.hitCd) { b.hitCd = new Map(); b.hitSet = new Set(); }
         b.hitCd.clear(); b.hitSet.clear();
         return b;
       }
       if (b.born < ot) { ot = b.born; oldest = b; }
     }
+    if (oldest.kind === 'turret') removeTurret(oldest);
     oldest.hitCd.clear(); oldest.hitSet.clear();
     return oldest;
   }
@@ -121,6 +145,7 @@ window.Weapons = (function () {
     b.aux = 0; b.aux2 = 0; b.evolved = w.evolved;
     b.poolDmg = 0; b.poolR = 0; b.poolDur = 0; b.poolBurn = 0; b.poolBurnDur = 0;
     b.blessed = !!st.blessed;     // 受队友光环加持:绘制时加一层金光
+    if (kind === 'turret') turretList.push(b);
     return b;
   }
 
@@ -261,7 +286,7 @@ window.Weapons = (function () {
         spawn(run, w, st, 'straight', 'p_arrow', p.x, p.y,
           Math.cos(wbBase) * st.speed, Math.sin(wbBase) * st.speed, 1.5);
         for (i = 1; i < st.count; i++) {
-          queueShot(run, w.id, i * 0.11, wbBase, st);
+          queueShot(run, w.id, i * 0.26, wbBase, st);
         }
         AudioSys.play('shoot_arrow');
         break;
@@ -448,6 +473,7 @@ window.Weapons = (function () {
       b.ttl -= dt;
       if (b.ttl <= 0) {
         if (b.kind === 'lob') landFlask(run, b);
+        if (b.kind === 'turret') removeTurret(b);
         b.alive = false;
         continue;
       }
@@ -606,9 +632,9 @@ window.Weapons = (function () {
               FX.ring(b.x, b.y - 92, { r: 22, color: '#8ef', life: 0.22, width: 2 });
             }
             // 塔间电弧:与射程内的另一座塔连线,对连线附近敌人造成伤害
-            for (var tj = 0; tj < BMAX; tj++) {
-              var ob = bullets[tj];
-              if (ob === b || !ob.alive || ob.kind !== 'turret') continue;
+            for (var tj = 0; tj < turretList.length; tj++) {
+              var ob = turretList[tj];
+              if (ob === b || !ob.alive) continue;
               var ad = Math.hypot(ob.x - b.x, ob.y - b.y);
               if (ad > 260 || ad < 1) continue;
               FX.lightning(b.x, b.y - 92, ob.x, ob.y - 92, '#bdf');
@@ -724,6 +750,7 @@ window.Weapons = (function () {
   function applyVisual(run, arr) {
     run._netVisual = true;
     for (var i = 0; i < BMAX; i++) bullets[i].alive = false;
+    turretList.length = 0;
     if (!arr) return;
     for (var j = 0; j < arr.length && j < BMAX; j++) {
       var s = arr[j], b = bullets[j];
@@ -744,6 +771,7 @@ window.Weapons = (function () {
       b.slow = 0; b.slowDur = 0; b.stun = 0; b.zapN = 1;
       if (!b.hitCd) { b.hitCd = new Map(); b.hitSet = new Set(); }
       b.hitCd.clear(); b.hitSet.clear();
+      if (b.kind === 'turret') turretList.push(b);
     }
     var wA = findWeapon(run, 'holyaura');
     if (wA && run.player && run.player.stats) wA.curR = wStats(run, wA).size;
@@ -788,25 +816,80 @@ window.Weapons = (function () {
   // 地面火焰池/圣光环:画在地面层之上,角色与装饰物之下,避免遮挡
   function drawGround(ctx, run) {
     var p = run.player;
-    // 圣光环
+    // 圣光环:呼吸透明度 + 流动金弧 + 旋转符文 + 环绕光点
     var wAura = findWeapon(run, 'holyaura');
     if (wAura) {
       var r = wAura.curR || wStats(run, wAura).size;
+      var auraT = run.t;
+      // 若隐若现的呼吸感:光环整体透明度随时间缓慢起伏
+      var breathe = 0.72 + 0.28 * Math.sin(auraT * 2.1);
+      ctx.globalAlpha = breathe;
       var g = ctx.createRadialGradient(p.x, p.y, r * 0.3, p.x, p.y, r);
       var col = wAura.evolved ? '255,240,150' : '255,235,170';
-      g.addColorStop(0, 'rgba(' + col + ',0.02)');
-      g.addColorStop(0.8, 'rgba(' + col + ',0.10)');
-      g.addColorStop(0.95, 'rgba(' + col + ',0.28)');
+      g.addColorStop(0, 'rgba(' + col + ',' + (0.12 + 0.05 * Math.sin(auraT * 3.2)).toFixed(3) + ')');
+      g.addColorStop(0.7, 'rgba(' + col + ',' + (0.22 + 0.08 * Math.sin(auraT * 2.6 + 1)).toFixed(3) + ')');
+      g.addColorStop(0.9, 'rgba(' + col + ',' + (0.46 + 0.10 * Math.sin(auraT * 2.1 + 2)).toFixed(3) + ')');
       g.addColorStop(1, 'rgba(' + col + ',0)');
       ctx.fillStyle = g;
       ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2); ctx.fill();
+      // 流动金弧:三组金色光弧分段旋转,首尾渐隐,形成能量流动
+      for (var ai = 0; ai < 3; ai++) {
+        var aOff = ai * Math.PI * 2 / 3 + auraT * 0.32;
+        var aLen = Math.PI * (0.42 + 0.16 * Math.sin(auraT * 1.9 + ai * 2.4));
+        var aR = r * (0.30 + ai * 0.27) + Math.sin(auraT * 2.3 + ai * 1.3) * r * 0.025;
+        ctx.strokeStyle = 'rgba(' + col + ',' + (0.80 - ai * 0.12).toFixed(3) + ')';
+        ctx.lineWidth = ai === 1 ? 5 : 3;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, Math.max(4, aR), aOff, aOff + aLen);
+        ctx.stroke();
+        ctx.lineCap = 'butt';
+      }
+      for (var ri = 0; ri < 3; ri++) {
+        var rr = r * (0.34 + ri * 0.23) + Math.sin(auraT * 1.7 + ri * 2.1) * r * 0.03;
+        ctx.strokeStyle = 'rgba(' + col + ',' + (0.42 - ri * 0.06).toFixed(3) + ')';
+        ctx.lineWidth = ri === 1 ? 4 : 2;
+        ctx.beginPath(); ctx.arc(p.x, p.y, Math.max(4, rr), 0, Math.PI * 2); ctx.stroke();
+      }
+      ctx.strokeStyle = 'rgba(255,250,215,0.55)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.97, 0, Math.PI * 2); ctx.stroke();
+      for (var mk = 0; mk < 6; mk++) {
+        var ma = mk * Math.PI / 3 + auraT * 0.45;
+        var mr = r * (0.72 + Math.sin(auraT * 2.2 + mk) * 0.04);
+        var mx = p.x + Math.cos(ma) * mr;
+        var my = p.y + Math.sin(ma) * mr;
+        ctx.fillStyle = 'rgba(255,250,215,0.95)';
+        ctx.fillRect(mx - 2, my - 2, 5, 5);
+        ctx.fillStyle = 'rgba(' + col + ',0.65)';
+        ctx.fillRect(mx - 4, my - 1, 9, 3);
+        ctx.fillRect(mx - 1, my - 4, 3, 9);
+      }
+      // 上游飘散的光尘:沿光环切向缓慢流动,忽明忽暗
+      for (var mt = 0; mt < 5; mt++) {
+        var mta = mt * Math.PI / 2 - auraT * 0.75;
+        var mtr = r * (0.5 + Math.sin(auraT * 2.8 + mt * 1.9) * 0.08);
+        var mox = p.x + Math.cos(mta) * mtr;
+        var moy = p.y + Math.sin(mta) * mtr;
+        var dustA = 0.35 + 0.6 * (0.5 + 0.5 * Math.sin(auraT * 3.4 + mt * 2.1));
+        ctx.fillStyle = 'rgba(255,250,220,' + dustA.toFixed(3) + ')';
+        ctx.beginPath(); ctx.arc(mox, moy, 2 + (mt % 3), 0, Math.PI * 2); ctx.fill();
+      }
+      if (wAura.evolved) {
+        var core = ctx.createRadialGradient(p.x, p.y, 1, p.x, p.y, r * 0.24);
+        core.addColorStop(0, 'rgba(255,252,230,0.7)');
+        core.addColorStop(1, 'rgba(255,236,160,0)');
+        ctx.fillStyle = core;
+        ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.24, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
     }
     // 火焰池
     for (var i = 0; i < BMAX; i++) {
       var b = bullets[i];
       if (!b.alive || b.kind !== 'pool') continue;
       ctx.globalAlpha = 0.55 + Math.sin(run.t * 8 + i) * 0.2;
-      var fr0 = SpriteGen.frames(b.spr);
+      var fr0 = cachedFrames(b.spr);
       var img0 = fr0[Math.floor(run.t * 8) % fr0.length];
       ctx.drawImage(img0, b.x - b.size / 2, b.y - b.size / 2, b.size, b.size);
       ctx.globalAlpha = 1;
@@ -820,7 +903,7 @@ window.Weapons = (function () {
     ctx.globalAlpha = b.ttl < 1 ? E.clamp(b.ttl * 2, 0, 1) : 1;
 
     // 塔身:使用复古像素电塔素材,底部锚定在地面
-    var towerImg = SpriteGen.frames('tesla_tower')[0];
+    var towerImg = cachedFrames('tesla_tower')[0];
     var towerW = 96, towerH = 96;
     ctx.drawImage(towerImg, bx - towerW / 2, baseY - towerH, towerW, towerH);
 
@@ -860,29 +943,43 @@ window.Weapons = (function () {
       if (b.kind === 'nova') {
         var rr = Math.min(b.phase, b.aux2);
         if (rr < 1) continue;
-        ctx.strokeStyle = b.evolved ? 'rgba(135,235,255,0.88)' : 'rgba(95,195,235,0.78)';
-        ctx.lineWidth = 5;
-        ctx.globalAlpha = E.clamp(b.ttl * 3, 0, 1);
-        ctx.beginPath(); ctx.arc(b.x, b.y, rr, 0, Math.PI * 2); ctx.stroke();
-        if (rr > 6) {
+        var novaAlpha = E.clamp(b.ttl * 3, 0, 1);
+        ctx.globalAlpha = novaAlpha;
+        var iceFrames = cachedFrames('vfx_ice');
+        var iceImg = iceFrames[Math.floor(run.t * 16) % iceFrames.length];
+        var iceCount = b.evolved ? 8 : 5;
+        var flashR = Math.max(3, rr * 0.18);
+        var flash = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, flashR);
+        flash.addColorStop(0, 'rgba(255,255,255,' + (0.9 * novaAlpha).toFixed(3) + ')');
+        flash.addColorStop(1, 'rgba(185,242,255,0)');
+        ctx.fillStyle = flash;
+        ctx.beginPath(); ctx.arc(b.x, b.y, flashR, 0, Math.PI * 2); ctx.fill();
+        for (var ringI = 0; ringI < 3; ringI++) {
+          var ringR = rr * (0.32 + ringI * 0.34) + Math.sin(run.t * 5 + ringI * 2) * 3;
+          ctx.strokeStyle = ringI === 0 ? 'rgba(230,252,255,0.9)' :
+            (b.evolved ? 'rgba(135,235,255,0.66)' : 'rgba(95,195,235,0.58)');
+          ctx.lineWidth = ringI === 0 ? 6 : 2.6 - ringI * 0.7;
+          ctx.beginPath(); ctx.arc(b.x, b.y, Math.max(3, ringR), 0, Math.PI * 2); ctx.stroke();
+        }
+        for (var ni = 0; ni < iceCount; ni++) {
+          var na = ni * Math.PI * 2 / iceCount + run.t * 0.35;
+          var ns = b.evolved ? 26 : 20;
+          var nr = rr * (0.52 + 0.2 * Math.sin(run.t * 3 + ni * 1.7));
+          var ix = b.x + Math.cos(na) * nr;
+          var iy = b.y + Math.sin(na) * nr;
+          ctx.drawImage(iceImg, ix - ns / 2, iy - ns / 2, ns, ns);
+          ctx.strokeStyle = 'rgba(215,250,255,0.55)';
           ctx.lineWidth = 1.5;
-          ctx.strokeStyle = 'rgba(215,250,255,0.72)';
-          ctx.beginPath(); ctx.arc(b.x, b.y, rr - 5, 0, Math.PI * 2); ctx.stroke();
-          var iceFrames = SpriteGen.frames('vfx_ice');
-          var iceImg = iceFrames[Math.floor(run.t * 16) % iceFrames.length];
-          var iceCount = b.evolved ? 8 : 5;
-          for (var ni = 0; ni < iceCount; ni++) {
-            var na = ni * Math.PI * 2 / iceCount + run.t * 0.35;
-            var ns = b.evolved ? 24 : 18;
-            ctx.drawImage(iceImg, b.x + Math.cos(na) * rr - ns / 2,
-              b.y + Math.sin(na) * rr - ns / 2, ns, ns);
-          }
+          ctx.beginPath();
+          ctx.moveTo(ix, iy);
+          ctx.lineTo(b.x + Math.cos(na) * rr, b.y + Math.sin(na) * rr);
+          ctx.stroke();
         }
         ctx.globalAlpha = 1;
         continue;
       }
-      var projectileFrames = SpriteGen.frames(b.spr);
-      var projectileFps = SpriteGen.animationFps(b.spr, 10);
+      var projectileFrames = cachedFrames(b.spr);
+      var projectileFps = cachedFps(b.spr, 10);
       var projectileAge = Math.max(0, run.t - (b.born || 0));
       var img = projectileFrames[Math.floor(projectileAge * projectileFps) % projectileFrames.length];
       var sc = 2 * (b.size / 16);

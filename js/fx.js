@@ -28,6 +28,13 @@
   var FIRE_COLS = ['#fff3b0', '#ffd24a', '#ff9531', '#ff5722'];
   var GOLD_COLS = ['#fff6c8', '#ffd24a', '#ffb020'];
 
+  var _fxFrames = {};
+  function cachedFrames(name) {
+    var c = _fxFrames[name];
+    if (!c) { c = SpriteGen.frames(name); _fxFrames[name] = c; }
+    return c;
+  }
+
   // ---------- 种子 RNG(mulberry32) ----------
   var _seed = 0x9e3779b9;
   function rand() {
@@ -307,7 +314,7 @@
     } else if (p.shape === SH_BEAM) {
       ctx.fillRect(p.x - s * 0.5, p.y - p.str, s, p.str);   // SH_BEAM:定高竖梁,底端锚定
     } else {
-      var frames = SpriteGen.frames(p.str);
+      var frames = cachedFrames(p.str);
       var frame = frames[Math.min(frames.length - 1, Math.floor(t01 * frames.length))];
       ctx.drawImage(frame, p.x - s * 0.5, p.y - s * 0.5, s, s);
     }

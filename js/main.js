@@ -1186,8 +1186,10 @@
     // 玩家周围柔光:用缓存贴图(不再每帧建径向渐变),双色叠出柔和感
     var pls = CFG.GAME.W / 2 + (run.player.x - camX);
     var plt = CFG.GAME.H / 2 + (run.player.y - camY);
-    ctx.globalAlpha = 0.28;
-    ctx.drawImage(SpriteGen.glow('#c0aeff'), pls - 190, plt - 190, 380, 380);
+    var auraW = Weapons.findWeapon(run, 'holyaura');
+    var glowCol = auraW ? (auraW.evolved ? '#ffefb0' : '#ffd76b') : '#c0aeff';
+    ctx.globalAlpha = auraW ? 0.42 : 0.28;
+    ctx.drawImage(SpriteGen.glow(glowCol), pls - 190, plt - 190, 380, 380);
     ctx.globalAlpha = 1;
 
     // 雾色叠层 + 暗角

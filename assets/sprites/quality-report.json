@@ -8,452 +8,404 @@
     "char_knight": [
       {
         "index": 0,
-        "coverage": 0.5744,
-        "colors": 8,
+        "coverage": 0.2993,
+        "colors": 11,
         "bbox": [
-          3,
-          4,
-          31,
+          8,
+          2,
+          26,
           34
         ],
         "centroid": [
-          16.5,
-          19.946
+          16.939,
+          17.928
         ],
-        "signature": "55b49115e0d3"
+        "signature": "10744e518406"
       },
       {
         "index": 1,
-        "coverage": 0.5744,
-        "colors": 8,
+        "coverage": 0.2967,
+        "colors": 11,
         "bbox": [
-          3,
-          4,
-          31,
+          8,
+          2,
+          26,
           34
         ],
         "centroid": [
-          16.5,
-          19.946
+          16.924,
+          17.799
         ],
-        "signature": "eae4bd3dd963"
+        "signature": "5862c1b4d77d"
       },
       {
         "index": 2,
-        "coverage": 0.5225,
-        "colors": 8,
+        "coverage": 0.2993,
+        "colors": 11,
         "bbox": [
-          5,
-          4,
-          29,
+          8,
+          2,
+          26,
           34
         ],
         "centroid": [
-          16.798,
-          18.381
+          16.939,
+          17.928
         ],
-        "signature": "59cb8463b920"
+        "signature": "10744e518406"
       },
       {
         "index": 3,
-        "coverage": 0.5225,
-        "colors": 8,
+        "coverage": 0.2967,
+        "colors": 11,
         "bbox": [
-          5,
-          4,
-          29,
+          8,
+          2,
+          26,
           34
         ],
         "centroid": [
-          16.202,
-          18.381
+          16.924,
+          17.799
         ],
-        "signature": "8337a6d89204"
+        "signature": "5862c1b4d77d"
       }
     ],
     "char_mage": [
       {
         "index": 0,
-        "coverage": 0.6159,
-        "colors": 5,
+        "coverage": 0.1912,
+        "colors": 10,
         "bbox": [
-          3,
+          10,
           2,
-          31,
+          23,
           34
         ],
         "centroid": [
-          16.5,
-          19.758
+          16.941,
+          18.973
         ],
-        "signature": "f698f6a73a5d"
+        "signature": "465c31f154ab"
       },
       {
         "index": 1,
-        "coverage": 0.6159,
-        "colors": 3,
+        "coverage": 0.2067,
+        "colors": 11,
         "bbox": [
-          3,
+          10,
           2,
-          31,
+          24,
           34
         ],
         "centroid": [
-          16.5,
-          19.758
+          17.494,
+          19.188
         ],
-        "signature": "49e65e4a90b5"
+        "signature": "3ec7f4e94ef6"
       },
       {
         "index": 2,
-        "coverage": 0.5502,
-        "colors": 5,
+        "coverage": 0.1912,
+        "colors": 10,
         "bbox": [
-          3,
+          10,
           2,
-          31,
+          23,
           34
         ],
         "centroid": [
-          16.896,
-          18.827
+          16.941,
+          18.973
         ],
-        "signature": "a48473e2cc15"
+        "signature": "465c31f154ab"
       },
       {
         "index": 3,
-        "coverage": 0.5502,
-        "colors": 5,
+        "coverage": 0.2067,
+        "colors": 11,
         "bbox": [
-          3,
+          10,
           2,
-          31,
+          24,
           34
         ],
         "centroid": [
-          16.104,
-          18.827
+          17.494,
+          19.188
         ],
-        "signature": "16eb51548bd9"
+        "signature": "3ec7f4e94ef6"
       }
     ],
     "char_ranger": [
       {
         "index": 0,
-        "coverage": 0.6401,
-        "colors": 8,
+        "coverage": 0.3209,
+        "colors": 12,
         "bbox": [
-          3,
           4,
-          31,
+          2,
+          29,
           34
         ],
         "centroid": [
-          16.797,
-          19.343
+          13.728,
+          18.367
         ],
-        "signature": "bc094f2c7183"
+        "signature": "19f0d476a6df"
       },
       {
         "index": 1,
-        "coverage": 0.6401,
-        "colors": 7,
+        "coverage": 0.3131,
+        "colors": 13,
         "bbox": [
-          3,
           4,
-          31,
+          2,
+          29,
           34
         ],
         "centroid": [
-          16.203,
-          19.343
+          13.597,
+          18.221
         ],
-        "signature": "04e2d15d05c7"
+        "signature": "03dddc466ffc"
       },
       {
         "index": 2,
-        "coverage": 0.5848,
-        "colors": 8,
+        "coverage": 0.3209,
+        "colors": 12,
         "bbox": [
-          3,
           4,
-          31,
+          2,
+          29,
           34
         ],
         "centroid": [
-          17.169,
-          18.192
+          13.728,
+          18.367
         ],
-        "signature": "8f625e811029"
+        "signature": "19f0d476a6df"
       },
       {
         "index": 3,
-        "coverage": 0.5848,
-        "colors": 8,
+        "coverage": 0.3131,
+        "colors": 13,
         "bbox": [
-          3,
           4,
-          31,
+          2,
+          29,
           34
         ],
         "centroid": [
-          15.831,
-          18.192
+          13.597,
+          18.221
         ],
-        "signature": "9bd8e0b921ee"
+        "signature": "03dddc466ffc"
       }
     ],
     "char_cleric": [
       {
         "index": 0,
-        "coverage": 0.6574,
-        "colors": 6,
+        "coverage": 0.2275,
+        "colors": 10,
         "bbox": [
-          1,
-          4,
-          33,
+          10,
+          3,
+          24,
           34
         ],
         "centroid": [
-          16.5,
-          19.637
+          17.593,
+          18.228
         ],
-        "signature": "821032e97f47"
+        "signature": "b03b76f729db"
       },
       {
         "index": 1,
-        "coverage": 0.6574,
-        "colors": 6,
+        "coverage": 0.2405,
+        "colors": 10,
         "bbox": [
-          1,
-          4,
-          33,
+          9,
+          3,
+          25,
           34
         ],
         "centroid": [
-          16.5,
-          19.637
+          17.252,
+          18.464
         ],
-        "signature": "ece4a8456869"
+        "signature": "75f39a71d963"
       },
       {
         "index": 2,
-        "coverage": 0.609,
-        "colors": 6,
+        "coverage": 0.2275,
+        "colors": 10,
         "bbox": [
+          10,
           3,
-          4,
-          31,
+          24,
           34
         ],
         "centroid": [
-          16.761,
-          18.0
+          17.593,
+          18.228
         ],
-        "signature": "5e3892c3fe26"
+        "signature": "b03b76f729db"
       },
       {
         "index": 3,
-        "coverage": 0.609,
-        "colors": 6,
+        "coverage": 0.2405,
+        "colors": 10,
         "bbox": [
+          9,
           3,
-          4,
-          31,
+          25,
           34
         ],
         "centroid": [
-          16.239,
-          18.0
+          17.252,
+          18.464
         ],
-        "signature": "b0956ffd0a4b"
+        "signature": "75f39a71d963"
       }
     ],
     "char_berserker": [
       {
         "index": 0,
-        "coverage": 0.6367,
-        "colors": 10,
+        "coverage": 0.2742,
+        "colors": 12,
         "bbox": [
-          1,
+          8,
           2,
-          33,
+          27,
           34
         ],
         "centroid": [
-          16.5,
-          19.609
+          16.729,
+          16.782
         ],
-        "signature": "9ded48e52b4e"
+        "signature": "8515a08dc882"
       },
       {
         "index": 1,
-        "coverage": 0.6367,
-        "colors": 10,
+        "coverage": 0.2742,
+        "colors": 12,
         "bbox": [
-          1,
+          8,
           2,
-          33,
+          27,
           34
         ],
         "centroid": [
-          16.5,
-          19.609
+          16.748,
+          16.71
         ],
-        "signature": "fece9c0eccfd"
+        "signature": "0e4531a6caf0"
       },
       {
         "index": 2,
-        "coverage": 0.5433,
-        "colors": 10,
+        "coverage": 0.2742,
+        "colors": 12,
         "bbox": [
-          3,
+          8,
           2,
-          31,
+          27,
           34
         ],
         "centroid": [
-          16.557,
-          18.385
+          16.729,
+          16.782
         ],
-        "signature": "f317dab20ea5"
+        "signature": "8515a08dc882"
       },
       {
         "index": 3,
-        "coverage": 0.5433,
-        "colors": 10,
+        "coverage": 0.2742,
+        "colors": 12,
         "bbox": [
-          3,
+          8,
           2,
-          31,
+          27,
           34
         ],
         "centroid": [
-          16.443,
-          18.385
+          16.748,
+          16.71
         ],
-        "signature": "8837ef86dfae"
+        "signature": "0e4531a6caf0"
       }
     ],
     "char_chrono": [
       {
         "index": 0,
-        "coverage": 0.692,
-        "colors": 9,
+        "coverage": 0.2189,
+        "colors": 14,
         "bbox": [
-          1,
+          10,
           2,
-          33,
+          24,
           34
         ],
         "centroid": [
-          16.5,
-          18.8
+          17.34,
+          19.186
         ],
-        "signature": "95d140c48736"
+        "signature": "98c32db54ece"
       },
       {
         "index": 1,
-        "coverage": 0.7197,
-        "colors": 7,
+        "coverage": 0.2258,
+        "colors": 12,
         "bbox": [
-          1,
+          10,
           2,
-          33,
+          25,
           34
         ],
         "centroid": [
-          16.5,
-          18.096
+          18.08,
+          18.705
         ],
-        "signature": "d370fcd8c818"
+        "signature": "76cba953a00a"
       },
       {
         "index": 2,
-        "coverage": 0.6713,
-        "colors": 9,
+        "coverage": 0.2189,
+        "colors": 14,
         "bbox": [
+          10,
           2,
-          2,
-          32,
+          24,
           34
         ],
         "centroid": [
-          16.335,
-          16.552
+          17.34,
+          19.186
         ],
-        "signature": "3b54037a2713"
+        "signature": "98c32db54ece"
       },
       {
         "index": 3,
-        "coverage": 0.6713,
-        "colors": 9,
+        "coverage": 0.2258,
+        "colors": 12,
         "bbox": [
+          10,
           2,
-          2,
-          32,
+          25,
           34
         ],
         "centroid": [
-          16.665,
-          16.552
+          18.08,
+          18.705
         ],
-        "signature": "45b1cad15e81"
+        "signature": "76cba953a00a"
       }
     ],
     "char_knight_walk": [
       {
         "index": 0,
-        "coverage": 0.3434,
-        "colors": 33,
-        "bbox": [
-          5,
-          2,
-          29,
-          34
-        ],
-        "centroid": [
-          20.642,
-          17.602
-        ],
-        "signature": "2e16b5c27f0c"
-      },
-      {
-        "index": 1,
-        "coverage": 0.3279,
-        "colors": 33,
-        "bbox": [
-          8,
-          2,
-          27,
-          34
-        ],
-        "centroid": [
-          18.454,
-          17.414
-        ],
-        "signature": "b66afab56c9c"
-      },
-      {
-        "index": 2,
-        "coverage": 0.3097,
-        "colors": 34,
-        "bbox": [
-          9,
-          2,
-          25,
-          34
-        ],
-        "centroid": [
-          17.251,
-          17.123
-        ],
-        "signature": "3615f7a68b75"
-      },
-      {
-        "index": 3,
-        "coverage": 0.3339,
-        "colors": 36,
+        "coverage": 0.3062,
+        "colors": 11,
         "bbox": [
           7,
           2,
@@ -461,455 +413,471 @@
           34
         ],
         "centroid": [
-          18.06,
-          17.355
+          17.364,
+          16.856
         ],
-        "signature": "ae6a14fb1b36"
+        "signature": "f76e5819d267"
+      },
+      {
+        "index": 1,
+        "coverage": 0.295,
+        "colors": 10,
+        "bbox": [
+          7,
+          2,
+          27,
+          34
+        ],
+        "centroid": [
+          17.387,
+          16.592
+        ],
+        "signature": "f6e07f3b7c62"
+      },
+      {
+        "index": 2,
+        "coverage": 0.2794,
+        "colors": 10,
+        "bbox": [
+          8,
+          2,
+          26,
+          34
+        ],
+        "centroid": [
+          16.935,
+          16.873
+        ],
+        "signature": "14213c330f30"
+      },
+      {
+        "index": 3,
+        "coverage": 0.2708,
+        "colors": 11,
+        "bbox": [
+          8,
+          2,
+          25,
+          34
+        ],
+        "centroid": [
+          16.131,
+          16.661
+        ],
+        "signature": "fe59b9e0a3c7"
       },
       {
         "index": 4,
-        "coverage": 0.3581,
-        "colors": 35,
+        "coverage": 0.2673,
+        "colors": 11,
         "bbox": [
-          6,
+          9,
           2,
-          29,
+          25,
           34
         ],
         "centroid": [
-          19.043,
-          17.819
+          16.278,
+          16.715
         ],
-        "signature": "5ef061a649c9"
+        "signature": "5f018a32166a"
       },
       {
         "index": 5,
-        "coverage": 0.3754,
-        "colors": 33,
+        "coverage": 0.2941,
+        "colors": 10,
         "bbox": [
+          8,
           2,
-          2,
-          31,
+          25,
           34
         ],
         "centroid": [
-          19.355,
-          18.007
+          15.979,
+          17.009
         ],
-        "signature": "9076f30b8a14"
+        "signature": "ea183d520ad1"
       },
       {
         "index": 6,
-        "coverage": 0.3651,
-        "colors": 35,
+        "coverage": 0.3045,
+        "colors": 10,
         "bbox": [
+          8,
           2,
-          2,
-          31,
+          26,
           34
         ],
         "centroid": [
-          20.682,
-          17.694
+          16.793,
+          17.136
         ],
-        "signature": "661b588a1ec2"
+        "signature": "6cae848a0ce5"
       },
       {
         "index": 7,
-        "coverage": 0.3607,
-        "colors": 35,
+        "coverage": 0.2958,
+        "colors": 11,
         "bbox": [
+          8,
           2,
-          2,
-          31,
+          26,
           34
         ],
         "centroid": [
-          21.516,
-          17.357
+          16.944,
+          17.427
         ],
-        "signature": "6bfc540fa204"
+        "signature": "d8f3bf6c1221"
       },
       {
         "index": 8,
-        "coverage": 0.3434,
-        "colors": 33,
+        "coverage": 0.2898,
+        "colors": 11,
         "bbox": [
-          4,
+          8,
           2,
-          30,
+          27,
           34
         ],
         "centroid": [
-          21.028,
-          17.592
+          17.851,
+          17.057
         ],
-        "signature": "f1acee8cf0bc"
+        "signature": "b2121158dfb0"
       }
     ],
     "char_knight_attack": [
       {
         "index": 0,
-        "coverage": 0.5087,
-        "colors": 8,
+        "coverage": 0.263,
+        "colors": 12,
+        "bbox": [
+          10,
+          2,
+          24,
+          34
+        ],
+        "centroid": [
+          16.957,
+          18.648
+        ],
+        "signature": "1e195e83d525"
+      },
+      {
+        "index": 1,
+        "coverage": 0.2076,
+        "colors": 12,
+        "bbox": [
+          10,
+          2,
+          25,
+          34
+        ],
+        "centroid": [
+          16.642,
+          19.2
+        ],
+        "signature": "d4ceda399df5"
+      },
+      {
+        "index": 2,
+        "coverage": 0.3201,
+        "colors": 11,
         "bbox": [
           2,
-          8,
+          2,
+          33,
+          34
+        ],
+        "centroid": [
+          11.311,
+          17.068
+        ],
+        "signature": "1512ce3d0a09"
+      },
+      {
+        "index": 3,
+        "coverage": 0.3304,
+        "colors": 12,
+        "bbox": [
+          2,
+          2,
           32,
           34
         ],
         "centroid": [
-          15.969,
-          21.983
+          11.076,
+          18.034
         ],
-        "signature": "124b92fb963a"
-      },
-      {
-        "index": 1,
-        "coverage": 0.5606,
-        "colors": 7,
-        "bbox": [
-          4,
-          2,
-          30,
-          34
-        ],
-        "centroid": [
-          15.66,
-          18.191
-        ],
-        "signature": "8a4d81c9e566"
-      },
-      {
-        "index": 2,
-        "coverage": 0.5363,
-        "colors": 7,
-        "bbox": [
-          3,
-          6,
-          31,
-          34
-        ],
-        "centroid": [
-          17.939,
-          20.113
-        ],
-        "signature": "bab6243bbd0c"
-      },
-      {
-        "index": 3,
-        "coverage": 0.5363,
-        "colors": 7,
-        "bbox": [
-          3,
-          6,
-          31,
-          34
-        ],
-        "centroid": [
-          15.061,
-          20.113
-        ],
-        "signature": "d14fcbca9501"
+        "signature": "46e640d12934"
       }
     ],
     "char_mage_walk": [
       {
         "index": 0,
-        "coverage": 0.3434,
-        "colors": 39,
+        "coverage": 0.2154,
+        "colors": 11,
         "bbox": [
-          5,
-          2,
-          29,
-          34
-        ],
-        "centroid": [
-          20.642,
-          17.602
-        ],
-        "signature": "7a04f9595945"
-      },
-      {
-        "index": 1,
-        "coverage": 0.3279,
-        "colors": 39,
-        "bbox": [
-          8,
-          2,
-          27,
-          34
-        ],
-        "centroid": [
-          18.454,
-          17.414
-        ],
-        "signature": "398be6d29708"
-      },
-      {
-        "index": 2,
-        "coverage": 0.3097,
-        "colors": 40,
-        "bbox": [
-          9,
+          10,
           2,
           25,
           34
         ],
         "centroid": [
-          17.251,
-          17.123
+          18.229,
+          18.811
         ],
-        "signature": "00a132a34981"
+        "signature": "eb07ecf8e566"
+      },
+      {
+        "index": 1,
+        "coverage": 0.2059,
+        "colors": 10,
+        "bbox": [
+          11,
+          2,
+          25,
+          34
+        ],
+        "centroid": [
+          18.42,
+          18.408
+        ],
+        "signature": "55e71a3b04b5"
+      },
+      {
+        "index": 2,
+        "coverage": 0.2033,
+        "colors": 10,
+        "bbox": [
+          10,
+          2,
+          24,
+          34
+        ],
+        "centroid": [
+          17.57,
+          18.366
+        ],
+        "signature": "2da9c8035ad4"
       },
       {
         "index": 3,
-        "coverage": 0.3339,
-        "colors": 42,
+        "coverage": 0.1886,
+        "colors": 11,
         "bbox": [
-          7,
+          10,
           2,
-          27,
+          23,
           34
         ],
         "centroid": [
-          18.06,
-          17.355
+          16.798,
+          18.138
         ],
-        "signature": "96cbf9e57353"
+        "signature": "d176e3abe4e3"
       },
       {
         "index": 4,
-        "coverage": 0.3581,
-        "colors": 41,
+        "coverage": 0.1886,
+        "colors": 11,
         "bbox": [
-          6,
+          11,
           2,
-          29,
+          23,
           34
         ],
         "centroid": [
-          19.043,
-          17.819
+          17.078,
+          18.454
         ],
-        "signature": "af0a44b5198f"
+        "signature": "fa4ee5fc5c95"
       },
       {
         "index": 5,
-        "coverage": 0.3754,
-        "colors": 39,
+        "coverage": 0.2128,
+        "colors": 10,
         "bbox": [
+          10,
           2,
-          2,
-          31,
+          23,
           34
         ],
         "centroid": [
-          19.355,
-          18.007
+          16.675,
+          18.972
         ],
-        "signature": "6d426e045384"
+        "signature": "b84877e005f1"
       },
       {
         "index": 6,
-        "coverage": 0.3651,
-        "colors": 41,
+        "coverage": 0.2042,
+        "colors": 10,
         "bbox": [
+          10,
           2,
-          2,
-          31,
+          23,
           34
         ],
         "centroid": [
-          20.682,
-          17.694
+          16.835,
+          18.932
         ],
-        "signature": "64b18be2f43c"
+        "signature": "8ac080227bf2"
       },
       {
         "index": 7,
-        "coverage": 0.3607,
-        "colors": 41,
+        "coverage": 0.1964,
+        "colors": 11,
         "bbox": [
+          10,
           2,
-          2,
-          31,
+          23,
           34
         ],
         "centroid": [
-          21.516,
-          17.357
+          16.872,
+          18.903
         ],
-        "signature": "caaabc073480"
+        "signature": "9fe4601c09be"
       },
       {
         "index": 8,
-        "coverage": 0.3434,
-        "colors": 39,
+        "coverage": 0.2137,
+        "colors": 11,
         "bbox": [
-          4,
+          10,
           2,
-          30,
+          25,
           34
         ],
         "centroid": [
-          21.028,
-          17.592
+          18.368,
+          18.822
         ],
-        "signature": "0249703a4592"
+        "signature": "8a5300d7c0f5"
       }
     ],
     "char_mage_attack": [
       {
         "index": 0,
-        "coverage": 0.5813,
-        "colors": 7,
+        "coverage": 0.1618,
+        "colors": 10,
         "bbox": [
+          12,
           2,
-          4,
-          32,
+          23,
           34
         ],
         "centroid": [
-          15.833,
-          20.833
+          17.674,
+          18.898
         ],
-        "signature": "96593f22fd91"
+        "signature": "7b4067fb059a"
       },
       {
         "index": 1,
-        "coverage": 0.6609,
-        "colors": 4,
+        "coverage": 0.1566,
+        "colors": 11,
         "bbox": [
-          3,
+          11,
           2,
-          31,
+          23,
           34
         ],
         "centroid": [
-          16.432,
-          18.06
+          16.851,
+          19.304
         ],
-        "signature": "632785c68deb"
+        "signature": "148c3950c7c0"
       },
       {
         "index": 2,
-        "coverage": 0.5882,
-        "colors": 6,
+        "coverage": 0.1756,
+        "colors": 12,
         "bbox": [
+          9,
           2,
-          2,
-          32,
+          23,
           34
         ],
         "centroid": [
-          17.429,
-          19.335
+          15.177,
+          19.172
         ],
-        "signature": "b1bdea43d3eb"
+        "signature": "5c1a5b0124e5"
       },
       {
         "index": 3,
-        "coverage": 0.5882,
-        "colors": 6,
+        "coverage": 0.1782,
+        "colors": 12,
         "bbox": [
+          10,
           2,
-          2,
-          32,
+          25,
           34
         ],
         "centroid": [
-          15.571,
-          19.335
+          15.942,
+          19.403
         ],
-        "signature": "ba7db6a1ad30"
+        "signature": "78e1de98b5a0"
       }
     ],
     "char_ranger_walk": [
       {
         "index": 0,
-        "coverage": 0.3486,
-        "colors": 38,
+        "coverage": 0.3019,
+        "colors": 12,
         "bbox": [
-          8,
+          4,
           2,
-          27,
+          30,
           34
         ],
         "centroid": [
-          18.774,
-          17.429
+          14.691,
+          17.745
         ],
-        "signature": "eb40e770f9f3"
+        "signature": "722ed39ab06b"
       },
       {
         "index": 1,
-        "coverage": 0.3486,
-        "colors": 36,
+        "coverage": 0.3097,
+        "colors": 13,
         "bbox": [
-          7,
+          4,
           2,
-          27,
+          31,
           34
         ],
         "centroid": [
-          18.012,
-          17.62
+          14.953,
+          17.344
         ],
-        "signature": "d1a83797e2ff"
+        "signature": "1a79ee8eeaf0"
       },
       {
         "index": 2,
-        "coverage": 0.3503,
-        "colors": 36,
+        "coverage": 0.2924,
+        "colors": 13,
         "bbox": [
-          8,
+          4,
           2,
-          27,
+          29,
           34
         ],
         "centroid": [
-          18.649,
-          17.664
+          13.562,
+          17.494
         ],
-        "signature": "ce044bcbbf16"
+        "signature": "a88c35b51b98"
       },
       {
         "index": 3,
-        "coverage": 0.359,
-        "colors": 40,
-        "bbox": [
-          6,
-          2,
-          27,
-          34
-        ],
-        "centroid": [
-          17.504,
-          17.304
-        ],
-        "signature": "dea9855b2950"
-      },
-      {
-        "index": 4,
-        "coverage": 0.3616,
-        "colors": 38,
-        "bbox": [
-          6,
-          2,
-          27,
-          34
-        ],
-        "centroid": [
-          17.038,
-          17.543
-        ],
-        "signature": "8b3fe1289fc6"
-      },
-      {
-        "index": 5,
-        "coverage": 0.3711,
-        "colors": 37,
+        "coverage": 0.263,
+        "colors": 12,
         "bbox": [
           6,
           2,
@@ -917,391 +885,375 @@
           34
         ],
         "centroid": [
-          17.699,
-          17.627
+          14.303,
+          17.507
         ],
-        "signature": "d5548c61b88c"
+        "signature": "03e996e3d61d"
       },
       {
-        "index": 6,
-        "coverage": 0.3607,
-        "colors": 39,
+        "index": 4,
+        "coverage": 0.2863,
+        "colors": 12,
         "bbox": [
           6,
           2,
-          27,
+          29,
           34
         ],
         "centroid": [
-          17.187,
-          17.403
+          13.973,
+          17.807
         ],
-        "signature": "5fd04498da5b"
+        "signature": "e44788078361"
+      },
+      {
+        "index": 5,
+        "coverage": 0.3123,
+        "colors": 13,
+        "bbox": [
+          5,
+          2,
+          29,
+          34
+        ],
+        "centroid": [
+          13.396,
+          17.881
+        ],
+        "signature": "72d066c479ca"
+      },
+      {
+        "index": 6,
+        "coverage": 0.3114,
+        "colors": 13,
+        "bbox": [
+          4,
+          2,
+          29,
+          34
+        ],
+        "centroid": [
+          13.331,
+          17.756
+        ],
+        "signature": "518de6c8844d"
       },
       {
         "index": 7,
-        "coverage": 0.3469,
-        "colors": 36,
+        "coverage": 0.2924,
+        "colors": 12,
         "bbox": [
-          7,
+          5,
           2,
-          27,
+          29,
           34
         ],
         "centroid": [
-          18.07,
-          17.115
+          13.997,
+          18.071
         ],
-        "signature": "747e9f93e23d"
+        "signature": "a6376d401313"
       },
       {
         "index": 8,
-        "coverage": 0.3478,
-        "colors": 37,
+        "coverage": 0.2967,
+        "colors": 12,
         "bbox": [
-          7,
+          4,
           2,
-          27,
+          30,
           34
         ],
         "centroid": [
-          18.194,
-          17.318
+          14.513,
+          17.778
         ],
-        "signature": "db4e35f4e3cd"
+        "signature": "1d100d397202"
       }
     ],
     "char_ranger_attack": [
       {
         "index": 0,
-        "coverage": 0.6125,
-        "colors": 8,
+        "coverage": 0.276,
+        "colors": 12,
         "bbox": [
-          2,
           6,
-          32,
+          2,
+          29,
           34
         ],
         "centroid": [
-          15.845,
-          19.98
+          13.803,
+          17.639
         ],
-        "signature": "e8812301e976"
+        "signature": "de3d0d00c2a7"
       },
       {
         "index": 1,
-        "coverage": 0.6228,
-        "colors": 8,
+        "coverage": 0.2863,
+        "colors": 13,
         "bbox": [
-          3,
+          5,
           2,
-          31,
+          29,
           34
         ],
         "centroid": [
-          16.667,
-          17.722
+          13.015,
+          17.776
         ],
-        "signature": "e4ec967c2e82"
+        "signature": "eae78cc20014"
       },
       {
         "index": 2,
-        "coverage": 0.6471,
-        "colors": 8,
+        "coverage": 0.3443,
+        "colors": 14,
         "bbox": [
           1,
-          4,
+          2,
           33,
           34
         ],
         "centroid": [
-          16.987,
-          18.543
+          10.814,
+          17.864
         ],
-        "signature": "e4b525a5ed73"
+        "signature": "3e9e9e2f7729"
       },
       {
         "index": 3,
-        "coverage": 0.6471,
-        "colors": 8,
+        "coverage": 0.3512,
+        "colors": 15,
         "bbox": [
           1,
-          4,
+          2,
           33,
           34
         ],
         "centroid": [
-          16.013,
-          18.543
+          10.633,
+          18.946
         ],
-        "signature": "b33097ca5838"
+        "signature": "84824f8cde63"
       }
     ],
     "char_cleric_walk": [
       {
         "index": 0,
-        "coverage": 0.3434,
-        "colors": 33,
-        "bbox": [
-          5,
-          2,
-          29,
-          34
-        ],
-        "centroid": [
-          20.642,
-          17.602
-        ],
-        "signature": "d2069b5170ca"
-      },
-      {
-        "index": 1,
-        "coverage": 0.3279,
-        "colors": 33,
+        "coverage": 0.2388,
+        "colors": 10,
         "bbox": [
           8,
-          2,
-          27,
-          34
-        ],
-        "centroid": [
-          18.454,
-          17.414
-        ],
-        "signature": "3b7bf74f34eb"
-      },
-      {
-        "index": 2,
-        "coverage": 0.3097,
-        "colors": 34,
-        "bbox": [
-          9,
-          2,
+          3,
           25,
           34
         ],
         "centroid": [
-          17.251,
-          17.123
+          17.25,
+          18.141
         ],
-        "signature": "93192af11526"
+        "signature": "e435988fff31"
+      },
+      {
+        "index": 1,
+        "coverage": 0.2327,
+        "colors": 10,
+        "bbox": [
+          9,
+          3,
+          25,
+          34
+        ],
+        "centroid": [
+          17.379,
+          17.762
+        ],
+        "signature": "d40d00152fd5"
+      },
+      {
+        "index": 2,
+        "coverage": 0.2362,
+        "colors": 10,
+        "bbox": [
+          9,
+          3,
+          25,
+          34
+        ],
+        "centroid": [
+          17.399,
+          17.919
+        ],
+        "signature": "6d9ee6dce491"
       },
       {
         "index": 3,
-        "coverage": 0.3339,
-        "colors": 36,
+        "coverage": 0.224,
+        "colors": 11,
         "bbox": [
-          7,
-          2,
-          27,
+          10,
+          3,
+          24,
           34
         ],
         "centroid": [
-          18.06,
-          17.355
+          17.56,
+          17.467
         ],
-        "signature": "cd1995204b60"
+        "signature": "4f5511b467b0"
       },
       {
         "index": 4,
-        "coverage": 0.3581,
-        "colors": 35,
+        "coverage": 0.2249,
+        "colors": 11,
         "bbox": [
-          6,
-          2,
-          29,
+          10,
+          3,
+          23,
           34
         ],
         "centroid": [
-          19.043,
-          17.819
+          16.919,
+          17.727
         ],
-        "signature": "b06d4ea0f9c9"
+        "signature": "c8537748d176"
       },
       {
         "index": 5,
-        "coverage": 0.3754,
-        "colors": 33,
+        "coverage": 0.2569,
+        "colors": 10,
         "bbox": [
-          2,
-          2,
-          31,
+          10,
+          3,
+          25,
           34
         ],
         "centroid": [
-          19.355,
-          18.007
+          17.364,
+          18.343
         ],
-        "signature": "f7b5644e35b3"
+        "signature": "1542e9f021ed"
       },
       {
         "index": 6,
-        "coverage": 0.3651,
-        "colors": 35,
+        "coverage": 0.2457,
+        "colors": 10,
         "bbox": [
-          2,
-          2,
-          31,
+          10,
+          3,
+          25,
           34
         ],
         "centroid": [
-          20.682,
-          17.694
+          17.528,
+          18.518
         ],
-        "signature": "710d2969066e"
+        "signature": "0c70e351a9f1"
       },
       {
         "index": 7,
-        "coverage": 0.3607,
-        "colors": 35,
+        "coverage": 0.2448,
+        "colors": 11,
         "bbox": [
-          2,
-          2,
-          31,
+          10,
+          3,
+          24,
           34
         ],
         "centroid": [
-          21.516,
-          17.357
+          17.477,
+          18.226
         ],
-        "signature": "69d6cb3af54c"
+        "signature": "0483e3a3a9b9"
       },
       {
         "index": 8,
-        "coverage": 0.3434,
-        "colors": 33,
+        "coverage": 0.2543,
+        "colors": 11,
         "bbox": [
-          4,
-          2,
-          30,
+          8,
+          3,
+          24,
           34
         ],
         "centroid": [
-          21.028,
-          17.592
+          17.071,
+          18.405
         ],
-        "signature": "5e5a7ef576b8"
+        "signature": "b02fee4a313e"
       }
     ],
     "char_cleric_attack": [
       {
         "index": 0,
-        "coverage": 0.5536,
-        "colors": 6,
+        "coverage": 0.2059,
+        "colors": 11,
         "bbox": [
+          10,
           2,
-          8,
-          32,
+          22,
           34
         ],
         "centroid": [
-          15.688,
-          21.087
+          16.45,
+          19.025
         ],
-        "signature": "9372fe3ed460"
+        "signature": "1ad66997d5f0"
       },
       {
         "index": 1,
-        "coverage": 0.6125,
-        "colors": 6,
+        "coverage": 0.1652,
+        "colors": 10,
         "bbox": [
-          3,
+          10,
           2,
-          31,
+          23,
           34
         ],
         "centroid": [
-          16.619,
-          17.879
+          16.147,
+          19.262
         ],
-        "signature": "4d133418a701"
+        "signature": "bd0f86cabfbe"
       },
       {
         "index": 2,
-        "coverage": 0.6401,
-        "colors": 6,
+        "coverage": 0.1721,
+        "colors": 10,
         "bbox": [
-          2,
+          9,
           4,
-          32,
+          23,
           34
         ],
         "centroid": [
-          17.354,
-          18.403
+          15.307,
+          19.714
         ],
-        "signature": "8e1c9f3fab8c"
+        "signature": "136904c52093"
       },
       {
         "index": 3,
-        "coverage": 0.6401,
-        "colors": 6,
+        "coverage": 0.2042,
+        "colors": 11,
         "bbox": [
+          9,
           2,
-          4,
-          32,
+          23,
           34
         ],
         "centroid": [
-          15.646,
-          18.403
+          15.004,
+          19.487
         ],
-        "signature": "ebee3b1c1070"
+        "signature": "02a8214923e9"
       }
     ],
     "char_berserker_walk": [
       {
         "index": 0,
-        "coverage": 0.3434,
-        "colors": 33,
-        "bbox": [
-          5,
-          2,
-          29,
-          34
-        ],
-        "centroid": [
-          20.642,
-          17.602
-        ],
-        "signature": "2ffaa07410fc"
-      },
-      {
-        "index": 1,
-        "coverage": 0.3279,
-        "colors": 33,
-        "bbox": [
-          8,
-          2,
-          27,
-          34
-        ],
-        "centroid": [
-          18.454,
-          17.414
-        ],
-        "signature": "90a5fa7f7f12"
-      },
-      {
-        "index": 2,
-        "coverage": 0.3097,
-        "colors": 34,
-        "bbox": [
-          9,
-          2,
-          25,
-          34
-        ],
-        "centroid": [
-          17.251,
-          17.123
-        ],
-        "signature": "f2aa0ac6dfbb"
-      },
-      {
-        "index": 3,
-        "coverage": 0.3339,
-        "colors": 36,
+        "coverage": 0.276,
+        "colors": 12,
         "bbox": [
           7,
           2,
@@ -1309,195 +1261,145 @@
           34
         ],
         "centroid": [
-          18.06,
-          17.355
+          16.743,
+          16.323
         ],
-        "signature": "49bfac5eb297"
+        "signature": "5dddb73b7614"
       },
       {
-        "index": 4,
-        "coverage": 0.3581,
-        "colors": 35,
+        "index": 1,
+        "coverage": 0.2941,
+        "colors": 11,
         "bbox": [
           6,
           2,
-          29,
+          27,
           34
         ],
         "centroid": [
-          19.043,
-          17.819
+          16.335,
+          15.844
         ],
-        "signature": "7dbc580157ac"
+        "signature": "9e15a3a9a9e3"
+      },
+      {
+        "index": 2,
+        "coverage": 0.2708,
+        "colors": 11,
+        "bbox": [
+          8,
+          2,
+          27,
+          34
+        ],
+        "centroid": [
+          16.783,
+          16.141
+        ],
+        "signature": "2a285a3dbb98"
+      },
+      {
+        "index": 3,
+        "coverage": 0.2595,
+        "colors": 12,
+        "bbox": [
+          8,
+          2,
+          26,
+          34
+        ],
+        "centroid": [
+          16.033,
+          15.757
+        ],
+        "signature": "87b800026225"
+      },
+      {
+        "index": 4,
+        "coverage": 0.2535,
+        "colors": 12,
+        "bbox": [
+          8,
+          2,
+          25,
+          34
+        ],
+        "centroid": [
+          15.375,
+          15.867
+        ],
+        "signature": "fda417cbae31"
       },
       {
         "index": 5,
-        "coverage": 0.3754,
-        "colors": 33,
+        "coverage": 0.2863,
+        "colors": 11,
         "bbox": [
+          8,
           2,
-          2,
-          31,
+          26,
           34
         ],
         "centroid": [
-          19.355,
-          18.007
+          15.885,
+          16.356
         ],
-        "signature": "3f417c8e249a"
+        "signature": "a2611502905d"
       },
       {
         "index": 6,
-        "coverage": 0.3651,
-        "colors": 35,
+        "coverage": 0.2967,
+        "colors": 11,
         "bbox": [
+          8,
           2,
-          2,
-          31,
+          27,
           34
         ],
         "centroid": [
-          20.682,
-          17.694
+          16.606,
+          16.306
         ],
-        "signature": "ad0418b56e72"
+        "signature": "b5947cea1f06"
       },
       {
         "index": 7,
-        "coverage": 0.3607,
-        "colors": 35,
+        "coverage": 0.2811,
+        "colors": 12,
         "bbox": [
+          8,
           2,
-          2,
-          31,
+          27,
           34
         ],
         "centroid": [
-          21.516,
-          17.357
+          16.742,
+          16.652
         ],
-        "signature": "1e289352ba10"
+        "signature": "4c8b3b383a00"
       },
       {
         "index": 8,
-        "coverage": 0.3434,
-        "colors": 33,
+        "coverage": 0.2785,
+        "colors": 12,
         "bbox": [
-          4,
+          7,
           2,
-          30,
+          27,
           34
         ],
         "centroid": [
-          21.028,
-          17.592
+          16.78,
+          16.528
         ],
-        "signature": "c3eade886c0b"
+        "signature": "d99fb6e2be7f"
       }
     ],
     "char_berserker_attack": [
       {
         "index": 0,
-        "coverage": 0.5571,
-        "colors": 9,
-        "bbox": [
-          1,
-          6,
-          33,
-          34
-        ],
-        "centroid": [
-          16.767,
-          21.767
-        ],
-        "signature": "4935d3032a4b"
-      },
-      {
-        "index": 1,
-        "coverage": 0.6194,
-        "colors": 9,
-        "bbox": [
-          1,
-          2,
-          33,
-          34
-        ],
-        "centroid": [
-          16.662,
-          18.098
-        ],
-        "signature": "f48bdc13250a"
-      },
-      {
-        "index": 2,
-        "coverage": 0.5882,
-        "colors": 10,
-        "bbox": [
-          2,
-          2,
-          32,
-          34
-        ],
-        "centroid": [
-          16.829,
-          19.018
-        ],
-        "signature": "7a673864caa0"
-      },
-      {
-        "index": 3,
-        "coverage": 0.5882,
-        "colors": 10,
-        "bbox": [
-          2,
-          2,
-          32,
-          34
-        ],
-        "centroid": [
-          16.171,
-          19.018
-        ],
-        "signature": "5cc5415c9e26"
-      }
-    ],
-    "char_chrono_walk": [
-      {
-        "index": 0,
-        "coverage": 0.3434,
-        "colors": 39,
-        "bbox": [
-          5,
-          2,
-          29,
-          34
-        ],
-        "centroid": [
-          20.642,
-          17.602
-        ],
-        "signature": "317e69fbdbf0"
-      },
-      {
-        "index": 1,
-        "coverage": 0.3279,
-        "colors": 39,
-        "bbox": [
-          8,
-          2,
-          27,
-          34
-        ],
-        "centroid": [
-          18.454,
-          17.414
-        ],
-        "signature": "236dacec1d9b"
-      },
-      {
-        "index": 2,
-        "coverage": 0.3097,
-        "colors": 40,
+        "coverage": 0.224,
+        "colors": 13,
         "bbox": [
           9,
           2,
@@ -1505,172 +1407,270 @@
           34
         ],
         "centroid": [
-          17.251,
-          17.123
+          15.71,
+          17.085
         ],
-        "signature": "988e37e87657"
+        "signature": "1c6bc03a20f8"
       },
       {
-        "index": 3,
-        "coverage": 0.3339,
-        "colors": 42,
+        "index": 1,
+        "coverage": 0.2085,
+        "colors": 13,
         "bbox": [
-          7,
+          8,
           2,
-          27,
+          25,
           34
         ],
         "centroid": [
-          18.06,
-          17.355
+          15.257,
+          17.892
         ],
-        "signature": "b5ff90801ff3"
+        "signature": "991e8bb0c566"
       },
       {
-        "index": 4,
-        "coverage": 0.3581,
-        "colors": 41,
+        "index": 2,
+        "coverage": 0.2526,
+        "colors": 14,
         "bbox": [
-          6,
+          5,
+          3,
+          29,
+          34
+        ],
+        "centroid": [
+          14.038,
+          17.123
+        ],
+        "signature": "1755d85f9c8e"
+      },
+      {
+        "index": 3,
+        "coverage": 0.314,
+        "colors": 14,
+        "bbox": [
+          4,
           2,
           29,
           34
         ],
         "centroid": [
-          19.043,
-          17.819
+          13.113,
+          16.537
         ],
-        "signature": "85aa21de44e9"
+        "signature": "d70a41195cae"
+      }
+    ],
+    "char_chrono_walk": [
+      {
+        "index": 0,
+        "coverage": 0.224,
+        "colors": 13,
+        "bbox": [
+          9,
+          2,
+          25,
+          34
+        ],
+        "centroid": [
+          17.788,
+          18.541
+        ],
+        "signature": "0dfaa1e91061"
+      },
+      {
+        "index": 1,
+        "coverage": 0.2171,
+        "colors": 14,
+        "bbox": [
+          9,
+          2,
+          25,
+          34
+        ],
+        "centroid": [
+          18.008,
+          18.203
+        ],
+        "signature": "26748b6284a9"
+      },
+      {
+        "index": 2,
+        "coverage": 0.2189,
+        "colors": 14,
+        "bbox": [
+          10,
+          2,
+          25,
+          34
+        ],
+        "centroid": [
+          18.119,
+          17.719
+        ],
+        "signature": "23eafbe6d9ee"
+      },
+      {
+        "index": 3,
+        "coverage": 0.205,
+        "colors": 12,
+        "bbox": [
+          10,
+          2,
+          24,
+          34
+        ],
+        "centroid": [
+          17.283,
+          18.0
+        ],
+        "signature": "60a660825669"
+      },
+      {
+        "index": 4,
+        "coverage": 0.2024,
+        "colors": 12,
+        "bbox": [
+          10,
+          2,
+          23,
+          34
+        ],
+        "centroid": [
+          16.483,
+          18.085
+        ],
+        "signature": "b632641cf0b5"
       },
       {
         "index": 5,
-        "coverage": 0.3754,
-        "colors": 39,
+        "coverage": 0.2344,
+        "colors": 14,
         "bbox": [
+          10,
           2,
-          2,
-          31,
+          24,
           34
         ],
         "centroid": [
-          19.355,
-          18.007
+          17.026,
+          18.011
         ],
-        "signature": "51eea89a2a7f"
+        "signature": "4b6f0e4aba44"
       },
       {
         "index": 6,
-        "coverage": 0.3651,
-        "colors": 41,
+        "coverage": 0.2189,
+        "colors": 14,
         "bbox": [
+          10,
           2,
-          2,
-          31,
+          24,
           34
         ],
         "centroid": [
-          20.682,
-          17.694
+          17.285,
+          18.534
         ],
-        "signature": "f8df47840abd"
+        "signature": "bdf80fdc8f05"
       },
       {
         "index": 7,
-        "coverage": 0.3607,
-        "colors": 41,
+        "coverage": 0.2128,
+        "colors": 12,
         "bbox": [
+          10,
           2,
-          2,
-          31,
+          24,
           34
         ],
         "centroid": [
-          21.516,
-          17.357
+          17.317,
+          18.504
         ],
-        "signature": "1b8d383c011e"
+        "signature": "010850ce447c"
       },
       {
         "index": 8,
-        "coverage": 0.3434,
-        "colors": 39,
+        "coverage": 0.2206,
+        "colors": 12,
         "bbox": [
-          4,
+          9,
           2,
-          30,
+          25,
           34
         ],
         "centroid": [
-          21.028,
-          17.592
+          17.918,
+          18.565
         ],
-        "signature": "1b0a1c3975b5"
+        "signature": "dd271e4376a0"
       }
     ],
     "char_chrono_attack": [
       {
         "index": 0,
-        "coverage": 0.7024,
-        "colors": 9,
+        "coverage": 0.1825,
+        "colors": 11,
         "bbox": [
-          1,
+          11,
           2,
-          33,
+          23,
           34
         ],
         "centroid": [
-          16.712,
-          18.914
+          17.071,
+          19.156
         ],
-        "signature": "a14d8b2ed28c"
+        "signature": "dd5201d80803"
       },
       {
         "index": 1,
-        "coverage": 0.7163,
-        "colors": 8,
+        "coverage": 0.154,
+        "colors": 12,
         "bbox": [
-          1,
+          11,
           2,
-          33,
+          23,
           34
         ],
         "centroid": [
-          16.553,
-          17.399
+          16.927,
+          19.163
         ],
-        "signature": "179e9921edb2"
+        "signature": "a78090ab68ea"
       },
       {
         "index": 2,
-        "coverage": 0.7266,
-        "colors": 9,
+        "coverage": 0.1687,
+        "colors": 13,
         "bbox": [
-          1,
-          2,
-          33,
+          8,
+          3,
+          22,
           34
         ],
         "centroid": [
-          17.214,
-          17.062
+          14.318,
+          19.728
         ],
-        "signature": "f1ac954fe913"
+        "signature": "4ab0f3464ad7"
       },
       {
         "index": 3,
-        "coverage": 0.7266,
-        "colors": 9,
+        "coverage": 0.2059,
+        "colors": 13,
         "bbox": [
-          1,
+          8,
           2,
-          33,
+          25,
           34
         ],
         "centroid": [
-          15.786,
-          17.062
+          14.29,
+          19.332
         ],
-        "signature": "8dc4d7ccb742"
+        "signature": "29bf86a304eb"
       }
     ],
     "skeleton": [
@@ -1946,19 +1946,19 @@
     "tesla_tower": [
       {
         "index": 0,
-        "coverage": 0.969,
-        "colors": 3774,
+        "coverage": 0.2892,
+        "colors": 4179,
         "bbox": [
-          1,
+          27,
           2,
-          127,
+          101,
           128
         ],
         "centroid": [
-          63.5,
-          64.5
+          63.521,
+          73.523
         ],
-        "signature": "bddaa8b75200"
+        "signature": "7523ef912671"
       }
     ],
     "merchant": [
@@ -5986,147 +5986,147 @@
     "vfx_ice": [
       {
         "index": 0,
-        "coverage": 0.0732,
-        "colors": 14,
+        "coverage": 0.2227,
+        "colors": 2,
         "bbox": [
-          6,
-          21,
+          5,
+          10,
           27,
           32
         ],
         "centroid": [
-          16.0,
-          26.0
+          15.149,
+          20.079
         ],
-        "signature": "43038d7278f7"
+        "signature": "49475b41d3b2"
       },
       {
         "index": 1,
-        "coverage": 0.0732,
-        "colors": 14,
+        "coverage": 0.0801,
+        "colors": 2,
         "bbox": [
-          10,
-          11,
-          21,
+          8,
+          17,
+          25,
           32
         ],
         "centroid": [
-          15.0,
-          21.0
+          15.756,
+          23.805
         ],
-        "signature": "025b62a5ae63"
+        "signature": "bcb64e29d960"
       },
       {
         "index": 2,
-        "coverage": 0.0674,
-        "colors": 68,
+        "coverage": 0.1348,
+        "colors": 3,
         "bbox": [
-          14,
-          7,
-          18,
+          6,
+          13,
+          26,
           32
         ],
         "centroid": [
-          15.942,
-          18.348
+          15.406,
+          21.536
         ],
-        "signature": "e66f5d76d0dd"
+        "signature": "4c6f587f8480"
       },
       {
         "index": 3,
-        "coverage": 0.0576,
-        "colors": 54,
+        "coverage": 0.165,
+        "colors": 3,
         "bbox": [
-          8,
-          15,
-          25,
+          4,
+          7,
+          27,
           32
         ],
         "centroid": [
-          15.424,
-          23.356
+          15.225,
+          18.444
         ],
-        "signature": "fae0be732373"
+        "signature": "b774b4dd6956"
       },
       {
         "index": 4,
-        "coverage": 0.0674,
-        "colors": 68,
+        "coverage": 0.2178,
+        "colors": 3,
         "bbox": [
-          4,
-          28,
+          3,
+          3,
           29,
           32
         ],
         "centroid": [
-          16.652,
-          29.942
+          15.211,
+          16.3
         ],
-        "signature": "3494ced72a8e"
+        "signature": "4bd5cb2edd3b"
       },
       {
         "index": 5,
-        "coverage": 0.0576,
-        "colors": 54,
+        "coverage": 0.248,
+        "colors": 3,
         "bbox": [
-          8,
-          15,
-          25,
+          2,
+          2,
+          31,
           32
         ],
         "centroid": [
-          15.644,
-          22.424
+          16.134,
+          16.465
         ],
-        "signature": "f23e5471476a"
+        "signature": "26599c81e733"
       },
       {
         "index": 6,
-        "coverage": 0.0674,
-        "colors": 68,
+        "coverage": 0.29,
+        "colors": 3,
         "bbox": [
-          14,
-          7,
-          18,
+          1,
+          3,
+          31,
           32
         ],
         "centroid": [
-          15.058,
-          19.652
+          15.892,
+          17.549
         ],
-        "signature": "b9354c7dedd7"
+        "signature": "46ec4d4814a3"
       },
       {
         "index": 7,
-        "coverage": 0.0576,
-        "colors": 54,
+        "coverage": 0.3389,
+        "colors": 3,
         "bbox": [
-          8,
-          15,
-          25,
+          1,
+          2,
+          31,
           32
         ],
         "centroid": [
-          16.576,
-          22.644
+          15.905,
+          16.562
         ],
-        "signature": "19d241f2bfe9"
+        "signature": "98091adfa878"
       },
       {
         "index": 8,
-        "coverage": 0.0674,
-        "colors": 68,
+        "coverage": 0.3672,
+        "colors": 3,
         "bbox": [
-          4,
-          28,
-          29,
+          1,
+          2,
+          31,
           32
         ],
         "centroid": [
-          15.348,
-          29.058
+          15.723,
+          16.367
         ],
-        "signature": "5acdece2bb36"
+        "signature": "71dda4444362"
       }
     ],
     "vfx_shield": [
@@ -6397,7 +6397,6 @@
     "ps_core[0]: silhouette touches logical frame edge",
     "deco_grave[0]: silhouette touches logical frame edge",
     "deco_deadtree[0]: silhouette touches logical frame edge",
-    "tesla_tower[0]: little transparent padding (96.9%)",
     "tesla_tower[0]: silhouette touches logical frame edge",
     "merchant[0]: silhouette touches logical frame edge",
     "merchant[1]: silhouette touches logical frame edge",

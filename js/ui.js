@@ -839,16 +839,21 @@ window.UI = (function () {
   function updateHUD(run) {
     var p = run.player;
     var xpPct = Math.min(100, run.xp / run.xpNeed * 100);
-    hudRefs.xpFill.style.width = xpPct + '%';
+    var xpW = Math.round(xpPct);
+    if (hudCache.xpW !== xpW) { hudCache.xpW = xpW; hudRefs.xpFill.style.width = xpW + '%'; }
     if (hudCache.lv !== run.level) { hudCache.lv = run.level; hudRefs.lvText.textContent = 'Lv.' + run.level; }
     var hpPct = Math.max(0, p.hp / p.stats.hp * 100);
-    hudRefs.hpFill.style.width = hpPct + '%';
-    hudRefs.hpFill.className = 'hp-fill' + (hpPct < 30 ? ' low' : '');
+    var hpW = Math.round(hpPct);
+    if (hudCache.hpW !== hpW) { hudCache.hpW = hpW; hudRefs.hpFill.style.width = hpW + '%'; }
+    var hpCls = 'hp-fill' + (hpPct < 30 ? ' low' : '');
+    if (hudCache.hpCls !== hpCls) { hudCache.hpCls = hpCls; hudRefs.hpFill.className = hpCls; }
     var hpTxt = Math.ceil(p.hp) + '/' + Math.round(p.stats.hp);
     // 护盾叠加显示
     var shPct = p.stats.shieldMax > 0 ? Math.max(0, p.shield / p.stats.hp * 100) : 0;
-    hudRefs.shieldFill.style.width = Math.min(100, shPct) + '%';
-    hudRefs.shieldFill.classList.toggle('hidden', p.shield <= 0);
+    var shW = Math.min(100, Math.round(shPct));
+    if (hudCache.shW !== shW) { hudCache.shW = shW; hudRefs.shieldFill.style.width = shW + '%'; }
+    var shHidden = p.shield <= 0;
+    if (hudCache.shHidden !== shHidden) { hudCache.shHidden = shHidden; hudRefs.shieldFill.classList.toggle('hidden', shHidden); }
     if (p.shield > 0) hpTxt += ' +' + Math.ceil(p.shield);
     if (hudCache.hp !== hpTxt) { hudCache.hp = hpTxt; hudRefs.hpText.textContent = hpTxt; }
     var t = Engine.fmtTime(run.t);
@@ -862,10 +867,11 @@ window.UI = (function () {
       var nsec = Math.ceil(ne.left);
       var neTxt = ne.label + ' ' + (nsec >= 60 ? Engine.fmtTime(nsec) : nsec + 's');
       if (hudCache.ne !== neTxt) { hudCache.ne = neTxt; hudRefs.nextEv.textContent = neTxt; }
-      hudRefs.nextEv.classList.remove('hidden');
-      hudRefs.nextEv.classList.toggle('urgent', nsec <= 10);
-    } else if (!hudRefs.nextEv.classList.contains('hidden')) {
-      hudRefs.nextEv.classList.add('hidden');
+      if (hudCache.neVis !== true) { hudCache.neVis = true; hudRefs.nextEv.classList.remove('hidden'); }
+      var neUrgent = nsec <= 10;
+      if (hudCache.neUrg !== neUrgent) { hudCache.neUrg = neUrgent; hudRefs.nextEv.classList.toggle('urgent', neUrgent); }
+    } else if (hudCache.neVis !== false) {
+      hudCache.neVis = false; hudRefs.nextEv.classList.add('hidden');
     }
     if (hudCache.gold !== run.gold) { hudCache.gold = run.gold; hudRefs.gold.textContent = ' ' + run.gold; }
     if (hudCache.kills !== run.kills) { hudCache.kills = run.kills; hudRefs.kills.textContent = ' ' + run.kills; }
@@ -892,10 +898,14 @@ window.UI = (function () {
     }
     // Boss 条
     if (run.boss && run.boss.alive) {
-      hudRefs.bossWrap.classList.remove('hidden');
-      hudRefs.bossName.textContent = CFG.BOSSES[run.boss.bossType].name;
-      hudRefs.bossFill.style.width = Math.max(0, run.boss.hp / run.boss.maxHp * 100) + '%';
-    } else hudRefs.bossWrap.classList.add('hidden');
+      if (hudCache.bossVis !== true) { hudCache.bossVis = true; hudRefs.bossWrap.classList.remove('hidden'); }
+      var bName = CFG.BOSSES[run.boss.bossType].name;
+      if (hudCache.bossName !== bName) { hudCache.bossName = bName; hudRefs.bossName.textContent = bName; }
+      var bossW = Math.round(Math.max(0, run.boss.hp / run.boss.maxHp * 100));
+      if (hudCache.bossW !== bossW) { hudCache.bossW = bossW; hudRefs.bossFill.style.width = bossW + '%'; }
+    } else if (hudCache.bossVis !== false) {
+      hudCache.bossVis = false; hudRefs.bossWrap.classList.add('hidden');
+    }
   }
 
   var warnT = null;

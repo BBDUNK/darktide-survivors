@@ -83,16 +83,34 @@ window.Engine = (function () {
     return inputVec;
   }
 
-  // ---------- 空间哈希(每帧重建,查询敌人) ----------
+  // ---------- 空间哈希(固定桶数组 + 代际复用,避免每帧分配) ----------
   var CELL = 72;
-  var grid = new Map();
-  function gridKey(cx, cy) { return cx * 100003 + cy; }
-  function gridClear() { grid.clear(); }
+  var GRID_BUCKETS = 1024;
+  var gridCells = new Array(GRID_BUCKETS);
+  var gridState = new Int32Array(GRID_BUCKETS);
+  var gridStamp = 1;
+  var gridUsed = [];
+  var gridRecycle = [];
+  function gridKey(cx, cy) { return (cx * 100003 + cy) & (GRID_BUCKETS - 1); }
+  function gridClear() {
+    gridStamp++;
+    if (gridStamp > 2000000000) {
+      gridStamp = 1;
+      for (var i = 0; i < GRID_BUCKETS; i++) gridState[i] = 0;
+    }
+    for (var i = 0; i < gridUsed.length; i++) gridRecycle.push(gridCells[gridUsed[i]]);
+    gridUsed.length = 0;
+  }
   function gridInsert(e) {
     var k = gridKey(Math.floor(e.x / CELL), Math.floor(e.y / CELL));
-    var arr = grid.get(k);
-    if (!arr) { arr = []; grid.set(k, arr); }
-    arr.push(e);
+    if (gridState[k] !== gridStamp) {
+      gridState[k] = gridStamp;
+      gridUsed.push(k);
+      var arr = gridRecycle.pop();
+      if (arr) arr.length = 0; else arr = [];
+      gridCells[k] = arr;
+    }
+    gridCells[k].push(e);
   }
   // 回调遍历圆形范围内的实体;cb 返回 true 则提前终止
   function gridQuery(x, y, r, cb) {
@@ -101,7 +119,8 @@ window.Engine = (function () {
     var r2 = r * r;
     for (var cy = y0; cy <= y1; cy++) {
       for (var cx = x0; cx <= x1; cx++) {
-        var arr = grid.get(gridKey(cx, cy));
+        var k = gridKey(cx, cy);
+        var arr = gridState[k] === gridStamp ? gridCells[k] : null;
         if (!arr) continue;
         for (var i = 0; i < arr.length; i++) {
           var e = arr[i];
@@ -119,7 +138,8 @@ window.Engine = (function () {
     var y0 = Math.floor((y - r) / CELL), y1 = Math.floor((y + r) / CELL);
     for (var cy = y0; cy <= y1; cy++) {
       for (var cx = x0; cx <= x1; cx++) {
-        var arr = grid.get(gridKey(cx, cy));
+        var k = gridKey(cx, cy);
+        var arr = gridState[k] === gridStamp ? gridCells[k] : null;
         if (!arr) continue;
         for (var i = 0; i < arr.length; i++) {
           var e = arr[i];
