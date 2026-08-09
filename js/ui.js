@@ -788,7 +788,6 @@ window.UI = (function () {
     s.appendChild(xpWrap);
     // 左上生命
     var tl = h('div', 'hud-tl');
-    tl.appendChild(h('div', 'hud-tl-title', '生命 · 装备'));
     var hpWrap = h('div', 'hp-wrap');
     hudRefs.hpFill = h('div', 'hp-fill');
     hpWrap.appendChild(hudRefs.hpFill);

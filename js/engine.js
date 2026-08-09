@@ -258,11 +258,11 @@ window.Engine = (function () {
     for (var ry = ry0 - 1; ry <= ry0 + 1; ry++) {
       for (var rx = rx0 - 1; rx <= rx0 + 1; rx++) {
         var rh = hash2(rx * 61 + id.length * 13, ry * 67 - id.length * 7);
-        if (rh <= 0.79 || id === 'wilds') continue;
+        if (rh <= 0.87 || id === 'wilds') continue;
         var wx = rx * region + 34 + hash2(rx * 73, ry * 79) * 190;
         var wy = ry * region + 28 + hash2(rx * 83, ry * 89) * 194;
-        var rw = 36 + hash2(rx * 97, ry * 101) * 62;
-        var rhh = 14 + hash2(rx * 103, ry * 107) * 26;
+        var rw = 58 + hash2(rx * 97, ry * 101) * 76;
+        var rhh = 24 + hash2(rx * 103, ry * 107) * 36;
         var rot = rh * Math.PI, co = Math.cos(rot), si = Math.sin(rot);
         var dx = x - wx, dy = y - wy;
         var lx = dx * co + dy * si, ly = -dx * si + dy * co;

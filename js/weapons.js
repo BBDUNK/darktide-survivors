@@ -358,6 +358,18 @@ window.Weapons = (function () {
         break;
       }
       case 'holytome': {
+        // 进化后的秘典不再是两本小书打转，而是维持一只独立的大恶魔。
+        // 其轨道会主动朝附近目标偏移，由 update 的 demon 分支负责追猎。
+        if (w.evolved) {
+          if (countKind(w.id, p) > 0) return;
+          b = spawn(run, w, st, 'demon', 'vfx_spirit', p.x, p.y, 0, 0, 1e9);
+          b.phase = run.t * 1.4;
+          b.orbitR = 82 * (w.area || 1); b.orbitSpd = 1.8;
+          b.pierce = 9999; b.dmg = st.dmg * 2.5; b.size = 34;
+          b.huntX = p.x; b.huntY = p.y;
+          AudioSys.play('evolve');
+          break;
+        }
         for (i = 0; i < st.count; i++) {
           a = (Math.PI * 2 / st.count) * i + run.t * 0.7;
           b = spawn(run, w, st, 'boomerang', 'p_book', p.x, p.y,
@@ -602,6 +614,20 @@ window.Weapons = (function () {
           hitEnemiesAlong(run, b, b.size * 0.62, 0.4);
           break;
         }
+        case 'demon': {
+          // 环绕主人，但会主动向最近敌人游猎；没有目标时平稳回到轨道。
+          b.phase += b.orbitSpd * dt;
+          var prey = nearestEnemy(b.x, b.y, 280);
+          var homeX = ownerX + Math.cos(b.phase) * b.orbitR;
+          var homeY = ownerY + Math.sin(b.phase) * b.orbitR;
+          var tx = prey ? prey.x : homeX, ty = prey ? prey.y : homeY;
+          var follow = prey ? 4.6 : 2.8;
+          b.x += (tx - b.x) * Math.min(1, dt * follow);
+          b.y += (ty - b.y) * Math.min(1, dt * follow);
+          b.angle = Math.atan2(ty - b.y, tx - b.x);
+          hitEnemiesAlong(run, b, b.size * 0.72, 0.28);
+          break;
+        }
         case 'turret': {
           b.zapFlash = Math.max(0, (b.zapFlash || 0) - dt);
           b.aux2 -= dt;
@@ -825,7 +851,8 @@ window.Weapons = (function () {
       var r = wAura.curR || wStats(run, wAura).size;
       var auraT = run.t;
       var auraFrames = cachedFrames('vfx_holy_aura');
-      var auraImg = auraFrames[Math.floor(auraT * cachedFps('vfx_holy_aura', 12)) % auraFrames.length];
+      // 光环是范围指示器，不应逐帧收缩跳动；固定完整形态，仅作呼吸式亮度变化。
+      var auraImg = auraFrames[Math.min(4, auraFrames.length - 1)];
       var auraSize = r * (wAura.evolved ? 2.18 : 2.04);
       ctx.globalAlpha = 0.16 + Math.sin(auraT * 2.1) * 0.035;
       ctx.drawImage(SpriteGen.glow(wAura.evolved ? '#fff1a3' : '#e9c66f'),
@@ -838,9 +865,11 @@ window.Weapons = (function () {
     for (var i = 0; i < BMAX; i++) {
       var b = bullets[i];
       if (!b.alive || b.kind !== 'pool') continue;
-      ctx.globalAlpha = 0.55 + Math.sin(run.t * 8 + i) * 0.2;
+      ctx.globalAlpha = 0.72 + Math.sin(run.t * 2.2 + i) * 0.07;
       var fr0 = cachedFrames(b.spr);
-      var img0 = fr0[Math.floor(run.t * 8) % fr0.length];
+      // 落地碎裂只在 projectile 的终点结算一次；火池固定为“碎瓶后的燃烧”
+      // 形态，绝不循环播放碎裂帧。
+      var img0 = fr0[Math.min(4, fr0.length - 1)];
       ctx.drawImage(img0, b.x - b.size / 2, b.y - b.size / 2, b.size, b.size);
       ctx.globalAlpha = 1;
     }
@@ -855,18 +884,16 @@ window.Weapons = (function () {
     var age = Math.max(0, run.t - (b.born || run.t));
     // 部署结束后塔身固定在同一帧；放电只叠加顶部闪电，彻底消除命中时
     // 塔身来回换帧造成的“抽搐”。
-    var action = age < 0.72 ? 'tesla_tower_deploy' : 'tesla_tower';
-    var towerFrames = cachedFrames(action);
-    var towerFps = cachedFps(action, 9);
-    var towerImg = action === 'tesla_tower'
-      ? towerFrames[0]
-      : towerFrames[Math.min(towerFrames.length - 1, Math.floor(age * towerFps))];
+    var towerFrames = cachedFrames('tesla_tower');
+    var towerImg = towerFrames[0];
     // 正方形等比绘制并按底座锚定,不再把塔体横向拉扁或裁掉顶部。
     var towerSize = 128;
     ctx.globalAlpha *= 0.34;
     ctx.drawImage(SpriteGen.get('vfx_shadow'), bx - 42, baseY - 10, 84, 18);
     ctx.globalAlpha = b.ttl < 1 ? E.clamp(b.ttl * 2, 0, 1) : 1;
-    ctx.drawImage(towerImg, bx - towerSize / 2, baseY - towerSize, towerSize, towerSize);
+    // 单一塔身自地下上升。没有换帧，因此生成时也不会出现抽搐。
+    var rise = age < 0.42 ? (1 - age / 0.42) * 54 : 0;
+    ctx.drawImage(towerImg, bx - towerSize / 2, baseY - towerSize + rise, towerSize, towerSize);
 
     // 顶部能量只保留轻薄辉光；分叉电弧来自逐帧美术,避免随机粗线抖动。
     var orbY = baseY - towerSize + 20;
@@ -897,7 +924,7 @@ window.Weapons = (function () {
         if (rr < 1) continue;
         var novaAlpha = E.clamp(b.ttl * 3, 0, 1);
         ctx.globalAlpha = novaAlpha;
-        var frostFrames = cachedFrames('vfx_frost_impact');
+        var frostFrames = cachedFrames('vfx_frost_radial');
         var frostProgress = E.clamp(rr / Math.max(1, b.aux2), 0, 0.999);
         var frostImg = frostFrames[Math.min(frostFrames.length - 1, Math.floor(frostProgress * frostFrames.length))];
         var frostSize = Math.max(72, rr * (b.evolved ? 2.34 : 2.14));
@@ -908,7 +935,9 @@ window.Weapons = (function () {
       var projectileFrames = cachedFrames(b.spr);
       var projectileFps = cachedFps(b.spr, 10);
       var projectileAge = Math.max(0, run.t - (b.born || 0));
-      var img = projectileFrames[Math.floor(projectileAge * projectileFps) % projectileFrames.length];
+      // 贤者光弹使用单帧稳定本体；旧动作条的空白帧正是飞行闪烁的来源。
+      var img = b.spr === 'p_bolt' ? projectileFrames[0]
+        : projectileFrames[Math.floor(projectileAge * projectileFps) % projectileFrames.length];
       var sc = 2 * (b.size / 16);
       if (b.spr === 'p_arrow') {
         // 箭矢固定朝发射方向,飞行途中不再随速度旋转
@@ -937,6 +966,7 @@ window.Weapons = (function () {
       ctx.translate(b.x, b.y);
       ctx.rotate(b.angle);
       var dw = img.width * 2 * (b.size / 16);
+      if (b.kind === 'demon') dw = img.width * 2.9;
       if (b.spr === 'p_slash' || b.spr === 'p_slash_big') {
         dw = Math.min(img.width * (b.spr === 'p_slash_big' ? 3 : 2.4) * (b.size / 16), 132);
       }

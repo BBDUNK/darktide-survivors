@@ -21,7 +21,9 @@ function add(spec) {
 }
 
 const characters = ['knight', 'mage', 'ranger', 'cleric', 'berserker', 'chrono'];
-const directions = [['down', 0], ['left', 1], ['right', 2], ['up', 3]];
+// Image sources place right-facing frames before left-facing frames.  The old
+// registration inverted these two rows, making every character run backwards.
+const directions = [['down', 0], ['right', 1], ['left', 2], ['up', 3]];
 const characterActions = [
   ['idle', 'idle', 8, 7],
   ['walk', 'run', 8, 11],
@@ -31,14 +33,14 @@ const characterActions = [
 add({
   name: 'merchant', source: 'assets/art-v4/sprites/npcs/merchant_actions.png',
   frameSize: [96, 96], frameRow: 0, frames: 8, fps: 7,
-  size: [96, 96], anchor: [48, 93], renderScale: 1
+  size: [96, 96], anchor: [48, 93], renderScale: 0.40
 });
 add({ name: 'merchant_attack', source: 'assets/art-v4/sprites/npcs/merchant_actions.png',
   frameSize: [96, 96], frameRow: 1, frames: 8, fps: 12,
-  size: [96, 96], anchor: [48, 93], renderScale: 1 });
+  size: [96, 96], anchor: [48, 93], renderScale: 0.40 });
 add({ name: 'merchant_prone', source: 'assets/art-v4/sprites/npcs/merchant_actions.png',
   frameSize: [96, 96], frameRow: 2, frames: 8, fps: 10,
-  size: [96, 96], anchor: [48, 93], renderScale: 1 });
+  size: [96, 96], anchor: [48, 93], renderScale: 0.40 });
 
 const characterScale = {
   knight: 0.58, mage: 0.64, ranger: 0.62,
@@ -148,6 +150,16 @@ for (const [name, row, fps] of [
     maxBaselineDrift: 96 });
 }
 
+add({ name: 'vfx_frost_radial', source: 'assets/art-v4/sprites/vfx/frost_radial_actions.png',
+  frameSize: [96, 96], frameRow: 0, frames: 8, fps: 10,
+  size: [96, 96], anchor: [48, 48], renderScale: 1, maxBaselineDrift: 96 });
+
+['toxic', 'arcane', 'blood', 'bone', 'hellfire', 'ice', 'electric', 'eye'].forEach((kind, index) => {
+  add({ name: `p_enemy_${kind}`, source: 'assets/art-v4/sprites/vfx/enemy_projectiles.png',
+    frameSize: [64, 64], frameRow: 0, frameStart: index, frames: 1, fps: 0,
+    size: [32, 32], anchor: [16, 16], renderScale: 1 });
+});
+
 rowAnimations('assets/art-v2/sprites/weapons/orbitblade_actions.png', [
   ['p_orbitblade', 0, 12, [40, 40]], ['p_orbitblade_fly', 1, 14, [40, 32]],
   ['vfx_orbitblade_hit', 2, 15, [48, 48]]
@@ -225,6 +237,11 @@ spriteGrid('assets/art-v4/sprites/terrain/terrain_tiles.png', 128, 3, [
 ], 128, 1);
 // Transparent sprite padding on a repeated tile becomes a visible square grid.
 for (const asset of next.slice(-9)) asset.seamlessTile = true;
+
+spriteGrid('assets/art-v4/sprites/terrain/swamp_puddles.png', 160, 2, [
+  'terrain_grave_swamp_puddle1', 'terrain_grave_swamp_puddle2',
+  'terrain_grave_swamp_puddle3', 'terrain_grave_swamp_puddle4'
+], 160, 1);
 
 spriteGrid('assets/art-v4/sprites/environment/terrain_props.png', 96, 4, [
   'deco_wither_cluster1', 'deco_wither_cluster2', 'deco_swamp_reeds', 'deco_lilypad',

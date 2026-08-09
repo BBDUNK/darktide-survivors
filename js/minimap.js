@@ -164,7 +164,7 @@ window.Minimap = (function () {
     ctx.fillText(mode === 'full' ? '全图' : '周围', x0 + 14, y0 + SIZE + 17);
     ctx.textAlign = 'right';
     ctx.fillStyle = '#ffd992';
-    ctx.fillText('索敌 · ' + Weapons.getTargetModeName(), x0 + SIZE - 13, y0 + SIZE + 17);
+    ctx.fillText('索敌方式：' + Weapons.getTargetModeName(), x0 + SIZE - 13, y0 + SIZE + 17);
     ctx.textAlign = 'left';
   }
 

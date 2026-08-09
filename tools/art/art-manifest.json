@@ -104,7 +104,7 @@
         48,
         93
       ],
-      "renderScale": 1
+      "renderScale": 0.4
     },
     {
       "preservePixels": true,
@@ -130,7 +130,7 @@
         48,
         93
       ],
-      "renderScale": 1
+      "renderScale": 0.4
     },
     {
       "preservePixels": true,
@@ -156,7 +156,7 @@
         48,
         93
       ],
-      "renderScale": 1
+      "renderScale": 0.4
     },
     {
       "preservePixels": true,
@@ -191,7 +191,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_knight_idle_left",
+      "name": "char_knight_idle_right",
       "source": "assets/art-v4/repaired/characters/char_knight_idle_4dir.png",
       "frameSize": [
         64,
@@ -217,7 +217,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_knight_idle_right",
+      "name": "char_knight_idle_left",
       "source": "assets/art-v4/repaired/characters/char_knight_idle_4dir.png",
       "frameSize": [
         64,
@@ -321,7 +321,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_knight_walk_left",
+      "name": "char_knight_walk_right",
       "source": "assets/art-v4/repaired/characters/char_knight_run_4dir.png",
       "frameSize": [
         64,
@@ -347,7 +347,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_knight_walk_right",
+      "name": "char_knight_walk_left",
       "source": "assets/art-v4/repaired/characters/char_knight_run_4dir.png",
       "frameSize": [
         64,
@@ -451,7 +451,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_knight_attack_left",
+      "name": "char_knight_attack_right",
       "source": "assets/art-v4/repaired/characters/char_knight_attack_4dir.png",
       "frameSize": [
         64,
@@ -477,7 +477,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_knight_attack_right",
+      "name": "char_knight_attack_left",
       "source": "assets/art-v4/repaired/characters/char_knight_attack_4dir.png",
       "frameSize": [
         64,
@@ -608,7 +608,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_knight_hurt_left",
+      "name": "char_knight_hurt_right",
       "source": "assets/art-v4/repaired/characters/char_knight_reaction_4dir.png",
       "frameSize": [
         64,
@@ -634,7 +634,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_knight_death_left",
+      "name": "char_knight_death_right",
       "source": "assets/art-v4/repaired/characters/char_knight_reaction_4dir.png",
       "frameSize": [
         64,
@@ -661,7 +661,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_knight_hurt_right",
+      "name": "char_knight_hurt_left",
       "source": "assets/art-v4/repaired/characters/char_knight_reaction_4dir.png",
       "frameSize": [
         64,
@@ -687,7 +687,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_knight_death_right",
+      "name": "char_knight_death_left",
       "source": "assets/art-v4/repaired/characters/char_knight_reaction_4dir.png",
       "frameSize": [
         64,
@@ -793,7 +793,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_mage_idle_left",
+      "name": "char_mage_idle_right",
       "source": "assets/art-v4/repaired/characters/char_mage_idle_4dir.png",
       "frameSize": [
         64,
@@ -819,7 +819,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_mage_idle_right",
+      "name": "char_mage_idle_left",
       "source": "assets/art-v4/repaired/characters/char_mage_idle_4dir.png",
       "frameSize": [
         64,
@@ -923,7 +923,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_mage_walk_left",
+      "name": "char_mage_walk_right",
       "source": "assets/art-v4/repaired/characters/char_mage_run_4dir.png",
       "frameSize": [
         64,
@@ -949,7 +949,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_mage_walk_right",
+      "name": "char_mage_walk_left",
       "source": "assets/art-v4/repaired/characters/char_mage_run_4dir.png",
       "frameSize": [
         64,
@@ -1053,7 +1053,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_mage_attack_left",
+      "name": "char_mage_attack_right",
       "source": "assets/art-v4/repaired/characters/char_mage_attack_4dir.png",
       "frameSize": [
         64,
@@ -1079,7 +1079,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_mage_attack_right",
+      "name": "char_mage_attack_left",
       "source": "assets/art-v4/repaired/characters/char_mage_attack_4dir.png",
       "frameSize": [
         64,
@@ -1210,7 +1210,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_mage_hurt_left",
+      "name": "char_mage_hurt_right",
       "source": "assets/art-v4/repaired/characters/char_mage_reaction_4dir.png",
       "frameSize": [
         64,
@@ -1236,7 +1236,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_mage_death_left",
+      "name": "char_mage_death_right",
       "source": "assets/art-v4/repaired/characters/char_mage_reaction_4dir.png",
       "frameSize": [
         64,
@@ -1263,7 +1263,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_mage_hurt_right",
+      "name": "char_mage_hurt_left",
       "source": "assets/art-v4/repaired/characters/char_mage_reaction_4dir.png",
       "frameSize": [
         64,
@@ -1289,7 +1289,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_mage_death_right",
+      "name": "char_mage_death_left",
       "source": "assets/art-v4/repaired/characters/char_mage_reaction_4dir.png",
       "frameSize": [
         64,
@@ -1395,7 +1395,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_ranger_idle_left",
+      "name": "char_ranger_idle_right",
       "source": "assets/art-v4/repaired/characters/char_ranger_idle_4dir.png",
       "frameSize": [
         64,
@@ -1421,7 +1421,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_ranger_idle_right",
+      "name": "char_ranger_idle_left",
       "source": "assets/art-v4/repaired/characters/char_ranger_idle_4dir.png",
       "frameSize": [
         64,
@@ -1525,7 +1525,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_ranger_walk_left",
+      "name": "char_ranger_walk_right",
       "source": "assets/art-v4/repaired/characters/char_ranger_run_4dir.png",
       "frameSize": [
         64,
@@ -1551,7 +1551,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_ranger_walk_right",
+      "name": "char_ranger_walk_left",
       "source": "assets/art-v4/repaired/characters/char_ranger_run_4dir.png",
       "frameSize": [
         64,
@@ -1655,7 +1655,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_ranger_attack_left",
+      "name": "char_ranger_attack_right",
       "source": "assets/art-v4/repaired/characters/char_ranger_attack_4dir.png",
       "frameSize": [
         64,
@@ -1681,7 +1681,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_ranger_attack_right",
+      "name": "char_ranger_attack_left",
       "source": "assets/art-v4/repaired/characters/char_ranger_attack_4dir.png",
       "frameSize": [
         64,
@@ -1812,7 +1812,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_ranger_hurt_left",
+      "name": "char_ranger_hurt_right",
       "source": "assets/art-v4/repaired/characters/char_ranger_reaction_4dir.png",
       "frameSize": [
         64,
@@ -1838,7 +1838,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_ranger_death_left",
+      "name": "char_ranger_death_right",
       "source": "assets/art-v4/repaired/characters/char_ranger_reaction_4dir.png",
       "frameSize": [
         64,
@@ -1865,7 +1865,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_ranger_hurt_right",
+      "name": "char_ranger_hurt_left",
       "source": "assets/art-v4/repaired/characters/char_ranger_reaction_4dir.png",
       "frameSize": [
         64,
@@ -1891,7 +1891,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_ranger_death_right",
+      "name": "char_ranger_death_left",
       "source": "assets/art-v4/repaired/characters/char_ranger_reaction_4dir.png",
       "frameSize": [
         64,
@@ -1997,7 +1997,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_cleric_idle_left",
+      "name": "char_cleric_idle_right",
       "source": "assets/art-v4/repaired/characters/char_cleric_idle_4dir.png",
       "frameSize": [
         64,
@@ -2023,7 +2023,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_cleric_idle_right",
+      "name": "char_cleric_idle_left",
       "source": "assets/art-v4/repaired/characters/char_cleric_idle_4dir.png",
       "frameSize": [
         64,
@@ -2127,7 +2127,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_cleric_walk_left",
+      "name": "char_cleric_walk_right",
       "source": "assets/art-v4/repaired/characters/char_cleric_run_4dir.png",
       "frameSize": [
         64,
@@ -2153,7 +2153,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_cleric_walk_right",
+      "name": "char_cleric_walk_left",
       "source": "assets/art-v4/repaired/characters/char_cleric_run_4dir.png",
       "frameSize": [
         64,
@@ -2257,7 +2257,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_cleric_attack_left",
+      "name": "char_cleric_attack_right",
       "source": "assets/art-v4/repaired/characters/char_cleric_attack_4dir.png",
       "frameSize": [
         64,
@@ -2283,7 +2283,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_cleric_attack_right",
+      "name": "char_cleric_attack_left",
       "source": "assets/art-v4/repaired/characters/char_cleric_attack_4dir.png",
       "frameSize": [
         64,
@@ -2414,7 +2414,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_cleric_hurt_left",
+      "name": "char_cleric_hurt_right",
       "source": "assets/art-v4/repaired/characters/char_cleric_reaction_4dir.png",
       "frameSize": [
         64,
@@ -2440,7 +2440,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_cleric_death_left",
+      "name": "char_cleric_death_right",
       "source": "assets/art-v4/repaired/characters/char_cleric_reaction_4dir.png",
       "frameSize": [
         64,
@@ -2467,7 +2467,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_cleric_hurt_right",
+      "name": "char_cleric_hurt_left",
       "source": "assets/art-v4/repaired/characters/char_cleric_reaction_4dir.png",
       "frameSize": [
         64,
@@ -2493,7 +2493,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_cleric_death_right",
+      "name": "char_cleric_death_left",
       "source": "assets/art-v4/repaired/characters/char_cleric_reaction_4dir.png",
       "frameSize": [
         64,
@@ -2599,7 +2599,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_berserker_idle_left",
+      "name": "char_berserker_idle_right",
       "source": "assets/art-v4/repaired/characters/char_berserker_idle_4dir.png",
       "frameSize": [
         64,
@@ -2625,7 +2625,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_berserker_idle_right",
+      "name": "char_berserker_idle_left",
       "source": "assets/art-v4/repaired/characters/char_berserker_idle_4dir.png",
       "frameSize": [
         64,
@@ -2729,7 +2729,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_berserker_walk_left",
+      "name": "char_berserker_walk_right",
       "source": "assets/art-v4/repaired/characters/char_berserker_run_4dir.png",
       "frameSize": [
         64,
@@ -2755,7 +2755,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_berserker_walk_right",
+      "name": "char_berserker_walk_left",
       "source": "assets/art-v4/repaired/characters/char_berserker_run_4dir.png",
       "frameSize": [
         64,
@@ -2859,7 +2859,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_berserker_attack_left",
+      "name": "char_berserker_attack_right",
       "source": "assets/art-v4/repaired/characters/char_berserker_attack_4dir.png",
       "frameSize": [
         64,
@@ -2885,7 +2885,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_berserker_attack_right",
+      "name": "char_berserker_attack_left",
       "source": "assets/art-v4/repaired/characters/char_berserker_attack_4dir.png",
       "frameSize": [
         64,
@@ -3016,7 +3016,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_berserker_hurt_left",
+      "name": "char_berserker_hurt_right",
       "source": "assets/art-v4/repaired/characters/char_berserker_reaction_4dir.png",
       "frameSize": [
         64,
@@ -3042,7 +3042,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_berserker_death_left",
+      "name": "char_berserker_death_right",
       "source": "assets/art-v4/repaired/characters/char_berserker_reaction_4dir.png",
       "frameSize": [
         64,
@@ -3069,7 +3069,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_berserker_hurt_right",
+      "name": "char_berserker_hurt_left",
       "source": "assets/art-v4/repaired/characters/char_berserker_reaction_4dir.png",
       "frameSize": [
         64,
@@ -3095,7 +3095,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_berserker_death_right",
+      "name": "char_berserker_death_left",
       "source": "assets/art-v4/repaired/characters/char_berserker_reaction_4dir.png",
       "frameSize": [
         64,
@@ -3201,7 +3201,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_chrono_idle_left",
+      "name": "char_chrono_idle_right",
       "source": "assets/art-v4/repaired/characters/char_chrono_idle_4dir.png",
       "frameSize": [
         64,
@@ -3227,7 +3227,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_chrono_idle_right",
+      "name": "char_chrono_idle_left",
       "source": "assets/art-v4/repaired/characters/char_chrono_idle_4dir.png",
       "frameSize": [
         64,
@@ -3331,7 +3331,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_chrono_walk_left",
+      "name": "char_chrono_walk_right",
       "source": "assets/art-v4/repaired/characters/char_chrono_run_4dir.png",
       "frameSize": [
         64,
@@ -3357,7 +3357,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_chrono_walk_right",
+      "name": "char_chrono_walk_left",
       "source": "assets/art-v4/repaired/characters/char_chrono_run_4dir.png",
       "frameSize": [
         64,
@@ -3461,7 +3461,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_chrono_attack_left",
+      "name": "char_chrono_attack_right",
       "source": "assets/art-v4/repaired/characters/char_chrono_attack_4dir.png",
       "frameSize": [
         64,
@@ -3487,7 +3487,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_chrono_attack_right",
+      "name": "char_chrono_attack_left",
       "source": "assets/art-v4/repaired/characters/char_chrono_attack_4dir.png",
       "frameSize": [
         64,
@@ -3618,7 +3618,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_chrono_hurt_left",
+      "name": "char_chrono_hurt_right",
       "source": "assets/art-v4/repaired/characters/char_chrono_reaction_4dir.png",
       "frameSize": [
         64,
@@ -3644,7 +3644,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_chrono_death_left",
+      "name": "char_chrono_death_right",
       "source": "assets/art-v4/repaired/characters/char_chrono_reaction_4dir.png",
       "frameSize": [
         64,
@@ -3671,7 +3671,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_chrono_hurt_right",
+      "name": "char_chrono_hurt_left",
       "source": "assets/art-v4/repaired/characters/char_chrono_reaction_4dir.png",
       "frameSize": [
         64,
@@ -3697,7 +3697,7 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
-      "name": "char_chrono_death_right",
+      "name": "char_chrono_death_left",
       "source": "assets/art-v4/repaired/characters/char_chrono_reaction_4dir.png",
       "frameSize": [
         64,
@@ -8300,6 +8300,248 @@
       "minCoverage": 0.006,
       "maxColors": 256,
       "maxCentroidDrift": 64,
+      "maxBaselineDrift": 96,
+      "name": "vfx_frost_radial",
+      "source": "assets/art-v4/sprites/vfx/frost_radial_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        48
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "p_enemy_toxic",
+      "source": "assets/art-v4/sprites/vfx/enemy_projectiles.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 0,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "p_enemy_arcane",
+      "source": "assets/art-v4/sprites/vfx/enemy_projectiles.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 1,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "p_enemy_blood",
+      "source": "assets/art-v4/sprites/vfx/enemy_projectiles.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 2,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "p_enemy_bone",
+      "source": "assets/art-v4/sprites/vfx/enemy_projectiles.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 3,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "p_enemy_hellfire",
+      "source": "assets/art-v4/sprites/vfx/enemy_projectiles.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 4,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "p_enemy_ice",
+      "source": "assets/art-v4/sprites/vfx/enemy_projectiles.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 5,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "p_enemy_electric",
+      "source": "assets/art-v4/sprites/vfx/enemy_projectiles.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 6,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "p_enemy_eye",
+      "source": "assets/art-v4/sprites/vfx/enemy_projectiles.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frameStart": 7,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "p_orbitblade",
       "source": "assets/art-v2/sprites/weapons/orbitblade_actions.png",
@@ -10211,6 +10453,114 @@
       ],
       "renderScale": 1,
       "seamlessTile": true
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "terrain_grave_swamp_puddle1",
+      "source": "assets/art-v4/sprites/terrain/swamp_puddles.png",
+      "frameSize": [
+        160,
+        160
+      ],
+      "frameRow": 0,
+      "frameStart": 0,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        160,
+        160
+      ],
+      "anchor": [
+        80,
+        158
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "terrain_grave_swamp_puddle2",
+      "source": "assets/art-v4/sprites/terrain/swamp_puddles.png",
+      "frameSize": [
+        160,
+        160
+      ],
+      "frameRow": 0,
+      "frameStart": 1,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        160,
+        160
+      ],
+      "anchor": [
+        80,
+        158
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "terrain_grave_swamp_puddle3",
+      "source": "assets/art-v4/sprites/terrain/swamp_puddles.png",
+      "frameSize": [
+        160,
+        160
+      ],
+      "frameRow": 1,
+      "frameStart": 0,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        160,
+        160
+      ],
+      "anchor": [
+        80,
+        158
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "terrain_grave_swamp_puddle4",
+      "source": "assets/art-v4/sprites/terrain/swamp_puddles.png",
+      "frameSize": [
+        160,
+        160
+      ],
+      "frameRow": 1,
+      "frameStart": 1,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        160,
+        160
+      ],
+      "anchor": [
+        80,
+        158
+      ],
+      "renderScale": 1
     },
     {
       "preservePixels": true,

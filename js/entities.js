@@ -941,6 +941,10 @@ window.Entities = (function () {
         var s = shots[i];
         s.alive = true; s.x = x; s.y = y;
         s.vx = nx * spd; s.vy = ny * spd; s.dmg = dmg; s.ttl = 5;
+        // Fixed authored hostile projectiles replace the old colour-only dots.
+        var c = (col || '').toLowerCase();
+        s.sprite = c.indexOf('7fd') >= 0 || c.indexOf('green') >= 0 ? 'p_enemy_toxic' :
+          (c.indexOf('a') >= 0 && c.indexOf('f') >= 0 ? 'p_enemy_arcane' : 'p_enemy_blood');
         s.slow = slow || 0; s.slowDur = slowDur || 0;
         s.webType = webType || false;
         s.col = col || null;          // 自定义配色(Boss 弹幕差异化)
@@ -1668,8 +1672,8 @@ window.Entities = (function () {
       ctx.globalAlpha = 0.45 + pulse * 0.30;
       ctx.drawImage(SpriteGen.glow(glowCol), it.x - gr, it.y - gr, gr * 2, gr * 2);
       ctx.globalAlpha = 1;
-      // 普通掉落从原来的约 0.56 提升为 1.1，辨识面积接近四倍。
-      var itemScale = it.type === 'chest' ? 1.16 : (it.type === 'coin' ? 0.94 : 1.10);
+      // 维持辨识度但回到与角色比例协调的尺寸；硬像素轮廓足够清晰，毋须占半个屏幕。
+      var itemScale = it.type === 'chest' ? 0.58 : (it.type === 'coin' ? 0.47 : 0.55);
       drawSprite(ctx, nm, it.type === 'coin' ? animF : 0, it.x, it.y + bob2, itemScale, false, 1, null);
       if (it.type === 'chest') { // 宝箱额外上升光柱
         ctx.globalAlpha = 0.10 + pulse * 0.10;
@@ -1791,8 +1795,10 @@ window.Entities = (function () {
         ctx.beginPath(); ctx.arc(sh.x - sr * 0.25, sh.y - sr * 0.25, sr * 0.42, 0, Math.PI * 2); ctx.fill();
         continue;
       }
-      var shotImg = shotFrames[Math.floor(run.t * 10) % shotFrames.length];
-      ctx.drawImage(shotImg, sh.x - 8, sh.y - 8, 16, 16);
+      var authored = getFrames(sh.sprite || 'p_enemy_blood', false);
+      var shotImg = (authored && authored[0]) || shotFrames[0];
+      var shotSize = Math.max(16, (sh.size || 16) * 1.25);
+      ctx.drawImage(shotImg, sh.x - shotSize / 2, sh.y - shotSize / 2, shotSize, shotSize);
     }
     // 玩家
     ctx.globalAlpha = 0.4;

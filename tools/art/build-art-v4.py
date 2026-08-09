@@ -19,6 +19,18 @@ def hard_alpha(image: Image.Image) -> Image.Image:
     return out
 
 
+def remove_magenta(image: Image.Image) -> Image.Image:
+    """Turn the ImageGen chroma key into hard alpha without soft pink fringes."""
+    out = image.convert("RGBA")
+    px = out.load()
+    for y in range(out.height):
+        for x in range(out.width):
+            r, g, b, a = px[x, y]
+            if r > 205 and b > 155 and g < 95:
+                px[x, y] = (0, 0, 0, 0)
+    return hard_alpha(out)
+
+
 def quantize(image: Image.Image, colors: int) -> Image.Image:
     image = hard_alpha(image)
     alpha = image.getchannel("A")
@@ -57,7 +69,7 @@ def fitted_sheet(rows: list[list[Image.Image]], cell_size: tuple[int, int], colo
             scale = shared if shared is not None else min((cell_w - 4) / frame.width, (cell_h - 4) / frame.height)
             resized = frame.resize(
                 (max(1, round(frame.width * scale)), max(1, round(frame.height * scale))),
-                Image.Resampling.LANCZOS,
+                Image.Resampling.NEAREST,
             )
             resized = quantize(resized, colors)
             x = column * cell_w + (cell_w - resized.width) // 2
@@ -77,6 +89,23 @@ def save(image: Image.Image, relative: str) -> None:
 def build_vfx() -> None:
     source = Image.open(SOURCE / "vfx" / "holy_frost_transparent.png")
     save(fitted_sheet(grid_cells(source, 8, 2), (96, 96), 72, True), "vfx/holy_frost_actions.png")
+
+
+def build_frost_and_enemy_projectiles() -> None:
+    source = remove_magenta(Image.open(SOURCE / "vfx" / "frost_enemy_projectiles_master.png"))
+    cells = grid_cells(source, 8, 2)
+    # The first row is a radial frost nova.  The second row is a clean catalog
+    # of hostile shots used by every enemy and boss instead of blurry circles.
+    # Keep a readable residual ring in the final frame.  The generator's last
+    # sparkle-only cell was below the runtime validation coverage threshold.
+    cells[0][-1] = cells[0][-2].copy()
+    save(fitted_sheet([cells[0]], (96, 96), 64, True), "vfx/frost_radial_actions.png")
+    save(fitted_sheet([cells[1]], (64, 64), 64, False), "vfx/enemy_projectiles.png")
+
+
+def build_swamp_puddles() -> None:
+    source = remove_magenta(Image.open(SOURCE / "terrain" / "swamp_puddles_master.png"))
+    save(fitted_sheet(grid_cells(source, 2, 2), (160, 112), 64, False), "terrain/swamp_puddles.png")
 
 
 def build_pickups() -> None:
@@ -122,8 +151,10 @@ def main() -> None:
     subprocess.run([sys.executable, str(ROOT / "tools" / "art" / "repair-sprite-grids.py")],
                    cwd=ROOT, check=True)
     build_vfx()
+    build_frost_and_enemy_projectiles()
     build_pickups()
     build_terrain()
+    build_swamp_puddles()
     build_props()
     build_merchant()
     build_frame()

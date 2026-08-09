@@ -137,7 +137,7 @@ window.CFG = {
     bladestorm:   { name: '剑刃风暴', icon: 'we_bladestorm',   of: 'orbitblade',
       desc: '六剑永久环绕,永不下班。', mult: { dmg: 2.0, count: 3 } },
     forbidden:    { name: '禁忌典籍', icon: 'we_forbidden',    of: 'holytome',
-      desc: '禁书螺旋环卫,靠近就被知识碾压。', mult: { dmg: 2.2, count: 2 } },
+      desc: '召唤一只大恶魔环绕主人，主动猎杀范围内的敌人。', mult: { dmg: 2.2, count: 2 } },
     skynet:       { name: '天网机阵', icon: 'we_skynet',       of: 'teslacoil',
       desc: '多塔联动,电弧交织成网。蜘蛛侠看了都点赞。', mult: { dmg: 1.8, count: 2 } }
   },
@@ -168,7 +168,7 @@ window.CFG = {
   ENEMIES: {
     bat:            { name: '骨翼蝠', hp: 6, dmg: 6, spd: 72, r: 10, xp: 1, ai: 'chase' },
     slime:          { name: '腐液史莱姆', hp: 13, dmg: 8, spd: 40, r: 11, xp: 1, ai: 'chase' },
-    slime_big:      { name: '巨腐史莱姆', hp: 60, dmg: 12, spd: 34, r: 15, xp: 4, ai: 'chase', split: 'slime' },
+    slime_big:      { name: '巨腐史莱姆', hp: 60, dmg: 12, spd: 34, r: 21, xp: 4, ai: 'chase', split: 'slime' },
     zombie:         { name: '烂泥行者', hp: 26, dmg: 10, spd: 44, r: 11, xp: 2, ai: 'chase' },
     // burrow: 从地里钻出(生成时播出土动画,期间不动作),可在安全区内破土
     skeleton:       { name: '白骨兵', hp: 36, dmg: 12, spd: 58, r: 11, xp: 2, ai: 'chase', burrow: 1.0 },

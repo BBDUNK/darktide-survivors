@@ -174,7 +174,7 @@ window.Merchant = (function () {
 
   function fireArrow(run, target) {
     var M = CFG.MERCHANT;
-    var sx = M.x + combat.face * 18, sy = M.y - 105;
+    var sx = M.x + combat.face * 11, sy = M.y - 39;
     var tx = target.x, ty = target.y - 5;
     var dx = tx - sx, dy = ty - sy, d = Math.hypot(dx, dy) || 1;
     var speed = M.arrowSpeed || 360;
@@ -268,12 +268,13 @@ window.Merchant = (function () {
       actionName = 'merchant_attack';
       frameIndex = Math.floor(combat.attackAge * SpriteGen.animationFps(actionName, 12));
     } else {
-      frameIndex = Math.floor(run.t * SpriteGen.animationFps(actionName, 7));
+      // 原图的待机帧体积差异很大；稳定展示首帧，避免商人原地闪烁。
+      frameIndex = 0;
     }
     var merchantFrames = SpriteGen.frames(actionName);
     var mimg = merchantFrames[frameIndex % merchantFrames.length];
     var bob = Math.sin(run.t * 2) * 1;
-    var mw = combat.prone > 0.65 ? 94 : 82, mh = 82;
+    var mw = combat.prone > 0.65 ? 45 : 40, mh = 40;
     ctx.globalAlpha = 0.4;
     ctx.drawImage(SpriteGen.get('vfx_shadow'), M.x - 22, M.y - 60, 44, 12);
     ctx.globalAlpha = 1;

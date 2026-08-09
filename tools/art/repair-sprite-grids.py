@@ -132,6 +132,18 @@ def recover_row(row: Image.Image, frame_w: int, frame_h: int, columns: int,
                 shifted.alpha_composite(source, (shift_x, 0))
                 recovered_frames[index] = shifted
 
+        # If a replacement pose is exactly identical to its predecessor, retain
+        # a one-pixel integer gait phase.  It prevents frozen-looking runs
+        # without interpolating or blurring any authored pixel.
+        for index in range(1, columns):
+            current, previous = recovered_frames[index], recovered_frames[index - 1]
+            if current is None or previous is None or current.size != previous.size:
+                continue
+            if current.tobytes() == previous.tobytes():
+                gait = Image.new("RGBA", current.size)
+                gait.alpha_composite(current, (1 if index % 2 else -1, 0))
+                recovered_frames[index] = gait
+
     for index, recovered in enumerate(recovered_frames):
         if recovered is None:
             recovered = row.crop((index * frame_w, 0, (index + 1) * frame_w, frame_h))
@@ -170,7 +182,13 @@ def main() -> None:
                 OUT / "characters" / name,
                 64,
                 64,
-                set(range(4)) if action != "reaction" else set(),
+                # All action directions receive the same strict validation.
+                # A damaged up-facing head is treated as a bad frame and is
+                # replaced by the nearest complete pose rather than rendered.
+                set(range(4)),
+                8,
+                0.72,
+                0.62,
             )
 
     enemies = (

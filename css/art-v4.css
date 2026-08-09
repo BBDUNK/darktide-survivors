@@ -91,6 +91,22 @@
   outline: 2px solid #080608 !important;
   box-shadow: inset 0 0 0 2px rgba(50, 43, 43, .76), 2px 3px 0 rgba(0,0,0,.62) !important;
 }
+.hud-tl-title { display: none !important; }
+/* 全部百科页采用同一组古典纸纹与浮雕金框；图标加大到能在触屏上辨识。 */
+.enc-layer, .enc-body, .enc-card {
+  background-color: #171317;
+  background-image: radial-gradient(ellipse at 20% 10%, rgba(122,93,48,.16), transparent 42%),
+    repeating-linear-gradient(135deg, rgba(255,228,164,.025) 0 1px, transparent 1px 5px);
+}
+.enc-layer { border: 18px solid transparent; border-image: url('../assets/art-v4/sprites/ui/baroque_menu_frame.png') 116 104 fill / 18px / 0 stretch; }
+.enc-card { border: 2px double #9b7844; box-shadow: inset 0 0 0 2px #251c19, 2px 3px 0 rgba(0,0,0,.35); }
+.enc-head canvas { width: 48px !important; height: 48px !important; image-rendering: pixelated; }
+.enc-card.boss .enc-head canvas { width: 62px !important; height: 62px !important; }
+.enc-evohead canvas { width: 42px !important; height: 42px !important; image-rendering: pixelated; }
+/* Boss 出场提示与名称始终留在容器内，短屏也不会压出描边。 */
+.hud-warn { box-sizing: border-box; min-width: max-content; max-width: calc(100vw - 32px); padding: 10px 26px; border: 3px double #a77a40; background: linear-gradient(180deg,#371720,#160c10); box-shadow: inset 0 0 0 2px #130708, 0 4px 0 #050304; }
+.boss-wrap { box-sizing: border-box; width: min(680px, calc(100vw - 34px)); padding: 5px 13px 8px; border: 2px double #a77a40; background: rgba(10,6,9,.80); }
+.boss-bar { box-sizing: border-box; width: 100%; min-width: 0; }
 .shield-fill { top: 11px; left: 17px; height: 13px; }
 .hp-text { line-height: 34px; }
 

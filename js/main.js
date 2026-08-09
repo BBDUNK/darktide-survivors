@@ -1084,14 +1084,25 @@
         var wx = rx * region + 34 + E.hash2(rx * 73, ry * 79) * 190;
         var wy = ry * region + 28 + E.hash2(rx * 83, ry * 89) * 194;
         var sx = wx - camX + W / 2, sy = wy - camY + H / 2;
-        var rw = 36 + E.hash2(rx * 97, ry * 101) * 62;
-        var rhh = 14 + E.hash2(rx * 103, ry * 107) * 26;
-        var wet = map.id !== 'wilds' && rh > 0.79;
-        ctx.globalAlpha = wet ? 0.62 : 0.32;
-        ctx.fillStyle = regionPattern || (wet ? (map.id === 'abyss' ? '#101b2d' : '#26342a')
-                            : (map.id === 'wilds' ? '#4a4724' : map.palette.ground2));
-        ctx.beginPath(); ctx.ellipse(sx | 0, sy | 0, rw, rhh, rh * Math.PI, 0, Math.PI * 2); ctx.fill();
-        if (wet) {
+        var rw = 58 + E.hash2(rx * 97, ry * 101) * 76;
+        var rhh = 24 + E.hash2(rx * 103, ry * 107) * 36;
+        var wet = map.id !== 'wilds' && rh > 0.87;
+        // 墓园沼泽用固定的泥边水坑精灵，而不是随缩放变形的程序椭圆；
+        // 世界坐标由 rx/ry 决定，镜头移动时水坑不会游移。
+        if (wet && map.id === 'graveyard') {
+          var puddleId = 'terrain_grave_swamp_puddle' + (1 + Math.floor(E.hash2(rx * 109, ry * 113) * 4));
+          var puddle = SpriteGen.get(puddleId);
+          var pw = 116 + Math.floor(E.hash2(rx * 127, ry * 131) * 54);
+          var ph = 74 + Math.floor(E.hash2(rx * 137, ry * 139) * 32);
+          ctx.globalAlpha = 0.94;
+          ctx.drawImage(puddle, (sx - pw / 2) | 0, (sy - ph / 2) | 0, pw, ph);
+        } else {
+          ctx.globalAlpha = wet ? 0.62 : 0.32;
+          ctx.fillStyle = regionPattern || (wet ? (map.id === 'abyss' ? '#101b2d' : '#26342a')
+                              : (map.id === 'wilds' ? '#4a4724' : map.palette.ground2));
+          ctx.beginPath(); ctx.ellipse(sx | 0, sy | 0, rw, rhh, rh * Math.PI, 0, Math.PI * 2); ctx.fill();
+        }
+        if (wet && map.id !== 'graveyard') {
           ctx.globalAlpha = 0.32;
           ctx.strokeStyle = map.id === 'abyss' ? '#4e658d' : '#637559';
           ctx.lineWidth = 2;
@@ -1140,6 +1151,12 @@
           ctx.beginPath();
           ctx.ellipse(sx | 0, sy | 0, dw * 0.36, dh * 0.10, 0, 0, Math.PI * 2);
           ctx.fill();
+          // 根部与地面之间叠一层固定的泥尘过渡，避免立体装饰像被硬切断。
+          ctx.globalAlpha = 0.22;
+          var rootGlow = ctx.createRadialGradient(sx | 0, sy | 0, 2, sx | 0, sy | 0, Math.max(12, dw * 0.46));
+          rootGlow.addColorStop(0, 'rgba(35,27,20,.92)'); rootGlow.addColorStop(1, 'rgba(35,27,20,0)');
+          ctx.fillStyle = rootGlow;
+          ctx.beginPath(); ctx.ellipse(sx | 0, sy | 0, Math.max(12, dw * 0.46), Math.max(5, dh * 0.10), 0, 0, Math.PI * 2); ctx.fill();
           ctx.globalAlpha = 0.92;
           ctx.drawImage(img, (sx - dw / 2) | 0, (sy - dh) | 0, dw, dh);
           ctx.globalAlpha = 1;
