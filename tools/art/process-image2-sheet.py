@@ -24,6 +24,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--padding", type=int, default=3)
     parser.add_argument("--colors", type=int, default=40)
     parser.add_argument("--alpha-threshold", type=int, default=96)
+    parser.add_argument(
+        "--frame-map",
+        default="",
+        help="Optional comma-separated source columns used for each output column, e.g. 0,1,2,3,4,5,6,6",
+    )
     return parser.parse_args()
 
 
@@ -54,24 +59,30 @@ def main() -> None:
     src = harden_alpha(Image.open(args.input), args.alpha_threshold)
     cell_w = src.width / args.cols
     cell_h = src.height / args.rows
-    out = Image.new("RGBA", (args.cols * args.cell, args.rows * args.cell), (0, 0, 0, 0))
+    frame_map = list(range(args.cols))
+    if args.frame_map:
+        frame_map = [int(value.strip()) for value in args.frame_map.split(",") if value.strip()]
+        if not frame_map or any(value < 0 or value >= args.cols for value in frame_map):
+            raise SystemExit("--frame-map contains an invalid source column")
+    out_cols = len(frame_map)
+    out = Image.new("RGBA", (out_cols * args.cell, args.rows * args.cell), (0, 0, 0, 0))
 
     for row in range(args.rows):
-        for col in range(args.cols):
-            left = round(col * cell_w)
+        for out_col, source_col in enumerate(frame_map):
+            left = round(source_col * cell_w)
             top = round(row * cell_h)
-            right = round((col + 1) * cell_w)
+            right = round((source_col + 1) * cell_w)
             bottom = round((row + 1) * cell_h)
             frame = src.crop((left, top, right, bottom))
             bbox = frame.getchannel("A").getbbox()
             if not bbox:
-                raise SystemExit(f"empty cell at row={row} col={col}")
+                raise SystemExit(f"empty cell at row={row} col={source_col}")
             subject = frame.crop(bbox)
             max_dim = args.cell - args.padding * 2
             scale = min(max_dim / subject.width, max_dim / subject.height)
             size = (max(1, round(subject.width * scale)), max(1, round(subject.height * scale)))
             subject = subject.resize(size, Image.Resampling.NEAREST)
-            x = col * args.cell + (args.cell - subject.width) // 2
+            x = out_col * args.cell + (args.cell - subject.width) // 2
             y = row * args.cell + args.cell - args.padding - subject.height
             out.alpha_composite(subject, (x, y))
 

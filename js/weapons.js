@@ -603,6 +603,7 @@ window.Weapons = (function () {
           break;
         }
         case 'turret': {
+          b.zapFlash = Math.max(0, (b.zapFlash || 0) - dt);
           b.aux2 -= dt;
           if (b.aux2 <= 0) {
             b.aux2 = b.aux;
@@ -627,6 +628,7 @@ window.Weapons = (function () {
               }
             }
             if (zapped) {
+              b.zapFlash = 0.46;
               AudioSys.play('zap');
               FX.burst(b.x, b.y - 94, { color: '#8ef', n: 7, speed: 120, life: 0.28, size: 2.2, glow: true });
               FX.ring(b.x, b.y - 92, { r: 22, color: '#8ef', life: 0.22, width: 2 });
@@ -902,37 +904,29 @@ window.Weapons = (function () {
     var pulse = 0.5 + 0.5 * Math.sin(run.t * 5.2 + bx * 0.17);
     ctx.globalAlpha = b.ttl < 1 ? E.clamp(b.ttl * 2, 0, 1) : 1;
 
-    // 塔身:使用复古像素电塔素材,底部锚定在地面
-    var towerImg = cachedFrames('tesla_tower')[0];
-    // ImageGen authored a tall coil with a wide mechanical base; keep it clearly larger than enemies.
-    var towerW = 160, towerH = 112;
-    ctx.drawImage(towerImg, bx - towerW / 2, baseY - towerH, towerW, towerH);
+    var age = Math.max(0, run.t - (b.born || run.t));
+    var action = 'tesla_tower';
+    if (b.ttl < 0.72) action = 'tesla_tower_overload';
+    else if (b.zapFlash > 0) action = 'tesla_tower_attack';
+    else if (age < 0.72) action = 'tesla_tower_deploy';
+    var towerFrames = cachedFrames(action);
+    var towerFps = cachedFps(action, action === 'tesla_tower_attack' ? 15 : 9);
+    var towerImg = towerFrames[Math.floor((action === 'tesla_tower_attack' ? 0.46 - b.zapFlash : age) * towerFps) % towerFrames.length];
+    // 正方形等比绘制并按底座锚定,不再把塔体横向拉扁或裁掉顶部。
+    var towerSize = 128;
+    ctx.globalAlpha *= 0.34;
+    ctx.drawImage(SpriteGen.get('vfx_shadow'), bx - 42, baseY - 10, 84, 18);
+    ctx.globalAlpha = b.ttl < 1 ? E.clamp(b.ttl * 2, 0, 1) : 1;
+    ctx.drawImage(towerImg, bx - towerSize / 2, baseY - towerSize, towerSize, towerSize);
 
-    // 顶部电球与脉冲辉光
-    var orbY = baseY - towerH + 8;
-    var glowR = 17 + pulse * 6;
+    // 顶部能量只保留轻薄辉光；分叉电弧来自逐帧美术,避免随机粗线抖动。
+    var orbY = baseY - towerSize + 20;
+    var glowR = 12 + pulse * 4;
     var glow = ctx.createRadialGradient(bx, orbY, 1, bx, orbY, glowR);
-    glow.addColorStop(0, 'rgba(140,235,255,' + (0.42 + pulse * 0.18).toFixed(3) + ')');
+    glow.addColorStop(0, 'rgba(190,248,255,' + (0.24 + pulse * 0.12).toFixed(3) + ')');
     glow.addColorStop(1, 'rgba(140,235,255,0)');
     ctx.fillStyle = glow;
     ctx.beginPath(); ctx.arc(bx, orbY, glowR, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#a8e4ff';
-    ctx.beginPath(); ctx.arc(bx, orbY, 6, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#eafcff';
-    ctx.beginPath(); ctx.arc(bx - 1.6, orbY - 1.6, 2.4, 0, Math.PI * 2); ctx.fill();
-
-    // 球顶随机放电分支
-    ctx.strokeStyle = 'rgba(160,240,255,0.9)';
-    ctx.lineWidth = 1.4;
-    for (var di = 0; di < 4; di++) {
-      ctx.beginPath();
-      var sx = bx + (di - 1.5) * 7, sy = orbY + 2;
-      ctx.moveTo(sx, sy);
-      var ex = sx + (Math.random() * 24 - 12), ey = sy - 8 - Math.random() * 18;
-      ctx.lineTo(ex, ey);
-      if (Math.random() < 0.6) ctx.lineTo(ex + (Math.random() * 12 - 6), ey - 4 - Math.random() * 8);
-      ctx.stroke();
-    }
     ctx.globalAlpha = 1;
   }
 

@@ -88,21 +88,73 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "merchant",
-      "source": "assets/art-v2/sprites/npcs/merchant_idle_4dir.png",
+      "source": "assets/art-v3/sprites/npcs/merchant_actions.png",
       "frameSize": [
-        64,
-        64
+        80,
+        80
       ],
       "frameRow": 0,
       "frames": 8,
       "fps": 7,
       "size": [
-        64,
-        64
+        80,
+        80
       ],
       "anchor": [
-        32,
-        62
+        40,
+        77
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "merchant_attack",
+      "source": "assets/art-v3/sprites/npcs/merchant_actions.png",
+      "frameSize": [
+        80,
+        80
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        80,
+        80
+      ],
+      "anchor": [
+        40,
+        77
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "merchant_prone",
+      "source": "assets/art-v3/sprites/npcs/merchant_actions.png",
+      "frameSize": [
+        80,
+        80
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        80,
+        80
+      ],
+      "anchor": [
+        40,
+        77
       ],
       "renderScale": 1
     },
@@ -130,7 +182,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -156,7 +208,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -182,7 +234,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -208,7 +260,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -234,7 +286,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -260,7 +312,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -286,7 +338,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -312,7 +364,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -338,7 +390,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -364,7 +416,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -390,7 +442,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -416,7 +468,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -442,7 +494,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -468,7 +520,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -494,7 +546,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -520,7 +572,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -547,7 +599,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -573,7 +625,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -600,7 +652,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -626,7 +678,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -653,7 +705,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -679,7 +731,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -706,7 +758,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -732,7 +784,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -758,7 +810,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -784,7 +836,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -810,7 +862,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -836,7 +888,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -862,7 +914,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -888,7 +940,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -914,7 +966,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -940,7 +992,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -966,7 +1018,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -992,7 +1044,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1018,7 +1070,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1044,7 +1096,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1070,7 +1122,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1096,7 +1148,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1122,7 +1174,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1149,7 +1201,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1175,7 +1227,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1202,7 +1254,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1228,7 +1280,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1255,7 +1307,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1281,7 +1333,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1308,7 +1360,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1334,7 +1386,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1360,7 +1412,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1386,7 +1438,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1412,7 +1464,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1438,7 +1490,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1464,7 +1516,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1490,7 +1542,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1516,7 +1568,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1542,7 +1594,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1568,7 +1620,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1594,7 +1646,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1620,7 +1672,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1646,7 +1698,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1672,7 +1724,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1698,7 +1750,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1724,7 +1776,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1751,7 +1803,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1777,7 +1829,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1804,7 +1856,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1830,7 +1882,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1857,7 +1909,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1883,7 +1935,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1910,7 +1962,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1936,7 +1988,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1962,7 +2014,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -1988,7 +2040,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2014,7 +2066,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2040,7 +2092,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2066,7 +2118,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2092,7 +2144,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2118,7 +2170,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2144,7 +2196,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2170,7 +2222,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2196,7 +2248,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2222,7 +2274,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2248,7 +2300,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2274,7 +2326,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2300,7 +2352,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2326,7 +2378,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2353,7 +2405,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2379,7 +2431,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2406,7 +2458,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2432,7 +2484,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2459,7 +2511,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2485,7 +2537,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2512,7 +2564,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2538,7 +2590,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2564,7 +2616,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2590,7 +2642,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2616,7 +2668,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2642,7 +2694,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2668,7 +2720,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2694,7 +2746,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2720,7 +2772,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2746,7 +2798,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2772,7 +2824,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2798,7 +2850,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2824,7 +2876,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2850,7 +2902,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2876,7 +2928,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2902,7 +2954,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2928,7 +2980,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2955,7 +3007,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -2981,7 +3033,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3008,7 +3060,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3034,7 +3086,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3061,7 +3113,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3087,7 +3139,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3114,7 +3166,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3140,7 +3192,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3166,7 +3218,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3192,7 +3244,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3218,7 +3270,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3244,7 +3296,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3270,7 +3322,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3296,7 +3348,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3322,7 +3374,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3348,7 +3400,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3374,7 +3426,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3400,7 +3452,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3426,7 +3478,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3452,7 +3504,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3478,7 +3530,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3504,7 +3556,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3530,7 +3582,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3557,7 +3609,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3583,7 +3635,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3610,7 +3662,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3636,7 +3688,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3663,7 +3715,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3689,7 +3741,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3716,7 +3768,7 @@
         24,
         62
       ],
-      "renderScale": 0.42
+      "renderScale": 0.56
     },
     {
       "preservePixels": true,
@@ -3830,7 +3882,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime",
-      "source": "assets/art-v2/sprites/enemies/slime_actions.png",
+      "source": "assets/art-v3/sprites/enemies/slime_actions.png",
       "frameSize": [
         64,
         64
@@ -3856,7 +3908,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime_walk",
-      "source": "assets/art-v2/sprites/enemies/slime_actions.png",
+      "source": "assets/art-v3/sprites/enemies/slime_actions.png",
       "frameSize": [
         64,
         64
@@ -3882,7 +3934,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime_attack",
-      "source": "assets/art-v2/sprites/enemies/slime_actions.png",
+      "source": "assets/art-v3/sprites/enemies/slime_actions.png",
       "frameSize": [
         64,
         64
@@ -3908,7 +3960,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime_death",
-      "source": "assets/art-v2/sprites/enemies/slime_actions.png",
+      "source": "assets/art-v3/sprites/enemies/slime_actions.png",
       "frameSize": [
         64,
         64
@@ -5389,6 +5441,1670 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
+      "name": "elite_bat",
+      "source": "assets/art-v3/sprites/elites/elite_bat_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_bat_walk",
+      "source": "assets/art-v3/sprites/elites/elite_bat_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_bat_attack",
+      "source": "assets/art-v3/sprites/elites/elite_bat_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_bat_death",
+      "source": "assets/art-v3/sprites/elites/elite_bat_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_slime",
+      "source": "assets/art-v3/sprites/elites/elite_slime_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_slime_walk",
+      "source": "assets/art-v3/sprites/elites/elite_slime_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_slime_attack",
+      "source": "assets/art-v3/sprites/elites/elite_slime_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_slime_death",
+      "source": "assets/art-v3/sprites/elites/elite_slime_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_slime_big",
+      "source": "assets/art-v3/sprites/elites/elite_slime_big_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_slime_big_walk",
+      "source": "assets/art-v3/sprites/elites/elite_slime_big_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_slime_big_attack",
+      "source": "assets/art-v3/sprites/elites/elite_slime_big_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_slime_big_death",
+      "source": "assets/art-v3/sprites/elites/elite_slime_big_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_zombie",
+      "source": "assets/art-v3/sprites/elites/elite_zombie_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_zombie_walk",
+      "source": "assets/art-v3/sprites/elites/elite_zombie_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_zombie_attack",
+      "source": "assets/art-v3/sprites/elites/elite_zombie_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_zombie_death",
+      "source": "assets/art-v3/sprites/elites/elite_zombie_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_skeleton",
+      "source": "assets/art-v3/sprites/elites/elite_skeleton_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_skeleton_walk",
+      "source": "assets/art-v3/sprites/elites/elite_skeleton_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_skeleton_attack",
+      "source": "assets/art-v3/sprites/elites/elite_skeleton_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_skeleton_death",
+      "source": "assets/art-v3/sprites/elites/elite_skeleton_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_ghost",
+      "source": "assets/art-v3/sprites/elites/elite_ghost_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_ghost_walk",
+      "source": "assets/art-v3/sprites/elites/elite_ghost_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_ghost_attack",
+      "source": "assets/art-v3/sprites/elites/elite_ghost_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_ghost_death",
+      "source": "assets/art-v3/sprites/elites/elite_ghost_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_spider",
+      "source": "assets/art-v3/sprites/elites/elite_spider_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_spider_walk",
+      "source": "assets/art-v3/sprites/elites/elite_spider_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_spider_attack",
+      "source": "assets/art-v3/sprites/elites/elite_spider_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_spider_death",
+      "source": "assets/art-v3/sprites/elites/elite_spider_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_cultist",
+      "source": "assets/art-v3/sprites/elites/elite_cultist_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_cultist_walk",
+      "source": "assets/art-v3/sprites/elites/elite_cultist_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_cultist_attack",
+      "source": "assets/art-v3/sprites/elites/elite_cultist_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_cultist_death",
+      "source": "assets/art-v3/sprites/elites/elite_cultist_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_orc",
+      "source": "assets/art-v3/sprites/elites/elite_orc_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_orc_walk",
+      "source": "assets/art-v3/sprites/elites/elite_orc_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_orc_attack",
+      "source": "assets/art-v3/sprites/elites/elite_orc_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_orc_death",
+      "source": "assets/art-v3/sprites/elites/elite_orc_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_imp",
+      "source": "assets/art-v3/sprites/elites/elite_imp_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_imp_walk",
+      "source": "assets/art-v3/sprites/elites/elite_imp_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_imp_attack",
+      "source": "assets/art-v3/sprites/elites/elite_imp_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_imp_death",
+      "source": "assets/art-v3/sprites/elites/elite_imp_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_knight_armored",
+      "source": "assets/art-v3/sprites/elites/elite_knight_armored_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_knight_armored_walk",
+      "source": "assets/art-v3/sprites/elites/elite_knight_armored_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_knight_armored_attack",
+      "source": "assets/art-v3/sprites/elites/elite_knight_armored_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_knight_armored_death",
+      "source": "assets/art-v3/sprites/elites/elite_knight_armored_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_werewolf",
+      "source": "assets/art-v3/sprites/elites/elite_werewolf_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_werewolf_walk",
+      "source": "assets/art-v3/sprites/elites/elite_werewolf_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_werewolf_attack",
+      "source": "assets/art-v3/sprites/elites/elite_werewolf_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_werewolf_death",
+      "source": "assets/art-v3/sprites/elites/elite_werewolf_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_mummy",
+      "source": "assets/art-v3/sprites/elites/elite_mummy_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_mummy_walk",
+      "source": "assets/art-v3/sprites/elites/elite_mummy_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_mummy_attack",
+      "source": "assets/art-v3/sprites/elites/elite_mummy_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_mummy_death",
+      "source": "assets/art-v3/sprites/elites/elite_mummy_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_gargoyle",
+      "source": "assets/art-v3/sprites/elites/elite_gargoyle_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_gargoyle_walk",
+      "source": "assets/art-v3/sprites/elites/elite_gargoyle_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_gargoyle_attack",
+      "source": "assets/art-v3/sprites/elites/elite_gargoyle_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_gargoyle_death",
+      "source": "assets/art-v3/sprites/elites/elite_gargoyle_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_bloodbat",
+      "source": "assets/art-v3/sprites/elites/elite_bloodbat_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_bloodbat_walk",
+      "source": "assets/art-v3/sprites/elites/elite_bloodbat_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_bloodbat_attack",
+      "source": "assets/art-v3/sprites/elites/elite_bloodbat_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_bloodbat_death",
+      "source": "assets/art-v3/sprites/elites/elite_bloodbat_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_wraith",
+      "source": "assets/art-v3/sprites/elites/elite_wraith_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_wraith_walk",
+      "source": "assets/art-v3/sprites/elites/elite_wraith_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_wraith_attack",
+      "source": "assets/art-v3/sprites/elites/elite_wraith_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "elite_wraith_death",
+      "source": "assets/art-v3/sprites/elites/elite_wraith_actions.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        52,
+        60
+      ],
+      "anchor": [
+        26,
+        58
+      ],
+      "renderScale": 0.52
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
       "name": "boss_slimeking",
       "source": "assets/art-v2/sprites/bosses/boss_slimeking_actions.png",
       "frameSize": [
@@ -6612,21 +8328,21 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "tesla_tower",
-      "source": "assets/art-v2/sprites/weapons/tesla_tower_actions.png",
+      "source": "assets/art-v3/sprites/weapons/tesla_tower_actions.png",
       "frameSize": [
-        64,
-        64
+        112,
+        112
       ],
       "frameRow": 0,
       "frames": 8,
       "fps": 8,
       "size": [
-        96,
-        96
+        112,
+        112
       ],
       "anchor": [
-        48,
-        94
+        56,
+        109
       ],
       "renderScale": 1
     },
@@ -6638,21 +8354,73 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "tesla_tower_deploy",
-      "source": "assets/art-v2/sprites/weapons/tesla_tower_actions.png",
+      "source": "assets/art-v3/sprites/weapons/tesla_tower_actions.png",
       "frameSize": [
-        64,
-        64
+        112,
+        112
       ],
       "frameRow": 1,
       "frames": 8,
       "fps": 10,
       "size": [
-        96,
-        96
+        112,
+        112
       ],
       "anchor": [
-        48,
-        94
+        56,
+        109
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "tesla_tower_attack",
+      "source": "assets/art-v3/sprites/weapons/tesla_tower_actions.png",
+      "frameSize": [
+        112,
+        112
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 15,
+      "size": [
+        112,
+        112
+      ],
+      "anchor": [
+        56,
+        109
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "tesla_tower_overload",
+      "source": "assets/art-v3/sprites/weapons/tesla_tower_actions.png",
+      "frameSize": [
+        112,
+        112
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 12,
+      "size": [
+        112,
+        112
+      ],
+      "anchor": [
+        56,
+        109
       ],
       "renderScale": 1
     },
@@ -6664,14 +8432,14 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "p_turret",
-      "source": "assets/art-v2/sprites/weapons/tesla_tower_actions.png",
+      "source": "assets/art-v3/sprites/weapons/tesla_tower_actions.png",
       "frameSize": [
-        64,
-        64
+        112,
+        112
       ],
       "frameRow": 2,
       "frames": 8,
-      "fps": 12,
+      "fps": 15,
       "size": [
         64,
         64
@@ -6681,6 +8449,222 @@
         62
       ],
       "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "deco_deadtree_large1",
+      "source": "assets/art-v3/sprites/environment/deadwood_props.png",
+      "frameSize": [
+        128,
+        128
+      ],
+      "frameRow": 0,
+      "frameStart": 0,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "renderScale": 0.82
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "deco_deadtree_large2",
+      "source": "assets/art-v3/sprites/environment/deadwood_props.png",
+      "frameSize": [
+        128,
+        128
+      ],
+      "frameRow": 0,
+      "frameStart": 1,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "renderScale": 0.82
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "deco_deadtree_large3",
+      "source": "assets/art-v3/sprites/environment/deadwood_props.png",
+      "frameSize": [
+        128,
+        128
+      ],
+      "frameRow": 0,
+      "frameStart": 2,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "renderScale": 0.82
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "deco_deadtree_large4",
+      "source": "assets/art-v3/sprites/environment/deadwood_props.png",
+      "frameSize": [
+        128,
+        128
+      ],
+      "frameRow": 0,
+      "frameStart": 3,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "renderScale": 0.82
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "deco_deadstump",
+      "source": "assets/art-v3/sprites/environment/deadwood_props.png",
+      "frameSize": [
+        128,
+        128
+      ],
+      "frameRow": 1,
+      "frameStart": 0,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "renderScale": 0.48
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "deco_fallenlog",
+      "source": "assets/art-v3/sprites/environment/deadwood_props.png",
+      "frameSize": [
+        128,
+        128
+      ],
+      "frameRow": 1,
+      "frameStart": 1,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "renderScale": 0.48
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "deco_deadroots",
+      "source": "assets/art-v3/sprites/environment/deadwood_props.png",
+      "frameSize": [
+        128,
+        128
+      ],
+      "frameRow": 1,
+      "frameStart": 2,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "renderScale": 0.48
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "deco_deadreeds",
+      "source": "assets/art-v3/sprites/environment/deadwood_props.png",
+      "frameSize": [
+        128,
+        128
+      ],
+      "frameRow": 1,
+      "frameStart": 3,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,

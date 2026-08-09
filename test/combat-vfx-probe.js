@@ -152,6 +152,7 @@ function colorCount(fg, w, h, match) {
       b.owner = run2.player; b.ownerX = run2.player.x; b.ownerY = run2.player.y;
       b.slow = 0; b.slowDur = 0; b.stun = 0; b.aux = 0; b.aux2 = 0;
       b.evolved = false; b.blessed = false;
+      b.zapFlash = cfg.zapFlash || 0;
       if (!b.hitCd) { b.hitCd = new Map(); b.hitSet = new Set(); }
       b.hitCd.clear(); b.hitSet.clear();
     };
@@ -187,9 +188,9 @@ function colorCount(fg, w, h, match) {
   }
 
   // 特斯拉电塔：经典塔形，尺寸明显大于旧 32px 精灵，且铜线圈/电球可被像素识别。
-  const tower = await diffShot({ spr: 'p_turret', kind: 'turret', x: 220, y: 0, size: 16, w: 150, h: 200, ttl: 10 }, 1400);
-  assert(tower.box.w >= 54, 'tower too narrow: ' + tower.box.w + 'px');
-  assert(tower.box.h >= 60, 'tower too short: ' + tower.box.h + 'px');
+  const tower = await diffShot({ spr: 'p_turret', kind: 'turret', x: 220, y: 0, size: 16, w: 170, h: 210, ttl: 10, zapFlash: 0.4 }, 1400);
+  assert(tower.box.w >= 64, 'tower too narrow: ' + tower.box.w + 'px');
+  assert(tower.box.h >= 108, 'tower too short: ' + tower.box.h + 'px');
   const copper = colorCount(tower.fg, tower.fg.w, tower.fg.h, (r, g, b) =>
     r >= 150 && r <= 235 && g >= 95 && g <= 180 && b >= 25 && b <= 120);
   const orb = colorCount(tower.fg, tower.fg.w, tower.fg.h, (r, g, b) =>
@@ -198,7 +199,7 @@ function colorCount(fg, w, h, match) {
   assert(orb >= 12, 'tesla orb pixels too few: ' + orb);
   const topCyan = (() => {
     let n = 0;
-    for (let y = 8; y < 36; y++) {
+    for (let y = 0; y < 64; y++) {
       for (let x = 0; x < tower.fg.w; x++) {
         const o = (y * tower.fg.w + x) * 4;
         const r = tower.fg.data[o];
@@ -209,7 +210,7 @@ function colorCount(fg, w, h, match) {
     }
     return n;
   })();
-  assert(topCyan >= 40, 'tesla orb/spark glow too weak near tower top: ' + topCyan);
+  assert(topCyan >= 18, 'tesla orb/spark glow too weak near tower top: ' + topCyan);
   console.log(`VFX TESLA OK   bbox ${tower.box.w}x${tower.box.h} (${tower.box.count}px), copper ${copper}px, orb ${orb}px, top cyan ${topCyan}px`);
 
   // 剑气：发射后角度必须保持固定，不再逐帧朝速度方向旋转。

@@ -265,7 +265,7 @@ window.Entities = (function () {
         x: 0, y: 0, vx: 0, vy: 0, hp: 0, maxHp: 0,
         r: 10, dmg: 0, spd: 0, armor: 0,
         kx: 0, ky: 0, flash: 0, frozen: 0, slow: 0, slowT: 0, stun: 0,
-        face: 1, animo: 0, alpha: 1,
+        face: 1, animo: 0, alpha: 1, attackAnimT: 0,
         elite: false, boss: false, bossType: '',
         ai: 'chase', aiT: 0, aiPhase: 0, tgtX: 0, tgtY: 0,
         burn: 0, burnT: 0, guard: 0,
@@ -312,7 +312,7 @@ window.Entities = (function () {
     e.r = def.r; e.dmg = def.dmg; e.spd = def.spd * (0.9 + Math.random() * 0.2);
     e.armor = def.armor || 0;
     e.kx = 0; e.ky = 0; e.flash = 0; e.frozen = 0; e.slow = 0; e.slowT = 0; e.stun = 0;
-    e.face = 1; e.animo = Math.random() * 10; e.alpha = 1;
+    e.face = 1; e.animo = Math.random() * 10; e.alpha = 1; e.attackAnimT = 0;
     e.elite = false; e.boss = isBoss; e.bossType = isBoss ? id : '';
     e.ai = isBoss ? 'boss' : (def.ai || 'chase');
     e.aiT = def.lobCd ? Math.random() * def.lobCd : 0; // 错开抛击节奏,避免齐射
@@ -551,6 +551,7 @@ window.Entities = (function () {
       e = enemies[i];
       if (!e.alive) continue;
       if (e.flash > 0) e.flash -= dt;
+      if (e.attackAnimT > 0) e.attackAnimT = Math.max(0, e.attackAnimT - dt);
       // 破土出场:静止且不参与碰撞/受伤,出土完成后才正常行动
       if (e.burrowT > 0) {
         e.burrowT -= dt;
@@ -610,6 +611,7 @@ window.Entities = (function () {
           e.aiT -= dt;
           if (e.aiT <= 0 && dist < 420) {
             e.aiT = e.def.shotCd;
+            e.attackAnimT = 0.48;
             fireShot(e.x, e.y, nx, ny, e.def.shotSpd, e.def.shotDmg * (e.elite ? 1.5 : 1));
           }
           break;
@@ -623,6 +625,7 @@ window.Entities = (function () {
           var fireRange = e.def.shotRange || 220;
           if (e.aiT <= 0 && dist < fireRange) {
             e.aiT = e.def.shotCd;
+            e.attackAnimT = 0.5;
             // 蛛网弹:白色黏丝,施加叠层减速;有射程上限且越远越慢
             fireShot(e.x, e.y, nx, ny, e.def.shotSpd,
               e.def.shotDmg * (e.elite ? 1.5 : 1), e.def.slowAmt, e.def.slowDur, true,
@@ -646,6 +649,7 @@ window.Entities = (function () {
           e.aiT -= dt;
           if (e.aiT <= 0 && dist < ld) {
             e.aiT = e.def.lobCd;
+            e.attackAnimT = 0.55;
             // 预判玩家去向,给出可躲避的落点
             fireLob(p.x + p.lastVx * 0.35, p.y + p.lastVy * 0.35, e.x, e.y,
               e.def.lobR, e.def.lobDmg * (e.elite ? 1.5 : 1), e.def.lobTravel);
@@ -662,6 +666,7 @@ window.Entities = (function () {
             e.flash = 0.05;
             if (e.aiT <= 0) {
               e.aiPhase = 2; e.aiT = 0.8;
+              e.attackAnimT = 0.55;
               e.tgtX = nx; e.tgtY = ny;
               FX.burst(e.x, e.y, { color: '#c44', n: 6, speed: 60, life: 0.3, size: 2 });
             }
@@ -812,6 +817,7 @@ window.Entities = (function () {
           }
         } else {                                    // 冲撞
           e.vx = e.tgtX * 360; e.vy = e.tgtY * 360;
+          e.attackAnimT = Math.max(e.attackAnimT, 0.16);
           e.kx = 0; e.ky = 0;                       // 冲撞时霸体
           if ((run.frame & 1) === 0) FX.trail(e.x, e.y, ELITE_COL, 3);
           if (e.skT <= 0) {
@@ -876,6 +882,7 @@ window.Entities = (function () {
         // 蓄力:不能移动,面向玩家,身上闪白光
         e.vx = 0; e.vy = 0;
         e.face = nx >= 0 ? 1 : -1;
+        e.attackAnimT = Math.max(e.attackAnimT, 0.18);
         if ((run.frame & 3) === 0) FX.trail(e.x + (Math.random() * 20 - 10), e.y - 6, '#fff', 2);
         e.archerT -= dt;
         if (e.archerT <= 0) {
@@ -885,6 +892,7 @@ window.Entities = (function () {
       }
       // 出手:向玩家射一支快箭,然后进入 5 秒冷却
       e.archerT -= dt;
+      e.attackAnimT = Math.max(e.attackAnimT, 0.18);
       if (e.archerT <= 0) {
         e.archerPhase = 0;
         e.archerCd = 5.0;
@@ -912,6 +920,7 @@ window.Entities = (function () {
       var p = w.player;
       var rr = e.r + p.r;
       if (E.dist2(e.x, e.y, p.x, p.y) < rr * rr) {
+        e.attackAnimT = Math.max(e.attackAnimT, 0.35);
         damagePlayerAt(run, w, e.dmg * (e.buffDmg || 1));
       }
     }
@@ -1630,7 +1639,7 @@ window.Entities = (function () {
         ctx.drawImage(SpriteGen.glow('#59c2ff'), g.x - 16, g.y - 16, 32, 32);
         ctx.globalAlpha = 1;
       }
-      drawSprite(ctx, gname, 0, g.x, g.y + bob, 0.75, false, 1, null);
+      drawSprite(ctx, gname, 0, g.x, g.y + bob, g.v >= 30 ? 0.58 : 0.44, false, 1, null);
     }
     // 道具
     for (i = 0; i < items.length; i++) {
@@ -1642,13 +1651,14 @@ window.Entities = (function () {
       var glowCol = it.type === 'chest' ? '#ffd76b'
         : (it.type === 'coin' ? '#ffeb78'
         : (it.type === 'meat' ? '#ff788c' : '#78c8ff'));
-      var gr = it.type === 'chest' ? 38 : 20;
+      var gr = it.type === 'chest' ? 32 : 14;
       var pulse = 0.5 + Math.sin(it.t * 4) * 0.5;
       // 拾取物地面柔光:缓存贴图,不再每帧建渐变
       ctx.globalAlpha = 0.45 + pulse * 0.30;
       ctx.drawImage(SpriteGen.glow(glowCol), it.x - gr, it.y - gr, gr * 2, gr * 2);
       ctx.globalAlpha = 1;
-      drawSprite(ctx, nm, it.type === 'coin' ? animF : 0, it.x, it.y + bob2, it.type === 'chest' ? 1.2 : 0.9, false, 1, null);
+      var itemScale = it.type === 'chest' ? 1.0 : (it.type === 'coin' ? 0.62 : 0.56);
+      drawSprite(ctx, nm, it.type === 'coin' ? animF : 0, it.x, it.y + bob2, itemScale, false, 1, null);
       if (it.type === 'chest') { // 宝箱额外上升光柱
         ctx.globalAlpha = 0.10 + pulse * 0.10;
         ctx.fillStyle = '#ffd76b';
@@ -1699,12 +1709,12 @@ window.Entities = (function () {
       var wob = e.boss ? 0 : Math.sin(run.t * 8 + e.animo) * 1.5;
       // 史莱姆跳跃:hop 抬高机体,squash 做蓄力压扁/腾空拉伸
       var hop = e.hop || 0, sq = e.squash || 1;
-      var enemySprite = e.boss ? e.bossType : e.id;
-      if (e.vx !== 0 || e.vy !== 0) enemySprite += '_walk';
+      var enemySprite = e.boss ? e.bossType : (e.elite ? 'elite_' + e.id : e.id);
+      if (!e.boss && e.attackAnimT > 0) enemySprite += '_attack';
+      else if (e.vx !== 0 || e.vy !== 0) enemySprite += '_walk';
       var enemyF = Math.floor(run.t * animFps(enemySprite, (e.vx === 0 && e.vy === 0) ? 6 : 10));
       drawSprite(ctx, enemySprite, enemyF + (e.animo | 0),
                  e.x, e.y + wob - hop, sc * sq, e.face < 0, e.alpha, tint);
-      if (e.elite) drawSprite(ctx, 'elite_crown', 0, e.x, e.y - e.r - 12, 1, false, 1, null);
       // 被强化的小怪:显示淡色光环表示受精英/Boss 增益
       if (e.buffed && !e.elite && !e.boss) {
         ctx.globalAlpha = 0.28 + Math.sin(run.t * 5 + e.animo) * 0.12;

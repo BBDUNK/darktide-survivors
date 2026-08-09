@@ -10,6 +10,8 @@ window.Merchant = (function () {
   var nextRefresh = 0;
   var slotCount = 0;
   var flash = 0;         // 刷新时的高亮计时
+  var arrows = [];
+  var combat = { prone: 0, attackAge: 9, attackCd: 0.3, face: 1, target: null };
 
   function reset(run) {
     var M = CFG.MERCHANT;
@@ -17,6 +19,9 @@ window.Merchant = (function () {
     nextRefresh = M.refreshInt;
     roll(run);
     flash = 0;
+    arrows.length = 0;
+    combat.prone = 0; combat.attackAge = 9; combat.attackCd = 0.3;
+    combat.face = 1; combat.target = null;
   }
 
   // 抽一件商品。武器/被动这两类要在运行时决定具体是哪一个。
@@ -98,6 +103,7 @@ window.Merchant = (function () {
       roll(run);
       if (run.cb && run.cb.onWarn) run.cb.onWarn('🛒 商人补货了!');
     }
+    updateCombat(run, dt);
     // 走到商品上自动购买(任意参战玩家都可购买)
     var ents = run.coopPlayers || [{ player: run.player, downed: false }];
     for (var i = 0; i < slots.length; i++) {
@@ -126,6 +132,79 @@ window.Merchant = (function () {
       FX.burst(owner.player.x, owner.player.y, { color: '#ffd76b', n: 14, speed: 100, life: 0.5, size: 2 });
       FX.ring(owner.player.x, owner.player.y, { r: 34, color: '#ffd76b', life: 0.4, width: 3 });
       AudioSys.play('upgrade_pick');
+    }
+  }
+
+  function nearestEnemy(x, y, range) {
+    var pool = Entities.pool, best = null, bestD = range * range;
+    for (var i = 0; i < pool.length; i++) {
+      var e = pool[i];
+      if (!e.alive) continue;
+      var d = E.dist2(x, y, e.x, e.y);
+      if (d < bestD) { bestD = d; best = e; }
+    }
+    return best;
+  }
+
+  // 老商人只在安全距离外逞强。怪物一旦贴近,他会立刻趴地装死并停止射击。
+  function updateCombat(run, dt) {
+    var M = CFG.MERCHANT;
+    var close = nearestEnemy(M.x, M.y - 36, M.playDeadR || 135);
+    if (close) {
+      combat.prone = Math.min(1, combat.prone + dt * 3.6);
+      combat.target = close;
+      combat.attackAge = 9;
+    } else {
+      combat.prone = Math.max(0, combat.prone - dt * 2.0);
+      combat.attackCd -= dt;
+      combat.attackAge += dt;
+      var target = nearestEnemy(M.x, M.y - 42, M.attackRange || 440);
+      combat.target = target;
+      if (target) {
+        combat.face = target.x >= M.x ? 1 : -1;
+        if (combat.prone <= 0.02 && combat.attackCd <= 0) {
+          combat.attackCd = M.attackCd || 1.35;
+          combat.attackAge = 0;
+          fireArrow(run, target);
+        }
+      }
+    }
+    updateArrows(run, dt);
+  }
+
+  function fireArrow(run, target) {
+    var M = CFG.MERCHANT;
+    var sx = M.x + combat.face * 18, sy = M.y - 105;
+    var tx = target.x, ty = target.y - 5;
+    var dx = tx - sx, dy = ty - sy, d = Math.hypot(dx, dy) || 1;
+    var speed = M.arrowSpeed || 360;
+    arrows.push({
+      alive: true, x: sx, y: sy, vx: dx / d * speed, vy: dy / d * speed,
+      ttl: 1.5, dmg: (M.arrowDamage || 20) + run.t * 0.025
+    });
+    AudioSys.play('shoot_arrow');
+  }
+
+  function updateArrows(run, dt) {
+    var pool = Entities.pool;
+    for (var i = arrows.length - 1; i >= 0; i--) {
+      var a = arrows[i];
+      a.ttl -= dt;
+      a.x += a.vx * dt; a.y += a.vy * dt;
+      if (a.ttl <= 0) { arrows.splice(i, 1); continue; }
+      var hit = null;
+      for (var j = 0; j < pool.length; j++) {
+        var e = pool[j];
+        if (!e.alive) continue;
+        var rr = e.r + 5;
+        if (E.dist2(a.x, a.y, e.x, e.y) <= rr * rr) { hit = e; break; }
+      }
+      if (!hit) continue;
+      Entities.damageEnemy(run, hit, a.dmg, {
+        noCrit: true, kx: a.vx * 0.08, ky: a.vy * 0.08
+      });
+      FX.burst(a.x, a.y, { color: '#d8b46b', n: 4, speed: 55, life: 0.22, size: 1.5 });
+      arrows.splice(i, 1);
     }
   }
 
@@ -178,16 +257,33 @@ window.Merchant = (function () {
   // 摊位与商人:画在地面层之上、角色之下
   function draw(ctx, run) {
     var M = CFG.MERCHANT;
-    // 新商人使用四帧待机动画；脚底锚定在摊位后方，不再用名字遮挡形象。
-    var merchantFrames = SpriteGen.frames('merchant');
-    var merchantFps = SpriteGen.animationFps('merchant', 6);
-    var mimg = merchantFrames[Math.floor(run.t * merchantFps) % merchantFrames.length];
+    // 三态动作:警戒待机 / 拉弓射击 / 趴地装死。最后一帧可持续保持趴伏。
+    var actionName = 'merchant';
+    var frameIndex = 0;
+    if (combat.prone > 0.02) {
+      actionName = 'merchant_prone';
+      var proneFrames = SpriteGen.frames(actionName);
+      frameIndex = Math.min(proneFrames.length - 1, Math.floor(combat.prone * proneFrames.length));
+    } else if (combat.attackAge < 0.68) {
+      actionName = 'merchant_attack';
+      frameIndex = Math.floor(combat.attackAge * SpriteGen.animationFps(actionName, 12));
+    } else {
+      frameIndex = Math.floor(run.t * SpriteGen.animationFps(actionName, 7));
+    }
+    var merchantFrames = SpriteGen.frames(actionName);
+    var mimg = merchantFrames[frameIndex % merchantFrames.length];
     var bob = Math.sin(run.t * 2) * 1;
-    var mw = 72, mh = 72;
+    var mw = combat.prone > 0.65 ? 94 : 82, mh = 82;
     ctx.globalAlpha = 0.4;
     ctx.drawImage(SpriteGen.get('vfx_shadow'), M.x - 22, M.y - 60, 44, 12);
     ctx.globalAlpha = 1;
-    ctx.drawImage(mimg, M.x - mw / 2, M.y - 58 - mh + bob, mw, mh);
+    if (combat.face < 0 && combat.prone < 0.65) {
+      ctx.save(); ctx.translate(M.x, 0); ctx.scale(-1, 1);
+      ctx.drawImage(mimg, -mw / 2, M.y - 58 - mh + bob, mw, mh);
+      ctx.restore();
+    } else {
+      ctx.drawImage(mimg, M.x - mw / 2, M.y - 58 - mh + bob, mw, mh);
+    }
     // 补货倒计时小闹钟
     drawClock(ctx, run);
 
@@ -246,6 +342,20 @@ window.Merchant = (function () {
     ctx.textAlign = 'left';
   }
 
+  // 箭矢位于角色/怪物层之上,由 main.js 在实体之后绘制。
+  function drawProjectiles(ctx, run) {
+    var frames = SpriteGen.frames('p_arrow');
+    var img = frames[Math.floor(run.t * SpriteGen.animationFps('p_arrow', 14)) % frames.length];
+    for (var i = 0; i < arrows.length; i++) {
+      var a = arrows[i];
+      ctx.save();
+      ctx.translate(a.x, a.y);
+      ctx.rotate(Math.atan2(a.vy, a.vx));
+      ctx.drawImage(img, -17, -5, 34, 10);
+      ctx.restore();
+    }
+  }
+
   // 补货倒计时单针钟:一根指针表示剩余比例,转过区域红、未转区域蓝
   function drawClock(ctx, run) {
     var M = CFG.MERCHANT;
@@ -285,6 +395,7 @@ window.Merchant = (function () {
     ctx.beginPath(); ctx.arc(cx, cy, 1.6, 0, Math.PI * 2); ctx.fill();
   }
 
-  return { reset: reset, update: update, draw: draw, roll: roll,
-           slots: function () { return slots; } };
+  return { reset: reset, update: update, draw: draw, drawProjectiles: drawProjectiles, roll: roll,
+           slots: function () { return slots; },
+           combatState: function () { return { prone: combat.prone, arrows: arrows.length, target: !!combat.target }; } };
 })();

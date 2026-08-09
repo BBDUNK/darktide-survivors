@@ -34,6 +34,35 @@ const OUT = path.join(process.cwd(), 'shots');
   console.log('站在商人处后已购买: ' + bought);
   await pg.screenshot({ path: path.join(OUT, '96-merchant-bought.png') });
 
+  // 商人战斗 AI:安全距离射箭,怪物贴脸时立即趴地装死。
+  await pg.evaluate(() => {
+    const r = window.Debug.run();
+    Entities.clearEnemies(r);
+    r.player.x = 700; r.player.y = 0;
+    window.__merchantTarget = Entities.spawnEnemy(r, 'zombie', 300, -55, { allowNear: true });
+    window.__merchantTarget.maxHp = window.__merchantTarget.hp = 120;
+  });
+  await pg.waitForTimeout(1900);
+  const bowResult = await pg.evaluate(() => ({
+    hp: window.__merchantTarget.hp,
+    alive: window.__merchantTarget.alive,
+    state: Merchant.combatState()
+  }));
+  if (bowResult.alive && bowResult.hp >= 120) throw new Error('商人没有射箭伤害远处怪物');
+  console.log('商人射箭命中: ' + JSON.stringify(bowResult));
+
+  await pg.evaluate(() => {
+    const r = window.Debug.run();
+    Entities.clearEnemies(r);
+    r.player.x = 700; r.player.y = 0;
+    Entities.spawnEnemy(r, 'orc', 58, -30, { allowNear: true });
+  });
+  await pg.waitForTimeout(360);
+  const prone = await pg.evaluate(() => Merchant.combatState());
+  if (prone.prone < 0.72) throw new Error('怪物贴近后商人没有及时趴地装死: ' + prone.prone);
+  console.log('商人装死状态: ' + JSON.stringify(prone));
+  await pg.screenshot({ path: path.join(OUT, '97-merchant-prone.png') });
+
   // 本命武器:骑士用剑气 vs 给骑士换别的武器,对比 wStats
   const aff = await pg.evaluate(() => {
     const r = window.Debug.run();

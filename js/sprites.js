@@ -1792,6 +1792,19 @@
     return PLACEHOLDER;
   }
 
+  function fallbackKey(name) {
+    var base = name.replace(/_(idle|walk|attack|hurt|death)_(down|left|right|up)$/, '')
+      .replace(/_(walk|attack|death|charge|overload|deploy)$/, '');
+    if (base.indexOf('elite_') === 0) base = base.slice(6);
+    if (base === 'merchant_prone' || base === 'merchant') return 'merchant';
+    if (base.indexOf('tesla_tower') === 0) return 'tesla_tower';
+    if (base.indexOf('deco_deadtree_large') === 0) return 'deco_deadtree';
+    if (base === 'deco_deadstump' || base === 'deco_fallenlog' || base === 'deco_deadroots') return 'deco_deadtree';
+    if (base === 'deco_deadreeds') return 'deco_bush';
+    if (base === 'ps_barrier') return 'ps_core';
+    return base;
+  }
+
   var atlasState = {
     loaded: false,
     count: 0,
@@ -1810,6 +1823,7 @@
       store = {};
       PLACEHOLDER = buildPlaceholder();
       store.vfx_glow = buildGlowTexture();
+      store.hud_minimap_frame = [new Pix(8, 8).toCanvas()];
       var name, i;
       for (name in defs) {
         if (typeof defs[name] !== 'function') {
@@ -1905,8 +1919,7 @@
       if (!store) this.init();
       var arr = store[name];
       // 动作图集缺失时退回角色基础帧，离线/图集加载失败也不会显示占位块。
-      if (!arr) arr = store[name.replace(/_(idle|walk|attack|hurt|death)_(down|left|right|up)$/, '')
-        .replace(/_(walk|attack|death|charge)$/, '')];
+      if (!arr) arr = store[fallbackKey(name)];
       if (!arr) arr = fallback(name);
       return arr[0];
     },
@@ -1932,8 +1945,7 @@
     frames: function (name) {
       if (!store) this.init();
       var arr = store[name];
-      if (!arr) arr = store[name.replace(/_(idle|walk|attack|hurt|death)_(down|left|right|up)$/, '')
-        .replace(/_(walk|attack|death|charge)$/, '')];
+      if (!arr) arr = store[fallbackKey(name)];
       if (!arr) arr = fallback(name);
       return arr;
     }

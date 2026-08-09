@@ -58,8 +58,8 @@ window.UI = (function () {
   function buildTitle() {
     var s = h('div', 'screen center-col');
     var logo = h('div', 'logo');
-    logo.appendChild(h('div', 'logo-main gothic-title', 'Darktide'));
-    logo.appendChild(h('div', 'logo-sub', '暗黑逃跑神 · SURVIVORS'));
+    logo.appendChild(h('div', 'logo-main gothic-title', 'DarkEscaper'));
+    logo.appendChild(h('div', 'logo-sub', '暗黑逃跑神 · MEDIEVAL SURVIVAL'));
     s.appendChild(logo);
     s.appendChild(h('div', 'blink hint', L.t('title_click')));
     s.appendChild(h('div', 'credits', L.t('title_credit')));
@@ -78,7 +78,7 @@ window.UI = (function () {
     var s = h('div', 'screen menu-screen');
     // 大标题:居中偏上
     var logo = h('div', 'logo menu-logo');
-    logo.appendChild(h('div', 'logo-main menu-big gothic-title', 'Darktide'));
+    logo.appendChild(h('div', 'logo-main menu-big gothic-title', 'DarkEscaper'));
     s.appendChild(logo);
     // 三列主体:左右侧栏对称,中间按钮列
     var body = h('div', 'menu-body');

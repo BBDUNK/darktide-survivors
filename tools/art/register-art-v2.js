@@ -29,10 +29,16 @@ const characterActions = [
 ];
 
 add({
-  name: 'merchant', source: 'assets/art-v2/sprites/npcs/merchant_idle_4dir.png',
-  frameSize: [64, 64], frameRow: 0, frames: 8, fps: 7,
-  size: [64, 64], anchor: [32, 62], renderScale: 1
+  name: 'merchant', source: 'assets/art-v3/sprites/npcs/merchant_actions.png',
+  frameSize: [80, 80], frameRow: 0, frames: 8, fps: 7,
+  size: [80, 80], anchor: [40, 77], renderScale: 1
 });
+add({ name: 'merchant_attack', source: 'assets/art-v3/sprites/npcs/merchant_actions.png',
+  frameSize: [80, 80], frameRow: 1, frames: 8, fps: 12,
+  size: [80, 80], anchor: [40, 77], renderScale: 1 });
+add({ name: 'merchant_prone', source: 'assets/art-v3/sprites/npcs/merchant_actions.png',
+  frameSize: [80, 80], frameRow: 2, frames: 8, fps: 10,
+  size: [80, 80], anchor: [40, 77], renderScale: 1 });
 
 for (const character of characters) {
   for (const [action, fileAction, frames, fps] of characterActions) {
@@ -41,7 +47,7 @@ for (const character of characters) {
       add({
         name: `char_${character}_${action}_${direction}`,
         source, frameSize: [64, 64], frameRow: row, frames, fps,
-        size: [48, 64], anchor: [24, 62], renderScale: 0.42
+        size: [48, 64], anchor: [24, 62], renderScale: 0.56
       });
     }
     // Down-facing compatibility aliases keep old callers and offline fallbacks working.
@@ -49,7 +55,7 @@ for (const character of characters) {
     add({
       name: alias,
       source, frameSize: [64, 64], frameRow: 0, frames, fps,
-      size: [48, 64], anchor: [24, 62], renderScale: 0.42
+      size: [48, 64], anchor: [24, 62], renderScale: 0.56
     });
   }
   const reaction = `assets/art-v2/sprites/characters/char_${character}_reaction_4dir.png`;
@@ -57,12 +63,12 @@ for (const character of characters) {
     add({
       name: `char_${character}_hurt_${direction}`,
       source: reaction, frameSize: [64, 64], frameRow: row, frames: 3, fps: 10,
-      size: [48, 64], anchor: [24, 62], renderScale: 0.42
+      size: [48, 64], anchor: [24, 62], renderScale: 0.56
     });
     add({
       name: `char_${character}_death_${direction}`,
       source: reaction, frameSize: [64, 64], frameRow: row, frameStart: 3, frames: 5, fps: 8,
-      size: [48, 64], anchor: [24, 62], renderScale: 0.42
+      size: [48, 64], anchor: [24, 62], renderScale: 0.56
     });
   }
 }
@@ -73,11 +79,24 @@ const enemies = [
 ];
 const enemyActions = [['', 0, 7], ['_walk', 1, 10], ['_attack', 2, 12], ['_death', 3, 9]];
 for (const enemy of enemies) {
-  const source = `assets/art-v2/sprites/enemies/${enemy}_actions.png`;
+  const source = enemy === 'slime'
+    ? 'assets/art-v3/sprites/enemies/slime_actions.png'
+    : `assets/art-v2/sprites/enemies/${enemy}_actions.png`;
   for (const [suffix, row, fps] of enemyActions) {
     add({
       name: `${enemy}${suffix}`, source, frameSize: [64, 64], frameRow: row, frames: 8, fps,
       size: [48, 56], anchor: [24, 54], renderScale: 0.45
+    });
+  }
+}
+
+// Every ordinary enemy has a dedicated elite model and the same four complete actions.
+for (const enemy of enemies) {
+  const source = `assets/art-v3/sprites/elites/elite_${enemy}_actions.png`;
+  for (const [suffix, row, fps] of enemyActions) {
+    add({
+      name: `elite_${enemy}${suffix}`, source, frameSize: [64, 64], frameRow: row, frames: 8, fps,
+      size: [52, 60], anchor: [26, 58], renderScale: 0.52
     });
   }
 }
@@ -120,10 +139,29 @@ rowAnimations('assets/art-v2/sprites/weapons/orbitblade_actions.png', [
   ['p_orbitblade', 0, 12, [40, 40]], ['p_orbitblade_fly', 1, 14, [40, 32]],
   ['vfx_orbitblade_hit', 2, 15, [48, 48]]
 ]);
-rowAnimations('assets/art-v2/sprites/weapons/tesla_tower_actions.png', [
-  ['tesla_tower', 0, 8, [96, 96]], ['tesla_tower_deploy', 1, 10, [96, 96]],
-  ['p_turret', 2, 12, [64, 64]]
-]);
+for (const [name, row, fps] of [
+  ['tesla_tower', 0, 8], ['tesla_tower_deploy', 1, 10],
+  ['tesla_tower_attack', 2, 15], ['tesla_tower_overload', 3, 12]
+]) {
+  add({ name, source: 'assets/art-v3/sprites/weapons/tesla_tower_actions.png',
+    frameSize: [112, 112], frameRow: row, frames: 8, fps,
+    size: [112, 112], anchor: [56, 109], renderScale: 1 });
+}
+// Compatibility projectile icon for network snapshots and old callers.
+add({ name: 'p_turret', source: 'assets/art-v3/sprites/weapons/tesla_tower_actions.png',
+  frameSize: [112, 112], frameRow: 2, frames: 8, fps: 15,
+  size: [64, 64], anchor: [32, 62], renderScale: 1 });
+
+const deadwoodNames = [
+  'deco_deadtree_large1', 'deco_deadtree_large2', 'deco_deadtree_large3', 'deco_deadtree_large4',
+  'deco_deadstump', 'deco_fallenlog', 'deco_deadroots', 'deco_deadreeds'
+];
+deadwoodNames.forEach((name, index) => add({
+  name, source: 'assets/art-v3/sprites/environment/deadwood_props.png',
+  frameSize: [128, 128], frameRow: Math.floor(index / 4), frameStart: index % 4,
+  frames: 1, fps: 0, size: [128, 128], anchor: [64, 124],
+  renderScale: index < 4 ? 0.82 : 0.48
+}));
 
 function iconGrid(source, columns, names) {
   names.forEach((name, index) => add({

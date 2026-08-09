@@ -214,7 +214,9 @@ window.CFG = {
     { id: 'graveyard', name: '幽暗墓园', desc: '雾锁的古老墓地,亡者在此不得安息',
       unlock: null, hpMul: 1.0, rateMul: 1.0,
       palette: { ground: '#221c33', ground2: '#2b2445', decor: '#4d4270', fog: '#2b2247', vign: '#0a0714', ambient: '#b9a5ff' },
-      decors: ['deco_grave', 'deco_deadtree', 'deco_bone', 'deco_fence', 'deco_skullpost'],
+      decors: ['deco_grave', 'deco_deadtree_large1', 'deco_deadtree_large2',
+               'deco_deadstump', 'deco_deadroots', 'deco_deadreeds',
+               'deco_bone', 'deco_fence', 'deco_skullpost'],
       music: 'graveyard',
       waves: [
         { t: 0,    ids: ['bat', 'slime'],                          rate: 1.3 },
@@ -250,7 +252,9 @@ window.CFG = {
     { id: 'wilds', name: '血月荒野', desc: '猩红之月照耀的猎场,兽群嗅到了你的血',
       unlock: { achv: 'a_survive_10' }, hpMul: 1.35, rateMul: 1.2,
       palette: { ground: '#2a1e16', ground2: '#35261a', decor: '#63452b', fog: '#4a201a', vign: '#120705', ambient: '#ff9d5c' },
-      decors: ['deco_tree2', 'deco_rock', 'deco_bush', 'deco_mushroom'],
+      decors: ['deco_deadtree_large3', 'deco_deadtree_large4', 'deco_fallenlog',
+               'deco_deadstump', 'deco_deadroots', 'deco_deadreeds',
+               'deco_rock', 'deco_bush', 'deco_mushroom'],
       music: 'wilds',
       waves: [
         { t: 0,    ids: ['spider', 'bat'],                         rate: 1.6 },
@@ -282,7 +286,8 @@ window.CFG = {
     { id: 'abyss', name: '深渊回廊', desc: '世界裂缝的最深处,暗潮的源头',
       unlock: { achv: 'a_survive_10_wilds' }, hpMul: 1.8, rateMul: 1.4,
       palette: { ground: '#161c33', ground2: '#1e2447', decor: '#3a4480', fog: '#1e2750', vign: '#05070f', ambient: '#8ef' },
-      decors: ['deco_pillar', 'deco_crystal', 'deco_rune', 'deco_stalag'],
+      decors: ['deco_pillar', 'deco_crystal', 'deco_rune', 'deco_stalag',
+               'deco_deadtree_large2', 'deco_deadroots', 'deco_deadreeds'],
       music: 'abyss',
       waves: [
         { t: 0,    ids: ['ghost', 'skeleton'],                     rate: 1.8 },
@@ -327,6 +332,11 @@ window.CFG = {
     refreshInt: 300,         // 5 分钟刷新一次并 +1 摊位
     spacing: 62,             // 摊位间距
     pickR: 26,               // 走到多近算购买
+    playDeadR: 135,          // 怪物逼近到此范围时立刻趴地装死
+    attackRange: 440,
+    attackCd: 1.35,
+    arrowSpeed: 360,
+    arrowDamage: 20,
     // 商品池:武器按当前是否已持有决定是新武器还是升级;道具立即生效
     // 价格:道具统一 10,武器/被动统一 20
     goods: [

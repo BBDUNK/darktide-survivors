@@ -1022,6 +1022,8 @@
     }
     ctx.globalAlpha = 1;
 
+    drawTerrainFeatures(map, camX, camY);
+
     // 第二层:细碎石砾(密度提高,尺寸分级)
     var cell = 32;
     var x0 = Math.floor((camX - W / 2) / cell) - 1, x1 = Math.floor((camX + W / 2) / cell) + 1;
@@ -1044,17 +1046,94 @@
     ctx.globalAlpha = 1;
   }
 
+  // 世界坐标稳定的道路/草地/泥地/沼泽层。大轮廓先画,碎纹理后画,
+  // 镜头移动时不会出现屏幕空间纹理游移或方格闪烁。
+  function drawTerrainFeatures(map, camX, camY) {
+    var W = CFG.GAME.W, H = CFG.GAME.H, R = CFG.GAME.MAP_R;
+    var seed = map.id === 'graveyard' ? 0.8 : (map.id === 'wilds' ? 2.4 : 4.1);
+    var road = map.id === 'graveyard' ? '#3a302c' : (map.id === 'wilds' ? '#4a3522' : '#242a3f');
+    var roadEdge = map.id === 'graveyard' ? '#18151d' : (map.id === 'wilds' ? '#21170f' : '#0d1122');
+    ctx.save();
+    ctx.translate(W / 2 - camX, H / 2 - camY);
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+
+    function roadPath(vertical) {
+      ctx.beginPath();
+      for (var v = -R - 120; v <= R + 120; v += 72) {
+        var bend = Math.sin(v * 0.0017 + seed) * 145 + Math.sin(v * 0.0041 + seed * 2) * 28;
+        if (vertical) {
+          if (v === -R - 120) ctx.moveTo(bend, v); else ctx.lineTo(bend, v);
+        } else {
+          if (v === -R - 120) ctx.moveTo(v, bend); else ctx.lineTo(v, bend);
+        }
+      }
+    }
+    ctx.globalAlpha = 0.55;
+    ctx.strokeStyle = roadEdge; ctx.lineWidth = map.id === 'wilds' ? 92 : 78;
+    roadPath(false); ctx.stroke();
+    ctx.strokeStyle = road; ctx.lineWidth = map.id === 'wilds' ? 72 : 60;
+    roadPath(false); ctx.stroke();
+    ctx.globalAlpha = 0.38;
+    ctx.strokeStyle = roadEdge; ctx.lineWidth = 54;
+    roadPath(true); ctx.stroke();
+    ctx.strokeStyle = road; ctx.lineWidth = 38;
+    roadPath(true); ctx.stroke();
+    ctx.restore();
+
+    // 地貌斑块:荒野以枯草为主,墓园有泥地/浅沼,深渊是冷色黑水。
+    var region = 260;
+    var rx0 = Math.floor((camX - W / 2) / region) - 1;
+    var rx1 = Math.floor((camX + W / 2) / region) + 1;
+    var ry0 = Math.floor((camY - H / 2) / region) - 1;
+    var ry1 = Math.floor((camY + H / 2) / region) + 1;
+    for (var ry = ry0; ry <= ry1; ry++) {
+      for (var rx = rx0; rx <= rx1; rx++) {
+        var rh = E.hash2(rx * 61 + map.id.length * 13, ry * 67 - map.id.length * 7);
+        if (rh < 0.53) continue;
+        var wx = rx * region + 34 + E.hash2(rx * 73, ry * 79) * 190;
+        var wy = ry * region + 28 + E.hash2(rx * 83, ry * 89) * 194;
+        var sx = wx - camX + W / 2, sy = wy - camY + H / 2;
+        var rw = 36 + E.hash2(rx * 97, ry * 101) * 62;
+        var rhh = 14 + E.hash2(rx * 103, ry * 107) * 26;
+        var wet = map.id !== 'wilds' && rh > 0.79;
+        ctx.globalAlpha = wet ? 0.62 : 0.32;
+        ctx.fillStyle = wet ? (map.id === 'abyss' ? '#101b2d' : '#26342a')
+                            : (map.id === 'wilds' ? '#4a4724' : map.palette.ground2);
+        ctx.beginPath(); ctx.ellipse(sx | 0, sy | 0, rw, rhh, rh * Math.PI, 0, Math.PI * 2); ctx.fill();
+        if (wet) {
+          ctx.globalAlpha = 0.32;
+          ctx.strokeStyle = map.id === 'abyss' ? '#4e658d' : '#637559';
+          ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.ellipse(sx | 0, sy | 0, rw * 0.72, rhh * 0.46, rh * Math.PI, 0, Math.PI * 2); ctx.stroke();
+        } else {
+          ctx.globalAlpha = 0.58;
+          ctx.fillStyle = map.id === 'wilds' ? '#77713a' : map.palette.decor;
+          for (var blade = -2; blade <= 2; blade++) {
+            var gx = (sx + blade * 7) | 0, gy = (sy + ((blade * blade) % 3) * 2) | 0;
+            ctx.fillRect(gx, gy - 5 - Math.abs(blade), 2, 6 + Math.abs(blade));
+          }
+        }
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function isTallDecor(name) {
+    return name.indexOf('tree') >= 0 || name === 'deco_grave' || name === 'deco_fence' ||
+      name === 'deco_skullpost' || name === 'deco_pillar' || name === 'deco_stalag';
+  }
+
   // 装饰物按基座 y 排序绘制:pass='back' 画角色身后的,pass='front' 画角色身前的,
   // 这样墓碑/枯树能正确遮挡走到它后面的角色。refY 传玩家世界 y。
   function drawDecor(map, camX, camY, refY, pass) {
-    var cell = 220;
+    var cell = 200;
     var x0 = Math.floor((camX - CFG.GAME.W / 2 - 60) / cell);
     var x1 = Math.floor((camX + CFG.GAME.W / 2 + 60) / cell);
     var y0 = Math.floor((camY - CFG.GAME.H / 2 - 80) / cell);
     var y1 = Math.floor((camY + CFG.GAME.H / 2 + 40) / cell);
     for (var cy = y0; cy <= y1; cy++) {
       for (var cx = x0; cx <= x1; cx++) {
-        var n = Math.floor(E.hash2(cx * 3 + 1, cy * 3 + 1) * 3); // 0~2 个装饰
+        var n = Math.floor(E.hash2(cx * 3 + 1, cy * 3 + 1) * 4); // 0~3 个装饰
         // 同一 cell 内按 n 均分横向区块,每块内留边距扰动,
         // 避免两个装饰落在同一位置互相重叠
         var cellW = cell / Math.max(1, n);
@@ -1069,10 +1148,16 @@
           if (pass === 'back' && wy > refY) continue;
           if (pass === 'front' && wy <= refY) continue;
           var name = map.decors[Math.floor(h1 * map.decors.length)];
+          var tall = isTallDecor(name);
+          if (pass === 'ground' && tall) continue;
+          if ((pass === 'back' || pass === 'front') && !tall) continue;
           var img = SpriteGen.get(name);
           var sx = wx - camX + CFG.GAME.W / 2;
           var sy = wy - camY + CFG.GAME.H / 2;
-          var dw = img.width * 2, dh = img.height * 2;
+          // V3 props carry an explicit logical render scale.  Honour it here so
+          // large source cells keep their detail without becoming screen-sized.
+          var decorScale = SpriteGen.renderScale ? SpriteGen.renderScale(name) : 1;
+          var dw = img.width * 2 * decorScale, dh = img.height * 2 * decorScale;
           // 贴地投影:让装饰物落在地面上而不是浮空
           ctx.globalAlpha = 0.32;
           ctx.fillStyle = '#000';
@@ -1080,7 +1165,7 @@
           ctx.ellipse(sx | 0, sy | 0, dw * 0.36, dh * 0.10, 0, 0, Math.PI * 2);
           ctx.fill();
           ctx.globalAlpha = 0.92;
-          ctx.drawImage(img, (sx - img.width) | 0, (sy - dh) | 0, dw, dh);
+          ctx.drawImage(img, (sx - dw / 2) | 0, (sy - dh) | 0, dw, dh);
           ctx.globalAlpha = 1;
         }
       }
@@ -1160,6 +1245,8 @@
     var pal = run.map.palette;
 
     drawGround(run.map, camX, camY);
+    // 低矮装饰永远处于地表层,不会错误覆盖角色脚部或弹幕。
+    drawDecor(run.map, camX, camY, run.player.y, 'ground');
     // 角色背后的装饰物(y 小于玩家)
     drawDecor(run.map, camX, camY, run.player.y, 'back');
 
@@ -1175,10 +1262,8 @@
       Entities.drawMates(ctx, run, Net.isHost() ? hostMateView() : coop.remote);
     }
     Entities.draw(ctx, run);
+    Merchant.drawProjectiles(ctx, run);
     ctx.restore();
-
-    // 角色前方的装饰物:自带屏幕坐标换算,必须在 translate 之外调用
-    drawDecor(run.map, camX, camY, run.player.y, 'front');
 
     ctx.save();
     ctx.translate(CFG.GAME.W / 2 - camX, CFG.GAME.H / 2 - camY);
@@ -1194,6 +1279,9 @@
     ctx.globalAlpha = auraW ? 0.42 : 0.28;
     ctx.drawImage(SpriteGen.glow(glowCol), pls - 190, plt - 190, 380, 380);
     ctx.globalAlpha = 1;
+
+    // 高大前景在角色、武器和角色光晕之后绘制,树干可正确遮挡从其后方经过的实体。
+    drawDecor(run.map, camX, camY, run.player.y, 'front');
 
     // 雾色叠层 + 暗角
     ctx.globalAlpha = 0.10 + Math.sin(run.t * 0.4) * 0.03;
@@ -1261,36 +1349,31 @@
     }
     drawMenuAsh();
 
-    // 顶部角色行:从右往左跳动,固定间隔整齐排列
+    // 顶部角色行:放到标题下方的独立展示带,保持完全不透明。
     var chars = ['char_knight', 'char_mage', 'char_ranger', 'char_cleric', 'char_berserker', 'char_chrono'];
     for (var ci = 0; ci < chars.length; ci++) {
       var cx = (CFG.GAME.W + 220 - (menuT * 36 + ci * 165) % (CFG.GAME.W + 220)) - 110;
-      var cy = 62 + Math.sin(menuT * 3.2 + ci * 0.8) * 6;
-      var cfr = SpriteGen.frames(chars[ci]);
-      var cimg = cfr[Math.floor(menuT * 5 + ci) % cfr.length];
-      ctx.globalAlpha = 0.55;
-      ctx.drawImage(cimg, cx, cy, 40, 40);
-      ctx.globalAlpha = 1;
+      var cy = 108 + Math.sin(menuT * 3.2 + ci * 0.8) * 4;
+      var cfr = SpriteGen.frames(chars[ci] + '_walk_right');
+      var cimg = cfr[Math.floor(menuT * 10 + ci) % cfr.length];
+      ctx.drawImage(cimg, cx, cy, 56, 74);
     }
 
     // 底部怪物行:普通怪 + Boss 随机错落排列,普通怪 32px,Boss 40px(还原比例)
     var parade = ['bat', 'slime', 'zombie', 'skeleton', 'ghost', 'spider', 'orc',
                   'boss_slimeking', 'boss_bonelord', 'boss_abysseye', 'boss_darklord'];
-    var crown = SpriteGen.get('elite_crown');
     for (var i = 0; i < parade.length; i++) {
       var pid = parade[i];
       var x = ((menuT * 40 + i * 152 + (i % 3) * 26) % (CFG.GAME.W + 200)) - 100;
-      var y = CFG.GAME.H - 90 + Math.sin(menuT * 4 + i * 1.3) * 4;
-      var frames = SpriteGen.frames(pid);
-      var img = frames[Math.floor(menuT * 5 + i) % frames.length];
+      var y = CFG.GAME.H - 72 + Math.sin(menuT * 4 + i * 1.3) * 3;
       var isBoss = pid.indexOf('boss_') === 0;
-      ctx.globalAlpha = 0.5;
+      var frames = SpriteGen.frames(pid + (isBoss ? '' : '_walk'));
+      var img = frames[Math.floor(menuT * 5 + i) % frames.length];
       if (isBoss) {
-        ctx.drawImage(img, x, y, 40, 40);            // Boss 比例不变,只是比小怪略大
+        ctx.drawImage(img, x, y, 54, 54);
       } else {
-        ctx.drawImage(img, x, y, 32, 32);
+        ctx.drawImage(img, x, y + 8, 42, 42);
       }
-      ctx.globalAlpha = 1;
     }
     ctx.drawImage(vignette, 0, 0);
     FX.update(1 / 60);
