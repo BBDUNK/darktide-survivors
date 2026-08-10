@@ -1289,8 +1289,12 @@ window.Entities = (function () {
     // 联机时经验按人数稀释,保证升级节奏不因多人分摊而失控
     var st = ownerStats || run.player.stats;
     var gain = v * st.growth * (run.coopXpMul || 1);
-    // 联机共享经验池:加给所有人,升级节奏一致
-    if (run.coopXp) {
+    // 联机共享经验池:加给所有人,升级节奏一致。
+    // ⚠ 必须判 !== null 而不是 truthy:coopXp 联机时初始化为 0(单机为 null),
+    // 写成 if (run.coopXp) 会因为 0 是 falsy 而在开局永远走单机分支 ——
+    // 共享经验池根本不累加,onCoopLevel 永不触发,客户端永远收不到升级选项。
+    // 这正是"联机升级坏了/升级拿不到新武器"的直接原因。
+    if (run.coopXp !== null && run.coopXp !== undefined) {
       run.coopXp += gain;
       while (run.coopXp >= run.xpNeed) {
         run.coopXp -= run.xpNeed;

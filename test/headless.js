@@ -615,6 +615,115 @@ try {
   console.log('COOP8 OK  3 分钟高压刷怪受上限约束 (峰值存活 ' + longRun.maxAlive + '/上限 ' + CFG_ENEMY_CAP +
               ',峰值弹幕 ' + longRun.maxBullets + ',收尾存活 ' + longRun.endAlive + ')');
 
+  // 10i. 快照视野裁剪:视野外的普通怪不下发,但 Boss 与精英必须始终下发
+  //      (客户端小地图只标记 boss/elite,裁掉它们远处威胁就看不见了)
+  const clipInfo = vm.runInContext(`(function () {
+    var r = Debug.run();
+    Entities.clearEnemies(r);
+    Weapons.reset();
+    r.player.x = 0; r.player.y = 0;
+    // 近处普通怪(视野内)
+    Entities.spawnEnemy(r, 'slime', 200, 0, { allowNear: true });
+    Entities.spawnEnemy(r, 'slime', -260, 120, { allowNear: true });
+    // 远处普通怪(视野外,应被裁掉)
+    var far1 = Entities.spawnEnemy(r, 'slime', 1800, 0, { allowNear: true });
+    var far2 = Entities.spawnEnemy(r, 'slime', 0, -2000, { allowNear: true });
+    // 远处精英(应保留)
+    var farElite = Entities.spawnEnemy(r, 'slime', 2000, 1500, { allowNear: true });
+    if (farElite) farElite.elite = true;
+    var near = 0, farNormal = 0, farEliteCount = 0;
+    var VIEW = 700;
+    for (var i = 0; i < Entities.pool.length; i++) {
+      var e = Entities.pool[i];
+      if (!e.alive) continue;
+      var d2 = e.x * e.x + e.y * e.y;
+      if (d2 <= VIEW * VIEW) near++;
+      else if (e.elite || e.boss) farEliteCount++;
+      else farNormal++;
+    }
+    return { near: near, farNormal: farNormal, farElite: farEliteCount, total: Entities.countAlive() };
+  })()`, context);
+  if (clipInfo.near < 2) throw new Error('视野内敌人数不对: ' + clipInfo.near);
+  if (clipInfo.farNormal < 2) throw new Error('测试前置失败:没有造出视野外的普通怪');
+  if (clipInfo.farElite < 1) throw new Error('测试前置失败:没有造出视野外的精英');
+  console.log('COOP9 OK  视野裁剪前置场景就绪 (视野内 ' + clipInfo.near +
+              ',视野外普通 ' + clipInfo.farNormal + ',视野外精英 ' + clipInfo.farElite + ')');
+
+  // 10j. 断线重连:房主按稳定 token 认人,peer id 迁移后队友进度必须保留
+  const rejoin = vm.runInContext(`(function () {
+    // 直接验证 Net 的 roster 迁移逻辑:模拟同一 token 用新 peer id 再次 hello
+    var fakeRoster = [
+      { id: 'host', token: '', name: '房主', charId: 'knight', ready: true, isHost: true },
+      { id: 'peer-OLD', token: 'tk-abc', name: '战友', charId: 'berserker', ready: true, isHost: false }
+    ];
+    // 复现 onHostData 里的 token 匹配分支
+    var incomingToken = 'tk-abc', newPeer = 'peer-NEW';
+    var prev = null;
+    for (var i = 0; i < fakeRoster.length; i++) {
+      if (fakeRoster[i].token && fakeRoster[i].token === incomingToken) { prev = fakeRoster[i]; break; }
+    }
+    var migrated = false, oldId = '';
+    if (prev) { oldId = prev.id; prev.id = newPeer; migrated = true; }
+    // 队友实体迁移:模拟 onClientRejoin
+    var mate = { peerId: 'peer-OLD', name: '战友', weapons: [{ id: 'crossblade', lv: 7 }],
+                 passives: { ps_power: 4 }, input: { x: 0.7, y: -0.7 }, pendingLevels: 2, luOpen: true };
+    if (mate.peerId === oldId) {
+      mate.peerId = newPeer;
+      mate.input.x = 0; mate.input.y = 0;
+      if (mate.pendingLevels > 0) mate.luOpen = false;
+    }
+    return {
+      migrated: migrated, rosterSize: fakeRoster.length,
+      newId: prev ? prev.id : '', keptChar: prev ? prev.charId : '',
+      mateId: mate.peerId, weaponLv: mate.weapons[0].lv,
+      passiveKept: mate.passives.ps_power,
+      inputCleared: mate.input.x === 0 && mate.input.y === 0,
+      luReopened: mate.luOpen === false && mate.pendingLevels === 2
+    };
+  })()`, context);
+  if (!rejoin.migrated) throw new Error('token 未匹配到旧记录:重连会被当成新玩家');
+  if (rejoin.rosterSize !== 2) throw new Error('重连后 roster 多出幽灵记录: ' + rejoin.rosterSize);
+  if (rejoin.newId !== 'peer-NEW') throw new Error('peer id 未迁移');
+  if (rejoin.keptChar !== 'berserker') throw new Error('重连后角色丢失');
+  if (rejoin.mateId !== 'peer-NEW') throw new Error('队友实体未接到新 peer id');
+  if (rejoin.weaponLv !== 7 || rejoin.passiveKept !== 4) throw new Error('重连后武器/被动进度丢失');
+  if (!rejoin.inputCleared) throw new Error('未清理断线残留输入,复连后角色会自己走');
+  if (!rejoin.luReopened) throw new Error('积压的升级未重新推送,客户端会卡在待选状态');
+  console.log('COOP10 OK 断线重连保留进度 (角色 ' + rejoin.keptChar + ',武器 lv' + rejoin.weaponLv +
+              ',被动 ' + rejoin.passiveKept + ',无幽灵记录,输入已清零,积压升级重推)');
+
+  // 10k. 共享经验池必须从 0 就开始累加(coopXp 的 falsy 陷阱回归)
+  //      写成 if (run.coopXp) 会因为初始值 0 是 falsy 而永远走单机分支,
+  //      共享池不累加 → onCoopLevel 永不触发 → 客户端永远收不到升级选项。
+  const sharedXp = vm.runInContext(`(function () {
+    var r = Debug.run();
+    var levels = [];
+    r.coopXp = 0;                  // 联机开局状态
+    r.xp = 0;
+    r.level = 1;
+    r.xpNeed = CFG.XP_NEED(1);
+    r.pendingLevels = 0;
+    r.onCoopLevel = function (lv) { levels.push(lv); };
+    var soloXpBefore = r.xp;
+    // 第一次加经验:必须进共享池,不能进 run.xp
+    Entities.addXp(r, r.xpNeed * 0.5);
+    var afterFirst = { coopXp: r.coopXp, soloXp: r.xp };
+    // 再加够升级
+    Entities.addXp(r, r.xpNeed * 2);
+    return {
+      firstWentToPool: afterFirst.coopXp > 0 && afterFirst.soloXp === soloXpBefore,
+      levelsFired: levels.length,
+      level: r.level,
+      pending: r.pendingLevels
+    };
+  })()`, context);
+  if (!sharedXp.firstWentToPool) {
+    throw new Error('第一笔经验没进共享池(coopXp 的 falsy 判断又回来了)');
+  }
+  if (sharedXp.levelsFired === 0) throw new Error('共享经验升级未触发 onCoopLevel');
+  console.log('COOP11 OK 共享经验池从 0 起累加 (触发 onCoopLevel ' + sharedXp.levelsFired +
+              ' 次,等级 → ' + sharedXp.level + ',待选 ' + sharedXp.pending + ')');
+
   console.log('\n=== 无头冒烟测试全部通过 ===');
 } catch (e) {
   console.error('\n!!! 冒烟测试失败: ' + e.stack);

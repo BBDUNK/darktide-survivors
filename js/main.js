@@ -183,12 +183,35 @@
 
   // ---- 房主:打快照并广播(15Hz) ----
   // 字段名压到 1~2 字符,15Hz × 4 人下带宽才够用。
-  function buildSnapshot() {
+  // 视野裁剪半径:客户端视口 960×540,半对角约 551。取 700 留出足够余量,
+  // 保证屏幕边缘刚要进入视野的实体已经在快照里(不会"凭空出现")。
+  var SNAP_VIEW_R = 700;
+
+  // 按接收方视野裁剪的快照。
+  // 之前是无条件全量广播:满载 400 怪时单帧 68KB,15Hz 下达 8Mbps/客户端,
+  // 远超 WebRTC DataChannel 的实际吞吐,数据在发送队列积压,客户端收到的
+  // 全是过期快照 —— 这正是"联机卡顿掉帧"的根因。
+  // 地图 4800×4800 而视口只有 960×540(约 1/25),裁掉视野外的实体能把
+  // 带宽压到原来的很小一部分,且客户端本来也渲染不到它们。
+  // viewX/viewY 传 null 时退化为全量(用于单机自检或调试)。
+  function buildSnapshot(viewX, viewY) {
     var pool = Entities.pool, i, e;
+    var clip = (viewX !== null && viewX !== undefined);
+    var R2 = SNAP_VIEW_R * SNAP_VIEW_R;
+    // 用方框预筛再比平方距离:避免对 400 个实体做 hypot
+    function inView(x, y) {
+      if (!clip) return true;
+      var dx = x - viewX, dy = y - viewY;
+      if (dx > SNAP_VIEW_R || dx < -SNAP_VIEW_R || dy > SNAP_VIEW_R || dy < -SNAP_VIEW_R) return false;
+      return dx * dx + dy * dy <= R2;
+    }
     var es = [];
     for (i = 0; i < pool.length; i++) {
       e = pool[i];
       if (!e.alive) continue;
+      // Boss 与精英始终下发:Boss 要画屏幕下方血条,两者都要出现在客户端小地图上
+      // (minimap 只标记 boss/elite)。它们同时存活数极少,全量下发的代价可忽略。
+      if (!e.boss && !e.elite && !inView(e.x, e.y)) continue;
       es.push({
         u: e.uid, i: e.id, x: Math.round(e.x), y: Math.round(e.y),
         h: Math.round(e.hp), m: Math.round(e.maxHp),
@@ -201,6 +224,7 @@
     var shots = Entities.getShots(), ss = [];
     for (i = 0; i < shots.length; i++) {
       if (!shots[i].alive) continue;
+      if (!inView(shots[i].x, shots[i].y)) continue;
       ss.push({
         x: Math.round(shots[i].x), y: Math.round(shots[i].y),
         vx: Math.round(shots[i].vx), vy: Math.round(shots[i].vy),
@@ -210,17 +234,20 @@
     var lobs = Entities.getLobs(), ls = [];
     for (i = 0; i < lobs.length; i++) {
       if (!lobs[i].alive) continue;
+      if (!inView(lobs[i].tx, lobs[i].ty)) continue;
       ls.push({ x: Math.round(lobs[i].tx), y: Math.round(lobs[i].ty),
                 r: lobs[i].r, t: +lobs[i].t.toFixed(2), d: lobs[i].dur });
     }
     var gems = Entities.getGems(), gs = [];
     for (i = 0; i < gems.length; i++) {
       if (!gems[i].alive) continue;
+      if (!inView(gems[i].x, gems[i].y)) continue;
       gs.push({ x: Math.round(gems[i].x), y: Math.round(gems[i].y), v: gems[i].v });
     }
     var items = Entities.getItems(), its = [];
     for (i = 0; i < items.length; i++) {
       if (!items[i].alive) continue;
+      // 掉落物(宝箱/道具)全量下发:数量少,且客户端要在小地图上看到远处宝箱
       its.push({ k: items[i].type, x: Math.round(items[i].x), y: Math.round(items[i].y) });
     }
     // 玩家弹幕:客户端需要看到所有参战者的投射物
@@ -228,6 +255,7 @@
     for (i = 0; i < wbs.length; i++) {
       var wb = wbs[i];
       if (!wb.alive) continue;
+      if (!inView(wb.x, wb.y)) continue;
       bs.push({
         k: wb.kind, s: wb.spr, x: Math.round(wb.x), y: Math.round(wb.y),
         vx: Math.round(wb.vx), vy: Math.round(wb.vy),
@@ -673,17 +701,11 @@
           };
         })
       };
+      // over 属于 Net 的关键消息类型,已由应用层 ACK 保证送达
+      // (带序号重发直到对端确认,收端去重),不再需要盲发多次。
       Net.broadcast(overMsg);
-      // 快照走 unreliable 通道(丢帧可接受),但 over 是结算信号不能丢。
-      // 重发 8 次(每次间隔 120ms)大幅提高送达率,否则客户端永远停在战斗画面卡死。
-      for (var ri = 1; ri <= 8; ri++) {
-        (function (n) {
-          setTimeout(function () {
-            if (coop.on && Net.isHost()) Net.broadcast(overMsg);
-          }, n * 120);
-        })(ri);
-      }
     }
+    Net.setInRun(false);   // 回到结算/大厅:此后掉线直接移除,不再保留占位
     coop.active = false;
     coop.mates = [];
     state = 'result';
@@ -899,12 +921,20 @@
     Entities.updateItems(run, dt);
     Entities.director(run, dt);
 
-    // 房主:定频广播世界快照
+    // 房主:定频给每个客户端发送按其视野裁剪的快照。
+    // 逐客户端定制而非统一广播,是因为每人视野不同;裁剪后带宽大幅下降,
+    // 避免 DataChannel 队列积压导致的"收到的全是过期快照"式卡顿。
     if (coop.on && Net.isHost()) {
       coop.snapAcc += dt;
       if (coop.snapAcc >= 1 / Net.SNAP_HZ) {
         coop.snapAcc = 0;
-        Net.broadcast(buildSnapshot());
+        for (var si = 0; si < coop.mates.length; si++) {
+          var sm = coop.mates[si];
+          if (!sm.player) continue;
+          // sendSnap 带背压保护:该连接积压过多时丢弃本帧,
+          // 避免旧快照排队造成延迟雪崩(快照是幂等的,丢一帧不影响正确性)
+          Net.sendSnap(sm.peerId, buildSnapshot(sm.player.x, sm.player.y));
+        }
       }
     }
 
@@ -1531,6 +1561,7 @@
         var mapId = Net.getMap() || CFG.MAPS[0].id;   // 房主选定,不再固定第一张
         coop.active = true;
         setupCoopHost(roster, mapId);
+        Net.setInRun(true);   // 之后掉线只标记离线并保留进度,等待重连
         Net.broadcast({ t: 'start', mapId: mapId, roster: roster });
         newRun(roster[0].charId, mapId);
       }
@@ -1543,7 +1574,12 @@
         if (mapId) UI.applyCoopMap(mapId);   // 房主选图后同步给客户端显示
       },
       onStart: function (m) {
-        // 客户端跟随房主开局;自己的角色取自大厅选择
+        // 客户端跟随房主开局;自己的角色取自大厅选择。
+        // m.rejoin=1 表示这是断线重连后房主补发的:同样走 newRun 重建本地场景,
+        // 但等级/武器/位置会在下一个快照到达时被房主的权威数据覆盖回来
+        // (房主端保留了这名玩家的实体,进度并未丢失)。
+        // coop.myId 必须刷新:PeerJS 重连会分配新 peer id,快照里的 ps.id
+        // 用的是新 id,不更新就再也认不出"哪个玩家是我自己"。
         var mine = UI.myPick() || CFG.CHARS[0].id;
         coop.on = true;
         coop.mates = [];
@@ -1551,6 +1587,7 @@
         coop.myId = Net.selfId();
         coop.active = true;
         newRun(mine, m.mapId);
+        if (m.rejoin) UI.toastText('已重连,正在同步战况…');
       },
       // 客户端:收到房主快照,重建世界并解出队友
       onSnap: function (m) {
@@ -1587,6 +1624,30 @@
           Weapons.applyVisual(run, m.b || []);
         } catch (e) {
           console.error('[联机] 快照应用失败:', e);
+        }
+      },
+      // 房主:客户端断线重连回来了(PeerJS 会给它一个新的 peer id)。
+      // 把对局内已有的队友实体接到新 peer id 上,玩家的武器/等级/被动/位置
+      // 全部保留;不这么做的话他会被当成新玩家,进度清零,而旧记录变成
+      // 一个永不更新输入的"幽灵队友"仍被刷怪追踪。
+      onClientRejoin: function (oldPeerId, newPeerId) {
+        if (!coop.on || !coop.mates) return;
+        for (var i = 0; i < coop.mates.length; i++) {
+          if (coop.mates[i].peerId !== oldPeerId) continue;
+          var mt = coop.mates[i];
+          mt.peerId = newPeerId;
+          mt.input.x = 0; mt.input.y = 0;   // 清掉断线瞬间残留的方向,避免复连后自己乱走
+          // 补发 start:重连的客户端刚握完手还停在大厅,不告诉它"对局仍在进行"
+          // 它就永远回不到战斗画面。带上它自己的角色 id 以便正确重建本地表现。
+          if (run && state !== 'result') {
+            Net.sendTo(newPeerId, {
+              t: 'start', mapId: run.map.id, roster: Net.getRoster(), rejoin: 1
+            });
+          }
+          // 断线期间可能积压了升级:重连后重新推一次,否则卡在"待选"状态
+          if (mt.pendingLevels > 0) { mt.luOpen = false; sendMateLevelUp(mt); }
+          UI.toastText(mt.name + ' 已重连');
+          return;
         }
       },
       // 房主:收到客户端输入
