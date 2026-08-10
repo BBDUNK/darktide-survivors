@@ -299,6 +299,15 @@ window.Entities = (function () {
     if (!freeIdx.length) return null;
     var def = CFG.ENEMIES[id] || CFG.BOSSES[id];
     if (!def) return null;
+    // 统一存活上限闸门:此前只有 director 的常规刷怪检查 ENEMY_CAP,
+    // 而事件波、Boss 召唤、史莱姆分裂等路径直接调 spawnEnemy,能把池子
+    // 从 400 一路填到 520(池容量)。满池后每帧要遍历/哈希/渲染 520 个实体,
+    // 正是"玩几分钟就卡死"的直接原因。
+    // Boss 永远放行(剧情必需);分裂子体放行(否则大史莱姆死了不分裂,机制会坏),
+    // 但它们仍受 freeIdx 的物理上限约束。
+    if (!CFG.BOSSES[id] && !(opts && opts.allowNear)) {
+      if ((POOL - freeIdx.length) >= CFG.GAME.ENEMY_CAP) return null;
+    }
     // 统一闸门:不许生在安全区内。豁免两种情况——
     //   allowNear: 分裂子体紧贴母体
     //   def.burrow: 破土怪允许近身冒出(有出土前摇作为反应窗口)

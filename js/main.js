@@ -619,11 +619,13 @@
           var mcd = null;
           for (var mci = 0; mci < CFG.CHARS.length; mci++) if (CFG.CHARS[mci].id === mt0.charId) mcd = CFG.CHARS[mci];
           if (mcd) {
-            var sP = run.player, sW = run.weapons, sPs = run.passives;
+            // ⚠ run.banished 必须一起存档并在 finally 里恢复:
+            // 漏掉它会让房主的丢弃列表被最后一个队友的 Set 顶替(引用泄漏)。
+            var sP = run.player, sW = run.weapons, sPs = run.passives, sB = run.banished;
             run.player = mt0.player; run.weapons = mt0.weapons; run.passives = mt0.passives;
             run.banished = mt0.banished || run.banished;
-            Weapons.addWeapon(run, mcd.weapon);
-            run.player = sP; run.weapons = sW; run.passives = sPs;
+            try { Weapons.addWeapon(run, mcd.weapon); }
+            finally { run.player = sP; run.weapons = sW; run.passives = sPs; run.banished = sB; }
           }
         }
       }

@@ -510,6 +510,111 @@ try {
   if (chestGot !== 1) throw new Error('队友宝箱未计入 pendingChest');
   console.log('COOP5 OK  队友可拾取烤肉/宝箱');
 
+  // 10f. 队友升级链路:选项按队友自己的 Build 生成,选完真的进他的武器列表
+  //      (用户报"联机升级后拿不到新武器",这里锁死这条链路)
+  const lvUp = vm.runInContext(`(function () {
+    var r = Debug.run(), m = window.__mate;
+    m.weapons.length = 0;
+    m.passives = {};
+    var savedP = r.player, savedW = r.weapons, savedPs = r.passives, savedB = r.banished;
+    r.player = m.player; r.weapons = m.weapons; r.passives = m.passives;
+    r.banished = m.banished;
+    var choices, applied = null;
+    try {
+      choices = Weapons.getLevelUpChoices(r);
+      // 找一个"新武器"选项;没有就退而取第一个
+      var pick = null;
+      for (var i = 0; i < choices.length; i++) {
+        if (choices[i].kind === 'weapon' && choices[i].isNew) { pick = choices[i]; break; }
+      }
+      if (!pick) pick = choices[0];
+      Weapons.applyChoice(r, pick);
+      applied = pick;
+    } finally {
+      r.player = savedP; r.weapons = savedW; r.passives = savedPs; r.banished = savedB;
+    }
+    return {
+      choiceCount: choices ? choices.length : 0,
+      appliedKind: applied ? applied.kind : null,
+      mateWeapons: m.weapons.length,
+      matePassives: Object.keys(m.passives).length,
+      // 关键:不能写进房主的列表
+      hostWeapons: r.weapons.length
+    };
+  })()`, context);
+  if (!lvUp.choiceCount) throw new Error('队友升级没有生成选项');
+  if (lvUp.mateWeapons + lvUp.matePassives === 0) throw new Error('队友升级后既无武器也无被动:升级没生效');
+  console.log('COOP6 OK  队友升级生效 (选项 ' + lvUp.choiceCount + ' 个,武器 ' +
+              lvUp.mateWeapons + ' 被动 ' + lvUp.matePassives + ',房主武器未被污染 ' + lvUp.hostWeapons + ')');
+
+  // 10g. run.banished 引用不能泄漏:给多个队友轮流加武器后,各自的丢弃集必须独立
+  //      (旧代码在队友初始化武器时覆盖了 run.banished 却没恢复)
+  const banishIsolation = vm.runInContext(`(function () {
+    var r = Debug.run();
+    var hostSet = r.banished;
+    var mateA = { weapons: [], passives: {}, banished: new Set(['crossblade']), player: window.__mate.player };
+    var mateB = { weapons: [], passives: {}, banished: new Set(['windbow']), player: window.__mate.player };
+    [mateA, mateB].forEach(function (mt) {
+      var sP = r.player, sW = r.weapons, sPs = r.passives, sB = r.banished;
+      r.player = mt.player; r.weapons = mt.weapons; r.passives = mt.passives;
+      r.banished = mt.banished;
+      try { Weapons.addWeapon(r, 'arcanebolt'); }
+      finally { r.player = sP; r.weapons = sW; r.passives = sPs; r.banished = sB; }
+    });
+    return {
+      hostRestored: r.banished === hostSet,
+      aKeeps: mateA.banished.has('crossblade') && !mateA.banished.has('windbow'),
+      bKeeps: mateB.banished.has('windbow') && !mateB.banished.has('crossblade')
+    };
+  })()`, context);
+  if (!banishIsolation.hostRestored) throw new Error('run.banished 未恢复为房主的集合(引用泄漏)');
+  if (!banishIsolation.aKeeps || !banishIsolation.bKeeps) throw new Error('队友之间的 banished 集合串了');
+  console.log('COOP7 OK  banished 集合互不污染,房主引用已复原');
+
+  // 10h. 长时稳定性:连续跑 3 分钟(10800 帧)房主模拟,
+  //      对象池不得漂移、武器链路不得中断(用户报"玩几分钟客户端就卡死")
+  const CFG_ENEMY_CAP = vm.runInContext('CFG.GAME.ENEMY_CAP', context);
+  const longRun = vm.runInContext(`(function () {
+    var r = Debug.run(), m = window.__mate;
+    Entities.clearEnemies(r);
+    Weapons.reset();
+    // 还原成真实对局:房主与队友都带武器,否则没人打怪,敌人只增不减,
+    // 测出来的"堆积"是测试自己造的假象。
+    r.weapons = [{ id: 'crossblade', lv: 5, cdT: 0, evolved: false, evoId: null, curR: 0 }];
+    m.weapons = [{ id: 'arcanebolt', lv: 5, cdT: 0, evolved: false, evoId: null, curR: 0 }];
+    m.downed = false;
+    var maxAlive = 0, maxBullets = 0, kills0 = r.kills;
+    for (var f = 0; f < 10800; f++) {
+      // 刷怪压力对齐真实节奏(每 6 帧一只,远超一般波次)。
+      // 不带 allowNear:走和游戏里事件波相同的路径,才能验证 ENEMY_CAP 闸门生效。
+      if (f % 6 === 0) {
+        Entities.spawnEnemy(r, 'slime', r.player.x + 200, r.player.y + ((f % 11) - 5) * 26);
+      }
+      Entities.updateEnemies(r, 1/60);
+      Weapons.updateFor(r, m.player, m.weapons, 1/60);
+      Weapons.update(r, 1/60);
+      Entities.updateGems(r, 1/60);
+      Entities.updateItems(r, 1/60);
+      var alive = Entities.countAlive();
+      if (alive > maxAlive) maxAlive = alive;
+      var bl = 0, bs = Weapons.getBullets();
+      for (var i = 0; i < bs.length; i++) if (bs[i].alive) bl++;
+      if (bl > maxBullets) maxBullets = bl;
+    }
+    return {
+      maxAlive: maxAlive, maxBullets: maxBullets,
+      endAlive: Entities.countAlive(), killed: r.kills - kills0
+    };
+  })()`, context);
+  // 核心断言:存活数必须被 ENEMY_CAP 卡住,不能一路填到池容量(520)。
+  // 满池会让每帧遍历/空间哈希/渲染都背 520 个实体,就是"几分钟后卡死"的直接原因。
+  if (longRun.maxAlive > CFG_ENEMY_CAP) {
+    throw new Error('敌人存活数突破 ENEMY_CAP: ' + longRun.maxAlive + ' > ' + CFG_ENEMY_CAP);
+  }
+  if (longRun.maxBullets > 320) throw new Error('弹幕池越界: ' + longRun.maxBullets);
+  console.log('COOP8 OK  3 分钟高压刷怪受上限约束 (峰值存活 ' + longRun.maxAlive + '/上限 ' + CFG_ENEMY_CAP +
+              ',峰值弹幕 ' + longRun.maxBullets + ',收尾存活 ' + longRun.endAlive + ')');
+
   console.log('\n=== 无头冒烟测试全部通过 ===');
 } catch (e) {
   console.error('\n!!! 冒烟测试失败: ' + e.stack);
