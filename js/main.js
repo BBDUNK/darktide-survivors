@@ -351,9 +351,13 @@
           AudioSys.play('levelup');
           Entities.bombBlast(run, 150, p.x, p.y);
         } else {
-          m.downed = true; m.reviveT = 0; p.hp = 0;
+          // ⚠ 必须同时置 p.downed:这里原先只设了 m.downed,漏掉玩家实体上的标记。
+          // 后果是倒地的队友在 applyCoopAuras 里仍被当作有效光环源,
+          // 也可能被 nearestAlivePlayer 当成能救人的存活者。
+          // 走 Entities.markTeamDowned 统一处理(它同时置 p.downed / p.reviveT /
+          // w.downed / w.reviveT 并做全员倒地判定),避免两份实现再次走偏。
+          Entities.markTeamDowned(run, m);
           FX.ring(p.x, p.y, { r: 50, color: '#ff5964', life: 0.6, width: 3 });
-          UI.warn('⚠ ' + m.name + ' 倒下了!');
         }
       }
     }

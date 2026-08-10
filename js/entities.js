@@ -2051,6 +2051,9 @@ window.Entities = (function () {
     getLobs: function () { return lobs; },
     // 联机:客户端用房主快照覆盖本地世界
     applySnapshot: applySnapshot,
-    drawMates: drawMates
+    drawMates: drawMates,
+    // 倒地标记的唯一入口:同时置 player.downed 与条目上的 downed,
+    // 并做全员倒地判定。main.js 代跑队友时也要用它,避免各写一份走偏。
+    markTeamDowned: markTeamDowned
   };
 })();

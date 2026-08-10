@@ -724,6 +724,23 @@ try {
   console.log('COOP11 OK 共享经验池从 0 起累加 (触发 onCoopLevel ' + sharedXp.levelsFired +
               ' 次,等级 → ' + sharedXp.level + ',待选 ' + sharedXp.pending + ')');
 
+  // 10l. 倒地标记必须同时落在两处:条目 w.downed 与玩家实体 p.downed。
+  //      漏掉 p.downed 会让倒地队友仍被当作有效光环源/可救援的存活者。
+  const downedSync = vm.runInContext(`(function () {
+    var r = Debug.run(), m = window.__mate;
+    m.downed = false; m.player.downed = false; m.player.hp = m.player.stats.hp;
+    Entities.markTeamDowned(r, m);
+    var bothSet = m.downed === true && m.player.downed === true;
+    // 恢复,避免影响后续用例
+    m.downed = false; m.player.downed = false;
+    m.player.hp = m.player.stats.hp; m.reviveT = 0; m.player.reviveT = 0;
+    return { bothSet: bothSet };
+  })()`, context);
+  if (!downedSync.bothSet) {
+    throw new Error('markTeamDowned 没有同时设置 w.downed 与 player.downed');
+  }
+  console.log('COOP12 OK 倒地标记双字段一致 (w.downed 与 player.downed 同时置位)');
+
   console.log('\n=== 无头冒烟测试全部通过 ===');
 } catch (e) {
   console.error('\n!!! 冒烟测试失败: ' + e.stack);
