@@ -238,6 +238,12 @@ window.Engine = (function () {
 
   // ---------- 世界地形与装饰 ----------
   // 绘制和移动判定共用同一组确定性函数；镜头移动或重新载入后地形不会漂移。
+  // 沼泽/水域生成阈值:hash 值高于此才生成。调高 = 数量更少。
+  // 与 main.js drawTerrain 的 wet 判定必须保持同一个数,否则视觉与减速判定会脱节。
+  var SWAMP_THRESHOLD = 0.91;
+  // 水坑精灵里"真正的水面"占外框的比例(其余是泥巴边)。只有踩进水面才减速。
+  var SWAMP_WATER_RATIO = 0.58;
+
   function terrainSeed(map) {
     var id = map && map.id ? map.id : map;
     return id === 'graveyard' ? 0.8 : (id === 'wilds' ? 2.4 : 4.1);
@@ -258,17 +264,31 @@ window.Engine = (function () {
     for (var ry = ry0 - 1; ry <= ry0 + 1; ry++) {
       for (var rx = rx0 - 1; rx <= rx0 + 1; rx++) {
         var rh = hash2(rx * 61 + id.length * 13, ry * 67 - id.length * 7);
-        if (rh <= 0.87 || id === 'wilds') continue;
+        if (rh <= SWAMP_THRESHOLD || id === 'wilds') continue;
         var wx = rx * region + 34 + hash2(rx * 73, ry * 79) * 190;
         var wy = ry * region + 28 + hash2(rx * 83, ry * 89) * 194;
+        var dx = x - wx, dy = y - wy;
+        if (id === 'graveyard') {
+          // 墓园沼泽绘制用的是固定尺寸水坑精灵(见 main.js drawTerrain),
+          // 判定必须跟它同一组尺寸,否则会出现"还在泥边就已经减速"。
+          // 精灵外框 pw×ph 里,泥巴边占外圈,真正的水面约在中心 60%,
+          // 只有踩进水面才减速。
+          // ⚠ 这两行必须与 main.js drawTerrain 的 pw/ph 公式逐字一致
+          var pw = 372 + Math.floor(hash2(rx * 127, ry * 131) * 174);
+          var ph = 225 + Math.floor(hash2(rx * 137, ry * 139) * 102);
+          var wrx = pw * 0.5 * SWAMP_WATER_RATIO;
+          var wry = ph * 0.5 * SWAMP_WATER_RATIO;
+          if ((dx * dx) / (wrx * wrx) + (dy * dy) / (wry * wry) <= 1) {
+            return { type: 'swamp', mul: 0.60 };
+          }
+          continue;
+        }
         var rw = 116 + hash2(rx * 97, ry * 101) * 152;
         var rhh = 48 + hash2(rx * 103, ry * 107) * 72;
         var rot = rh * Math.PI, co = Math.cos(rot), si = Math.sin(rot);
-        var dx = x - wx, dy = y - wy;
         var lx = dx * co + dy * si, ly = -dx * si + dy * co;
         if ((lx * lx) / (rw * rw) + (ly * ly) / (rhh * rhh) <= 1) {
-          return id === 'graveyard' ? { type: 'swamp', mul: 0.60 }
-            : { type: 'water', mul: 0.75 };
+          return { type: 'water', mul: 0.75 };
         }
       }
     }
@@ -336,6 +356,8 @@ window.Engine = (function () {
     isTouch: function () { return isTouch; },
     viewScale: function () { return viewScale; },
     terrainEffect: terrainEffect, roadBend: roadBend,
+    // 绘制侧(main.js drawTerrain)必须复用这两个常量,保证视觉与减速判定同步
+    SWAMP_THRESHOLD: SWAMP_THRESHOLD, SWAMP_WATER_RATIO: SWAMP_WATER_RATIO,
     forEachDecor: forEachDecor, decorCollisionRadius: decorCollisionRadius,
     resolveDecorCollision: resolveDecorCollision,
     setTimeScale: function (s) { timeScale = s; },

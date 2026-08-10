@@ -1887,8 +1887,29 @@
       atlasState.image = cfg.image;
       atlasState.promise = new Promise(function (resolve) {
         var image = new Image();
+        var settled = false;
+        var timer = setTimeout(function () {
+          if (settled) return;
+          settled = true;
+          atlasState.error = 'atlas load timed out: ' + cfg.image;
+          console.warn('[SpriteGen] 图集加载超时,继续使用程序素材: ' + cfg.image);
+          window.SpriteGen.init();
+          resolve(false);
+        }, 8000);
+        function fallback(message) {
+          if (settled) return;
+          settled = true;
+          clearTimeout(timer);
+          atlasState.error = message;
+          console.warn('[SpriteGen] 图集加载失败,继续使用程序素材: ' + cfg.image);
+          window.SpriteGen.init();
+          resolve(false);
+        }
         image.onload = function () {
           try {
+            if (settled) return;
+            settled = true;
+            clearTimeout(timer);
             var replacements = {};
             var names = Object.keys(cfg.frames);
             for (var ni = 0; ni < names.length; ni++) {
@@ -1924,10 +1945,7 @@
           }
         };
         image.onerror = function () {
-          atlasState.error = 'image load failed: ' + cfg.image;
-          console.warn('[SpriteGen] 图集加载失败,继续使用程序素材: ' + cfg.image);
-          window.SpriteGen.init();
-          resolve(false);
+          fallback('image load failed: ' + cfg.image);
         };
         image.decoding = 'async';
         image.fetchPriority = 'high';

@@ -7,6 +7,7 @@
   var run = null;
   var vignette = null;
   var menuBgImg = null;
+  var atlasPending = false;
   var achvTimer = 0;
   var dpsTimer = 0, lastDmg = 0;
 
@@ -22,6 +23,11 @@
   }
   function skipIntro() {
     if (introDone) return;
+    if (atlasPending) {
+      // 图集仍在后台加载:先记录跳过意图,加载完成后再切菜单,避免提前触发整套程序素材生成。
+      introSkipped = true;
+      return;
+    }
     introDone = true;
     state = 'menu';
     UI.show('menu');     // 显示主菜单 DOM 层(标题屏也隐藏)
@@ -43,23 +49,26 @@
     }
 
     // ---- 静态美术资源展示:上下两行,随版本同步更新 ----
-    // 上行:全部角色 + 透明底的武器/道具精灵(不用带黑底的 defIcon)
-    var heroRow = ['char_knight', 'char_mage', 'char_ranger', 'char_cleric', 'char_berserker', 'char_chrono'];
-    heroRow = heroRow.concat(['p_slash', 'p_bolt', 'p_arrow', 'p_book', 'p_axe', 'p_shadow',
-                              'p_fireflask', 'p_orbitblade', 'coin', 'meat', 'chest', 'magnet']);
-    var hGap = 46;
-    var hTotal = heroRow.length * hGap;
-    var hStart = (W - hTotal) / 2;
-    for (var hi = 0; hi < heroRow.length; hi++) {
-      var hx = hStart + hi * hGap + hGap / 2;
-      var hy = 58 + Math.sin(introT * 2.5 + hi * 0.6) * 3;
-      var hFrames = SpriteGen.frames(heroRow[hi]);
-      var himg = hFrames[Math.floor(introT * 6 + hi * 0.35) % hFrames.length];
-      var hw = heroRow[hi].indexOf('char_') === 0 ? 38 : 26;
-      ctx.globalAlpha = 1;   // 透明度拉到最高,不若隐若现
-      ctx.drawImage(himg, hx - hw / 2, hy - hw / 2, hw, hw);
+    // 图集后台加载期间先不绘制精灵行,避免触发整套程序素材生成导致卡顿。
+    if (!atlasPending) {
+      // 上行:全部角色 + 透明底的武器/道具精灵(不用带黑底的 defIcon)
+      var heroRow = ['char_knight', 'char_mage', 'char_ranger', 'char_cleric', 'char_berserker', 'char_chrono'];
+      heroRow = heroRow.concat(['p_slash', 'p_bolt', 'p_arrow', 'p_book', 'p_axe', 'p_shadow',
+                                'p_fireflask', 'p_orbitblade', 'coin', 'meat', 'chest', 'magnet']);
+      var hGap = 46;
+      var hTotal = heroRow.length * hGap;
+      var hStart = (W - hTotal) / 2;
+      for (var hi = 0; hi < heroRow.length; hi++) {
+        var hx = hStart + hi * hGap + hGap / 2;
+        var hy = 58 + Math.sin(introT * 2.5 + hi * 0.6) * 3;
+        var hFrames = SpriteGen.frames(heroRow[hi]);
+        var himg = hFrames[Math.floor(introT * 6 + hi * 0.35) % hFrames.length];
+        var hw = heroRow[hi].indexOf('char_') === 0 ? 38 : 26;
+        ctx.globalAlpha = 1;   // 透明度拉到最高,不若隐若现
+        ctx.drawImage(himg, hx - hw / 2, hy - hw / 2, hw, hw);
+      }
+      ctx.globalAlpha = 1;
     }
-    ctx.globalAlpha = 1;
 
     // 中央题字(放大,两行)
     ctx.textAlign = 'center';
@@ -80,23 +89,25 @@
     ctx.fillStyle = '#cfe6ff';
     ctx.fillText('特别鸣谢:SOTA Model', W / 2, H / 2 + 68);
 
-    // 下行:全部敌人 + Boss(静态排列,不滚动)
-    var enemyRow = ['bat', 'slime', 'slime_big', 'zombie', 'skeleton', 'ghost', 'spider', 'cultist',
-                    'orc', 'imp', 'knight_armored', 'werewolf', 'mummy', 'gargoyle', 'bloodbat', 'wraith',
-                    'boss_slimeking', 'boss_bonelord', 'boss_abysseye', 'boss_darklord'];
-    var eGap = 44;
-    var eTotal = enemyRow.length * eGap;
-    var eStart = (W - eTotal) / 2;
-    for (var ei = 0; ei < enemyRow.length; ei++) {
-      var ex = eStart + ei * eGap + eGap / 2;
-      var ey = H - 62 + Math.sin(introT * 2.5 + ei * 0.7) * 3;
-      var eimg = SpriteGen.get(enemyRow[ei]);
-      var isBoss = enemyRow[ei].indexOf('boss_') === 0;
-      var ew = isBoss ? 40 : 30;
-      ctx.globalAlpha = 1;   // 透明度拉到最高
-      ctx.drawImage(eimg, ex - ew / 2, ey - ew / 2, ew, ew);
+    if (!atlasPending) {
+      // 下行:全部敌人 + Boss(静态排列,不滚动)
+      var enemyRow = ['bat', 'slime', 'slime_big', 'zombie', 'skeleton', 'ghost', 'spider', 'cultist',
+                      'orc', 'imp', 'knight_armored', 'werewolf', 'mummy', 'gargoyle', 'bloodbat', 'wraith',
+                      'boss_slimeking', 'boss_bonelord', 'boss_abysseye', 'boss_darklord'];
+      var eGap = 44;
+      var eTotal = enemyRow.length * eGap;
+      var eStart = (W - eTotal) / 2;
+      for (var ei = 0; ei < enemyRow.length; ei++) {
+        var ex = eStart + ei * eGap + eGap / 2;
+        var ey = H - 62 + Math.sin(introT * 2.5 + ei * 0.7) * 3;
+        var eimg = SpriteGen.get(enemyRow[ei]);
+        var isBoss = enemyRow[ei].indexOf('boss_') === 0;
+        var ew = isBoss ? 40 : 30;
+        ctx.globalAlpha = 1;   // 透明度拉到最高
+        ctx.drawImage(eimg, ex - ew / 2, ey - ew / 2, ew, ew);
+      }
+      ctx.globalAlpha = 1;
     }
-    ctx.globalAlpha = 1;
 
     // 右下角跳过提示
     ctx.textAlign = 'right';
@@ -1086,14 +1097,17 @@
         var sx = wx - camX + W / 2, sy = wy - camY + H / 2;
         var rw = 116 + E.hash2(rx * 97, ry * 101) * 152;
         var rhh = 48 + E.hash2(rx * 103, ry * 107) * 72;
-        var wet = map.id !== 'wilds' && rh > 0.87;
+        // 阈值与 engine.terrainEffect 共用同一常量:沼泽数量更少、单个更大,
+        // 且视觉水坑与"进水才减速"的判定始终对齐。
+        var wet = map.id !== 'wilds' && rh > E.SWAMP_THRESHOLD;
         // 墓园沼泽用固定的泥边水坑精灵，而不是随缩放变形的程序椭圆；
         // 世界坐标由 rx/ry 决定，镜头移动时水坑不会游移。
         if (wet && map.id === 'graveyard') {
           var puddleId = 'terrain_grave_swamp_puddle' + (1 + Math.floor(E.hash2(rx * 109, ry * 113) * 4));
           var puddle = SpriteGen.get(puddleId);
-          var pw = 248 + Math.floor(E.hash2(rx * 127, ry * 131) * 116);
-          var ph = 150 + Math.floor(E.hash2(rx * 137, ry * 139) * 68);
+          // 数量减少后单个做大(约 1.5x),整体沼泽覆盖感不减但更成片、更像大水洼
+          var pw = 372 + Math.floor(E.hash2(rx * 127, ry * 131) * 174);
+          var ph = 225 + Math.floor(E.hash2(rx * 137, ry * 139) * 102);
           ctx.globalAlpha = 0.94;
           ctx.drawImage(puddle, (sx - pw / 2) | 0, (sy - ph / 2) | 0, pw, ph);
         } else {
@@ -1189,42 +1203,63 @@
   }
 
   // 暗潮结界:地图边界的流动光墙(世界坐标系内绘制)
+  // 空气墙式边界:不再用黑色虚空+硬光墙切断世界。
+  // 边界外的地面与装饰照常绘制(地形/装饰层本来就按相机范围画,不受 MAP_R 限制),
+  // 这里只叠一层由内向外渐浓的雾,暗示"走不过去",视觉上浑然一体。
   function drawBoundary(run) {
     var R = CFG.GAME.MAP_R;
-    var pulse = 0.45 + Math.sin(run.t * 2) * 0.18;
-    // 外侧虚空
-    ctx.fillStyle = 'rgba(4,2,10,0.92)';
-    ctx.fillRect(-R - 2000, -R - 2000, 2000, (R + 2000) * 2);        // 左
-    ctx.fillRect(R, -R - 2000, 2000, (R + 2000) * 2);                 // 右
-    ctx.fillRect(-R, -R - 2000, R * 2, 2000);                          // 上
-    ctx.fillRect(-R, R, R * 2, 2000);                                  // 下
-    // 结界光墙
-    ctx.strokeStyle = 'rgba(150,90,255,' + pulse.toFixed(3) + ')';
-    ctx.lineWidth = 6;
-    ctx.strokeRect(-R, -R, R * 2, R * 2);
-    ctx.strokeStyle = 'rgba(220,190,255,' + (pulse * 0.7).toFixed(3) + ')';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(-R + 5, -R + 5, (R - 5) * 2, (R - 5) * 2);
-    // 沿墙流动的符文点
-    ctx.fillStyle = 'rgba(200,160,255,' + (pulse * 0.9).toFixed(3) + ')';
-    var span = R * 2, step = 160;
-    var drift = (run.t * 40) % step;
-    for (var o = -R + drift; o < R; o += step) {
-      ctx.fillRect(o, -R - 1, 26, 4);
-      ctx.fillRect(o, R - 3, 26, 4);
-      ctx.fillRect(-R - 1, o, 4, 26);
-      ctx.fillRect(R - 3, o, 4, 26);
+    var FADE = 1150;                // 雾的渐变宽度:铺得更长,远景衰减更缓
+    var pal = run.map.palette;
+    var fog = pal.fog || '#0b0812';
+    var rgb = hexToRgb(fog);
+    var base = 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',';
+
+    // 四条边各画一层线性渐变:边界处几乎透明 → 外侧逐渐浓到不可见
+    function edge(x, y, w, h, gx0, gy0, gx1, gy1) {
+      var g = ctx.createLinearGradient(gx0, gy0, gx1, gy1);
+      // 边界处几乎不遮挡,让界外景物看得清;越远才越浓,读作"雾里还有世界"
+      g.addColorStop(0, base + '0)');
+      g.addColorStop(0.30, base + '0.28)');
+      g.addColorStop(0.65, base + '0.66)');
+      g.addColorStop(1, base + '0.95)');
+      ctx.fillStyle = g;
+      ctx.fillRect(x, y, w, h);
     }
-    // 靠近边界时的警示
+    var OUT = 2600;
+    edge(-R - OUT, -R - OUT, OUT, (R + OUT) * 2, -R, 0, -R - FADE, 0);        // 左
+    edge(R, -R - OUT, OUT, (R + OUT) * 2, R, 0, R + FADE, 0);                 // 右
+    edge(-R, -R - OUT, R * 2, OUT, 0, -R, 0, -R - FADE);                      // 上
+    edge(-R, R, R * 2, OUT, 0, R, 0, R + FADE);                               // 下
+
+    // 极淡的能量薄膜:只在很靠近时才隐约可见,不抢画面
     var p = run.player;
     var near = Math.min(R - Math.abs(p.x), R - Math.abs(p.y));
-    if (near < 180) {
-      ctx.globalAlpha = (1 - near / 180) * 0.5;
-      ctx.strokeStyle = '#ff6688';
-      ctx.lineWidth = 10;
+    if (near < 300) {
+      var k = 1 - near / 300;
+      ctx.globalAlpha = k * 0.22;
+      ctx.strokeStyle = 'rgba(190,170,255,1)';
+      ctx.lineWidth = 3;
       ctx.strokeRect(-R, -R, R * 2, R * 2);
+      // 贴墙的微弱流动光点,提示这是一道屏障而不是地图缺失
+      ctx.globalAlpha = k * 0.3;
+      ctx.fillStyle = 'rgba(214,198,255,1)';
+      var step = 190, drift = (run.t * 26) % step;
+      for (var o = -R + drift; o < R; o += step) {
+        ctx.fillRect(o, -R - 1, 22, 2);
+        ctx.fillRect(o, R - 1, 22, 2);
+        ctx.fillRect(-R - 1, o, 2, 22);
+        ctx.fillRect(R - 1, o, 2, 22);
+      }
       ctx.globalAlpha = 1;
     }
+  }
+
+  function hexToRgb(hex) {
+    var h = String(hex).replace('#', '');
+    if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+    var n = parseInt(h, 16);
+    if (isNaN(n)) return { r: 11, g: 8, b: 18 };
+    return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
   }
 
   var menuT = 0;
@@ -1382,15 +1417,10 @@
     ctx = canvas.getContext('2d');
     ctx.imageSmoothingEnabled = false;
 
+    // 图集立即在后台开始下载,不阻塞首帧;加载完成后再替换精灵。
     var atlasReady = SpriteGen.loadAtlas();
-    if (atlasReady) await atlasReady;
-    else SpriteGen.init();
-    if (document.fonts && document.fonts.load) {
-      await Promise.all([
-        document.fonts.load('16px "Fusion Pixel"'),
-        document.fonts.load('700 96px "Darktide Gothic"')
-      ]);
-    }
+    if (atlasReady) atlasPending = true;
+    else { SpriteGen.init(); atlasPending = false; }
     menuBgImg = new Image();
     menuBgImg.src = 'assets/backgrounds/menu-monolith.png';
     Meta.load();
@@ -1642,6 +1672,16 @@
     bootIntro();
 
     Engine.start(update, render);
+
+    // 字体后台加载,不阻塞首帧;图集完成后补齐精灵并处理跳过意图。
+    if (document.fonts && document.fonts.load) {
+      document.fonts.load('16px "Fusion Pixel"');
+      document.fonts.load('700 96px "Darktide Gothic"');
+    }
+    if (atlasReady) {
+      try { await atlasReady; } finally { atlasPending = false; }
+    }
+    if (introSkipped && !introDone) skipIntro();
   }
 
   window.Debug = {
