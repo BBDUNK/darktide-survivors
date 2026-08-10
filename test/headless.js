@@ -55,6 +55,7 @@ function makeEl(tag) {
     _cls: new Set(),
     _text: '',
     width: 0, height: 0, value: '', type: '', min: 0, max: 100,
+    dataset: {},
     _handlers: {},
     classList: {
       add: (...c) => c.forEach(x => el._cls.add(x)),

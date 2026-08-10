@@ -18,7 +18,7 @@ window.CFG = {
     SAVE_KEY: 'darktide_save_v2',
     // 画布适配:contain=等比适配永不裁切(默认) / fill=拉伸铺满可裁边 / native=原尺寸不缩放
     UI_SCALE: 'contain',
-    VERSION: 'v0.20.0'
+    VERSION: 'v0.20.1'
   },
 
   // 玩家基础属性(角色/被动/商店在此之上修正)
@@ -330,6 +330,7 @@ window.CFG = {
   // 地图中心摆摊,走到物品上自动购买。每 refreshInt 秒全部刷新并多一个摊位。
   MERCHANT: {
     x: 0, y: 0,              // 地图中心
+    drawH: 74,               // 屏幕绘制高度,与角色等高(骑士约 74px);宽度按原图比例推算
     slots: 3,                // 初始摊位数
     maxSlots: 5,
     refreshInt: 300,         // 5 分钟刷新一次并 +1 摊位

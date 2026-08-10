@@ -937,8 +937,9 @@ window.Weapons = (function () {
       var projectileFrames = cachedFrames(b.spr);
       var projectileFps = cachedFps(b.spr, 10);
       var projectileAge = Math.max(0, run.t - (b.born || 0));
-      // 贤者光弹使用单帧稳定本体；旧动作条的空白帧正是飞行闪烁的来源。
-      var img = b.spr === 'p_bolt' ? projectileFrames[0]
+      // 贤者光弹与秘典使用单帧稳定本体:旧动作条里混着空白帧和"合书/散页"帧,
+      // 一边靠 b.angle 自转一边换帧,本体就会忽大忽小,正是飞行闪烁的来源。
+      var img = (b.spr === 'p_bolt' || b.spr === 'p_book') ? projectileFrames[0]
         : projectileFrames[Math.floor(projectileAge * projectileFps) % projectileFrames.length];
       var sc = 2 * (b.size / 16);
       if (b.spr === 'p_arrow') {

@@ -133,6 +133,8 @@
   var store = null; // name -> [canvas,...](init 后填充;get/frames 高频路径零分配)
   var warned = {};
   var PLACEHOLDER = null;
+  var stableCache = {};          // stableFrames() 的结果缓存
+  var STABLE_MIN_RATIO = 0.55;   // 帧覆盖率低于峰值这个比例即视为过渡帧
 
   function def(name, fn) { defs[name] = fn; }
   function two(fn) { return function () { return [fn(0), fn(1)]; }; }
@@ -1930,6 +1932,7 @@
             for (var key in replacements) {
               store[key] = replacements[key];
               atlasState.names[key] = true;
+              if (stableCache[key]) delete stableCache[key];
             }
             atlasState.scales = cfg.renderScale || {};
             atlasState.fps = cfg.animationFps || {};
@@ -2006,6 +2009,38 @@
       if (!arr) arr = store[fallbackKey(name)];
       if (!arr) arr = fallback(name);
       return arr;
+    },
+    // → frames() 去掉离群帧后的子集。有些 AI 母版夹着几乎空白的过渡帧
+    // (merchant_attack 第 5 帧只剩一把弓、p_book 合上时体积骤降一半),
+    // 循环播到它精灵会整体消失或体积突变,肉眼就是闪烁。按不透明像素占比
+    // 筛掉明显偏小的帧,动作保留、闪烁消除。结果缓存,调用方可每帧调。
+    stableFrames: function (name) {
+      if (stableCache[name]) return stableCache[name];
+      var all = this.frames(name);
+      var keep = all;
+      try {
+        var cv = document.createElement('canvas');
+        var g = cv.getContext('2d', { willReadFrequently: true });
+        var covs = [], peak = 0, i, k;
+        for (i = 0; i < all.length; i++) {
+          var im = all[i];
+          cv.width = im.width; cv.height = im.height;
+          g.clearRect(0, 0, cv.width, cv.height);
+          g.drawImage(im, 0, 0);
+          var d = g.getImageData(0, 0, cv.width, cv.height).data, n = 0;
+          for (k = 3; k < d.length; k += 4) if (d[k] > 16) n++;
+          var c = n / (cv.width * cv.height);
+          covs.push(c);
+          if (c > peak) peak = c;
+        }
+        var good = [];
+        for (i = 0; i < all.length; i++) if (covs[i] >= peak * STABLE_MIN_RATIO) good.push(all[i]);
+        if (good.length) keep = good;
+      } catch (e) {
+        // file:// 下画布被跨域污染读不了像素,退回全帧
+      }
+      stableCache[name] = keep;
+      return keep;
     }
   };
 })();

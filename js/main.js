@@ -1759,6 +1759,9 @@
     }
     if (atlasReady) {
       try { await atlasReady; } finally { atlasPending = false; }
+      // UI 的图标是 canvas 快照,boot 时图集还没下完,拿到的是洋红占位块;
+      // 图集就位后重绘一遍,HUD 与菜单里的图标才会变成真素材。
+      UI.refreshIcons();
     }
     if (introSkipped && !introDone) skipIntro();
   }

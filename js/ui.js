@@ -16,14 +16,31 @@ window.UI = (function () {
     if (text !== undefined) el.textContent = text;
     return el;
   }
+  // 图标是"把精灵拷进一张 canvas"的快照。UI 在 boot 时同步构建,而图集还在后台
+  // 下载,此刻取到的往往是洋红占位块,快照又不会自己更新 —— HUD 上的金币/击杀
+  // 图标就这样一直是花格子。记下源名字,等图集就绪后由 refreshIcons() 重绘。
+  var iconNodes = [];
+  function paintIcon(c) {
+    var src = SpriteGen.get(c.dataset.icon);
+    if (c.width !== src.width || c.height !== src.height) {
+      c.width = src.width; c.height = src.height;
+    }
+    var g = c.getContext('2d');
+    g.clearRect(0, 0, c.width, c.height);
+    g.drawImage(src, 0, 0);
+  }
   function iconCanvas(name, px) {
-    var src = SpriteGen.get(name);
     var c = document.createElement('canvas');
-    c.width = src.width; c.height = src.height;
-    c.getContext('2d').drawImage(src, 0, 0);
+    c.dataset.icon = name;
     c.style.width = px + 'px'; c.style.height = px + 'px';
     c.className = 'pix';
+    paintIcon(c);
+    iconNodes.push(c);
     return c;
+  }
+  // 图集加载完成后由 main.js 调用,把早期快照重绘成真素材
+  function refreshIcons() {
+    for (var i = 0; i < iconNodes.length; i++) paintIcon(iconNodes[i]);
   }
   function btn(text, cls, onClick) {
     var b = h('button', 'btn ' + (cls || ''), text);
@@ -1218,6 +1235,7 @@ window.UI = (function () {
 
   return {
     init: init, show: show, showHud: showHud, hideAllScreens: hideAllScreens,
+    refreshIcons: refreshIcons,
     updateHUD: updateHUD, warn: warn, bossBanner: bossBanner,
     showLevelUp: showLevelUp, hideLevelUp: hideLevelUp,
     showChest: showChest, showPause: showPause, hidePause: hidePause,

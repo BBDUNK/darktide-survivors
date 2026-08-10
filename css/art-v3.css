@@ -130,13 +130,21 @@
     6px 7px 0 rgba(0,0,0,.52);
   color: #ded3bc;
 }
+/* 顶边中央的菱形。缺 top/left 时它会落在 flex 流里的静态位置,正好压在
+   「强化圣坛」标题上,看起来像文字重影 —— 必须显式定位到边框上。 */
 .menu-altar::before,
 .menu-board::before {
   content: '◆';
   color: #9c7538;
   text-shadow: 0 0 7px rgba(181, 120, 43, .45);
   position: absolute;
-  margin-top: -13px;
+  left: 50%;
+  top: 4px;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 9px;
+  line-height: 1;
+  pointer-events: none;
 }
 .menu-altar-title,
 .menu-board-title {

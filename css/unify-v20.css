@@ -120,3 +120,50 @@ html, body, button, input, select, textarea,
   outline-color: #e79aa4;
   color: #ffeaee;
 }
+
+/* ---------- 3. 主菜单按钮:换成 HUD 金币/击杀框那套华丽金属边 ---------- */
+/* 用整图拉伸而不是九宫格:顶部冠饰是居中的整体纹样,一旦切成九宫格
+   中段就会被抹成条纹。素材本身四周留白 39px,拉伸后正好当作外描边。 */
+.menu-col .btn,
+.menu-subrow .btn.sub,
+.menu-altar .btn.ruby {
+  background: url('../assets/art-v2/ui/hud_coin_frame.png') center / 100% 100% no-repeat;
+  /* theme-v17 给 .btn.primary/.ruby 设过 border-image-source,
+     只要 border-image 还生效就会盖掉上面的 background,必须显式清掉。 */
+  border-image: none;
+  border: 0;
+  outline: 0;
+  box-shadow: none;
+  image-rendering: pixelated;
+  color: #f3e6c6;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, .85);
+}
+/* 主行动/宝石红按钮用色调滤镜区分,底纹保持同一张框。
+   art-v3 的 .menu-col .btn.primary 是三类选择器,压得过上面的两类规则,
+   所以底图必须在同等特异度上再写一次,否则主按钮还是旧的红色渐变。 */
+.menu-col .btn.primary {
+  background: url('../assets/art-v2/ui/hud_coin_frame.png') center / 100% 100% no-repeat;
+  border-image: none;
+  border: 0;
+  outline: 0;
+  box-shadow: none;
+  filter: saturate(1.35) brightness(1.16);
+  color: #fff7e2;
+}
+.menu-altar .btn.ruby {
+  filter: hue-rotate(-28deg) saturate(1.7) brightness(1.05);
+  color: #ffeaea;
+}
+.menu-col .btn:hover,
+.menu-subrow .btn.sub:hover,
+.menu-altar .btn.ruby:hover {
+  filter: brightness(1.3) saturate(1.25);
+}
+.menu-col .btn.primary:hover { filter: saturate(1.5) brightness(1.34); }
+.menu-altar .btn.ruby:hover { filter: hue-rotate(-28deg) saturate(1.85) brightness(1.24); }
+.menu-col .btn:active,
+.menu-subrow .btn.sub:active,
+.menu-altar .btn.ruby:active {
+  transform: translateY(2px);
+  filter: brightness(.86);
+}

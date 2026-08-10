@@ -174,7 +174,8 @@ window.Merchant = (function () {
 
   function fireArrow(run, target) {
     var M = CFG.MERCHANT;
-    var sx = M.x + combat.face * 11, sy = M.y - 39;
+    // 出箭点跟着绘制高度走:弓大致在身高一半略上的位置
+    var sx = M.x + combat.face * (M.drawH * 0.22), sy = M.y - 56 - M.drawH * 0.5;
     var tx = target.x, ty = target.y - 5;
     var dx = tx - sx, dy = ty - sy, d = Math.hypot(dx, dy) || 1;
     var speed = M.arrowSpeed || 360;
@@ -260,30 +261,41 @@ window.Merchant = (function () {
     // 三态动作:警戒待机 / 拉弓射击 / 趴地装死。最后一帧可持续保持趴伏。
     var actionName = 'merchant';
     var frameIndex = 0;
+    var merchantFrames;
     if (combat.prone > 0.02) {
+      // 趴地是"站→躺"的单向过程,后半段本就该越来越扁,不能按覆盖率筛帧,
+      // 否则会把真正躺平的那几帧当成坏帧丢掉。这里按进度取帧、末帧保持。
       actionName = 'merchant_prone';
-      var proneFrames = SpriteGen.frames(actionName);
-      frameIndex = Math.min(proneFrames.length - 1, Math.floor(combat.prone * proneFrames.length));
-    } else if (combat.attackAge < 0.68) {
-      actionName = 'merchant_attack';
-      frameIndex = Math.floor(combat.attackAge * SpriteGen.animationFps(actionName, 12));
+      merchantFrames = SpriteGen.frames(actionName);
+      frameIndex = Math.min(merchantFrames.length - 1, Math.floor(combat.prone * merchantFrames.length));
     } else {
-      // 原图的待机帧体积差异很大；稳定展示首帧，避免商人原地闪烁。
-      frameIndex = 0;
+      if (combat.attackAge < 0.68) {
+        actionName = 'merchant_attack';
+        frameIndex = Math.floor(combat.attackAge * SpriteGen.animationFps(actionName, 12));
+      } else {
+        actionName = 'merchant';
+        frameIndex = Math.floor(run.t * SpriteGen.animationFps(actionName, 7));
+      }
+      merchantFrames = SpriteGen.stableFrames(actionName);
     }
-    var merchantFrames = SpriteGen.frames(actionName);
     var mimg = merchantFrames[frameIndex % merchantFrames.length];
     var bob = Math.sin(run.t * 2) * 1;
-    var mw = combat.prone > 0.65 ? 45 : 40, mh = 40;
+    // 等比缩放到与角色等高。之前 mw 在装死时 40→45 而 mh 恒为 40,把商人横向拉扁;
+    // 按原图宽高比推宽度就不会再变形,各动作之间体型也一致。
+    var mh = M.drawH;
+    var mw = mh * (mimg.width / mimg.height);
+    var groundY = M.y - 56;              // 站位在摊位后方,脚底落在这条线上
+    var shadowW = mw * 0.6;
     ctx.globalAlpha = 0.4;
-    ctx.drawImage(SpriteGen.get('vfx_shadow'), M.x - 22, M.y - 60, 44, 12);
+    ctx.drawImage(SpriteGen.get('vfx_shadow'), M.x - shadowW / 2, groundY - 6, shadowW, 12);
     ctx.globalAlpha = 1;
+    var mTop = groundY - mh + bob;
     if (combat.face < 0 && combat.prone < 0.65) {
       ctx.save(); ctx.translate(M.x, 0); ctx.scale(-1, 1);
-      ctx.drawImage(mimg, -mw / 2, M.y - 58 - mh + bob, mw, mh);
+      ctx.drawImage(mimg, -mw / 2, mTop, mw, mh);
       ctx.restore();
     } else {
-      ctx.drawImage(mimg, M.x - mw / 2, M.y - 58 - mh + bob, mw, mh);
+      ctx.drawImage(mimg, M.x - mw / 2, mTop, mw, mh);
     }
     // 补货倒计时小闹钟
     drawClock(ctx, run);
