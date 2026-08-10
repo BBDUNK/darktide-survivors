@@ -158,13 +158,27 @@ window.Minimap = (function () {
     ctx.fillRect(x0 + 8, y0 + SIZE + 3, SIZE - 16, 20);
     ctx.strokeStyle = '#4f3c63';
     ctx.strokeRect(x0 + 8.5, y0 + SIZE + 3.5, SIZE - 17, 19);
+    // 底部状态条只放"索敌方式",居中占满整条。
+    // 之前左边还并排一个"周围/全图",两段合起来 110px + 间距 > 116px 的内宽,
+    // 在"最低血量/最高血量"这两个较长的模式名下会挤出边框。
+    // 视野模式改为画在地图右上角的小角标(见下),不再争抢这条的宽度。
     ctx.font = 'bold 10px "Microsoft YaHei",sans-serif';
-    ctx.textAlign = 'left';
-    ctx.fillStyle = '#c8b6dd';
-    ctx.fillText(mode === 'full' ? '全图' : '周围', x0 + 14, y0 + SIZE + 17);
-    ctx.textAlign = 'right';
+    ctx.textAlign = 'center';
     ctx.fillStyle = '#ffd992';
-    ctx.fillText('索敌方式：' + Weapons.getTargetModeName(), x0 + SIZE - 13, y0 + SIZE + 17);
+    ctx.fillText('索敌方式：' + Weapons.getTargetModeName(), cx, y0 + SIZE + 17);
+
+    // 视野模式角标:贴在小地图右上角内侧,带深色衬底保证在地图内容上也可读
+    var tag = mode === 'full' ? '全图' : '周围';
+    ctx.font = 'bold 9px "Microsoft YaHei",sans-serif';
+    var tw = ctx.measureText(tag).width;
+    ctx.fillStyle = 'rgba(12,8,20,0.78)';
+    ctx.fillRect(x0 + SIZE - tw - 12, y0 + 5, tw + 7, 13);
+    ctx.strokeStyle = 'rgba(120,96,150,0.75)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x0 + SIZE - tw - 11.5, y0 + 5.5, tw + 6, 12);
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#c8b6dd';
+    ctx.fillText(tag, x0 + SIZE - tw / 2 - 8, y0 + 15);
     ctx.textAlign = 'left';
   }
 
