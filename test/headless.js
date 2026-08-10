@@ -742,6 +742,90 @@ try {
   }
   console.log('COOP12 OK 倒地标记双字段一致 (w.downed 与 player.downed 同时置位)');
 
+  // ============ 近期修复回归 ============
+  const fx = (src) => vm.runInContext(src, context);
+
+  // R1 复活只生效一次:stats.revive 会被 recomputeStats 重建,消耗必须记在
+  //     revivesUsed 上,否则捡个被动就把复活次数补满 = 无限复活。
+  const r1 = fx(`
+    (() => {
+      const run = Debug.run();
+      run.over = false; run.player.hp = run.player.stats.hp;
+      run.player.iframe = 0; run.player.revivesUsed = 0;
+      run.player.stats.revive = 1;
+      Entities.damagePlayer(run, 99999);          // 第一次:触发复活
+      const first = { hp: run.player.hp, used: run.player.revivesUsed, stats: run.player.stats.revive };
+      run.player.iframe = 0; run.player.hp = 1;    // 只重置判定用血量,保留复活计数
+      Entities.damagePlayer(run, 99999);          // 第二次:应当真正死亡
+      const second = { hp: run.player.hp, used: run.player.revivesUsed, over: run.over };
+      run.player.hp = run.player.stats.hp; run.player.iframe = 0; run.over = false;
+      return {
+        reviveOnce: first.used === 1 && first.hp > 0 && first.stats === 1,
+        // 只判第二次"真正死亡"(hp=0 且没有再来一次复活)。run.over 在联机残留
+        // 队友在场时不一定为 true(队友还能救),死亡本身才是复活修复的信号。
+        noInfinite: second.used === 1 && second.hp <= 0
+      };
+    })()
+  `);
+  if (!r1.reviveOnce || !r1.noInfinite) {
+    throw new Error('复活回归失败: ' + JSON.stringify(r1));
+  }
+  console.log('R1 OK 复活只生效一次,不会因属性重算无限复活');
+
+  // R2 冻结/眩晕的敌人不造成接触伤害(硬控=既不能动也不能伤)
+  const r2 = fx(`
+    (() => {
+      const run = Debug.run();
+      // 前面的联机用例会在 run.coopPlayers 里留队友,僵尸会被他们引走;
+      // 这里退化成单机场景(只剩房主),冻结与否的对照才干净。
+      run.coopPlayers = null;
+      run.player.hp = run.player.stats.hp; run.player.iframe = 0; run.over = false;
+      run.player.x = 0; run.player.y = 0; run.player.slow = 0; run.player.slowT = 0;
+      Entities.clearEnemies(run);
+      const step = () => {
+        // 钉住玩家坐标,排除"人走远了怪追不上"这类环境差异
+        run.player.x = 0; run.player.y = 0;
+        Entities.updateEnemies(run, 1 / 60); Entities.updateGems(run, 1 / 60); Entities.updateItems(run, 1 / 60);
+      };
+      const z = Entities.spawnEnemy(run, 'zombie', run.player.x + 8, run.player.y, { allowNear: true });
+      z.frozen = 5;
+      const hp0 = run.player.hp;
+      for (let f = 0; f < 30; f++) step();
+      const frozenNoHit = run.player.hp >= hp0;
+      Entities.clearEnemies(run); run.player.hp = run.player.stats.hp; run.player.iframe = 0;
+      const z2 = Entities.spawnEnemy(run, 'zombie', run.player.x + 8, run.player.y, { allowNear: true });
+      const hp1 = run.player.hp;
+      for (let f = 0; f < 30; f++) step();
+      const normalHit = run.player.hp < hp1;
+      return { frozenNoHit, normalHit };
+    })()
+  `);
+  if (!r2.frozenNoHit || !r2.normalHit) {
+    throw new Error('冻结接触伤害回归失败: ' + JSON.stringify(r2));
+  }
+  console.log('R2 OK 冻结/眩晕敌人无接触伤害,未冻结的对照仍会咬人');
+
+  // R3 地面道具过期消失:长局里金币/烤肉无限堆积会撑爆道具池,
+  //    并挤掉 Boss/精英宝箱的生成位。金币 30 秒 TTL,宝箱永久。
+  const r3 = fx(`
+    (() => {
+      const run = Debug.run();
+      Entities.clearEnemies(run);
+      const coin = Entities.spawnItem(run, 'coin', 300, 300);
+      const chest = Entities.spawnItem(run, 'chest', -300, -300);
+      const ttlOk = coin.ttl === 30 && chest.ttl === -1;
+      coin.ttl = 0.4;                                    // 压短,快速验证
+      for (let f = 0; f < 40; f++) Entities.updateItems(run, 1 / 60);
+      const coinExpired = !coin.alive;
+      const chestKept = chest.alive;
+      return { ttlOk, coinExpired, chestKept };
+    })()
+  `);
+  if (!r3.ttlOk || !r3.coinExpired || !r3.chestKept) {
+    throw new Error('道具过期回归失败: ' + JSON.stringify(r3));
+  }
+  console.log('R3 OK 金币/烤肉按 TTL 过期,宝箱永久保留');
+
   console.log('\n=== 无头冒烟测试全部通过 ===');
 } catch (e) {
   console.error('\n!!! 冒烟测试失败: ' + e.stack);

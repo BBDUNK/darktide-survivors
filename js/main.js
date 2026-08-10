@@ -342,8 +342,8 @@
       Weapons.updateFor(run, p, m.weapons, dt);
       // 队友倒地判定
       if (p.hp <= 0 && !m.downed) {
-        if (p.stats && p.stats.revive > 0) {
-          p.stats.revive--;
+        if (p.stats && p.stats.revive - (p.revivesUsed || 0) > 0) {
+          p.revivesUsed++;
           p.hp = p.stats.hp * 0.5;
           p.iframe = 2.5;
           FX.levelBeam(p.x, p.y);

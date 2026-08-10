@@ -12,6 +12,7 @@ window.Entities = (function () {
       attackAnimT: 0, attackAnimAge: 0,
       char: charDef,
       shield: 0, shieldRegenT: 0,  // 护盾当前值 / 下次恢复计时
+      revivesUsed: 0,              // 已消耗的复活次数;stats.revive 会被 recompute 重建,消耗必须单独记
       lastVx: 0, lastVy: 0,        // 移动矢量,敌人抛击用于预判落点
       slow: 0, slowT: 0,                        // 蛛网减速
       webStacks: 0, webT: 0, rootT: 0,          // 蛛网叠层 / 缠身残留 / 硬控计时
@@ -202,8 +203,8 @@ window.Entities = (function () {
     FX.shake(5, 0.25);
     FX.flash('#ff2233', 0.18, 0.25);
     if (p.hp <= 0) {
-      if (p.stats.revive > 0) {
-        p.stats.revive--;
+      if (p.stats.revive - (p.revivesUsed || 0) > 0) {
+        p.revivesUsed++;
         p.hp = p.stats.hp * 0.5;
         p.iframe = 2.5;
         FX.levelBeam(p.x, p.y);
@@ -245,8 +246,8 @@ window.Entities = (function () {
     AudioSys.play('player_hurt');
     FX.shake(4, 0.2);
     if (p.hp <= 0) {
-      if (p.stats.revive > 0) {
-        p.stats.revive--;
+      if (p.stats.revive - (p.revivesUsed || 0) > 0) {
+        p.revivesUsed++;
         p.hp = p.stats.hp * 0.5;
         p.iframe = 2.5;
         FX.levelBeam(p.x, p.y);
@@ -558,6 +559,9 @@ window.Entities = (function () {
 
   function updateEnemies(run, dt) {
     var p = run.player;
+    var hostP = run.player;   // 光环领域以"持有者"(房主)为中心。p 会在下面敌怪循环里被改写成
+                              // 各敌人的目标,不能用它当领域圆心 —— 联机时领域会跟着最后一个
+                              // 怪的目标跑偏。
     E.gridClear();
     var i, e;
     for (i = 0; i < POOL; i++) { e = enemies[i]; if (e.alive) E.gridInsert(e); }
@@ -733,7 +737,7 @@ window.Entities = (function () {
       // 圣光领域:范围内的敌方弹幕速度上限封顶(减速 20%,不逐帧累乘导致停住)
       if (run.holyAuraR) {
         var hr = run.holyAuraR;
-        var hd2 = (sh.x - p.x) * (sh.x - p.x) + (sh.y - p.y) * (sh.y - p.y);
+        var hd2 = (sh.x - hostP.x) * (sh.x - hostP.x) + (sh.y - hostP.y) * (sh.y - hostP.y);
         if (hd2 < hr * hr) {
           var spdCur = Math.hypot(sh.vx, sh.vy);
           var cap = Math.max(40, (sh.capSpd || spdCur) * 0.8);
@@ -751,8 +755,9 @@ window.Entities = (function () {
       if (sh.maxRange > 0) {
         if (sh.travelled > sh.maxRange) { sh.alive = false; continue; }
         var decay = Math.max(0.3, 1 - sh.travelled / sh.maxRange);
-        sh.vx = (sh.vx / Math.hypot(sh.vx, sh.vy) || 0) * sh.spd0 * decay;
-        sh.vy = (sh.vy / Math.hypot(sh.vx, sh.vy) || 0) * sh.spd0 * decay;
+        // 在"当前速度"上衰减,而不是用 sh.spd0 重新算一遍 —— 后者会把上方
+        // 圣光领域施加的减速盖掉,让蛛网弹在领域里也满速。
+        sh.vx *= decay; sh.vy *= decay;
       }
       sh.x += sh.vx * dt; sh.y += sh.vy * dt;
       var hitEntry = null, ents2 = playerEntries(run);
@@ -930,6 +935,8 @@ window.Entities = (function () {
   }
 
   function contactCheckAll(run, e) {
+    // 冻结/眩晕中的敌人不会攻击:硬控的意义就是让它既不能动也不能伤到你。
+    if (run.freezeT > 0 || e.frozen > 0 || e.stun > 0) return;
     var ents = playerEntries(run);
     for (var i = 0; i < ents.length; i++) {
       var w = ents[i];
@@ -1317,15 +1324,30 @@ window.Entities = (function () {
   }
 
   // ================= 道具拾取物 =================
+  // 金币/烤肉会过期消失(避免长局/联机里掉落地板上的东西无限堆积,把数组撑到
+  // 无界并挤掉 Boss 宝箱的生成位);宝箱是稀有掉落,永不消失。
+  var ITEM_TTL = 30, ITEM_BLINK = 4;
   var items = [];
   function spawnItem(run, type, x, y) {
     for (var i = 0; i < items.length; i++) {
       if (!items[i].alive) {
         var it = items[i];
         it.alive = true; it.type = type; it.x = x; it.y = y; it.t = 0; it.pull = false;
+        it.ttl = (type === 'chest') ? -1 : ITEM_TTL;
         it.v = (type === 'coin') ? (CFG.DROPS.goldValue[0] + Math.floor(Math.random() * (CFG.DROPS.goldValue[1] - CFG.DROPS.goldValue[0] + 1))) : 0;
         return it;
       }
+    }
+    // 池满但活着的东西都是会过期的普通掉落时,撵走最老的一件腾位置 ——
+    // 否则 Boss/精英宝箱会在满地金币时静默消失,等于把战利品白白吞掉。
+    if (type === 'chest' || type === 'meat') {
+      var oldest = null, ot = 1e18;
+      for (i = 0; i < items.length; i++) {
+        if (items[i].alive && items[i].type !== 'chest' && items[i].t < ot) {
+          ot = items[i].t; oldest = items[i];
+        }
+      }
+      if (oldest) oldest.alive = false;
     }
     return null;
   }
@@ -1335,6 +1357,10 @@ window.Entities = (function () {
       var it = items[i];
       if (!it.alive) continue;
       it.t += dt;
+      if (it.ttl > 0) {
+        it.ttl -= dt;
+        if (it.ttl <= 0) { it.alive = false; continue; }
+      }
       var w = nearestPlayer(run, it.x, it.y);
       if (!w) continue;
       var p = w.player;
@@ -1531,6 +1557,9 @@ window.Entities = (function () {
       case 'boss':
         var b = spawnAtRing(run, ev.id);
         if (b) announceBoss(run, b);
+        // 池子正好被占满时 spawnAtRing 会返回 null:事件已经递增过了,若不退回
+        // 该剧情 Boss 就永远不刷了。回退索引,下一帧自动重试。
+        else if (run.eventIdx > 0) run.eventIdx--;
         break;
     }
   }
@@ -1681,6 +1710,8 @@ window.Entities = (function () {
         : (it.type === 'meat' ? '#ff788c' : '#78c8ff'));
       var gr = it.type === 'chest' ? 38 : 24;
       var pulse = 0.5 + Math.sin(it.t * 4) * 0.5;
+      // 即将消失前闪烁提醒玩家(宝箱 ttl=-1 不参与)
+      if (it.ttl > 0 && it.ttl < ITEM_BLINK && Math.floor(it.ttl * 6) % 2 === 0) continue;
       // 拾取物地面柔光:缓存贴图,不再每帧建渐变
       ctx.globalAlpha = 0.45 + pulse * 0.30;
       ctx.drawImage(SpriteGen.glow(glowCol), it.x - gr, it.y - gr, gr * 2, gr * 2);
@@ -1953,6 +1984,7 @@ window.Entities = (function () {
       s = snap.it[i];
       items[i].alive = true; items[i].type = s.k;
       items[i].x = s.x; items[i].y = s.y; items[i].t = 0; items[i].pull = false;
+      items[i].ttl = (s.k === 'chest') ? -1 : ITEM_TTL;   // 与 spawnItem 同规则
     }
     run.t = snap.t;
     if (snap.bh !== undefined) run.bossHpPct = snap.bh;
