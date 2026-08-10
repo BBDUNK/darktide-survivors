@@ -1,0 +1,45 @@
+# Cloudflare Pages 部署排除清单(gitignore 风格)
+# 目的:只上传运行时真正需要的资源。美术源图/中间产物留在仓库供 Codex 迭代,但不进 CDN。
+# 效果:部署体积 385MB → 约 5MB,首屏与全站加载显著加快。
+#
+# ⚠ 改动前请先跑校验,确保没排除掉被代码引用的资源:
+#   grep -rhoE "assets/[A-Za-z0-9_./-]+" index.html js/*.js css/*.css | sort -u
+
+# ---- 美术源图与中间产物(运行时零引用) ----
+assets/art-v2/sources/**
+assets/art-v2/work/**
+assets/art-v2/sprites/**
+assets/art-v3/sources/**
+assets/art-v3/work/**
+assets/art-v3/sprites/**
+assets/art-v4/sources/**
+assets/art-v4/repaired/**
+assets/art-library/**
+assets/sprites/previews/**
+assets/sprites/sources/**
+assets/sprites/vendor/**
+assets/sprites/quality-report.json
+
+# 必须保留(代码有引用),此处仅作提示,勿添加排除:
+#   assets/art-v2/ui/          HUD 边框(血条/经验/计时/槽位)
+#   assets/art-v3/ui/          计时器边框
+#   assets/art-v4/sprites/ui/  巴洛克菜单边框
+#   assets/sprites/atlas.png|atlas.json|atlas-data.js
+#   assets/ui/** assets/backgrounds/** assets/intro.jpg
+
+# ---- 大体积未引用图 ----
+assets/intro-v2.png
+
+# ---- 开发期文件 ----
+tools/**
+test/**
+docs/**
+.github/**
+*.md
+server.log
+
+# ---- 废弃与调试产物 ----
+_unused/**
+shots/**
+screenshot.png
+.playwright-mcp/**

@@ -1,0 +1,122 @@
+/* unify-v20.css — 统一 UI 边框与字体可读性
+ *
+ * 解决两个问题:
+ *  1) 字体太花:art-v2.css 把哥特尖角花体(UnifrakturCook)设成了全局正文字体,
+ *     中文还会 fallback 到 SimSun,正文难以辨认。这里让正文回到清晰的
+ *     Fusion Pixel 中文像素字体,花体只保留给大标题(.gothic-title / logo)。
+ *  2) 边框风格不统一:主菜单/面板/弹窗用的是 CSS 描边,而进地图后的 HUD
+ *     (血条/杀怪数)用的是 art-v2 的 PNG 九宫格金属边框。这里把菜单侧
+ *     也统一到同一套 PNG 边框质感。
+ *
+ * 本文件最后加载,只做覆盖,不修改 Codex 的 art-v*.css。
+ */
+
+/* ---------- 1. 字体可读性 ---------- */
+:root {
+  /* 正文:清晰的中文像素字体优先,不再用哥特花体 */
+  --font-cn: "Fusion Pixel", "Microsoft YaHei", "PingFang SC", sans-serif;
+  --font-pix: "Fusion Pixel", "Press Start 2P", "Microsoft YaHei", monospace;
+  /* 花体单独留一个变量,仅标题使用 */
+  --font-gothic: "Darktide Gothic", Georgia, serif;
+}
+
+html, body, button, input, select, textarea,
+.hud, .screen, .modal, .card, .slot, .toast,
+.btn, .info-box, .shop-item, .achv-row, .codex-cell, .enc-card,
+.coop-char, .coop-member, .lu-card, .chest-item, .story-para {
+  font-family: var(--font-cn);
+}
+
+/* 数值类保持像素等宽,便于对齐 */
+.hp-text, .lv-text, .hud-timer, .hud-stat, .rs-val,
+.menu-altar-gold, .coop-code, .menu-version {
+  font-family: var(--font-pix);
+}
+
+/* 花体只给大标题,并降低描边花哨度以提升辨识 */
+.logo-main, .menu-big, .gothic-title {
+  font-family: var(--font-gothic);
+}
+/* 页面小标题改回清晰字体:之前用花体导致"设置/成就"等字难认 */
+.page-title, .modal-title, .enc-name, .card-name, .info-title,
+.shop-name, .achv-name, .lu-name, .menu-board-title, .menu-altar-title {
+  font-family: var(--font-cn);
+  letter-spacing: 1px;
+}
+
+/* 正文行高与字重:小字号下更清楚 */
+.card-sub, .shop-desc, .achv-desc, .lu-desc, .enc-sub, .enc-trait,
+.codex-desc, .coop-note, .story-para, .info-desc {
+  line-height: 1.75;
+  font-weight: 500;
+}
+
+/* ---------- 2. 统一边框:菜单侧套用 HUD 的金属九宫格 ---------- */
+/* 面板类:与 hud_coin_frame 同族的金属描边质感 */
+.menu-altar, .menu-board, .modal-box, .info-box,
+.shop-item, .achv-row, .codex-cell, .enc-card, .lu-card {
+  background:
+    linear-gradient(180deg, rgba(11, 13, 18, 0.92), rgba(5, 7, 10, 0.88));
+  border: 2px solid #1a1d22;
+  outline: 1px solid #8d7044;
+  outline-offset: -4px;
+  box-shadow:
+    inset 0 0 0 2px #394047,
+    inset 0 2px 0 rgba(255, 235, 190, 0.10),
+    4px 5px 0 rgba(0, 0, 0, 0.5);
+  border-radius: 0;
+}
+
+/* 圣坛保留大理石感,但边框统一成金属 */
+.menu-altar {
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255,255,255,0.88), rgba(226,220,206,0.72) 42%, rgba(180,172,154,0.6) 100%),
+    repeating-linear-gradient(115deg, rgba(206,199,182,0.45) 0 2px, transparent 2px 7px);
+}
+.menu-altar-title { color: #4a2408; }
+.menu-altar-gold { color: #7d5f00; }
+
+/* 战报木牌:保留木色但换金属边 */
+.menu-board {
+  background: linear-gradient(180deg, #6d5430, #533f22 70%, #3f2f19);
+}
+
+/* 按钮:金属浮雕,与 HUD 同色系 */
+.btn {
+  background: linear-gradient(180deg, #6f7681 0%, #565d68 46%, #3b414a 100%);
+  border: 2px solid #14161a;
+  outline: 1px solid #8d7044;
+  outline-offset: -4px;
+  color: #f0e6d2;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.85);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 238, 200, 0.22),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.45),
+    3px 4px 0 rgba(0, 0, 0, 0.5);
+}
+.btn:hover {
+  border-color: #000;
+  outline-color: #d5bd83;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 238, 200, 0.28),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.45),
+    3px 4px 0 rgba(0, 0, 0, 0.5),
+    0 0 12px rgba(213, 189, 131, 0.3);
+}
+.btn:active {
+  box-shadow: inset 0 3px 0 rgba(0, 0, 0, 0.5);
+}
+.btn.primary {
+  background: linear-gradient(180deg, #a5844a 0%, #856532 46%, #6a4f24 100%);
+  outline-color: #e3c78d;
+  color: #fff6dd;
+}
+.btn.danger {
+  background: linear-gradient(180deg, #93413c 0%, #75302c 46%, #551d1c 100%);
+  outline-color: #c08a7a;
+}
+.btn.ruby {
+  background: linear-gradient(180deg, #b8384a 0%, #8e2033 48%, #641423 100%);
+  outline-color: #e79aa4;
+  color: #ffeaee;
+}
