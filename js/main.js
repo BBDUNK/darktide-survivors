@@ -1136,10 +1136,22 @@
     ctx.globalAlpha = 1;
   }
 
+  // 立体装饰(有体积、能与角色互相遮挡) vs 贴地装饰(纯地面痕迹,永远画在角色下面)。
+  // 判定依据是"物件在世界里是否明显高于地面":
+  //   立体:树/墓碑/栅栏/骨桩/石柱/钟乳石/路标/水晶/树桩/倒木/芦苇丛
+  //   贴地:石板、车辙、苔痕、睡莲、骸骨、蘑菇、灌木、符文地纹等
+  // 分错会有两种可感知的错误:把地面石板当立体 → 角色被石板挡住;
+  // 把树桩当贴地 → 角色从树桩"上面"穿过去。
+  var TALL_DECOR = {
+    deco_grave: 1, deco_fence: 1, deco_skullpost: 1, deco_pillar: 1,
+    deco_stalag: 1, deco_road_marker: 1, deco_crystal: 1,
+    deco_deadstump: 1, deco_fallenlog: 1,
+    deco_swamp_reeds: 1, deco_deadreeds: 1, deco_abyss_coral: 1
+  };
   function isTallDecor(name) {
-    return name.indexOf('tree') >= 0 || name === 'deco_grave' || name === 'deco_fence' ||
-      name === 'deco_skullpost' || name === 'deco_pillar' || name === 'deco_stalag' ||
-      name === 'deco_road_marker';
+    // 所有 tree 系一律立体
+    if (name.indexOf('tree') >= 0) return true;
+    return !!TALL_DECOR[name];
   }
 
   // 装饰物按基座 y 排序绘制:pass='back' 画角色身后的,pass='front' 画角色身前的,

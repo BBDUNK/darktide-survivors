@@ -298,6 +298,25 @@ window.Engine = (function () {
   // 每格只放一件装饰并扩大安全间距；这样两棵大树/墓碑的实际轮廓
   // 不会在相邻格随机偏移后相互叠穿。
   var DECOR_CELL = 304;
+
+  // 按物件"设定"分配出现率:体量越大越稀疏,越显眼的地标越罕见。
+  // 全部用同一个密度会让大树和小石头一样多,视觉上既拥挤又没有层次。
+  var DECOR_RARITY = {
+    // 大型地标:很稀疏,一屏最多见到一两个
+    deco_deadtree_large1: 0.30, deco_deadtree_large2: 0.30,
+    deco_deadtree_large3: 0.30, deco_deadtree_large4: 0.30,
+    deco_pillar: 0.34, deco_crystal: 0.30, deco_stalag: 0.40,
+    // 中型:适度
+    deco_grave: 0.62, deco_fence: 0.50, deco_skullpost: 0.46,
+    deco_fallenlog: 0.44, deco_deadstump: 0.55, deco_wagon_rut: 0.50,
+    deco_road_marker: 0.34, deco_abyss_coral: 0.44,
+    deco_rune_cluster: 0.42, deco_wither_cluster1: 0.55, deco_wither_cluster2: 0.55,
+    // 小型植被/碎物:可以铺得密一些,负责填满空地
+    deco_rock: 0.90, deco_bush: 0.86, deco_mushroom: 0.80, deco_bone: 0.78,
+    deco_rune: 0.70, deco_lilypad: 0.74, deco_deadroots: 0.80,
+    deco_swamp_reeds: 0.72, deco_deadreeds: 0.72
+  };
+
   function decorEntry(map, cx, cy) {
     if (!map || !map.decors || !map.decors.length) return null;
     var density = hash2(cx * 3 + 1, cy * 3 + 1);
@@ -309,6 +328,9 @@ window.Engine = (function () {
     var wy = cy * DECOR_CELL + DECOR_CELL * 0.5 + (h2 - 0.5) * 24;
     if (Math.abs(wx - CFG.MERCHANT.x) < 190 && Math.abs(wy - CFG.MERCHANT.y) < 190) return null;
     var name = map.decors[Math.floor(hash2(cx * 19 + 5, cy * 23 + 7) * map.decors.length)];
+    // 稀有度筛选:用独立的确定性 hash,保证同一格结果稳定(不随相机/帧变化)
+    var rarity = DECOR_RARITY[name];
+    if (rarity !== undefined && hash2(cx * 29 + 11, cy * 31 + 13) > rarity) return null;
     return { x: wx, y: wy, name: name, hash: h1 };
   }
   function forEachDecor(map, minX, minY, maxX, maxY, callback) {
