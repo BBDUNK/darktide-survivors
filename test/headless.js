@@ -813,7 +813,7 @@ try {
       Entities.clearEnemies(run);
       const coin = Entities.spawnItem(run, 'coin', 300, 300);
       const chest = Entities.spawnItem(run, 'chest', -300, -300);
-      const ttlOk = coin.ttl === 30 && chest.ttl === -1;
+      const ttlOk = coin.ttl === 300 && chest.ttl === -1;
       coin.ttl = 0.4;                                    // 压短,快速验证
       for (let f = 0; f < 40; f++) Entities.updateItems(run, 1 / 60);
       const coinExpired = !coin.alive;

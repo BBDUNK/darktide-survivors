@@ -1326,7 +1326,7 @@ window.Entities = (function () {
   // ================= 道具拾取物 =================
   // 金币/烤肉会过期消失(避免长局/联机里掉落地板上的东西无限堆积,把数组撑到
   // 无界并挤掉 Boss 宝箱的生成位);宝箱是稀有掉落,永不消失。
-  var ITEM_TTL = 30, ITEM_BLINK = 4;
+  var ITEM_TTL = 300, ITEM_BLINK = 5;
   var items = [];
   function spawnItem(run, type, x, y) {
     for (var i = 0; i < items.length; i++) {

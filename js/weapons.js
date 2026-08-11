@@ -889,19 +889,17 @@ window.Weapons = (function () {
     var towerFrames = cachedFrames('tesla_tower');
     var towerImg = towerFrames[0];
     // 正方形等比绘制并按底座锚定,不再把塔体横向拉扁或裁掉顶部。
-    // 塔身素材本身高约 100px,按 64px 绘制(约与角色同高、比角色略矮),
-    // 之前硬编码 128px 让它比角色还高半截,主屏上过于抢戏。
-    var towerSize = 64;
+    var towerSize = 128;
     ctx.globalAlpha *= 0.34;
-    ctx.drawImage(SpriteGen.get('vfx_shadow'), bx - 22, baseY - 9, 44, 12);
+    ctx.drawImage(SpriteGen.get('vfx_shadow'), bx - 42, baseY - 10, 84, 18);
     ctx.globalAlpha = b.ttl < 1 ? E.clamp(b.ttl * 2, 0, 1) : 1;
     // 单一塔身自地下上升。没有换帧，因此生成时也不会出现抽搐。
-    var rise = age < 0.42 ? (1 - age / 0.42) * 30 : 0;
+    var rise = age < 0.42 ? (1 - age / 0.42) * 54 : 0;
     ctx.drawImage(towerImg, bx - towerSize / 2, baseY - towerSize + rise, towerSize, towerSize);
 
     // 顶部能量只保留轻薄辉光；分叉电弧来自逐帧美术,避免随机粗线抖动。
-    var orbY = baseY - towerSize + 12;
-    var glowR = 9 + pulse * 3;
+    var orbY = baseY - towerSize + 20;
+    var glowR = 12 + pulse * 4;
     var glow = ctx.createRadialGradient(bx, orbY, 1, bx, orbY, glowR);
     glow.addColorStop(0, 'rgba(190,248,255,' + (0.24 + pulse * 0.12).toFixed(3) + ')');
     glow.addColorStop(1, 'rgba(140,235,255,0)');
@@ -911,7 +909,7 @@ window.Weapons = (function () {
       var zapFrames = cachedFrames('vfx_lightning');
       var zapAge = Math.max(0, 0.46 - b.zapFlash);
       var zapImg = zapFrames[Math.floor(zapAge * cachedFps('vfx_lightning', 18)) % zapFrames.length];
-      var zapSize = 40 + pulse * 6;
+      var zapSize = 68 + pulse * 10;
       ctx.globalAlpha = E.clamp(b.zapFlash * 3.4, 0.45, 1);
       ctx.drawImage(zapImg, bx - zapSize / 2, orbY - zapSize / 2, zapSize, zapSize);
     }
