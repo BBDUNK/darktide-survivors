@@ -1012,6 +1012,35 @@ try {
   }
   console.log('R10 OK 圣女光环贴地范围、天降圣光与七位大天使实体正常');
 
+  // R11 寒霜冲击是从中心向四周推进的冰霜环。伤害半径单调扩张，显示
+  // 采用固定外接圆的 radial 素材，避免再把帧内扩散和整体缩放叠加成跳动。
+  const r11 = fx(`
+    (() => {
+      Debug.startArtTest();
+      const r = Debug.run();
+      r.weapons = [{ id: 'frostnova', lv: 1, cdT: 0, evolved: false, evoId: null, curR: 0 }];
+      Entities.recomputeStats(r);
+      r.t += 0.01; r.frame++; Weapons.update(r, 0.01);
+      const b = Weapons.getBullets().find(x => x.alive && x.kind === 'nova');
+      const first = b ? b.phase : -1;
+      r.t += 0.2; r.frame++; Weapons.update(r, 0.2);
+      const mid = b ? b.phase : -1;
+      r.t += 0.6; r.frame++; Weapons.update(r, 0.6);
+      const last = b ? Math.min(b.phase, b.aux2) : -1;
+      const radialSheet = SpriteGen.frames('vfx_frost_radial');
+      const firstFrame = radialSheet[0];
+      // The atlas uses 96px cells while the intentional procedural fallback
+      // uses its own cell size.  What matters for no-jitter rendering is a
+      // complete, constant-size sequence in either path.
+      return { radialSheet: radialSheet.length >= 1 && radialSheet.every(f => f.width === firstFrame.width && f.height === firstFrame.height),
+        outwardDamage: first > 0 && mid > first && last >= mid && last <= b.aux2 };
+    })()
+  `);
+  if (!Object.values(r11).every(Boolean)) {
+    throw new Error('寒霜冲击扩散回归失败: ' + JSON.stringify(r11));
+  }
+  console.log('R11 OK 寒霜冲击以连续半径向外扩散，使用固定圆形素材足迹');
+
   console.log('\n=== 无头冒烟测试全部通过 ===');
 } catch (e) {
   console.error('\n!!! 冒烟测试失败: ' + e.stack);

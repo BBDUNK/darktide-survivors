@@ -1181,7 +1181,11 @@ window.Weapons = (function () {
         var frostFrames = cachedFrames('vfx_frost_radial');
         var frostProgress = E.clamp(rr / Math.max(1, b.aux2), 0, 0.999);
         var frostImg = frostFrames[Math.min(frostFrames.length - 1, Math.floor(frostProgress * frostFrames.length))];
-        var frostSize = Math.max(72, rr * (b.evolved ? 2.34 : 2.14));
+        // The authored sheet already grows its circular ring from the centre.
+        // Scaling the whole image by rr again made the outer edge leap between
+        // frames.  Keep one fixed ground footprint and advance only the ring
+        // frame: visually continuous, mechanically still expanding outward.
+        var frostSize = Math.max(72, b.aux2 * (b.evolved ? 2.34 : 2.14));
         ctx.drawImage(frostImg, b.x - frostSize / 2, b.y - frostSize / 2, frostSize, frostSize);
         ctx.globalAlpha = 1;
         continue;

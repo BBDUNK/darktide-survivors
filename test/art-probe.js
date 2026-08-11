@@ -95,6 +95,7 @@ function assert(ok, message) {
     holyAura: SpriteGen.frames('vfx_holy_aura').map(c => [c.width, c.height]),
     archangel: SpriteGen.frames('vfx_archangel').map(c => [c.width, c.height]),
     frostImpact: SpriteGen.frames('vfx_frost_impact').map(c => [c.width, c.height]),
+    frostRadial: SpriteGen.frames('vfx_frost_radial').map(c => [c.width, c.height]),
     terrain: SpriteGen.frames('tile_graveyard').map(c => [c.width, c.height]),
     terrainV4: ['terrain_grave_ground', 'terrain_grave_swamp', 'terrain_grave_road',
       'terrain_wild_ground', 'terrain_wild_grass', 'terrain_wild_road',
@@ -149,6 +150,8 @@ function assert(ok, message) {
     'archangel V4 frames are incorrect');
   assert(atlas.frostImpact.length === 8 && atlas.frostImpact.every(frame => JSON.stringify(frame) === '[96,96]'),
     'frost impact V4 frames are incorrect');
+  assert(atlas.frostRadial.length === 8 && atlas.frostRadial.every(frame => JSON.stringify(frame) === '[96,96]'),
+    'frost radial V4 frames are incorrect');
   assert(atlas.terrainV4.every(group => group.length === 1 && JSON.stringify(group[0]) === '[128,128]'),
     'V4 terrain tiles are incorrect');
   assert(atlas.gems.every(group => group.length === 1 && JSON.stringify(group[0]) === '[32,32]'),
