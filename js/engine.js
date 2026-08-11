@@ -36,6 +36,11 @@ window.Engine = (function () {
   var inputVec = { x: 0, y: 0 };
   var lastDir = { x: 1, y: 0 };
   var dashRequest = null, lastTap = {};
+  // Touch has no physical direction keys, so a quick second flick of the
+  // virtual stick in the same direction is the mobile equivalent of a double
+  // tap.  It is deliberately detected on release and never consumes a second
+  // finger, preserving pinch zoom and HUD multitouch.
+  var lastTouchFlick = { t: 0, x: 0, y: 0 };
 
   function initInput(canvas) {
     function trackPointer(e) {
@@ -109,7 +114,16 @@ window.Engine = (function () {
       }
     });
     function endTouch(e) {
-      if (touch.active && e.pointerId === touch.id) { touch.active = false; touch.dx = 0; touch.dy = 0; }
+      if (touch.active && e.pointerId === touch.id) {
+        var len = Math.hypot(touch.dx, touch.dy);
+        if (len > 22 && e.pointerType === 'touch') {
+          var fx = touch.dx / len, fy = touch.dy / len, now = performance.now();
+          var sameDirection = fx * lastTouchFlick.x + fy * lastTouchFlick.y > 0.72;
+          if (now - lastTouchFlick.t < 320 && sameDirection) dashRequest = { x: fx, y: fy };
+          lastTouchFlick.t = now; lastTouchFlick.x = fx; lastTouchFlick.y = fy;
+        }
+        touch.active = false; touch.dx = 0; touch.dy = 0;
+      }
       delete pinch.points[e.pointerId]; pinch.ids = Object.keys(pinch.points); pinch.distance = 0;
     }
     window.addEventListener('pointerup', endTouch);
@@ -355,6 +369,7 @@ window.Engine = (function () {
     deco_deadtree_large1: 0.30, deco_deadtree_large2: 0.30,
     deco_deadtree_large3: 0.30, deco_deadtree_large4: 0.30,
     deco_pillar: 0.34, deco_crystal: 0.30, deco_stalag: 0.40,
+    deco_burned_cottage: 0.16, deco_broken_wagon: 0.24,
     // 中型:适度
     deco_grave: 0.62, deco_fence: 0.50, deco_skullpost: 0.46,
     deco_fallenlog: 0.44, deco_deadstump: 0.55, deco_wagon_rut: 0.50,
@@ -365,22 +380,65 @@ window.Engine = (function () {
     deco_rune: 0.70, deco_lilypad: 0.74, deco_deadroots: 0.80,
     deco_swamp_reeds: 0.72, deco_deadreeds: 0.72
   };
+  var decorCandidateCache = Object.create(null);
 
-  function decorEntry(map, cx, cy) {
+  function decorRadius(name) {
+    if (!name) return 18;
+    if (name === 'deco_burned_cottage') return 66;
+    if (name === 'deco_broken_wagon') return 52;
+    if (name.indexOf('tree') >= 0) return 50;
+    if (name === 'deco_pillar' || name === 'deco_crystal' || name === 'deco_stalag') return 40;
+    if (name === 'deco_grave' || name === 'deco_fence' || name === 'deco_fallenlog') return 30;
+    return 22;
+  }
+
+  // Pure candidate generation permits neighbor tests without recursion.  The
+  // final visible set is therefore independent of camera order and cannot
+  // produce two large props intersecting one another.
+  function decorCandidate(map, cx, cy) {
     if (!map || !map.decors || !map.decors.length) return null;
+    var cacheKey = (map.id || 'map') + ':' + cx + ':' + cy;
+    if (Object.prototype.hasOwnProperty.call(decorCandidateCache, cacheKey)) {
+      return decorCandidateCache[cacheKey] || null;
+    }
     var density = hash2(cx * 3 + 1, cy * 3 + 1);
-    if (density < 0.23) return null;
+    if (density < 0.23) { decorCandidateCache[cacheKey] = false; return null; }
     var h1 = hash2(cx * 7 + 17, cy * 7 + 31);
     var h2 = hash2(cx * 11 + 43, cy * 11 + 59);
-    // 固定格心 + 很小的确定性偏移：不因相机、帧率或遍历顺序移动。
     var wx = cx * DECOR_CELL + DECOR_CELL * 0.5 + (h1 - 0.5) * 28;
     var wy = cy * DECOR_CELL + DECOR_CELL * 0.5 + (h2 - 0.5) * 24;
-    if (Math.abs(wx - CFG.MERCHANT.x) < 190 && Math.abs(wy - CFG.MERCHANT.y) < 190) return null;
+    if (Math.abs(wx - CFG.MERCHANT.x) < 190 && Math.abs(wy - CFG.MERCHANT.y) < 190) {
+      decorCandidateCache[cacheKey] = false; return null;
+    }
+    // Roads remain legible and pools remain self-contained terrain features.
+    // This especially prevents trees/houses from appearing on the road or
+    // visually sticking into a swamp edge.
+    var terrain = terrainEffect(map, wx, wy);
+    if (terrain.type === 'road' || terrain.type === 'swamp' || terrain.type === 'water') {
+      decorCandidateCache[cacheKey] = false; return null;
+    }
     var name = map.decors[Math.floor(hash2(cx * 19 + 5, cy * 23 + 7) * map.decors.length)];
-    // 稀有度筛选:用独立的确定性 hash,保证同一格结果稳定(不随相机/帧变化)
     var rarity = DECOR_RARITY[name];
-    if (rarity !== undefined && hash2(cx * 29 + 11, cy * 31 + 13) > rarity) return null;
-    return { x: wx, y: wy, name: name, hash: h1 };
+    if (rarity !== undefined && hash2(cx * 29 + 11, cy * 31 + 13) > rarity) {
+      decorCandidateCache[cacheKey] = false; return null;
+    }
+    return (decorCandidateCache[cacheKey] = {
+      x: wx, y: wy, name: name, hash: h1, priority: hash2(cx * 37 + 71, cy * 41 + 73)
+    });
+  }
+
+  function decorEntry(map, cx, cy) {
+    var current = decorCandidate(map, cx, cy);
+    if (!current) return null;
+    var radius = decorRadius(current.name);
+    for (var ny = cy - 1; ny <= cy + 1; ny++) for (var nx = cx - 1; nx <= cx + 1; nx++) {
+      if (nx === cx && ny === cy) continue;
+      var other = decorCandidate(map, nx, ny);
+      if (!other || other.priority > current.priority) continue;
+      var safe = radius + decorRadius(other.name) + 18;
+      if (dist2(current.x, current.y, other.x, other.y) < safe * safe) return null;
+    }
+    return current;
   }
   function forEachDecor(map, minX, minY, maxX, maxY, callback) {
     var x0 = Math.floor(minX / DECOR_CELL), x1 = Math.floor(maxX / DECOR_CELL);
@@ -395,6 +453,9 @@ window.Engine = (function () {
   function decorCollisionRadius(name) {
     if (!name) return 0;
     if (name.indexOf('tree') >= 0) return 31;
+    if (name === 'deco_burned_cottage') return 42;
+    if (name === 'deco_broken_wagon') return 30;
+    if (name === 'deco_broken_sword') return 11;
     if (name === 'deco_deadstump') return 22;
     if (name === 'deco_grave' || name === 'deco_pillar' || name === 'deco_stalag') return 18;
     if (name === 'deco_fence' || name === 'deco_skullpost' || name === 'deco_road_marker') return 14;
@@ -430,7 +491,7 @@ window.Engine = (function () {
     terrainEffect: terrainEffect, roadBend: roadBend,
     // 绘制侧(main.js drawTerrain)必须复用这两个常量,保证视觉与减速判定同步
     SWAMP_THRESHOLD: SWAMP_THRESHOLD, SWAMP_WATER_RATIO: SWAMP_WATER_RATIO,
-    forEachDecor: forEachDecor, decorCollisionRadius: decorCollisionRadius,
+    forEachDecor: forEachDecor, decorCollisionRadius: decorCollisionRadius, decorVisualRadius: decorRadius,
     resolveDecorCollision: resolveDecorCollision,
     setTimeScale: function (s) { timeScale = s; },
     nextUid: function () { return uidCounter++; },

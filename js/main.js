@@ -1186,6 +1186,7 @@
     deco_grave: 1, deco_fence: 1, deco_skullpost: 1, deco_pillar: 1,
     deco_stalag: 1, deco_road_marker: 1, deco_crystal: 1,
     deco_deadstump: 1, deco_fallenlog: 1,
+    deco_burned_cottage: 1, deco_broken_wagon: 1, deco_broken_sword: 1,
     deco_swamp_reeds: 1, deco_deadreeds: 1, deco_abyss_coral: 1
   };
   function isTallDecor(name) {

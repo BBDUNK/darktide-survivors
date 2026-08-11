@@ -264,6 +264,20 @@ spriteGrid('assets/art-v4/sprites/environment/terrain_props.png', 96, 4, [
   'deco_road_marker', 'deco_wagon_rut', 'deco_abyss_coral', 'deco_rune_cluster'
 ], 96, 0.62);
 
+// Large authored battlefield landmarks.  They deliberately use one stable
+// frame each: environmental art must not animate or jitter while the camera
+// moves.  The chest is shared by the real one-shot vault interactions.
+[
+  ['deco_burned_cottage', 0, 0.90],
+  ['deco_broken_wagon', 1, 0.80],
+  ['deco_broken_sword', 2, 0.64],
+  ['vault_chest', 3, 0.76]
+].forEach(([name, index, renderScale]) => add({
+  name, source: 'assets/art-v4/sprites/environment/ruin_props.png',
+  frameSize: [128, 128], frameRow: 0, frameStart: index, frames: 1, fps: 0,
+  size: [128, 128], anchor: [64, 124], renderScale
+}));
+
 add({
   name: 'hud_minimap_frame', source: 'assets/art-v2/ui/hud_minimap_frame.png', frames: 1,
   size: [132, 132], anchor: [66, 66], renderScale: 1

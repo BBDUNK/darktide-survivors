@@ -10811,6 +10811,114 @@
       "maxColors": 256,
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
+      "name": "deco_burned_cottage",
+      "source": "assets/art-v4/sprites/environment/ruin_props.png",
+      "frameSize": [
+        128,
+        128
+      ],
+      "frameRow": 0,
+      "frameStart": 0,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "renderScale": 0.9
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "deco_broken_wagon",
+      "source": "assets/art-v4/sprites/environment/ruin_props.png",
+      "frameSize": [
+        128,
+        128
+      ],
+      "frameRow": 0,
+      "frameStart": 1,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "renderScale": 0.8
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "deco_broken_sword",
+      "source": "assets/art-v4/sprites/environment/ruin_props.png",
+      "frameSize": [
+        128,
+        128
+      ],
+      "frameRow": 0,
+      "frameStart": 2,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "renderScale": 0.64
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "vault_chest",
+      "source": "assets/art-v4/sprites/environment/ruin_props.png",
+      "frameSize": [
+        128,
+        128
+      ],
+      "frameRow": 0,
+      "frameStart": 3,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "renderScale": 0.76
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
       "name": "hud_minimap_frame",
       "source": "assets/art-v2/ui/hud_minimap_frame.png",
       "frames": 1,

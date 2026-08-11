@@ -46,8 +46,15 @@ function assert(value, message) { if (!value) throw new Error(message); }
         if (hit.type === 'swamp') { swamp = { x, y, mul: hit.mul }; break; }
       }
     }
-    let collision = null;
+    let collision = null, invalidTerrain = [], overlap = null, allDecor = [];
     Engine.forEachDecor(grave, -1800, -1800, 1800, 1800, decor => {
+      const area = Engine.terrainEffect(grave, decor.x, decor.y);
+      if (area.type === 'road' || area.type === 'swamp' || area.type === 'water') invalidTerrain.push({ name: decor.name, type: area.type });
+      for (const other of allDecor) {
+        const safe = Engine.decorVisualRadius(decor.name) + Engine.decorVisualRadius(other.name) + 18;
+        if (!overlap && Math.hypot(decor.x - other.x, decor.y - other.y) < safe) overlap = { a: decor.name, b: other.name };
+      }
+      allDecor.push(decor);
       if (collision) return;
       const radius = Engine.decorCollisionRadius(decor.name);
       if (!radius) return;
@@ -55,7 +62,7 @@ function assert(value, message) { if (!value) throw new Error(message); }
       Engine.resolveDecorCollision(grave, body);
       collision = { radius, distance: Math.hypot(body.x - decor.x, body.y - decor.y), name: decor.name };
     });
-    return { road, swamp, collision };
+    return { road, swamp, collision, invalidTerrain, overlap, decorCount: allDecor.length };
   });
   assert(terrain.road.type === 'road' && Math.abs(terrain.road.mul - 1.2) < 1e-6,
     'road must increase movement speed by 20%');
@@ -63,7 +70,9 @@ function assert(value, message) { if (!value) throw new Error(message); }
     'graveyard swamp must reduce movement speed by 40%');
   assert(terrain.collision && terrain.collision.distance >= terrain.collision.radius + 8.9,
     'solid decor collision did not push the player outside');
-  console.log(`TERRAIN OK  road×${terrain.road.mul}, swamp×${terrain.swamp.mul}, ${terrain.collision.name} collision`);
+  assert(terrain.invalidTerrain.length === 0, 'decor appeared on restricted terrain: ' + JSON.stringify(terrain.invalidTerrain));
+  assert(!terrain.overlap, 'decor overlap: ' + JSON.stringify(terrain.overlap));
+  console.log(`TERRAIN OK  road×${terrain.road.mul}, swamp×${terrain.swamp.mul}, ${terrain.collision.name} collision, ${terrain.decorCount} clear props`);
 
   await page.mouse.click(420, 195);
   await page.getByText('开始远征').click();
@@ -89,9 +98,14 @@ function assert(value, message) { if (!value) throw new Error(message); }
     pointer('pointerup', 44, window, 660, 82);
     const targetWhileMoving = modeBefore !== Weapons.getTargetModeName() && Engine.touchState.active;
     pointer('pointerup', 41, window, 176, 260);
-    return { movingBefore, pausedWhileMoving, targetWhileMoving, released: !Engine.touchState.active };
+    // Two short, matching joystick flicks request the same dash that desktop
+    // double-tapping a direction key does.
+    pointer('pointerdown', 51, canvas, 120, 250); pointer('pointermove', 51, window, 180, 250); pointer('pointerup', 51, window, 180, 250);
+    pointer('pointerdown', 52, canvas, 120, 250); pointer('pointermove', 52, window, 180, 250); pointer('pointerup', 52, window, 180, 250);
+    const dash = Engine.consumeDash();
+    return { movingBefore, pausedWhileMoving, targetWhileMoving, released: !Engine.touchState.active, dash };
   });
-  assert(touch.movingBefore && touch.pausedWhileMoving && touch.targetWhileMoving && touch.released,
+  assert(touch.movingBefore && touch.pausedWhileMoving && touch.targetWhileMoving && touch.released && touch.dash && touch.dash.x > 0.9,
     'two-finger movement/HUD input failed: ' + JSON.stringify(touch));
   assert(errors.length === 0, 'browser errors: ' + errors.join('; '));
   console.log('TOUCH OK  movement remains active while pause and target-mode buttons use a second finger');

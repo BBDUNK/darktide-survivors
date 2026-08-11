@@ -40713,6 +40713,78 @@
         "signature": "06bf9e3028b7"
       }
     ],
+    "deco_burned_cottage": [
+      {
+        "index": 0,
+        "coverage": 0.5186,
+        "colors": 56,
+        "bbox": [
+          9,
+          5,
+          119,
+          125
+        ],
+        "centroid": [
+          63.711,
+          75.65
+        ],
+        "signature": "e7923449807d"
+      }
+    ],
+    "deco_broken_wagon": [
+      {
+        "index": 0,
+        "coverage": 0.5018,
+        "colors": 56,
+        "bbox": [
+          4,
+          22,
+          124,
+          125
+        ],
+        "centroid": [
+          60.77,
+          77.001
+        ],
+        "signature": "8c1dec1231c5"
+      }
+    ],
+    "deco_broken_sword": [
+      {
+        "index": 0,
+        "coverage": 0.1699,
+        "colors": 56,
+        "bbox": [
+          32,
+          5,
+          96,
+          125
+        ],
+        "centroid": [
+          67.178,
+          79.27
+        ],
+        "signature": "90813cbe435e"
+      }
+    ],
+    "vault_chest": [
+      {
+        "index": 0,
+        "coverage": 0.6328,
+        "colors": 54,
+        "bbox": [
+          4,
+          33,
+          124,
+          125
+        ],
+        "centroid": [
+          62.684,
+          78.801
+        ],
+        "signature": "62796139bb30"
+      }
+    ],
     "hud_minimap_frame": [
       {
         "index": 0,
@@ -40729,40 +40801,6 @@
           67.637
         ],
         "signature": "205b976db012"
-      }
-    ],
-    "vault_chest": [
-      {
-        "index": 0,
-        "coverage": 0.4965,
-        "colors": 7,
-        "bbox": [
-          1,
-          10,
-          23,
-          24
-        ],
-        "centroid": [
-          11.101,
-          16.49
-        ],
-        "signature": "2658cf6753a7"
-      },
-      {
-        "index": 1,
-        "coverage": 0.592,
-        "colors": 235,
-        "bbox": [
-          1,
-          5,
-          23,
-          24
-        ],
-        "centroid": [
-          10.572,
-          14.543
-        ],
-        "signature": "90e7d727e864"
       }
     ],
     "vfx_glow": [
@@ -41519,8 +41557,6 @@
     "terrain_grave_swamp_puddle3[0]: silhouette touches logical frame edge",
     "terrain_grave_swamp_puddle4[0]: silhouette touches logical frame edge",
     "hud_minimap_frame[0]: silhouette touches logical frame edge",
-    "vault_chest[0]: silhouette touches logical frame edge",
-    "vault_chest[1]: silhouette touches logical frame edge",
     "vfx_glow[0]: silhouette touches logical frame edge",
     "icon_gold[0]: silhouette touches logical frame edge",
     "icon_hp[0]: silhouette touches logical frame edge",

@@ -217,7 +217,8 @@ window.CFG = {
       decors: ['deco_grave', 'deco_deadtree_large1', 'deco_deadtree_large2',
                'deco_deadstump', 'deco_deadroots', 'deco_deadreeds',
                'deco_bone', 'deco_fence', 'deco_skullpost', 'deco_wither_cluster1',
-               'deco_wither_cluster2', 'deco_swamp_reeds', 'deco_lilypad', 'deco_road_marker'],
+               'deco_wither_cluster2', 'deco_swamp_reeds', 'deco_lilypad', 'deco_road_marker',
+               'deco_burned_cottage', 'deco_broken_sword'],
       music: 'graveyard',
       waves: [
         { t: 0,    ids: ['bat', 'slime'],                          rate: 1.3 },
@@ -256,7 +257,8 @@ window.CFG = {
       decors: ['deco_deadtree_large3', 'deco_deadtree_large4', 'deco_fallenlog',
                'deco_deadstump', 'deco_deadroots', 'deco_deadreeds',
                'deco_rock', 'deco_bush', 'deco_mushroom', 'deco_wither_cluster1',
-               'deco_wither_cluster2', 'deco_wagon_rut'],
+               'deco_wither_cluster2', 'deco_wagon_rut', 'deco_burned_cottage',
+               'deco_broken_wagon', 'deco_broken_sword'],
       music: 'wilds',
       waves: [
         { t: 0,    ids: ['spider', 'bat'],                         rate: 1.6 },
@@ -290,7 +292,8 @@ window.CFG = {
       palette: { ground: '#161c33', ground2: '#1e2447', decor: '#3a4480', fog: '#1e2750', vign: '#05070f', ambient: '#8ef' },
       decors: ['deco_pillar', 'deco_crystal', 'deco_rune', 'deco_stalag',
                'deco_deadtree_large2', 'deco_deadroots', 'deco_deadreeds',
-               'deco_abyss_coral', 'deco_rune_cluster'],
+               'deco_abyss_coral', 'deco_rune_cluster', 'deco_broken_sword',
+               'deco_broken_wagon'],
       music: 'abyss',
       waves: [
         { t: 0,    ids: ['ghost', 'skeleton'],                     rate: 1.8 },
