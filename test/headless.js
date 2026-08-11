@@ -936,6 +936,29 @@ try {
   }
   console.log('R7 OK 后期 Boss 耐久、暗潮真身、血怒回血与电塔分散布点正常');
 
+  // R8 世界补给箱不能退化为四角反复刷新的纯金币点：每局要固定混合
+  // 武器结算与真实道具，领取后永久消失。
+  const r8 = fx(`
+    (() => {
+      Debug.startArtTest();
+      const caches = Debug.vaults();
+      const weaponIndex = caches.findIndex(v => v.rewardKind === 'weapon');
+      const itemIndex = caches.findIndex(v => v.rewardKind === 'item');
+      const mixed = caches.length === 7 && caches.filter(v => v.rewardKind === 'weapon').length >= 3 &&
+        caches.filter(v => v.rewardKind === 'item').length >= 4;
+      const itemId = itemIndex >= 0 ? caches[itemIndex].itemId : '';
+      const itemClaimed = itemIndex >= 0 && Debug.claimVault(itemIndex);
+      const physicalItem = Entities.getItems().some(it => it.alive && it.type === itemId);
+      const weaponClaimed = weaponIndex >= 0 && Debug.claimVault(weaponIndex);
+      const oneShot = weaponIndex >= 0 && !Debug.claimVault(weaponIndex);
+      return { mixed, itemClaimed, physicalItem, weaponClaimed, oneShot };
+    })()
+  `);
+  if (!Object.values(r8).every(Boolean)) {
+    throw new Error('世界补给箱回归失败: ' + JSON.stringify(r8));
+  }
+  console.log('R8 OK 全图补给箱混合武器/实物道具，领取后永久消失');
+
   console.log('\n=== 无头冒烟测试全部通过 ===');
 } catch (e) {
   console.error('\n!!! 冒烟测试失败: ' + e.stack);

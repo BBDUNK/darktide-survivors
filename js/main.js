@@ -534,7 +534,14 @@
       var x, y, tries = 0;
       do { x = (Math.random() * 2 - 1) * R; y = (Math.random() * 2 - 1) * R; tries++; }
       while (tries < 40 && (Math.hypot(x, y) < 360 || vaults.some(function (v) { return E.dist2(x, y, v.x, v.y) < 360 * 360; })));
-      vaults.push({ x: x, y: y, gold: 24 + Math.floor(Math.random() * 24), alive: true });
+      // Every run contains both cache types, so these are never just coin
+      // dispensers. Weapon caches use the real chest resolver; item caches
+      // leave a physical pickup in the world.
+      var rewardKind = i < 3 ? 'weapon' : 'item';
+      var itemPool = ['magnet', 'meat', 'bomb', 'clock'];
+      var itemId = itemPool[Math.floor(Math.random() * itemPool.length)];
+      vaults.push({ x: x, y: y, gold: 24 + Math.floor(Math.random() * 24),
+        rewardKind: rewardKind, itemId: itemId, alive: true });
     }
   }
   function updateVaults(run, dt) {
@@ -559,9 +566,14 @@
         AudioSys.play('coin');
         // 重置累积
         v.alive = false;
-        if (Math.random() < 0.55) {
+        if (v.rewardKind === 'weapon') {
           var loot = Weapons.chestLoot(run);
-          if (loot.length && run.cb && run.cb.onWarn) run.cb.onWarn('遗失宝箱：' + loot[0].name);
+          if (loot.length && run.cb && run.cb.onWarn) run.cb.onWarn('补给宝箱：' + loot[0].name);
+        } else {
+          // Physical rewards retain their existing sprites, pickup effects and
+          // coop ownership instead of being turned into a hidden stat grant.
+          Entities.spawnItem(run, v.itemId, v.x + 18, v.y - 10);
+          if (run.cb && run.cb.onWarn) run.cb.onWarn('补给宝箱：发现道具');
         }
       }
     }
@@ -582,7 +594,9 @@
       ctx.globalAlpha = 0.4 + pulse * 0.2;
       ctx.drawImage(SpriteGen.glow('#ffd76b'), sx - 30, sy - 30, 60, 60);
       ctx.globalAlpha = 1;
-      ctx.drawImage(cimg, sx - 24, sy - 24 + bob, 48, 48);
+      ctx.drawImage(cimg, sx - 30, sy - 30 + bob, 60, 60);
+      var marker = SpriteGen.get(v.rewardKind === 'weapon' ? 'w_crossblade' : v.itemId);
+      ctx.drawImage(marker, sx + 17, sy - 38 + bob, 16, 16);
       // 金币数字
       ctx.font = 'bold 10px monospace';
       ctx.textAlign = 'center';
@@ -1902,6 +1916,17 @@
     testAction: applyTestAction,
     menuBackground: function () {
       return { loaded: !!(menuBgImg && menuBgImg.width), src: menuBgImg ? menuBgImg.src : '' };
+    },
+    vaults: function () {
+      return vaults.map(function (v) {
+        return { x: v.x, y: v.y, alive: v.alive, rewardKind: v.rewardKind, itemId: v.itemId };
+      });
+    },
+    claimVault: function (index) {
+      if (!run || !vaults[index] || !vaults[index].alive) return false;
+      run.player.x = vaults[index].x; run.player.y = vaults[index].y;
+      updateVaults(run, 0);
+      return !vaults[index].alive;
     }
   };
 
