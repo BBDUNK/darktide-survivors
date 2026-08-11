@@ -11,6 +11,8 @@ from __future__ import annotations
 
 from collections import deque
 from pathlib import Path
+import subprocess
+import sys
 
 from PIL import Image
 
@@ -45,6 +47,17 @@ def hard_alpha(image: Image.Image) -> Image.Image:
     out = image.convert("RGBA")
     out.putalpha(out.getchannel("A").point(lambda value: 255 if value >= 128 else 0))
     return out
+
+
+def clean_palette(image: Image.Image, colors: int = 48) -> Image.Image:
+    """Remove ImageGen micro-colour noise without introducing interpolation."""
+    image = hard_alpha(image)
+    alpha = image.getchannel("A")
+    indexed = image.quantize(colors=colors, method=Image.Quantize.FASTOCTREE,
+                             dither=Image.Dither.NONE)
+    out = indexed.convert("RGBA")
+    out.putalpha(alpha)
+    return hard_alpha(out)
 
 
 def bbox_distance(a: tuple[int, int, int, int], b: tuple[int, int, int, int]) -> float:
@@ -168,7 +181,7 @@ def repair(source: Path, destination: Path, frame_w: int, frame_h: int,
                                            area_ratio, width_ratio),
                                (0, row_index * frame_h))
     destination.parent.mkdir(parents=True, exist_ok=True)
-    hard_alpha(output).save(destination, optimize=True)
+    clean_palette(output).save(destination, optimize=True)
     print(f"repaired {source.relative_to(ROOT)} -> {destination.relative_to(ROOT)}")
 
 
@@ -203,20 +216,26 @@ def main() -> None:
             64,
             64,
             {0, 1, 2},
-            5 if enemy in ("spider", "slime_big") else 7,
-            0.76 if enemy in ("spider", "slime_big") else 0.64,
-            0.64 if enemy in ("spider", "slime_big") else 0.52,
+            16 if enemy in ("spider", "slime", "slime_big") else 9,
+            0.48 if enemy in ("spider", "slime", "slime_big") else 0.58,
+            0.42 if enemy in ("spider", "slime", "slime_big") else 0.48,
         )
-    repair(
-        ROOT / "assets" / "art-v3" / "sprites" / "enemies" / "slime_actions.png",
-        OUT / "enemies" / "slime_actions.png",
-        64,
-        64,
-        {0, 1, 2},
-        6,
-        0.74,
-        0.62,
-    )
+    # Spider and slime masters contain seven authored poses per row.  Their old
+    # intermediates were mistakenly sliced as eight columns, which is the root
+    # cause of half bodies and detached legs.  Re-extract the seven true cells
+    # and duplicate the final pose to satisfy the runtime's eight-frame API.
+    processor = ROOT / "tools" / "art" / "process-image2-sheet.py"
+    for source, destination, extra in (
+        (ROOT / "assets" / "art-v2" / "sources" / "enemies" / "spider" / "spider_actions_master.png",
+         OUT / "enemies" / "spider_actions.png", ["--overlap", "58", "--primary-only"]),
+        (ROOT / "assets" / "art-v3" / "sources" / "enemies" / "slime" / "slime_actions_master.png",
+         OUT / "enemies" / "slime_actions.png", []),
+    ):
+        subprocess.run([
+            sys.executable, str(processor), "--input", str(source), "--out", str(destination),
+            "--cols", "7", "--rows", "4", "--frame-map", "0,1,2,3,4,5,6,6",
+            "--cell", "64", "--padding", "3", "--colors", "40", *extra,
+        ], cwd=ROOT, check=True)
 
     for boss in ("boss_slimeking", "boss_bonelord", "boss_abysseye", "boss_darklord"):
         name = f"{boss}_actions.png"
@@ -225,8 +244,33 @@ def main() -> None:
             OUT / "bosses" / name,
             96,
             96,
-            {0, 1, 2, 3},
+            # Charge/attack/death deliberately change silhouette area.  Only
+            # idle and walk rows are normalized; otherwise a collapsed slime
+            # death frame is incorrectly replaced with a standing neighbour.
+            {0, 1},
+            14 if boss == "boss_slimeking" else 10,
+            0.48,
+            0.42,
         )
+    slime_master = ROOT / "assets" / "art-v4" / "sources" / "bosses" / "slimeking_rework_master.png"
+    if slime_master.exists():
+        # The authored sheet has idle/walk/attack/death rows.  Map its attack
+        # poses to both charge and attack so the established five-row runtime
+        # contract remains intact without interpolating blurry pixels.
+        subprocess.run([
+            sys.executable, str(processor), "--input", str(slime_master),
+            "--out", str(OUT / "bosses" / "boss_slimeking_actions.png"),
+            "--cols", "8", "--rows", "4", "--row-map", "0,1,2,2,3",
+            "--cell", "96", "--padding", "4", "--colors", "48", "--overlap", "18", "--primary-only",
+        ], cwd=ROOT, check=True)
+    else:
+        subprocess.run([
+            sys.executable, str(processor),
+            "--input", str(ROOT / "assets" / "art-v2" / "sources" / "bosses" / "boss_slimeking" / "boss_slimeking_actions_master.png"),
+            "--out", str(OUT / "bosses" / "boss_slimeking_actions.png"),
+            "--cols", "8", "--rows", "5", "--cell", "96", "--padding", "4", "--colors", "48",
+            "--overlap", "58", "--primary-only",
+        ], cwd=ROOT, check=True)
 
 
 if __name__ == "__main__":

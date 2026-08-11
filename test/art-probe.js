@@ -92,6 +92,7 @@ function assert(ok, message) {
     slimeKing: SpriteGen.frames('boss_slimeking').map(c => [c.width, c.height]),
     explosion: SpriteGen.frames('vfx_explosion').map(c => [c.width, c.height]),
     holyAura: SpriteGen.frames('vfx_holy_aura').map(c => [c.width, c.height]),
+    archangel: SpriteGen.frames('vfx_archangel').map(c => [c.width, c.height]),
     frostImpact: SpriteGen.frames('vfx_frost_impact').map(c => [c.width, c.height]),
     terrain: SpriteGen.frames('tile_graveyard').map(c => [c.width, c.height]),
     terrainV4: ['terrain_grave_ground', 'terrain_grave_swamp', 'terrain_grave_road',
@@ -114,18 +115,18 @@ function assert(ok, message) {
   assert(atlas.status.count >= 431, 'expected at least 431 atlas assets, got ' + atlas.status.count);
   assert(totalFrames >= 2507, 'expected at least 2507 atlas frames, got ' + totalFrames);
   for (const hero of atlas.heroes) {
-    assert(JSON.stringify(hero.frames) === '[[48,64],[48,64],[48,64],[48,64],[48,64],[48,64],[48,64],[48,64]]',
+    const heroSize = hero.name === 'char_berserker' ? '[56,64]' : '[48,64]';
+    assert(hero.frames.length === 8 && hero.frames.every(frame => JSON.stringify(frame) === heroSize),
       hero.name + ' atlas frames are incorrect');
-    assert(JSON.stringify(hero.walk) ===
-      '[[48,64],[48,64],[48,64],[48,64],[48,64],[48,64],[48,64],[48,64]]',
+    assert(hero.walk.length === 8 && hero.walk.every(frame => JSON.stringify(frame) === heroSize),
       hero.name + ' walk frames are incorrect');
-    assert(JSON.stringify(hero.attack) === '[[48,64],[48,64],[48,64],[48,64],[48,64],[48,64],[48,64],[48,64]]',
+    assert(hero.attack.length === 8 && hero.attack.every(frame => JSON.stringify(frame) === heroSize),
       hero.name + ' attack frames are incorrect');
     assert(hero.fps === 7, hero.name + ' idle animation fps is incorrect');
     assert(hero.walkFps === 11, hero.name + ' walk animation fps is incorrect');
     assert(hero.attackFps === 13, hero.name + ' attack animation fps is incorrect');
   }
-  assert(atlas.skeleton.length === 8 && atlas.skeleton.every(frame => JSON.stringify(frame) === '[48,56]'), 'skeleton atlas frames are incorrect');
+  assert(atlas.skeleton.length === 8 && atlas.skeleton.every(frame => JSON.stringify(frame) === '[56,58]'), 'skeleton atlas frames are incorrect');
   assert(atlas.eliteSkeleton.length === 8 && atlas.eliteSkeleton.every(frame => JSON.stringify(frame) === '[52,60]'), 'elite skeleton attack frames are incorrect');
   assert(atlas.merchantProne.length === 8 && atlas.merchantProne.every(frame => JSON.stringify(frame) === '[96,96]'), 'merchant prone frames are incorrect');
   assert(JSON.stringify(atlas.deadTree) === '[[128,128]]', 'large dead tree frame is incorrect');
@@ -135,13 +136,15 @@ function assert(ok, message) {
   assert(atlas.skeletonFps === 7 && atlas.slimeKingFps === 6, 'enemy animation fps values are incorrect');
   assert(atlas.arrowFps === 14, 'arrow animation fps is incorrect');
   assert(atlas.teslaFps === 8, 'tesla tower animation fps is incorrect');
-  assert(atlas.knightScale === 0.58 && Math.abs(atlas.bossScale - 0.52) < 0.00001,
+  assert(atlas.knightScale === 0.58 && Math.abs(atlas.bossScale - 0.72) < 0.00001,
     'atlas art scales are incorrect');
   assert(atlas.explosion.length === 8 && atlas.explosion.every(frame => JSON.stringify(frame) === '[48,48]'),
     'explosion VFX atlas frames are incorrect');
   assert(JSON.stringify(atlas.terrain) === '[[16,16]]', 'graveyard terrain tile is incorrect');
   assert(atlas.holyAura.length === 8 && atlas.holyAura.every(frame => JSON.stringify(frame) === '[96,96]'),
     'holy aura V4 frames are incorrect');
+  assert(atlas.archangel.length === 8 && atlas.archangel.every(frame => JSON.stringify(frame) === '[72,88]'),
+    'archangel V4 frames are incorrect');
   assert(atlas.frostImpact.length === 8 && atlas.frostImpact.every(frame => JSON.stringify(frame) === '[96,96]'),
     'frost impact V4 frames are incorrect');
   assert(atlas.terrainV4.every(group => group.length === 1 && JSON.stringify(group[0]) === '[128,128]'),
@@ -201,27 +204,29 @@ function assert(ok, message) {
   const theme = await page.evaluate(() => {
     const button = document.querySelector('.menu-screen:not(.hidden) .menu-col .btn:not(.primary)');
     const panel = document.querySelector('.menu-screen:not(.hidden) .menu-board');
+    const altar = document.querySelector('.menu-screen:not(.hidden) .menu-altar');
     return {
       font: getComputedStyle(document.body).fontFamily,
       buttonBackground: getComputedStyle(button).backgroundImage,
       buttonBorder: getComputedStyle(button).borderColor,
       panelBackground: getComputedStyle(panel).backgroundImage,
       panelBorder: getComputedStyle(panel).borderColor,
+      altarBackground: getComputedStyle(altar).backgroundImage,
       titleFont: getComputedStyle(document.querySelector('.gothic-title')).fontFamily,
       titleText: document.querySelector('.gothic-title').textContent,
       menuBackground: Debug.menuBackground()
     };
   });
   assert(theme.font.includes('Fusion Pixel'), 'Fusion Pixel font is not active');
-  assert(theme.buttonBackground.includes('linear-gradient') && theme.buttonBorder !== 'rgb(0, 0, 0)',
-    'V3 black-iron/brass button skin is not active');
-  assert(theme.panelBackground.includes('linear-gradient') && theme.panelBorder !== 'rgb(0, 0, 0)',
-    'V3 symmetric menu panel skin is not active');
+  assert(theme.buttonBackground.includes('hud_coin_frame.png'),
+    'Baroque framed main-menu button skin is not active');
+  assert(theme.panelBackground.includes('battle_report_panel.png') && theme.altarBackground.includes('holy_altar_panel.png'),
+    'generated battle-report/altar panel art is not active');
   assert(theme.titleFont.includes('Darktide Gothic'), 'gothic title font is not active');
   assert(theme.titleText === 'DarkEscaper', 'DarkEscaper title text is incorrect: ' + theme.titleText);
   assert(theme.menuBackground.loaded && theme.menuBackground.src.includes('menu-monolith.png'),
     'menu background asset was not loaded');
-  console.log('THEME OK  V3 black-iron/brass menu, DarkEscaper title, local fonts and menu background');
+  console.log('THEME OK  Baroque framed menu, authored report/altar panels, DarkEscaper title and local fonts');
   await page.getByText('开始远征').click();
   await page.getByText('下一步').click();
   await page.getByText('出发').click();

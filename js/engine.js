@@ -31,10 +31,21 @@ window.Engine = (function () {
   // ---------- 输入 ----------
   var keys = {};
   var touch = { active: false, sx: 0, sy: 0, dx: 0, dy: 0, id: -1 };
+  var pinch = { ids: [], points: {}, distance: 0 };
+  var pointer = { active: false, x: 0, y: 0, worldX: 0, worldY: 0, type: 'mouse' };
   var inputVec = { x: 0, y: 0 };
   var lastDir = { x: 1, y: 0 };
 
   function initInput(canvas) {
+    function trackPointer(e) {
+      var rect = canvas.getBoundingClientRect();
+      pointer.x = (e.clientX - rect.left) * CFG.GAME.W / Math.max(1, rect.width);
+      pointer.y = (e.clientY - rect.top) * CFG.GAME.H / Math.max(1, rect.height);
+      pointer.worldX = cam.x + pointer.x - CFG.GAME.W / 2;
+      pointer.worldY = cam.y + pointer.y - CFG.GAME.H / 2;
+      pointer.type = e.pointerType || 'mouse';
+      pointer.active = true;
+    }
     window.addEventListener('keydown', function (e) {
       keys[e.code] = true;
       if (e.code === 'Escape' || e.code === 'KeyP') { if (Engine.onPause) Engine.onPause(); }
@@ -50,6 +61,20 @@ window.Engine = (function () {
     window.addEventListener('blur', function () { keys = {}; if (Engine.onBlur) Engine.onBlur(); });
     // 触屏虚拟摇杆
     canvas.addEventListener('pointerdown', function (e) {
+      trackPointer(e);
+      if (e.pointerType === 'mouse' && e.button === 1) {
+        e.preventDefault();
+        if (Engine.onMiddleClick) Engine.onMiddleClick();
+        return;
+      }
+      if (e.pointerType === 'touch') {
+        pinch.points[e.pointerId] = { x: e.clientX, y: e.clientY };
+        pinch.ids = Object.keys(pinch.points);
+        if (pinch.ids.length === 2) {
+          var pa = pinch.points[pinch.ids[0]], pb = pinch.points[pinch.ids[1]];
+          pinch.distance = Math.hypot(pa.x - pb.x, pa.y - pb.y) || 1;
+        }
+      }
       if (e.pointerType === 'touch' && !touch.active) {
         // 落点在小地图上时交给点击切换处理,不启动摇杆
         if (Engine.isOverMinimap && Engine.isOverMinimap(e.clientX, e.clientY)) return;
@@ -58,11 +83,25 @@ window.Engine = (function () {
       }
     });
     window.addEventListener('pointermove', function (e) {
+      trackPointer(e);
       if (touch.active && e.pointerId === touch.id) {
         touch.dx = e.clientX - touch.sx; touch.dy = e.clientY - touch.sy;
       }
+      if (e.pointerType === 'touch' && pinch.points[e.pointerId]) {
+        pinch.points[e.pointerId] = { x: e.clientX, y: e.clientY };
+        pinch.ids = Object.keys(pinch.points);
+        if (pinch.ids.length === 2) {
+          var p0 = pinch.points[pinch.ids[0]], p1 = pinch.points[pinch.ids[1]];
+          var distance = Math.hypot(p0.x - p1.x, p0.y - p1.y) || 1;
+          if (Engine.onPinch && pinch.distance) Engine.onPinch(distance / pinch.distance);
+          pinch.distance = distance;
+        }
+      }
     });
-    function endTouch(e) { if (touch.active && e.pointerId === touch.id) { touch.active = false; touch.dx = 0; touch.dy = 0; } }
+    function endTouch(e) {
+      if (touch.active && e.pointerId === touch.id) { touch.active = false; touch.dx = 0; touch.dy = 0; }
+      delete pinch.points[e.pointerId]; pinch.ids = Object.keys(pinch.points); pinch.distance = 0;
+    }
     window.addEventListener('pointerup', endTouch);
     window.addEventListener('pointercancel', endTouch);
   }
@@ -372,7 +411,7 @@ window.Engine = (function () {
     clamp: clamp, lerp: lerp, dist2: dist2, mulberry32: mulberry32, hash2: hash2,
     fmtTime: fmtTime, pick: pick,
     initInput: initInput, readInput: readInput, keys: function () { return keys; },
-    lastDir: lastDir, touchState: touch,
+    lastDir: lastDir, touchState: touch, pointerState: pointer,
     gridClear: gridClear, gridInsert: gridInsert, gridQuery: gridQuery, gridNearest: gridNearest,
     cam: cam, start: start, fitCanvas: fitCanvas, refit: refit,
     isTouch: function () { return isTouch; },
@@ -384,6 +423,6 @@ window.Engine = (function () {
     resolveDecorCollision: resolveDecorCollision,
     setTimeScale: function (s) { timeScale = s; },
     nextUid: function () { return uidCounter++; },
-    onPause: null, onBlur: null, onToggleMap: null, onScroll: null, isOverMinimap: null
+    onPause: null, onBlur: null, onToggleMap: null, onScroll: null, onMiddleClick: null, onPinch: null, isOverMinimap: null
   };
 })();

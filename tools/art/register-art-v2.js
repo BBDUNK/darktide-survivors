@@ -44,7 +44,7 @@ add({ name: 'merchant_prone', source: 'assets/art-v4/sprites/npcs/merchant_actio
 
 const characterScale = {
   knight: 0.58, mage: 0.64, ranger: 0.62,
-  cleric: 0.62, berserker: 0.64, chrono: 0.62
+  cleric: 0.62, berserker: 0.72, chrono: 0.62
 };
 
 for (const character of characters) {
@@ -54,7 +54,8 @@ for (const character of characters) {
       add({
         name: `char_${character}_${action}_${direction}`,
         source, frameSize: [64, 64], frameRow: row, frames, fps,
-        size: [48, 64], anchor: [24, 62], renderScale: characterScale[character]
+        size: character === 'berserker' ? [56, 64] : [48, 64],
+        anchor: character === 'berserker' ? [28, 62] : [24, 62], renderScale: characterScale[character]
       });
     }
     // Down-facing compatibility aliases keep old callers and offline fallbacks working.
@@ -62,7 +63,8 @@ for (const character of characters) {
     add({
       name: alias,
       source, frameSize: [64, 64], frameRow: 0, frames, fps,
-      size: [48, 64], anchor: [24, 62], renderScale: characterScale[character]
+      size: character === 'berserker' ? [56, 64] : [48, 64],
+      anchor: character === 'berserker' ? [28, 62] : [24, 62], renderScale: characterScale[character]
     });
   }
   const reaction = `assets/art-v4/repaired/characters/char_${character}_reaction_4dir.png`;
@@ -70,12 +72,14 @@ for (const character of characters) {
     add({
       name: `char_${character}_hurt_${direction}`,
       source: reaction, frameSize: [64, 64], frameRow: row, frames: 3, fps: 10,
-      size: [48, 64], anchor: [24, 62], renderScale: characterScale[character]
+      size: character === 'berserker' ? [56, 64] : [48, 64],
+      anchor: character === 'berserker' ? [28, 62] : [24, 62], renderScale: characterScale[character]
     });
     add({
       name: `char_${character}_death_${direction}`,
       source: reaction, frameSize: [64, 64], frameRow: row, frameStart: 3, frames: 5, fps: 8,
-      size: [48, 64], anchor: [24, 62], renderScale: characterScale[character]
+      size: character === 'berserker' ? [56, 64] : [48, 64],
+      anchor: character === 'berserker' ? [28, 62] : [24, 62], renderScale: characterScale[character]
     });
   }
 }
@@ -85,12 +89,15 @@ const enemies = [
   'orc', 'imp', 'knight_armored', 'werewolf', 'mummy', 'gargoyle', 'bloodbat', 'wraith'
 ];
 const enemyActions = [['', 0, 7], ['_walk', 1, 10], ['_attack', 2, 12], ['_death', 3, 9]];
+const enemyScale = { spider: 0.58, slime: 0.54, slime_big: 0.72 };
 for (const enemy of enemies) {
   const source = `assets/art-v4/repaired/enemies/${enemy}_actions.png`;
   for (const [suffix, row, fps] of enemyActions) {
     add({
       name: `${enemy}${suffix}`, source, frameSize: [64, 64], frameRow: row, frames: 8, fps,
-      size: [48, 56], anchor: [24, 54], renderScale: 0.45
+      size: enemy === 'slime_big' ? [60, 62] : [56, 58],
+      anchor: enemy === 'slime_big' ? [30, 60] : [28, 56],
+      renderScale: enemyScale[enemy] || 0.48
     });
   }
 }
@@ -113,7 +120,7 @@ for (const boss of bosses) {
   for (const [suffix, row, fps] of bossActions) {
     add({
       name: `${boss}${suffix}`, source, frameSize: [96, 96], frameRow: row, frames: 8, fps,
-      size: [96, 96], anchor: [48, 93], renderScale: 0.52
+      size: [96, 96], anchor: [48, 93], renderScale: boss === 'boss_slimeking' ? 0.72 : 0.58
     });
   }
 }
@@ -140,19 +147,18 @@ rowAnimations('assets/art-v2/sprites/vfx/attack_effects.png', [
   ['p_dragon', 7, 12, [48, 32]]
 ]);
 
-for (const [name, row, fps] of [
-  ['vfx_holy_aura', 0, 12], ['vfx_frost_impact', 1, 14]
-]) {
-  add({ name, source: 'assets/art-v4/sprites/vfx/holy_frost_actions.png',
-    frameSize: [96, 96], frameRow: row, frames: 8, fps,
-    size: [96, 96], anchor: [48, 48], renderScale: 1,
-    // 环形冲击的上下缘随生命周期刻意扩张，不应用脚底基线规则。
-    maxBaselineDrift: 96 });
-}
+add({ name: 'vfx_holy_aura', source: 'assets/art-v4/sprites/vfx/holy_ground_actions.png',
+  frameSize: [96, 96], frameRow: 0, frames: 8, fps: 5,
+  size: [96, 96], anchor: [48, 48], renderScale: 1, maxBaselineDrift: 96 });
 
 add({ name: 'vfx_frost_radial', source: 'assets/art-v4/sprites/vfx/frost_radial_actions.png',
   frameSize: [96, 96], frameRow: 0, frames: 8, fps: 10,
   size: [96, 96], anchor: [48, 48], renderScale: 1, maxBaselineDrift: 96 });
+
+add({ name: 'vfx_archangel', source: 'assets/art-v4/sprites/vfx/archangel_actions.png',
+  frameSize: [96, 96], frameRow: 0, frames: 8, fps: 10,
+  size: [72, 88], anchor: [36, 84], renderScale: 0.72,
+  maxCentroidDrift: 24, maxBaselineDrift: 12 });
 
 ['toxic', 'arcane', 'blood', 'bone', 'hellfire', 'ice', 'electric', 'eye'].forEach((kind, index) => {
   add({ name: `p_enemy_${kind}`, source: 'assets/art-v4/sprites/vfx/enemy_projectiles.png',

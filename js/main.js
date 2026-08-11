@@ -10,6 +10,7 @@
   var atlasPending = false;
   var achvTimer = 0;
   var dpsTimer = 0, lastDmg = 0;
+  var worldZoom = 1;
 
   // ================= 开幕过渡 =================
   var introImg = null, introT = 0, introDone = false, introSkipped = false;
@@ -893,8 +894,8 @@
       // 相机跟随自己的权威位置
       E.cam.x = E.lerp(E.cam.x, cp.x, 1 - Math.pow(0.001, dt));
       E.cam.y = E.lerp(E.cam.y, cp.y, 1 - Math.pow(0.001, dt));
-      var cmX = Math.max(0, CFG.GAME.MAP_R - CFG.GAME.W / 2 + 90);
-      var cmY = Math.max(0, CFG.GAME.MAP_R - CFG.GAME.H / 2 + 90);
+      var cmX = Math.max(0, CFG.GAME.MAP_R - CFG.GAME.W / 2);
+      var cmY = Math.max(0, CFG.GAME.MAP_R - CFG.GAME.H / 2);
       E.cam.x = E.clamp(E.cam.x, -cmX, cmX);
       E.cam.y = E.clamp(E.cam.y, -cmY, cmY);
       Weapons.updateVisual(run, dt);         // 纯视觉弹幕运动,不结算伤害
@@ -1250,56 +1251,25 @@
     ctx.globalAlpha = 1;
   }
 
-  // 暗潮结界:地图边界的流动光墙(世界坐标系内绘制)
-  // 空气墙式边界:不再用黑色虚空+硬光墙切断世界。
-  // 边界外的地面与装饰照常绘制(地形/装饰层本来就按相机范围画,不受 MAP_R 限制),
-  // 这里只叠一层由内向外渐浓的雾,暗示"走不过去",视觉上浑然一体。
+  // 静止的铸铁边界。没有时间变量、流动纹路或闪烁，镜头会精确停在此处。
   function drawBoundary(run) {
     var R = CFG.GAME.MAP_R;
-    var FADE = 1150;                // 雾的渐变宽度:铺得更长,远景衰减更缓
     var pal = run.map.palette;
     var fog = pal.fog || '#0b0812';
-    var rgb = hexToRgb(fog);
-    var base = 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',';
-
-    // 四条边各画一层线性渐变:边界处几乎透明 → 外侧逐渐浓到不可见
-    function edge(x, y, w, h, gx0, gy0, gx1, gy1) {
-      var g = ctx.createLinearGradient(gx0, gy0, gx1, gy1);
-      // 边界处几乎不遮挡,让界外景物看得清;越远才越浓,读作"雾里还有世界"
-      g.addColorStop(0, base + '0)');
-      g.addColorStop(0.30, base + '0.28)');
-      g.addColorStop(0.65, base + '0.66)');
-      g.addColorStop(1, base + '0.95)');
-      ctx.fillStyle = g;
-      ctx.fillRect(x, y, w, h);
-    }
-    var OUT = 2600;
-    edge(-R - OUT, -R - OUT, OUT, (R + OUT) * 2, -R, 0, -R - FADE, 0);        // 左
-    edge(R, -R - OUT, OUT, (R + OUT) * 2, R, 0, R + FADE, 0);                 // 右
-    edge(-R, -R - OUT, R * 2, OUT, 0, -R, 0, -R - FADE);                      // 上
-    edge(-R, R, R * 2, OUT, 0, R, 0, R + FADE);                               // 下
-
-    // 极淡的能量薄膜:只在很靠近时才隐约可见,不抢画面
-    var p = run.player;
-    var near = Math.min(R - Math.abs(p.x), R - Math.abs(p.y));
-    if (near < 300) {
-      var k = 1 - near / 300;
-      ctx.globalAlpha = k * 0.22;
-      ctx.strokeStyle = 'rgba(190,170,255,1)';
-      ctx.lineWidth = 3;
-      ctx.strokeRect(-R, -R, R * 2, R * 2);
-      // 贴墙的微弱流动光点,提示这是一道屏障而不是地图缺失
-      ctx.globalAlpha = k * 0.3;
-      ctx.fillStyle = 'rgba(214,198,255,1)';
-      var step = 190, drift = (run.t * 26) % step;
-      for (var o = -R + drift; o < R; o += step) {
-        ctx.fillRect(o, -R - 1, 22, 2);
-        ctx.fillRect(o, R - 1, 22, 2);
-        ctx.fillRect(-R - 1, o, 2, 22);
-        ctx.fillRect(R - 1, o, 2, 22);
-      }
-      ctx.globalAlpha = 1;
-    }
+    var rgb = hexToRgb(fog), OUT = 2200;
+    ctx.fillStyle = 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',0.94)';
+    ctx.fillRect(-R - OUT, -R - OUT, OUT, (R + OUT) * 2);
+    ctx.fillRect(R, -R - OUT, OUT, (R + OUT) * 2);
+    ctx.fillRect(-R, -R - OUT, R * 2, OUT);
+    ctx.fillRect(-R, R, R * 2, OUT);
+    ctx.globalAlpha = 0.94;
+    ctx.strokeStyle = '#171319'; ctx.lineWidth = 14;
+    ctx.strokeRect(-R, -R, R * 2, R * 2);
+    ctx.strokeStyle = '#6d5435'; ctx.lineWidth = 3;
+    ctx.strokeRect(-R + 6, -R + 6, R * 2 - 12, R * 2 - 12);
+    ctx.strokeStyle = '#2b1a1c'; ctx.lineWidth = 2;
+    ctx.strokeRect(-R + 11, -R + 11, R * 2 - 22, R * 2 - 22);
+    ctx.globalAlpha = 1;
   }
 
   function hexToRgb(hex) {
@@ -1329,6 +1299,9 @@
     drawDecor(run.map, camX, camY, run.player.y, 'back');
 
     ctx.save();
+    ctx.translate(CFG.GAME.W / 2, CFG.GAME.H / 2);
+    ctx.scale(worldZoom, worldZoom);
+    ctx.translate(-CFG.GAME.W / 2, -CFG.GAME.H / 2);
     ctx.translate(CFG.GAME.W / 2 - camX, CFG.GAME.H / 2 - camY);
     drawBoundary(run);
     Weapons.drawGround(ctx, run);
@@ -1344,6 +1317,9 @@
     ctx.restore();
 
     ctx.save();
+    ctx.translate(CFG.GAME.W / 2, CFG.GAME.H / 2);
+    ctx.scale(worldZoom, worldZoom);
+    ctx.translate(-CFG.GAME.W / 2, -CFG.GAME.H / 2);
     ctx.translate(CFG.GAME.W / 2 - camX, CFG.GAME.H / 2 - camY);
     Weapons.draw(ctx, run);
     FX.draw(ctx);
@@ -1354,12 +1330,22 @@
     var plt = CFG.GAME.H / 2 + (run.player.y - camY);
     var auraW = Weapons.findWeapon(run, 'holyaura');
     var glowCol = auraW ? (auraW.evolved ? '#ffefb0' : '#ffd76b') : '#c0aeff';
+    ctx.save();
+    ctx.translate(CFG.GAME.W / 2, CFG.GAME.H / 2);
+    ctx.scale(worldZoom, worldZoom);
+    ctx.translate(-CFG.GAME.W / 2, -CFG.GAME.H / 2);
     ctx.globalAlpha = auraW ? 0.42 : 0.28;
     ctx.drawImage(SpriteGen.glow(glowCol), pls - 190, plt - 190, 380, 380);
     ctx.globalAlpha = 1;
+    ctx.restore();
 
     // 高大前景在角色、武器和角色光晕之后绘制,树干可正确遮挡从其后方经过的实体。
+    ctx.save();
+    ctx.translate(CFG.GAME.W / 2, CFG.GAME.H / 2);
+    ctx.scale(worldZoom, worldZoom);
+    ctx.translate(-CFG.GAME.W / 2, -CFG.GAME.H / 2);
     drawDecor(run.map, camX, camY, run.player.y, 'front');
+    ctx.restore();
 
     // 雾色叠层 + 暗角
     ctx.globalAlpha = 0.10 + Math.sin(run.t * 0.4) * 0.03;
@@ -1500,7 +1486,12 @@
     E.onScroll = function (dy) {
       if (state !== 'run') return;
       if (Math.abs(dy) < 1) return;
-      Weapons.cycleTargetMode();
+      worldZoom = E.clamp(worldZoom + (dy > 0 ? -0.08 : 0.08), 0.72, 1.42);
+    };
+    E.onMiddleClick = function () { if (state === 'run') Weapons.cycleTargetMode(); };
+    E.onPinch = function (scale) {
+      if (state !== 'run') return;
+      worldZoom = E.clamp(worldZoom * scale, 0.72, 1.42);
     };
 
     // 屏幕坐标是否落在小地图上(鼠标点击与触屏摇杆共用,避免手指按图变成移动)

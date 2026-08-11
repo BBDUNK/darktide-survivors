@@ -86,6 +86,32 @@
       "minCoverage": 0.006,
       "maxColors": 256,
       "maxCentroidDrift": 64,
+      "maxBaselineDrift": 96,
+      "name": "vfx_frost_impact",
+      "source": "assets/art-v4/sprites/vfx/holy_frost_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 14,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        48
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "merchant",
       "source": "assets/art-v4/sprites/npcs/merchant_actions.png",
@@ -2583,14 +2609,14 @@
       "frames": 8,
       "fps": 7,
       "size": [
-        48,
+        56,
         64
       ],
       "anchor": [
-        24,
+        28,
         62
       ],
-      "renderScale": 0.64
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -2609,14 +2635,14 @@
       "frames": 8,
       "fps": 7,
       "size": [
-        48,
+        56,
         64
       ],
       "anchor": [
-        24,
+        28,
         62
       ],
-      "renderScale": 0.64
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -2635,14 +2661,14 @@
       "frames": 8,
       "fps": 7,
       "size": [
-        48,
+        56,
         64
       ],
       "anchor": [
-        24,
+        28,
         62
       ],
-      "renderScale": 0.64
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -2661,14 +2687,14 @@
       "frames": 8,
       "fps": 7,
       "size": [
-        48,
+        56,
         64
       ],
       "anchor": [
-        24,
+        28,
         62
       ],
-      "renderScale": 0.64
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -2687,14 +2713,14 @@
       "frames": 8,
       "fps": 7,
       "size": [
-        48,
+        56,
         64
       ],
       "anchor": [
-        24,
+        28,
         62
       ],
-      "renderScale": 0.64
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -2713,14 +2739,14 @@
       "frames": 8,
       "fps": 11,
       "size": [
-        48,
+        56,
         64
       ],
       "anchor": [
-        24,
+        28,
         62
       ],
-      "renderScale": 0.64
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -2739,14 +2765,14 @@
       "frames": 8,
       "fps": 11,
       "size": [
-        48,
+        56,
         64
       ],
       "anchor": [
-        24,
+        28,
         62
       ],
-      "renderScale": 0.64
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -2765,14 +2791,14 @@
       "frames": 8,
       "fps": 11,
       "size": [
-        48,
+        56,
         64
       ],
       "anchor": [
-        24,
+        28,
         62
       ],
-      "renderScale": 0.64
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -2791,14 +2817,14 @@
       "frames": 8,
       "fps": 11,
       "size": [
-        48,
+        56,
         64
       ],
       "anchor": [
-        24,
+        28,
         62
       ],
-      "renderScale": 0.64
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -2817,14 +2843,14 @@
       "frames": 8,
       "fps": 11,
       "size": [
-        48,
+        56,
         64
       ],
       "anchor": [
-        24,
+        28,
         62
       ],
-      "renderScale": 0.64
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -2843,14 +2869,14 @@
       "frames": 8,
       "fps": 13,
       "size": [
-        48,
+        56,
         64
       ],
       "anchor": [
-        24,
+        28,
         62
       ],
-      "renderScale": 0.64
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -2869,14 +2895,14 @@
       "frames": 8,
       "fps": 13,
       "size": [
-        48,
+        56,
         64
       ],
       "anchor": [
-        24,
+        28,
         62
       ],
-      "renderScale": 0.64
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -2895,14 +2921,14 @@
       "frames": 8,
       "fps": 13,
       "size": [
-        48,
+        56,
         64
       ],
       "anchor": [
-        24,
+        28,
         62
       ],
-      "renderScale": 0.64
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -2921,14 +2947,14 @@
       "frames": 8,
       "fps": 13,
       "size": [
-        48,
+        56,
         64
       ],
       "anchor": [
-        24,
+        28,
         62
       ],
-      "renderScale": 0.64
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -2947,14 +2973,14 @@
       "frames": 8,
       "fps": 13,
       "size": [
-        48,
+        56,
         64
       ],
       "anchor": [
-        24,
+        28,
         62
       ],
-      "renderScale": 0.64
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -2973,14 +2999,14 @@
       "frames": 3,
       "fps": 10,
       "size": [
-        48,
+        56,
         64
       ],
       "anchor": [
-        24,
+        28,
         62
       ],
-      "renderScale": 0.64
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -3000,14 +3026,14 @@
       "frames": 5,
       "fps": 8,
       "size": [
-        48,
+        56,
         64
       ],
       "anchor": [
-        24,
+        28,
         62
       ],
-      "renderScale": 0.64
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -3026,14 +3052,14 @@
       "frames": 3,
       "fps": 10,
       "size": [
-        48,
+        56,
         64
       ],
       "anchor": [
-        24,
+        28,
         62
       ],
-      "renderScale": 0.64
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -3053,14 +3079,14 @@
       "frames": 5,
       "fps": 8,
       "size": [
-        48,
+        56,
         64
       ],
       "anchor": [
-        24,
+        28,
         62
       ],
-      "renderScale": 0.64
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -3079,14 +3105,14 @@
       "frames": 3,
       "fps": 10,
       "size": [
-        48,
+        56,
         64
       ],
       "anchor": [
-        24,
+        28,
         62
       ],
-      "renderScale": 0.64
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -3106,14 +3132,14 @@
       "frames": 5,
       "fps": 8,
       "size": [
-        48,
+        56,
         64
       ],
       "anchor": [
-        24,
+        28,
         62
       ],
-      "renderScale": 0.64
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -3132,14 +3158,14 @@
       "frames": 3,
       "fps": 10,
       "size": [
-        48,
+        56,
         64
       ],
       "anchor": [
-        24,
+        28,
         62
       ],
-      "renderScale": 0.64
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -3159,14 +3185,14 @@
       "frames": 5,
       "fps": 8,
       "size": [
-        48,
+        56,
         64
       ],
       "anchor": [
-        24,
+        28,
         62
       ],
-      "renderScale": 0.64
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -3787,14 +3813,14 @@
       "frames": 8,
       "fps": 7,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -3813,14 +3839,14 @@
       "frames": 8,
       "fps": 10,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -3839,14 +3865,14 @@
       "frames": 8,
       "fps": 12,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -3865,14 +3891,14 @@
       "frames": 8,
       "fps": 9,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -3891,14 +3917,14 @@
       "frames": 8,
       "fps": 7,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.54
     },
     {
       "preservePixels": true,
@@ -3917,14 +3943,14 @@
       "frames": 8,
       "fps": 10,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.54
     },
     {
       "preservePixels": true,
@@ -3943,14 +3969,14 @@
       "frames": 8,
       "fps": 12,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.54
     },
     {
       "preservePixels": true,
@@ -3969,14 +3995,14 @@
       "frames": 8,
       "fps": 9,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.54
     },
     {
       "preservePixels": true,
@@ -3995,14 +4021,14 @@
       "frames": 8,
       "fps": 7,
       "size": [
-        48,
-        56
+        60,
+        62
       ],
       "anchor": [
-        24,
-        54
+        30,
+        60
       ],
-      "renderScale": 0.45
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -4021,14 +4047,14 @@
       "frames": 8,
       "fps": 10,
       "size": [
-        48,
-        56
+        60,
+        62
       ],
       "anchor": [
-        24,
-        54
+        30,
+        60
       ],
-      "renderScale": 0.45
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -4047,14 +4073,14 @@
       "frames": 8,
       "fps": 12,
       "size": [
-        48,
-        56
+        60,
+        62
       ],
       "anchor": [
-        24,
-        54
+        30,
+        60
       ],
-      "renderScale": 0.45
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -4073,14 +4099,14 @@
       "frames": 8,
       "fps": 9,
       "size": [
-        48,
-        56
+        60,
+        62
       ],
       "anchor": [
-        24,
-        54
+        30,
+        60
       ],
-      "renderScale": 0.45
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -4099,14 +4125,14 @@
       "frames": 8,
       "fps": 7,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4125,14 +4151,14 @@
       "frames": 8,
       "fps": 10,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4151,14 +4177,14 @@
       "frames": 8,
       "fps": 12,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4177,14 +4203,14 @@
       "frames": 8,
       "fps": 9,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4203,14 +4229,14 @@
       "frames": 8,
       "fps": 7,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4229,14 +4255,14 @@
       "frames": 8,
       "fps": 10,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4255,14 +4281,14 @@
       "frames": 8,
       "fps": 12,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4281,14 +4307,14 @@
       "frames": 8,
       "fps": 9,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4307,14 +4333,14 @@
       "frames": 8,
       "fps": 7,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4333,14 +4359,14 @@
       "frames": 8,
       "fps": 10,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4359,14 +4385,14 @@
       "frames": 8,
       "fps": 12,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4385,14 +4411,14 @@
       "frames": 8,
       "fps": 9,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4411,14 +4437,14 @@
       "frames": 8,
       "fps": 7,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -4437,14 +4463,14 @@
       "frames": 8,
       "fps": 10,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -4463,14 +4489,14 @@
       "frames": 8,
       "fps": 12,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -4489,14 +4515,14 @@
       "frames": 8,
       "fps": 9,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -4515,14 +4541,14 @@
       "frames": 8,
       "fps": 7,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4541,14 +4567,14 @@
       "frames": 8,
       "fps": 10,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4567,14 +4593,14 @@
       "frames": 8,
       "fps": 12,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4593,14 +4619,14 @@
       "frames": 8,
       "fps": 9,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4619,14 +4645,14 @@
       "frames": 8,
       "fps": 7,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4645,14 +4671,14 @@
       "frames": 8,
       "fps": 10,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4671,14 +4697,14 @@
       "frames": 8,
       "fps": 12,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4697,14 +4723,14 @@
       "frames": 8,
       "fps": 9,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4723,14 +4749,14 @@
       "frames": 8,
       "fps": 7,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4749,14 +4775,14 @@
       "frames": 8,
       "fps": 10,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4775,14 +4801,14 @@
       "frames": 8,
       "fps": 12,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4801,14 +4827,14 @@
       "frames": 8,
       "fps": 9,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4827,14 +4853,14 @@
       "frames": 8,
       "fps": 7,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4853,14 +4879,14 @@
       "frames": 8,
       "fps": 10,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4879,14 +4905,14 @@
       "frames": 8,
       "fps": 12,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4905,14 +4931,14 @@
       "frames": 8,
       "fps": 9,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4931,14 +4957,14 @@
       "frames": 8,
       "fps": 7,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4957,14 +4983,14 @@
       "frames": 8,
       "fps": 10,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -4983,14 +5009,14 @@
       "frames": 8,
       "fps": 12,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -5009,14 +5035,14 @@
       "frames": 8,
       "fps": 9,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -5035,14 +5061,14 @@
       "frames": 8,
       "fps": 7,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -5061,14 +5087,14 @@
       "frames": 8,
       "fps": 10,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -5087,14 +5113,14 @@
       "frames": 8,
       "fps": 12,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -5113,14 +5139,14 @@
       "frames": 8,
       "fps": 9,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -5139,14 +5165,14 @@
       "frames": 8,
       "fps": 7,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -5165,14 +5191,14 @@
       "frames": 8,
       "fps": 10,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -5191,14 +5217,14 @@
       "frames": 8,
       "fps": 12,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -5217,14 +5243,14 @@
       "frames": 8,
       "fps": 9,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -5243,14 +5269,14 @@
       "frames": 8,
       "fps": 7,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -5269,14 +5295,14 @@
       "frames": 8,
       "fps": 10,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -5295,14 +5321,14 @@
       "frames": 8,
       "fps": 12,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -5321,14 +5347,14 @@
       "frames": 8,
       "fps": 9,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -5347,14 +5373,14 @@
       "frames": 8,
       "fps": 7,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -5373,14 +5399,14 @@
       "frames": 8,
       "fps": 10,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -5399,14 +5425,14 @@
       "frames": 8,
       "fps": 12,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -5425,14 +5451,14 @@
       "frames": 8,
       "fps": 9,
       "size": [
-        48,
-        56
+        56,
+        58
       ],
       "anchor": [
-        24,
-        54
+        28,
+        56
       ],
-      "renderScale": 0.45
+      "renderScale": 0.48
     },
     {
       "preservePixels": true,
@@ -7122,7 +7148,7 @@
         48,
         93
       ],
-      "renderScale": 0.52
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -7148,7 +7174,7 @@
         48,
         93
       ],
-      "renderScale": 0.52
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -7174,7 +7200,7 @@
         48,
         93
       ],
-      "renderScale": 0.52
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -7200,7 +7226,7 @@
         48,
         93
       ],
-      "renderScale": 0.52
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -7226,7 +7252,7 @@
         48,
         93
       ],
-      "renderScale": 0.52
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,
@@ -7252,7 +7278,7 @@
         48,
         93
       ],
-      "renderScale": 0.52
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -7278,7 +7304,7 @@
         48,
         93
       ],
-      "renderScale": 0.52
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -7304,7 +7330,7 @@
         48,
         93
       ],
-      "renderScale": 0.52
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -7330,7 +7356,7 @@
         48,
         93
       ],
-      "renderScale": 0.52
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -7356,7 +7382,7 @@
         48,
         93
       ],
-      "renderScale": 0.52
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -7382,7 +7408,7 @@
         48,
         93
       ],
-      "renderScale": 0.52
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -7408,7 +7434,7 @@
         48,
         93
       ],
-      "renderScale": 0.52
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -7434,7 +7460,7 @@
         48,
         93
       ],
-      "renderScale": 0.52
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -7460,7 +7486,7 @@
         48,
         93
       ],
-      "renderScale": 0.52
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -7486,7 +7512,7 @@
         48,
         93
       ],
-      "renderScale": 0.52
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -7512,7 +7538,7 @@
         48,
         93
       ],
-      "renderScale": 0.52
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -7538,7 +7564,7 @@
         48,
         93
       ],
-      "renderScale": 0.52
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -7564,7 +7590,7 @@
         48,
         93
       ],
-      "renderScale": 0.52
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -7590,7 +7616,7 @@
         48,
         93
       ],
-      "renderScale": 0.52
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -7616,7 +7642,7 @@
         48,
         93
       ],
-      "renderScale": 0.52
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -8250,40 +8276,14 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 96,
       "name": "vfx_holy_aura",
-      "source": "assets/art-v4/sprites/vfx/holy_frost_actions.png",
+      "source": "assets/art-v4/sprites/vfx/holy_ground_actions.png",
       "frameSize": [
         96,
         96
       ],
       "frameRow": 0,
       "frames": 8,
-      "fps": 12,
-      "size": [
-        96,
-        96
-      ],
-      "anchor": [
-        48,
-        48
-      ],
-      "renderScale": 1
-    },
-    {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 96,
-      "name": "vfx_frost_impact",
-      "source": "assets/art-v4/sprites/vfx/holy_frost_actions.png",
-      "frameSize": [
-        96,
-        96
-      ],
-      "frameRow": 1,
-      "frames": 8,
-      "fps": 14,
+      "fps": 5,
       "size": [
         96,
         96
@@ -8319,6 +8319,32 @@
         48
       ],
       "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 24,
+      "maxBaselineDrift": 12,
+      "name": "vfx_archangel",
+      "source": "assets/art-v4/sprites/vfx/archangel_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        72,
+        88
+      ],
+      "anchor": [
+        36,
+        84
+      ],
+      "renderScale": 0.72
     },
     {
       "preservePixels": true,

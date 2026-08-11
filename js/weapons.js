@@ -72,7 +72,7 @@ window.Weapons = (function () {
       pierce: b.pierce || 0, size: b.size || 16, knock: b.knock || 0,
       chains: b.chains || 0, range: b.range || 0,
       slow: b.slow || 0, slowDur: b.slowDur || 0, stun: b.stun || 0,
-      zapCount: b.zapCount || 1,
+      zapCount: b.zapCount || 1, holyStrike: b.holyStrike || 0,
       poolDmg: b.poolDmg || 0, poolR: b.poolR || 0, poolDur: b.poolDur || 0,
       dur: b.dur || 0, orbitR: b.orbitR || 0, zapCd: b.zapCd || 0,
       areaMul: 1, durMul: 1
@@ -94,6 +94,7 @@ window.Weapons = (function () {
       if (d.stun) st.stun += d.stun;
       if (d.poolDur) st.poolDur += d.poolDur;
       if (d.zapCount) st.zapCount += d.zapCount;
+      if (d.holyStrike) st.holyStrike += d.holyStrike;
     }
     if (w.evolved) {
       var m = CFG.EVOS[w.evoId].mult;
@@ -121,6 +122,7 @@ window.Weapons = (function () {
     var p0 = run.player;
     if (p0.auraProjSpd) st.speed *= (1 + p0.auraProjSpd);
     if (p0.auraDmg) st.dmg *= (1 + p0.auraDmg);
+    if (p0._bloodRageMul) st.dmg *= p0._bloodRageMul;
     st.blessed = !!p0.auraProjSpd;
     st.areaMul *= s.area;
     st.size *= st.areaMul;
@@ -270,13 +272,10 @@ window.Weapons = (function () {
         e = nearestEnemy(p.x, p.y, 300);
         var wbBase = e ? Math.atan2(e.y - p.y, e.x - p.x) : Math.atan2(E.lastDir.y, E.lastDir.x);
         if (w.evolved) {
-          // 千羽风暴:凝聚成一条绿龙,沿单一方向贯穿路径上所有敌人
-          b = spawn(run, w, st, 'dragon', 'p_dragon', p.x, p.y,
-            Math.cos(wbBase) * st.speed * 0.75, Math.sin(wbBase) * st.speed * 0.75, 2.2);
-          b.dmg = st.dmg * 3.2;      // 单体高额伤害
-          b.pierce = 9999;           // 贯穿一切
-          b.size = st.size * 2.4;
-          b.aux = wbBase;            // 朝向,绘制龙身用
+          if (countKind(w.id, p) > 0) return;
+          // 常驻青龙：桌面跟随鼠标，触屏在可视范围内自主猎杀。
+          b = spawn(run, w, st, 'guideDragon', 'p_dragon', p.x, p.y, 0, 0, 1e9);
+          b.dmg = st.dmg * 2.4; b.pierce = 9999; b.size = 48; b.aux = 430;
           AudioSys.play('shoot_arrow');
           AudioSys.play('evolve');
           break;
@@ -293,12 +292,14 @@ window.Weapons = (function () {
       }
       case 'holyaura': return; // 光环在 update 里持续处理
       case 'whirlaxe': {
-        for (i = 0; i < st.count; i++) {
-          var vx = (Math.random() - 0.5) * 220 + (E.lastDir.x * 60);
-          b = spawn(run, w, st, 'axe', 'p_axe', p.x, p.y, vx, -st.speed, 2.6);
-          b.spin = 9;
-          b.pierce = 9999;
-        }
+        if (!p.char || p.char.id !== 'berserker') return;
+        e = nearestEnemy(p.x, p.y, st.range * 1.7);
+        // A reach weapon should never swing at empty air: both the visual and
+        // hit volume begin only when a target enters its real attack range.
+        if (!e) return;
+        a = Math.atan2(e.y - p.y, e.x - p.x);
+        b = spawn(run, w, st, 'melee', 'p_slash_big', p.x, p.y, 0, 0, 0.24);
+        b.angle = a; b.aux = st.range; b.size = st.size * 1.35; b.pierce = 9999;
         AudioSys.play('shoot_axe');
         break;
       }
@@ -347,11 +348,17 @@ window.Weapons = (function () {
       case 'orbitblade': {
         // 已有存活刀片则不重复生成
         if (countKind(w.id, p) > 0) return;
+        if (w.evolved) {
+          b = spawn(run, w, st, 'divineSword', 'p_orbitblade_fly', p.x, p.y, 0, 0, 1e9);
+          b.size = 44; b.dmg = st.dmg * 1.7; b.pierce = 9999; b.aux = 560;
+          AudioSys.play('evolve');
+          break;
+        }
         for (i = 0; i < st.count; i++) {
           b = spawn(run, w, st, 'orbit', 'p_orbitblade', p.x, p.y, 0, 0,
-            w.evolved ? 1e9 : st.dur);
+            st.dur);
           b.phase = (Math.PI * 2 / st.count) * i;
-          b.orbitR = st.orbitR; b.orbitSpd = 3.2 * (w.evolved ? 1.4 : 1);
+          b.orbitR = st.orbitR; b.orbitSpd = 3.2;
           b.pierce = 9999;
         }
         AudioSys.play('shoot_slash');
@@ -365,7 +372,7 @@ window.Weapons = (function () {
           b = spawn(run, w, st, 'demon', 'vfx_spirit', p.x, p.y, 0, 0, 1e9);
           b.phase = run.t * 1.4;
           b.orbitR = 82 * (w.area || 1); b.orbitSpd = 1.8;
-          b.pierce = 9999; b.dmg = st.dmg * 2.5; b.size = 34;
+          b.pierce = 9999; b.dmg = st.dmg * 2.5; b.size = 18;
           b.huntX = p.x; b.huntY = p.y;
           AudioSys.play('evolve');
           break;
@@ -381,6 +388,14 @@ window.Weapons = (function () {
         break;
       }
       case 'teslacoil': {
+        if (w.evolved) {
+          if (countKind(w.id, p) > 0) return;
+          b = spawn(run, w, st, 'tank', 'p_turret', p.x, p.y, 0, 0, 1e9);
+          b.fireT = 0.35; b.pierce = 9999; b.dmg = st.dmg * 4.2; b.size = 58;
+          b.zapN = st.zapCount + 2; b.orbitR = st.range * 1.15;
+          AudioSys.play('evolve');
+          break;
+        }
         for (i = 0; i < st.count; i++) {
           a = Math.random() * Math.PI * 2;
           b = spawn(run, w, st, 'turret', 'p_turret',
@@ -389,6 +404,9 @@ window.Weapons = (function () {
           b.aux2 = 0;
           b.orbitR = st.range;
           b.zapN = st.zapCount + (w.evolved ? 2 : 0);   // 多道闪电数量
+          b.overload = w.lv >= 3 || w.evolved;
+          b.overloadDmg = st.dmg * (0.85 + w.lv * 0.12);
+          b.overloadR = st.range * (0.78 + w.lv * 0.035);
         }
         AudioSys.play('turret_place');
         break;
@@ -475,6 +493,20 @@ window.Weapons = (function () {
     return false;
   };
 
+  function releaseTeslaOverload(run, b) {
+    if (!b.overload) return;
+    var damage = b.overloadDmg || b.dmg;
+    var radius = b.overloadR || b.orbitR * 0.8;
+    if (!run._netVisual) E.gridQuery(b.x, b.y, radius, function (e) {
+      Entities.damageEnemy(run, e, damage, { stun: 0.45, kx: (e.x - b.x) * 0.75, ky: (e.y - b.y) * 0.75 });
+      return false;
+    });
+    FX.ring(b.x, b.y, { r: radius, color: '#9ff4ff', life: 0.65, width: 5 });
+    FX.ring(b.x, b.y, { r: radius * 0.66, color: '#e8ffff', life: 0.48, width: 3 });
+    FX.burst(b.x, b.y, { color: '#b9f8ff', n: 18, speed: 210, life: 0.5, size: 3, glow: true });
+    AudioSys.play('zap');
+  }
+
   function updateBullets(run, dt) {
     var p = run.player;
     for (var i = 0; i < BMAX; i++) {
@@ -485,7 +517,7 @@ window.Weapons = (function () {
       b.ttl -= dt;
       if (b.ttl <= 0) {
         if (b.kind === 'lob') landFlask(run, b);
-        if (b.kind === 'turret') removeTurret(b);
+        if (b.kind === 'turret') { releaseTeslaOverload(run, b); removeTurret(b); }
         b.alive = false;
         continue;
       }
@@ -550,6 +582,31 @@ window.Weapons = (function () {
           b.angle += b.spin * dt;
           hitEnemiesAlong(run, b, b.size * 0.62, 0.3);
           break;
+        case 'melee': {
+          b.x = ownerX + Math.cos(b.angle) * b.aux * 0.56;
+          b.y = ownerY + Math.sin(b.angle) * b.aux * 0.56;
+          b.phase += dt * 13;
+          hitEnemiesAlong(run, b, Math.max(b.size, b.aux * 0.42), 0.16);
+          break;
+        }
+        case 'tank': {
+          // Ultimate Tesla evolution: the player is carried by a slow visual
+          // chassis, with a fixed roof coil and an independently timed cannon.
+          b.x = ownerX; b.y = ownerY + 8;
+          b.fireT -= dt;
+          if (b.fireT <= 0) {
+            b.fireT = 3;
+            var tankA = Math.atan2(E.lastDir.y || 0, E.lastDir.x || 1);
+            var tankWeapon = { id: b.wid, evolved: true };
+            var blast = spawn(run, tankWeapon, { dmg: b.dmg, size: 58, pierce: 9999, knock: 200 }, 'straight', 'p_bolt',
+              b.x + Math.cos(tankA) * 38, b.y + Math.sin(tankA) * 38, Math.cos(tankA) * 620, Math.sin(tankA) * 620, 1.25);
+            blast.size = 58; blast.pierce = 9999; blast.dmg = b.dmg; blast.knock = 230;
+            FX.ring(b.x, b.y, { r: 72, color: '#9ff4ff', life: 0.35, width: 5 });
+            AudioSys.play('zap');
+          }
+          if ((run.frame % 20) === 0) chainZap(run, { id: b.wid, evolved: true }, { dmg: b.dmg * 0.25, chains: b.zapN, range: b.orbitR, stun: 0.18 }, b.x, b.y - 24);
+          break;
+        }
         case 'boomerang': {
           b.phase += dt;
           var out = b.phase < (b.ttl + b.phase) * 0.42; // 前 42% 时间外飞
@@ -626,6 +683,48 @@ window.Weapons = (function () {
           b.y += (ty - b.y) * Math.min(1, dt * follow);
           b.angle = Math.atan2(ty - b.y, tx - b.x);
           hitEnemiesAlong(run, b, b.size * 0.72, 0.28);
+          break;
+        }
+        case 'guideDragon': {
+          var pointer = E.pointerState;
+          var isDesktopPointer = pointer && pointer.active && pointer.type !== 'touch';
+          var dragonTarget = isDesktopPointer ? {
+            x: E.cam.x + pointer.x - CFG.GAME.W / 2,
+            y: E.cam.y + pointer.y - CFG.GAME.H / 2
+          } : nearestEnemy(b.x, b.y, 620);
+          var dgx = dragonTarget ? dragonTarget.x : ownerX + E.lastDir.x * 160;
+          var dgy = dragonTarget ? dragonTarget.y : ownerY + E.lastDir.y * 160;
+          dgx = E.clamp(dgx, ownerX - CFG.GAME.W / 2 + 42, ownerX + CFG.GAME.W / 2 - 42);
+          dgy = E.clamp(dgy, ownerY - CFG.GAME.H / 2 + 42, ownerY + CFG.GAME.H / 2 - 42);
+          var dgdx = dgx - b.x, dgdy = dgy - b.y, dgdist = Math.hypot(dgdx, dgdy) || 1;
+          var dgstep = Math.min(dgdist, b.aux * dt);
+          b.vx = dgdx / dgdist * b.aux; b.vy = dgdy / dgdist * b.aux;
+          b.x += dgdx / dgdist * dgstep; b.y += dgdy / dgdist * dgstep;
+          b.angle = Math.atan2(dgdy, dgdx);
+          if ((run.frame & 1) === 0) FX.trail(b.x, b.y, '#55e88a', 4);
+          hitEnemiesAlong(run, b, b.size * 0.78, 0.16);
+          break;
+        }
+        case 'divineSword': {
+          var swordTarget = nearestEnemy(b.x, b.y, 1400) || nearestEnemy(ownerX, ownerY, 1800);
+          var swx = swordTarget ? swordTarget.x : ownerX + Math.cos(run.t * 1.8) * 240;
+          var swy = swordTarget ? swordTarget.y : ownerY + Math.sin(run.t * 1.8) * 180;
+          var swdx = swx - b.x, swdy = swy - b.y, swdist = Math.hypot(swdx, swdy) || 1;
+          b.vx = swdx / swdist * b.aux; b.vy = swdy / swdist * b.aux;
+          b.x += b.vx * dt; b.y += b.vy * dt; b.angle = Math.atan2(b.vy, b.vx);
+          if ((run.frame & 1) === 0) FX.trail(b.x, b.y, '#ffe596', 5);
+          hitEnemiesAlong(run, b, b.size * 0.82, 0.13);
+          break;
+        }
+        case 'angel': {
+          b.phase += dt * 1.35;
+          var angelTarget = nearestEnemy(b.x, b.y, b.orbitR);
+          var agx = angelTarget ? angelTarget.x : ownerX + Math.cos(b.phase) * b.orbitR * 0.62;
+          var agy = angelTarget ? angelTarget.y : ownerY + Math.sin(b.phase) * b.orbitR * 0.46;
+          b.x += (agx - b.x) * Math.min(1, dt * 5.2);
+          b.y += (agy - b.y) * Math.min(1, dt * 5.2);
+          b.angle = 0;
+          hitEnemiesAlong(run, b, b.size * 0.52, 0.22);
           break;
         }
         case 'turret': {
@@ -728,6 +827,40 @@ window.Weapons = (function () {
 
   var runRef = null;
 
+  function updateRage(run, w, dt) {
+    var p = run.player;
+    if (w.rageKills === undefined) w.rageKills = run.kills || 0;
+    var gained = Math.max(0, (run.kills || 0) - w.rageKills);
+    w.rageKills = run.kills || 0;
+    if (gained > 0) {
+      w.rageT = 2.2 + w.lv * 0.18;
+      if (w.evolved && p.char && p.char.id === 'berserker') {
+        w.phantomStacks = Math.min(20, (w.phantomStacks || 0) + gained);
+      }
+    }
+    w.rageT = Math.max(0, (w.rageT || 0) - dt);
+    var rageBonus = w.rageT > 0 ? 0.10 + w.lv * 0.022 : 0;
+    if (w.evolved) rageBonus += (w.phantomStacks || 0) * 0.025;
+    p._bloodRageMul = Math.max(p._bloodRageMul || 1, 1 + rageBonus);
+    if (w.rageT > 0) p._rageSpeedMul = Math.max(p._rageSpeedMul || 1, 1.12);
+
+    if (!p.char || p.char.id !== 'berserker' || w.lv < 4) return;
+    w.stormCd = (w.stormCd === undefined ? 10 : w.stormCd) - dt;
+    if (w.stormCd <= 0) { w.stormCd = 10; w.stormT = 1.35; w.stormTick = 0; AudioSys.play('evolve'); }
+    w.stormT = Math.max(0, (w.stormT || 0) - dt);
+    if (w.stormT <= 0) return;
+    p._stormSpeedMul = Math.max(p._stormSpeedMul || 1, 1.82);
+    w.stormTick -= dt;
+    if (w.stormTick <= 0 && nearestEnemy(p.x, p.y, wStats(run, w).range * 1.45)) {
+      w.stormTick = 0.11;
+      var st = wStats(run, w);
+      var a = run.t * 12.5;
+      var b = spawn(run, w, st, 'melee', 'p_slash_big', p.x, p.y, 0, 0, 0.2);
+      b.angle = a; b.aux = st.range * 1.18; b.size = st.size * 1.5; b.pierce = 9999;
+      FX.ring(p.x, p.y, { r: st.range * 0.72, color: '#b72832', life: 0.18, width: 3 });
+    }
+  }
+
   // 联机:房主代跑某个队友的武器。共用同一子弹池,弹幕归属只影响视觉光环。
   // owner 是队友的 player 对象,list 是他的武器数组。
   function updateFor(run, owner, list, dt) {
@@ -735,8 +868,10 @@ window.Weapons = (function () {
     var saved = run.player;
     run.player = owner;                 // 临时把武器计算的"玩家"切到队友
     try {
+      owner._bloodRageMul = 1; owner._rageSpeedMul = 1; owner._stormSpeedMul = 1;
       for (var i = 0; i < list.length; i++) {
         var w = list[i];
+        if (w.id === 'whirlaxe') updateRage(run, w, dt);
         if (w.id === 'holyaura') { updateAura(run, w, dt); continue; }
         w.cdT -= dt;
         if (w.cdT <= 0) {
@@ -757,8 +892,10 @@ window.Weapons = (function () {
   function update(run, dt) {
     runRef = run;
     var p = run.player;
+    p._bloodRageMul = 1; p._rageSpeedMul = 1; p._stormSpeedMul = 1;
     for (var i = 0; i < run.weapons.length; i++) {
       var w = run.weapons[i];
+      if (w.id === 'whirlaxe') updateRage(run, w, dt);
       if (w.id === 'holyaura') { updateAura(run, w, dt); continue; }
       w.cdT -= dt;
       if (w.cdT <= 0) {
@@ -812,13 +949,31 @@ window.Weapons = (function () {
 
   function getBullets() { return bullets; }
 
+  function summonArchangels(run, w, st) {
+    var p = run.player;
+    for (var i = 0; i < 7; i++) {
+      var a = Math.PI * 2 * i / 7;
+      var b = spawn(run, w, st, 'angel', 'vfx_archangel',
+        p.x + Math.cos(a) * st.size * 0.72, p.y + Math.sin(a) * st.size * 0.42, 0, 0, 4.8);
+      b.phase = a; b.orbitR = st.size; b.size = 30;
+      b.dmg = st.dmg * 2.1; b.pierce = 9999;
+    }
+    FX.ring(p.x, p.y, { r: st.size, color: '#ffe9a0', life: 0.7, width: 4 });
+    AudioSys.play('evolve');
+  }
+
   function updateAura(run, w, dt) {
     var p = run.player;
+    var st = wStats(run, w);
+    w.curR = st.size;
+    if (w.evolved) {
+      w.angelCd = (w.angelCd === undefined ? 0.3 : w.angelCd) - dt;
+      if (w.angelCd <= 0) { w.angelCd = 8.5; summonArchangels(run, w, st); }
+    }
     w.cdT -= dt;
     if (w.cdT > 0) return;
-    var st = wStats(run, w);
     w.cdT = st.cd;
-    w.curR = st.size; // 供绘制
+    if (!w.holyNext) w.holyNext = new Map();
     // 圣光:亡灵类额外减速 50%(鬼魂/骷髅/死灵),普通敌人维持原有减速
     var slowAmt = w.evolved ? 0.3 : 0;
     E.gridQuery(p.x, p.y, st.size, function (e) {
@@ -829,6 +984,13 @@ window.Weapons = (function () {
         slowDur: undead ? 1.0 : 0.6,
         kx: (e.x - p.x) * 0.3, ky: (e.y - p.y) * 0.3
       });
+      var nextBeam = w.holyNext.get(e.uid) || 0;
+      if (st.holyStrike && run.t >= nextBeam && Math.random() < 0.5) {
+        w.holyNext.set(e.uid, run.t + 2.0);
+        FX.lightning(e.x, e.y - 210, e.x, e.y, '#fff1a6');
+        FX.burst(e.x, e.y, { color: '#fff0a3', n: 8, speed: 90, life: 0.34, size: 2.5, glow: true });
+        if (!run._netVisual) Entities.damageEnemy(run, e, st.dmg * (1.7 + 0.12 * w.lv), { stun: 0.18 });
+      }
       return false;
     });
     // 圣光:范围内敌方弹幕减速 20%(存储标记,子弹更新时按比例衰减)
@@ -851,15 +1013,30 @@ window.Weapons = (function () {
       var r = wAura.curR || wStats(run, wAura).size;
       var auraT = run.t;
       var auraFrames = cachedFrames('vfx_holy_aura');
-      // 光环是范围指示器，不应逐帧收缩跳动；固定完整形态，仅作呼吸式亮度变化。
-      var auraImg = auraFrames[Math.min(4, auraFrames.length - 1)];
-      var auraSize = r * (wAura.evolved ? 2.18 : 2.04);
-      ctx.globalAlpha = 0.16 + Math.sin(auraT * 2.1) * 0.035;
-      ctx.drawImage(SpriteGen.glow(wAura.evolved ? '#fff1a3' : '#e9c66f'),
-        p.x - r, p.y - r, r * 2, r * 2);
-      ctx.globalAlpha = wAura.evolved ? 0.92 : 0.78;
-      ctx.drawImage(auraImg, p.x - auraSize / 2, p.y - auraSize / 2, auraSize, auraSize);
+      // 八帧只有纹样旋转、外径完全相同；压成贴地椭圆，不再爬到人物高度。
+      var auraImg = auraFrames[Math.floor(auraT * cachedFps('vfx_holy_aura', 5)) % auraFrames.length];
+      var auraW = r * (wAura.evolved ? 2.22 : 2.08), auraH = r * 1.12;
+      ctx.globalAlpha = (wAura.evolved ? 0.9 : 0.76) + Math.sin(auraT * 1.7) * 0.045;
+      ctx.drawImage(auraImg, p.x - auraW / 2, p.y - auraH / 2 + 9, auraW, auraH);
       ctx.globalAlpha = 1;
+    }
+    var rageW = findWeapon(run, 'whirlaxe');
+    if (rageW && rageW.evolved && rageW.phantomStacks > 0 && p.char && p.char.id === 'berserker') {
+      var action = p.attackAnimT > 0 ? 'attack' : (p.moving ? 'walk' : 'idle');
+      var spriteId = p.char.sprite + '_' + action + '_' + (p.dir || 'down');
+      var phantomFrames = cachedFrames(spriteId);
+      var phantom = phantomFrames[Math.floor((action === 'attack' ? p.attackAnimAge : p.animT) * cachedFps(spriteId, 10)) % phantomFrames.length];
+      var grow = 1 + Math.min(20, rageW.phantomStacks) * 0.025;
+      var pw = 70 * grow, ph = 82 * grow;
+      var dir = p.dir || 'down';
+      var back = dir === 'left' ? { x: 1, y: 0 } : dir === 'right' ? { x: -1, y: 0 } :
+        dir === 'up' ? { x: 0, y: 1 } : { x: 0, y: -1 };
+      var px = p.x + back.x * (26 + grow * 4), py = p.y + back.y * (22 + grow * 4);
+      ctx.save();
+      ctx.globalAlpha = 0.24 + Math.min(20, rageW.phantomStacks) * 0.012;
+      ctx.filter = 'grayscale(1) sepia(1) saturate(6) hue-rotate(305deg) brightness(1.08)';
+      ctx.drawImage(phantom, px - pw / 2, py - ph - 20, pw, ph);
+      ctx.restore();
     }
     // 火焰池
     for (var i = 0; i < BMAX; i++) {
@@ -916,6 +1093,23 @@ window.Weapons = (function () {
     ctx.globalAlpha = 1;
   }
 
+  function drawTeslaTank(ctx, b, run) {
+    var x = b.x, y = b.y;
+    ctx.save();
+    ctx.globalAlpha = 0.88;
+    ctx.fillStyle = '#0b1016'; ctx.fillRect(x - 38, y - 12, 76, 24);
+    ctx.fillStyle = '#263440'; ctx.fillRect(x - 32, y - 18, 64, 20);
+    ctx.fillStyle = '#66808c'; ctx.fillRect(x - 26, y - 14, 52, 7);
+    ctx.fillStyle = '#b88a36'; ctx.fillRect(x - 14, y - 29, 28, 14);
+    ctx.fillStyle = '#d7eaff'; ctx.fillRect(x - 6, y - 42, 12, 20);
+    ctx.fillStyle = '#80efff'; ctx.fillRect(x - 2, y - 48, 4, 8);
+    ctx.fillStyle = '#a4f6ff'; ctx.fillRect(x + 10, y - 26, 42, 5);
+    ctx.fillStyle = '#11151b'; ctx.fillRect(x - 38, y + 10, 76, 6);
+    ctx.fillStyle = '#9ff4ff'; ctx.globalAlpha = 0.5 + Math.sin(run.t * 8) * 0.22;
+    ctx.fillRect(x - 7, y - 51, 14, 4);
+    ctx.restore();
+  }
+
   function draw(ctx, run) {
     // 普通弹幕与飞行物(火焰池已移到 drawGround)
     for (var i = 0; i < BMAX; i++) {
@@ -957,6 +1151,10 @@ window.Weapons = (function () {
         drawTeslaCoil(ctx, b, run);
         continue;
       }
+      if (b.kind === 'tank') {
+        drawTeslaTank(ctx, b, run);
+        continue;
+      }
       // 受队友光环加持的弹幕:先铺一层金色光晕
       if (b.blessed) {
         var bg = ctx.createRadialGradient(b.x, b.y, 1, b.x, b.y, b.size * 0.9);
@@ -969,7 +1167,10 @@ window.Weapons = (function () {
       ctx.translate(b.x, b.y);
       ctx.rotate(b.angle);
       var dw = img.width * 2 * (b.size / 16);
-      if (b.kind === 'demon') dw = img.width * 2.9;
+      if (b.kind === 'demon') dw = img.width * 1.7 * (b.size / 16);
+      if (b.kind === 'guideDragon') dw = img.width * 4.7;
+      if (b.kind === 'divineSword') dw = img.width * 3.35;
+      if (b.kind === 'angel') dw = img.width * 1.65;
       if (b.spr === 'p_slash' || b.spr === 'p_slash_big') {
         dw = Math.min(img.width * (b.spr === 'p_slash_big' ? 3 : 2.4) * (b.size / 16), 132);
       }
@@ -1005,6 +1206,7 @@ window.Weapons = (function () {
   function canEvolve(run, w) {
     var def = CFG.WEAPONS[w.id];
     if (!def || w.evolved) return false;
+    if (w.id === 'whirlaxe' && (!run.player.char || run.player.char.id !== 'berserker')) return false;
     if (w.lv < def.lv.length + 1) return false;
     return (run.passives[def.evoNeed] || 0) > 0;
   }
@@ -1019,7 +1221,8 @@ window.Weapons = (function () {
     cdM: function (v) { return '冷却 -' + Math.round((1 - v) * 100) + '%'; },
     areaM: function (v) { return '范围 +' + Math.round((v - 1) * 100) + '%'; },
     durM: function (v) { return '持续 +' + Math.round((v - 1) * 100) + '%'; },
-    spdM: function (v) { return '弹速 +' + Math.round((v - 1) * 100) + '%'; }
+    spdM: function (v) { return '弹速 +' + Math.round((v - 1) * 100) + '%'; },
+    holyStrike: function () { return '解锁/强化天降圣光（50%）'; }
   };
   function deltaDesc(delta) {
     var parts = [];

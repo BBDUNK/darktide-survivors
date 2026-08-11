@@ -67,20 +67,20 @@ window.CFG = {
       lv: [ { count: 1 }, { dmg: 6 }, { count: 1 }, { cdM: 0.85 }, { dmg: 8 }, { count: 1 }, { dmg: 10, pierce: 1, areaM: 1.25 } ] },
     arcanebolt: { name: '贤者光弹', icon: 'w_arcanebolt', evo: 'arcanestorm', evoNeed: 'ps_core',
       desc: '大法师随手搓的魔法弹,但会自动追人。',
-      base: { dmg: 8, cd: 1.30, count: 1, speed: 240, pierce: 0, size: 8, knock: 40 },
+      base: { dmg: 11, cd: 1.05, count: 2, speed: 280, pierce: 1, size: 9, knock: 48 },
       lv: [ { count: 1 }, { dmg: 5 }, { count: 1 }, { cdM: 0.85 }, { dmg: 7 }, { count: 1 }, { dmg: 9, cdM: 0.85 } ] },
     windbow: { name: '侠盗神箭', icon: 'w_windbow', evo: 'featherstorm', evoNeed: 'ps_eagle',
       desc: '绿林传说之弓,一箭还你一个公道。',
       base: { dmg: 6, cd: 1.0, count: 2, speed: 420, pierce: 1, size: 12, knock: 30 },
       lv: [ { count: 1 }, { dmg: 5 }, { pierce: 1 }, { count: 1 }, { dmg: 6, cdM: 0.88 }, { count: 1 }, { dmg: 8, pierce: 1 } ] },
     holyaura: { name: '圣女光环', icon: 'w_holyaura', evo: 'sanctuary', evoNeed: 'ps_pendant',
-      desc: '圣女祈福的圣光领域,亡灵进来就超度。',
-      base: { dmg: 5, cd: 0.5, count: 1, speed: 0, pierce: -1, size: 78, knock: 8 },
-      lv: [ { areaM: 1.15 }, { dmg: 2 }, { areaM: 1.15 }, { dmg: 3 }, { areaM: 1.2 }, { dmg: 3 }, { dmg: 4, areaM: 1.2 } ] },
+      desc: '贴地缓慢旋转的圣光领域；升级后会呼唤天降圣光轰击领域内的敌人。',
+      base: { dmg: 5, cd: 0.5, count: 1, speed: 0, pierce: -1, size: 117, knock: 8 },
+      lv: [ { areaM: 1.12 }, { dmg: 2, holyStrike: 1 }, { areaM: 1.12 }, { dmg: 3, holyStrike: 1 }, { areaM: 1.16 }, { dmg: 3 }, { dmg: 4, areaM: 1.16, holyStrike: 1 } ] },
     whirlaxe: { name: '风暴战斧', icon: 'w_whirlaxe', evo: 'worldender', evoNeed: 'ps_belt',
-      desc: '雷神的备用武器,砸出去不一定找得回来。',
-      base: { dmg: 15, cd: 1.5, count: 1, speed: 300, pierce: 6, size: 16, knock: 110 },
-      lv: [ { count: 1 }, { dmg: 9 }, { count: 1 }, { cdM: 0.85 }, { dmg: 12 }, { count: 1 }, { dmg: 16, areaM: 1.3 } ] },
+      desc: '狂战士将战斧化作高频远距近战；其他角色仅能借它激发杀敌血怒。',
+      base: { dmg: 11, cd: 0.48, count: 1, speed: 0, pierce: -1, size: 24, range: 96, knock: 72 },
+      lv: [ { dmg: 4 }, { areaM: 1.12 }, { cdM: 0.88 }, { dmg: 5 }, { areaM: 1.15 }, { cdM: 0.86 }, { dmg: 8, areaM: 1.18 } ] },
     // 控制类:伤害明显低于输出类,价值在减速/眩晕/灼烧持续
     chainlight: { name: '宙斯雷链', icon: 'w_chainlight', evo: 'thorwrath', evoNeed: 'ps_boots',
       desc: '奥林匹斯的天罚,雷会在敌群里自己找下一个。',
@@ -101,11 +101,11 @@ window.CFG = {
       lv: [ { dmg: 3 }, { count: 1 }, { dmg: 4 }, { cdM: 0.85 }, { count: 1 }, { dmg: 5 }, { count: 1, dmg: 6 } ] },
     orbitblade: { name: '逍遥御剑', icon: 'w_orbitblade', evo: 'bladestorm', evoNeed: 'ps_boots',
       desc: '御剑门镇派之宝,绕着你飞,比你还忙。',
-      base: { dmg: 11, cd: 4.2, count: 2, speed: 3.2, pierce: -1, size: 16, dur: 3.0, orbitR: 68, knock: 70 },
+      base: { dmg: 11, cd: 4.2, count: 2, speed: 3.2, pierce: -1, size: 16, dur: 3.0, orbitR: 136, knock: 70 },
       lv: [ { count: 1 }, { dmg: 4 }, { count: 1 }, { durM: 1.25, areaM: 1.12 }, { dmg: 5 }, { count: 1 }, { dmg: 7, durM: 1.3 } ] },
     holytome: { name: '所罗门秘典', icon: 'w_holytome', evo: 'forbidden', evoNeed: 'ps_power',
       desc: '封印七十二魔神的古籍,砸完还能自己飞回来。',
-      base: { dmg: 12, cd: 2.7, count: 1, speed: 340, pierce: 8, size: 16, knock: 60 },
+      base: { dmg: 12, cd: 2.7, count: 1, speed: 340, pierce: 8, size: 8, knock: 60 },
       lv: [ { count: 1 }, { dmg: 5 }, { cdM: 0.85 }, { count: 1 }, { dmg: 6 }, { areaM: 1.25 }, { count: 1, dmg: 7 } ] },
     // zapCount: 每次放电同时打几个目标(升级提升,增强对群);塔与塔之间会自动连电弧
     teslacoil: { name: '特斯拉电塔', icon: 'w_teslacoil', evo: 'skynet', evoNeed: 'ps_magnetstone',
@@ -121,11 +121,11 @@ window.CFG = {
     arcanestorm:  { name: '奥术风暴', icon: 'we_arcanestorm',  of: 'arcanebolt',
       desc: '飞弹成群,命中就炸,快乐加倍。', mult: { dmg: 1.8, count: 3 } },
     featherstorm: { name: '千羽风暴', icon: 'we_featherstorm', of: 'windbow',
-      desc: '八向齐射,暴击率暴涨。这箭雨还带羽毛的。', mult: { dmg: 1.6, count: 4 } },
+      desc: '化为一条可操控的常驻青龙；鼠标引导，手机端自主猎杀。', mult: { dmg: 1.6, count: 4 } },
     sanctuary:    { name: '圣域', icon: 'we_sanctuary',    of: 'holyaura',
-      desc: '领域扩大并治愈自身,敌人进来就变慢。', mult: { dmg: 1.8, area: 1.6 } },
+      desc: '领域扩大并治愈自身，七位大天使周期性降临并在领域内猎杀敌人。', mult: { dmg: 1.8, area: 1.6 } },
     worldender:   { name: '灭世回旋', icon: 'we_worldender',   of: 'whirlaxe',
-      desc: '毁天灭地的巨斧风暴,字面意思。', mult: { dmg: 2.5, count: 2 } },
+      desc: '狂战士背后浮现血色半身幻像，击杀使幻像与攻击力成长，最多叠加 20 层。', mult: { dmg: 2.1 } },
     thorwrath:    { name: '雷神之怒', icon: 'we_thorwrath',    of: 'chainlight',
       desc: '连锁闪电贯穿全场,敌人都被电麻了。', mult: { dmg: 2.0, chains: 6 } },
     absolutezero: { name: '绝对零度', icon: 'we_absolutezero', of: 'frostnova',
@@ -135,11 +135,11 @@ window.CFG = {
     thousandcuts: { name: '影刃千杀', icon: 'we_thousandcuts', of: 'shadowdagger',
       desc: '影匕如雨,命中后还会弹射。一千刀,一刀不少。', mult: { dmg: 1.7, count: 2 } },
     bladestorm:   { name: '剑刃风暴', icon: 'we_bladestorm',   of: 'orbitblade',
-      desc: '六剑永久环绕,永不下班。', mult: { dmg: 2.0, count: 3 } },
+      desc: '凝成一柄巨大常驻神剑，在地图中高速寻敌斩杀。', mult: { dmg: 2.0, count: 3 } },
     forbidden:    { name: '禁忌典籍', icon: 'we_forbidden',    of: 'holytome',
       desc: '召唤一只大恶魔环绕主人，主动猎杀范围内的敌人。', mult: { dmg: 2.2, count: 2 } },
-    skynet:       { name: '天网机阵', icon: 'we_skynet',       of: 'teslacoil',
-      desc: '多塔联动,电弧交织成网。蜘蛛侠看了都点赞。', mult: { dmg: 1.8, count: 2 } }
+    skynet:       { name: '电磁战车', icon: 'we_skynet',       of: 'teslacoil',
+      desc: '角色驾驭电磁炮战车：车顶常驻特斯拉塔，每 3 秒朝前方发射巨型电磁冲击。', mult: { dmg: 2.1, count: 1 } }
   },
 
   // ---------------- 被动 ----------------
@@ -181,7 +181,7 @@ window.CFG = {
     orc:            { name: '碎颅兽人', hp: 85, dmg: 16, spd: 54, r: 13, xp: 5, ai: 'chase' },
     imp:            { name: '狱火小鬼', hp: 32, dmg: 12, spd: 86, r: 10, xp: 3, ai: 'chase' },
     // 重骑:受击后举盾1.8秒,只触发一次(guardOnHit)
-    knight_armored: { name: '堕落重骑', hp: 170, dmg: 18, spd: 40, r: 13, xp: 8, ai: 'shielder', armor: 4,
+    knight_armored: { name: '堕落重骑', hp: 220, dmg: 20, spd: 38, r: 18, xp: 10, ai: 'shielder', armor: 5,
                       guardOnHit: true, guardDur: 1.8 },
     werewolf:       { name: '血月狼人', hp: 95, dmg: 20, spd: 72, r: 12, xp: 6, ai: 'charge', chargeSpd: 240, chargeCd: 3.5 },
     mummy:          { name: '尘缚木乃伊', hp: 130, dmg: 14, spd: 34, r: 12, xp: 6, ai: 'chase' },
@@ -194,17 +194,17 @@ window.CFG = {
 
   // music: 专属战斗曲;shotCol: 弹幕配色(区分各 Boss);auraR: 强化小怪的光环半径
   BOSSES: {
-    boss_slimeking: { name: '腐液之王', hp: 3200, dmg: 20, spd: 46, r: 46, xp: 60,
-      music: 'boss_slime', shotCol: '#7fd44f', auraR: 260,
+    boss_slimeking: { name: '腐液之王', hp: 3200, dmg: 20, spd: 46, r: 64, xp: 60,
+      music: 'boss_slime', shotCol: '#7fd44f',
       desc: '第 5 分钟:巨型史莱姆,跳劈并分裂出小史莱姆' },
     boss_bonelord:  { name: '骸骨领主', hp: 10000, dmg: 26, spd: 50, r: 48, xp: 120,
-      music: 'boss_bone', shotCol: '#e8e0c8', auraR: 280,
+      music: 'boss_bone', shotCol: '#e8e0c8',
       desc: '第 10 分钟:环形骨矢弹幕,连续蓄力冲撞' },
     boss_abysseye:  { name: '深渊之眼', hp: 24000, dmg: 30, spd: 42, r: 52, xp: 220,
-      music: 'boss_abyss', shotCol: '#c46bff', auraR: 300,
+      music: 'boss_abyss', shotCol: '#c46bff',
       desc: '第 15 分钟:螺旋弹幕,瞬移到背后并召唤怨灵' },
     boss_darklord:  { name: '暗潮魔王', hp: 52000, dmg: 36, spd: 55, r: 56, xp: 500,
-      music: 'boss_dark', shotCol: '#ff4d7a', auraR: 340,
+      music: 'boss_dark', shotCol: '#ff4d7a',
       desc: '第 18 分钟:最终决战,兼具冲撞与瞬移。20 分钟后狂暴!' }
   },
 
@@ -321,10 +321,8 @@ window.CFG = {
   ],
 
   // 精英:每 90 秒(自 120s 起)从当前波挑一种,属性放大并掉宝箱
-  // auraR: 精英光环半径(强化同类小怪);buffSpd/buffDmg: 被强化小怪的加成
   ELITE: { firstT: 120, interval: 90, hpMul: 14, dmgMul: 1.5, xpMul: 8, scale: 1.5,
-           auraR: 220, buffSpd: 1.20, buffDmg: 1.25,
-           bossBuffSpd: 1.35, bossBuffDmg: 1.45 },
+           auraR: 0, buffSpd: 1, buffDmg: 1, bossBuffSpd: 1, bossBuffDmg: 1 },
 
   // ---------------- 流浪商人 ----------------
   // 地图中心摆摊,走到物品上自动购买。每 refreshInt 秒全部刷新并多一个摊位。

@@ -31,7 +31,9 @@ function findPython() {
 }
 
 function run(python, script) {
-  const result = spawnSync(python, [path.join(root, 'tools', 'art', script), '--manifest', manifest], {
+  const args = [path.join(root, 'tools', 'art', script), '--manifest', manifest];
+  if (script === 'pixel-cleanup.py' && process.env.ART_SKIP_PREVIEWS === '1') args.push('--skip-previews');
+  const result = spawnSync(python, args, {
     cwd: root, stdio: 'inherit'
   });
   if (result.status !== 0) process.exit(result.status || 1);

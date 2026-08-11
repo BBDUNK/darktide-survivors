@@ -218,7 +218,10 @@ def save_retry(image: Image.Image, destination: Path) -> None:
     """Windows scanners can briefly hold new PNGs open; retry before failing."""
     for attempt in range(5):
         try:
-            image.save(destination, optimize=True)
+            # Pillow's optimized PNG writer intermittently raises WinError 22
+            # while regenerating thousands of previews.  Normal PNG output is
+            # deterministic, faster, and avoids that handle-pressure failure.
+            image.save(destination, optimize=False)
             return
         except OSError:
             if attempt == 4:
@@ -308,7 +311,7 @@ def process_backgrounds(manifest: dict, root: Path) -> None:
         print(f"Built background {output}")
 
 
-def build(manifest_path: Path) -> None:
+def build(manifest_path: Path, skip_previews: bool = False) -> None:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     root = manifest_path.parents[2]
     if manifest.get("externalManifest"):
@@ -348,7 +351,8 @@ def build(manifest_path: Path) -> None:
             except ValueError as error:
                 raise ValueError(f"{spec['name']}[{index}]: {error}") from error
             processed.append(frame)
-            save_retry(checker_preview(frame, manifest.get("previewScale", 8)), preview_dir / f"{spec['name']}-{index}.png")
+            if not skip_previews:
+                save_retry(checker_preview(frame, manifest.get("previewScale", 8)), preview_dir / f"{spec['name']}-{index}.png")
         frames[spec["name"]] = processed
 
     atlas_meta = pack(frames, manifest, out_dir)
@@ -359,7 +363,8 @@ def build(manifest_path: Path) -> None:
         "window.SPRITE_ATLAS = " + json.dumps(atlas_meta, ensure_ascii=False, separators=(",", ":")) + ";\n",
         encoding="utf-8",
     )
-    contact_sheet(frames, manifest.get("previewScale", 8), preview_dir / "contact-sheet.png")
+    if not skip_previews:
+        contact_sheet(frames, manifest.get("previewScale", 8), preview_dir / "contact-sheet.png")
     process_backgrounds(manifest, root)
     print(f"Built {sum(len(v) for v in frames.values())} frames into {out_dir / 'atlas.png'}")
 
@@ -367,5 +372,6 @@ def build(manifest_path: Path) -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--manifest", default="tools/art/art-manifest.json")
+    parser.add_argument("--skip-previews", action="store_true")
     args = parser.parse_args()
-    build(Path(args.manifest).resolve())
+    build(Path(args.manifest).resolve(), args.skip_previews)

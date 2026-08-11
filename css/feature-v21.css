@@ -1,0 +1,112 @@
+/* feature-v21.css — 复古巴洛克统一外观与主菜单专属画板 */
+
+.menu-col .btn {
+  width: 372px !important;
+  min-height: 62px !important;
+  padding: 0 42px 3px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  box-sizing: border-box;
+}
+
+.menu-altar,
+.menu-board {
+  width: 236px !important;
+  height: 302px !important;
+  box-sizing: border-box;
+  border: 0 !important;
+  outline: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: 8px 10px 18px rgba(0,0,0,.65) !important;
+  image-rendering: pixelated;
+}
+.menu-altar {
+  padding: 54px 42px 42px !important;
+  background: url('../assets/art-v4/sprites/ui/holy_altar_panel.png') center / 100% 100% no-repeat !important;
+  justify-content: flex-end !important;
+  gap: 6px !important;
+}
+.menu-board {
+  padding: 60px 45px 55px !important;
+  background: url('../assets/art-v4/sprites/ui/battle_report_panel.png') center / 100% 100% no-repeat !important;
+  gap: 5px !important;
+}
+.menu-altar::before, .menu-altar::after,
+.menu-board::before, .menu-board::after { content: none !important; display: none !important; }
+.menu-altar-title, .menu-board-title {
+  color: #4a2612 !important;
+  border: 0 !important;
+  padding: 0 !important;
+  margin: 0 0 5px !important;
+  text-shadow: 0 1px rgba(255,238,184,.65) !important;
+  font-weight: 900;
+  white-space: nowrap;
+}
+.menu-board-body { gap: 4px !important; }
+.board-row { font-size: 12px !important; }
+.board-label { color: #5e2d1d !important; }
+.board-val { color: #8d1717 !important; text-shadow: none !important; }
+.menu-altar-gold { color: #7b4d12 !important; text-shadow: none !important; }
+.menu-altar-icon.menu-altar-flame {
+  position: relative;
+  width: 72px !important;
+  height: 76px !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  margin-bottom: -5px;
+}
+.menu-altar-flame::before {
+  content: '';
+  position: absolute;
+  left: 50%; bottom: 11px;
+  width: calc(18px + 13px * var(--altar-power, 0));
+  height: calc(26px + 24px * var(--altar-power, 0));
+  transform: translateX(-50%) rotate(45deg);
+  border-radius: 60% 10% 62% 38%;
+  background: radial-gradient(circle at 65% 65%, #fff7c4 0 16%, #ffd34f 20% 42%, #f47822 48% 70%, #ad2330 74%);
+  box-shadow: 0 0 calc(10px + 18px * var(--altar-power, 0)) rgba(255,185,61,.82);
+}
+
+/* Generated baroque frame used as a true nine-slice: detailed corners remain
+   intact while the straight edge pieces stretch to any notification or bar. */
+.boss-wrap, .hud-warn, .modal-box, .pause-box {
+  border: 18px solid transparent !important;
+  border-image: url('../assets/art-v4/sprites/ui/baroque_menu_frame.png') 116 104 fill / 18px / 0 stretch !important;
+  box-sizing: border-box;
+}
+.boss-wrap { width: min(780px, calc(100vw - 22px)) !important; min-height: 72px; padding: 13px 30px 15px !important; }
+.boss-bar { height: 30px !important; }
+.hud-warn { min-width: min(680px, calc(100vw - 22px)) !important; min-height: 62px; padding: 17px 42px !important; text-align: center; }
+.pause-box { min-width: min(560px, calc(100vw - 30px)); padding: 38px !important; }
+.asset-gallery { display:grid; grid-template-columns:repeat(auto-fill,minmax(104px,1fr)); gap:8px; }
+.asset-cell { min-height:86px; padding:6px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; border:2px solid #614622; background:rgba(9,7,8,.78); }
+.asset-cell canvas { width:46px; height:46px; image-rendering:pixelated; }
+.asset-name { max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:9px; color:#e7ca88; }
+.enc-section-title { margin:16px 0 8px; color:#f0d899; font-weight:900; letter-spacing:1px; }
+
+/* 全部次级界面统一为深色金纹巴洛克框；不改变各页面原有布局。 */
+.modal-box, .info-box, .shop-item, .achv-row, .codex-cell, .enc-card,
+.lu-card, .chest-item, .settings-body, .coop-code, .coop-char, .coop-member,
+.map-card, .card, .toast, .result-box, .story-box, .pause-box {
+  border: 3px solid #17100c !important;
+  outline: 1px solid #ad8448 !important;
+  outline-offset: -6px !important;
+  border-radius: 0 !important;
+  background-color: rgba(10,9,10,.94) !important;
+  box-shadow: inset 0 0 0 2px #4b3927, inset 0 0 22px rgba(147,91,31,.16), 5px 6px 0 rgba(0,0,0,.52) !important;
+}
+.page-title, .modal-title, .info-title {
+  color: #e6c986;
+  text-shadow: 2px 2px #140907;
+}
+
+@media (max-width: 760px), (max-height: 520px) {
+  .menu-altar, .menu-board { width: 190px !important; height: 244px !important; }
+  .menu-altar { padding: 42px 32px 30px !important; }
+  .menu-board { padding: 48px 34px 42px !important; }
+  .menu-col .btn { width: 270px !important; }
+  .board-row { font-size: 10px !important; }
+}

@@ -1811,6 +1811,14 @@
     return PLACEHOLDER;
   }
 
+  function buildProceduralOne(name) {
+    if (!defs[name]) return null;
+    var pxFrames = defs[name](), canvases = [];
+    for (var i = 0; i < pxFrames.length; i++) canvases.push(pxFrames[i].toCanvas());
+    store[name] = canvases;
+    return canvases;
+  }
+
   function fallbackKey(name) {
     var base = name.replace(/_(idle|walk|attack|hurt|death)_(down|left|right|up)$/, '')
       .replace(/_(walk|attack|death|charge|overload|deploy)$/, '');
@@ -1831,6 +1839,11 @@
     if (base.indexOf('terrain_abyss_') === 0) return 'tile_abyss';
     if (base === 'vfx_holy_aura') return 'vfx_circle';
     if (base === 'vfx_frost_impact') return 'vfx_ice';
+    if (base === 'vfx_frost_radial') return 'vfx_ice';
+    if (base === 'vfx_archangel') return 'vfx_spirit';
+    if (base === 'p_orbitblade_fly') return 'p_orbitblade';
+    if (base === 'icon_gold') return 'coin';
+    if (base === 'icon_kill') return 'p_slash';
     if (base === 'ps_barrier') return 'ps_core';
     return base;
   }
@@ -1979,6 +1992,7 @@
     get: function (name) {
       if (!store) this.init();
       var arr = store[name];
+      if (!arr && !atlasState.loaded) arr = buildProceduralOne(name);
       // 动作图集缺失时退回角色基础帧，离线/图集加载失败也不会显示占位块。
       if (!arr) arr = store[fallbackKey(name)];
       if (!arr) arr = fallback(name);
@@ -2006,6 +2020,7 @@
     frames: function (name) {
       if (!store) this.init();
       var arr = store[name];
+      if (!arr && !atlasState.loaded) arr = buildProceduralOne(name);
       if (!arr) arr = store[fallbackKey(name)];
       if (!arr) arr = fallback(name);
       return arr;

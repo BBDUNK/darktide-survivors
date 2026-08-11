@@ -130,7 +130,7 @@ window.Entities = (function () {
     var terrain = E.terrainEffect ? E.terrainEffect(run.map, p.x, p.y) : { mul: 1, type: 'ground' };
     p.terrainType = terrain.type;
     p.terrainMul = terrain.mul;
-    var mspd = s.speed * (1 - (p.slow || 0)) * terrain.mul;
+    var mspd = s.speed * (1 - (p.slow || 0)) * terrain.mul * (p._rageSpeedMul || 1) * (p._stormSpeedMul || 1);
     // 记录当前速度矢量,供敌人抛击预判落点
     p.lastVx = iv.x * mspd;
     p.lastVy = iv.y * mspd;
@@ -176,9 +176,8 @@ window.Entities = (function () {
     // 相机跟随(同样夹在边界内,避免镜头越过结界露出空白)
     E.cam.x = E.lerp(E.cam.x, p.x, 1 - Math.pow(0.001, dt));
     E.cam.y = E.lerp(E.cam.y, p.y, 1 - Math.pow(0.001, dt));
-    // 留出余量让结界墙进入视野(不要夹到刚好贴墙,否则看不见边界)
-    var margin = 90;
-    var cmX = Math.max(0, R - CFG.GAME.W / 2 + margin), cmY = Math.max(0, R - CFG.GAME.H / 2 + margin);
+    // 镜头在地图边界处停止，玩家仍可沿屏幕边缘独立移动。
+    var cmX = Math.max(0, R - CFG.GAME.W / 2), cmY = Math.max(0, R - CFG.GAME.H / 2);
     E.cam.x = E.clamp(E.cam.x, -cmX, cmX);
     E.cam.y = E.clamp(E.cam.y, -cmY, cmY);
   }
@@ -526,34 +525,11 @@ window.Entities = (function () {
   }
 
   // ================= 敌人 AI =================
-  // 精英/Boss 光环:精英只强化同类小怪,Boss 强化全部小怪。
-  // 每 6 帧重算一次即可,buff 以倍率形式缓存在 e.buffSpd / e.buffDmg。
+  // 精英/Boss 不再给周围怪物附加强化光环；这里只负责清掉旧局/联机快照残留。
   function applyAuras(run) {
-    var i, e;
-    for (i = 0; i < POOL; i++) {
-      e = enemies[i];
+    for (var i = 0; i < POOL; i++) {
+      var e = enemies[i];
       if (e.alive) { e.buffSpd = 1; e.buffDmg = 1; e.buffed = false; }
-    }
-    // 网格已由 updateEnemies 每帧重建。只对每个精英/Boss 查询其光环半径内的小怪,
-    // 避免 520×520 全扫描。精英/Boss 数量远小于总敌人数。
-    for (i = 0; i < POOL; i++) {
-      var src = enemies[i];
-      if (!src.alive || (!src.elite && !src.boss)) continue;
-      var bd = src.boss ? CFG.BOSSES[src.bossType] : null;
-      var r = src.boss ? (bd && bd.auraR ? bd.auraR : 300) : CFG.ELITE.auraR;
-      var bs = src.boss ? CFG.ELITE.bossBuffSpd : CFG.ELITE.buffSpd;
-      var bdm = src.boss ? CFG.ELITE.bossBuffDmg : CFG.ELITE.buffDmg;
-      var srcId = src.id;
-      var isBoss = src.boss;
-      E.gridQuery(src.x, src.y, r, function (e2) {
-        if (e2 === src || e2.elite || e2.boss) return false;
-        // 精英只增强同类型小怪,Boss 增强所有类型
-        if (!isBoss && e2.id !== srcId) return false;
-        if (bs > e2.buffSpd) e2.buffSpd = bs;
-        if (bdm > e2.buffDmg) e2.buffDmg = bdm;
-        e2.buffed = true;
-        return false;
-      });
     }
   }
 
@@ -960,7 +936,9 @@ window.Entities = (function () {
         // Fixed authored hostile projectiles replace the old colour-only dots.
         var c = (col || '').toLowerCase();
         s.sprite = c.indexOf('7fd') >= 0 || c.indexOf('green') >= 0 ? 'p_enemy_toxic' :
-          (c.indexOf('a') >= 0 && c.indexOf('f') >= 0 ? 'p_enemy_arcane' : 'p_enemy_blood');
+          (c.indexOf('e8e0') >= 0 ? 'p_enemy_bone' :
+          (c.indexOf('c46b') >= 0 ? 'p_enemy_arcane' :
+          (c.indexOf('ffd7') >= 0 ? 'p_enemy_hellfire' : 'p_enemy_blood')));
         s.slow = slow || 0; s.slowDur = slowDur || 0;
         s.webType = webType || false;
         s.col = col || null;          // 自定义配色(Boss 弹幕差异化)
@@ -1121,10 +1099,10 @@ window.Entities = (function () {
           // 用独立计数器决定冲撞时机:aiPhase 同时被当作弹幕旋转角,不能兼作节奏计数
           e.atkCount = (e.atkCount || 0) + 1;
           if (e.atkCount % 3 === 0) {          // 每三轮转入召唤(3 批 × 3 只)
-            e.chargeSeq = 3; e.chargePhase = 0; e.skT = 0.9;
+            e.chargeSeq = 4; e.chargePhase = 0; e.skT = 0.9;
             break;
           }
-          var n = 14;
+          var n = 20;
           for (var j = 0; j < n; j++) {
             var a = (Math.PI * 2 / n) * j + e.aiPhase * 0.3;
             fireShot(e.x, e.y, Math.cos(a), Math.sin(a), 130, e.dmg * 0.6 * dMul, 0, 0, false, bcol);
@@ -1822,26 +1800,18 @@ window.Entities = (function () {
       var sh = shots[i];
       if (!sh.alive) continue;
       if (sh.webType) {
-        var webImg = webFrames[Math.floor(run.t * 10) % webFrames.length];
+        var webImg = webFrames[0];
         ctx.drawImage(webImg, sh.x - 9, sh.y - 9, 18, 18);
-        continue;
-      }
-      if (sh.col) {
-        // Boss 专属配色弹幕:发光核心 + 外圈,和普通红弹明显区分
-        var sr = (sh.size || 16) * 0.42;
-        ctx.globalAlpha = 0.35;
-        ctx.fillStyle = sh.col;
-        ctx.beginPath(); ctx.arc(sh.x, sh.y, sr * 1.9, 0, Math.PI * 2); ctx.fill();
-        ctx.globalAlpha = 1;
-        ctx.fillStyle = sh.col;
-        ctx.beginPath(); ctx.arc(sh.x, sh.y, sr, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath(); ctx.arc(sh.x - sr * 0.25, sh.y - sr * 0.25, sr * 0.42, 0, Math.PI * 2); ctx.fill();
         continue;
       }
       var authored = getFrames(sh.sprite || 'p_enemy_blood', false);
       var shotImg = (authored && authored[0]) || shotFrames[0];
       var shotSize = Math.max(16, (sh.size || 16) * 1.25);
+      if (sh.col) {
+        ctx.globalAlpha = 0.22;
+        ctx.drawImage(SpriteGen.glow(sh.col), sh.x - shotSize, sh.y - shotSize, shotSize * 2, shotSize * 2);
+        ctx.globalAlpha = 1;
+      }
       ctx.drawImage(shotImg, sh.x - shotSize / 2, sh.y - shotSize / 2, shotSize, shotSize);
     }
     // 玩家

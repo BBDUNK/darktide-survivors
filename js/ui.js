@@ -147,8 +147,11 @@ window.UI = (function () {
     menuVersion.textContent = CFG.GAME.VERSION;
     // 左侧圣坛快捷入口:大图标置顶 + 标题 + 金币 + 宝石红进入按钮
     menuAltar.innerHTML = '';
-    var iconBox = h('div', 'menu-altar-icon');
-    iconBox.appendChild(iconCanvas('icon_gold', 44));
+    var iconBox = h('div', 'menu-altar-icon menu-altar-flame');
+    var totalMeta = 0;
+    for (var mk in d.metaLv) totalMeta += d.metaLv[mk] || 0;
+    var altarPower = Math.min(1, totalMeta / Math.max(1, CFG.META.length * 3)).toFixed(2);
+    if (menuAltar.style && menuAltar.style.setProperty) menuAltar.style.setProperty('--altar-power', altarPower);
     menuAltar.appendChild(iconBox);
     menuAltar.appendChild(h('div', 'menu-altar-title', '🏛 强化圣坛'));
     var goldLine = h('div', 'menu-altar-gold');
@@ -573,6 +576,7 @@ window.UI = (function () {
   function renderCodexTabs() {
     codexTabs.innerHTML = '';
     var tabs = [['w', '⚔ 武器'], ['p', '💠 被动'], ['e', '☠ 敌人'], ['m', '📖 机制'], ['g', '🎮 操作指南'], ['s', '📜 故事']];
+    tabs.push(['a', '素材库']);
     tabs.forEach(function (t) {
       codexTabs.appendChild(btn(t[1], codexTab === t[0] ? 'primary small-btn' : 'small-btn',
         function () { codexTab = t[0]; refreshCodex(); }));
@@ -585,9 +589,35 @@ window.UI = (function () {
     if (codexTab === 'w') renderEncWeapons();
     else if (codexTab === 'p') renderEncPassives();
     else if (codexTab === 'e') renderEncEnemies();
+    else if (codexTab === 'a') renderArtGallery();
     else if (codexTab === 'g') renderEncGuide();
     else if (codexTab === 's') renderEncStory();
     else renderEncMechanics();
+  }
+
+  function renderArtGallery() {
+    var atlas = window.SPRITE_ATLAS || { frames: {} };
+    var names = Object.keys(atlas.frames || {}).sort();
+    codexBody.appendChild(h('div', 'enc-intro', '当前图集：' + names.length + ' 个素材；缩略图直接读取正在运行的图集。'));
+    var groups = [
+      ['角色动作', function (n) { return n.indexOf('char_') === 0; }],
+      ['敌人与首领', function (n) { return n.indexOf('boss_') === 0 || n.indexOf('elite_') === 0 || /^(bat|slime|zombie|skeleton|spider|ghost|orc|imp|mummy|gargoyle|wraith|werewolf|cultist|knight_)/.test(n); }],
+      ['武器、弹幕与特效', function (n) { return n.indexOf('p_') === 0 || n.indexOf('vfx_') === 0 || n.indexOf('w_') === 0 || n.indexOf('we_') === 0 || n === 'tesla_tower'; }],
+      ['环境、拾取物与界面', function (n) { return n.indexOf('terrain_') === 0 || n.indexOf('deco_') === 0 || n.indexOf('icon_') === 0 || n.indexOf('hud_') === 0 || n.indexOf('ui_') === 0 || n.indexOf('pickup_') === 0; }]
+    ];
+    groups.forEach(function (group) {
+      var subset = names.filter(group[1]);
+      if (!subset.length) return;
+      codexBody.appendChild(h('div', 'enc-section-title', group[0] + ' · ' + subset.length));
+      var grid = h('div', 'asset-gallery');
+      subset.forEach(function (name) {
+        var cell = h('div', 'asset-cell');
+        cell.appendChild(iconCanvas(name, 46));
+        cell.appendChild(h('div', 'asset-name', name));
+        grid.appendChild(cell);
+      });
+      codexBody.appendChild(grid);
+    });
   }
 
   function renderEncWeapons() {

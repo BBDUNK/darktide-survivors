@@ -88,19 +88,27 @@ def save(image: Image.Image, relative: str) -> None:
 
 
 def build_vfx() -> None:
-    source = Image.open(SOURCE / "vfx" / "holy_frost_transparent.png")
-    save(fitted_sheet(grid_cells(source, 8, 2), (96, 96), 72, True), "vfx/holy_frost_actions.png")
+    source = remove_magenta(Image.open(SOURCE / "vfx" / "holy_ground_frost_master.png"))
+    cells = grid_cells(source, 8, 2)
+    # Both effects are authored as flat ground decals.  Keeping the rows in
+    # separate sheets prevents a tall frost frame from shrinking the thin holy
+    # ellipse and guarantees that the right-most aura frame is never cropped.
+    save(fitted_sheet([cells[0]], (96, 96), 56, True), "vfx/holy_ground_actions.png")
+    save(fitted_sheet([cells[1]], (96, 96), 56, True), "vfx/frost_radial_actions.png")
+
+
+def build_archangel() -> None:
+    source = remove_magenta(Image.open(SOURCE / "vfx" / "archangel_actions_master.png"))
+    save(fitted_sheet(grid_cells(source, 8, 1), (96, 96), 72, True, True),
+         "vfx/archangel_actions.png")
 
 
 def build_frost_and_enemy_projectiles() -> None:
     source = remove_magenta(Image.open(SOURCE / "vfx" / "frost_enemy_projectiles_master.png"))
     cells = grid_cells(source, 8, 2)
-    # The first row is a radial frost nova.  The second row is a clean catalog
-    # of hostile shots used by every enemy and boss instead of blurry circles.
-    # Keep a readable residual ring in the final frame.  The generator's last
-    # sparkle-only cell was below the runtime validation coverage threshold.
-    cells[0][-1] = cells[0][-2].copy()
-    save(fitted_sheet([cells[0]], (96, 96), 64, True), "vfx/frost_radial_actions.png")
+    # The second row is a clean catalog of hostile shots used by every enemy
+    # and boss instead of blurry colour-only circles.  The new frost wave is
+    # built by build_vfx() from its dedicated flat-ground source.
     save(fitted_sheet([cells[1]], (64, 64), 64, False), "vfx/enemy_projectiles.png")
 
 
@@ -168,11 +176,26 @@ def build_frame() -> None:
     save(quantize(source, 96), "ui/baroque_menu_frame.png")
 
 
+def build_menu_panels() -> None:
+    specs = (
+        ("battle_report_master.png", "ui/battle_report_panel.png", (384, 512)),
+        ("holy_altar_master.png", "ui/holy_altar_panel.png", (384, 576)),
+    )
+    for source_name, destination, size in specs:
+        source = remove_magenta(Image.open(SOURCE / "ui" / source_name))
+        bbox = source.getchannel("A").getbbox()
+        if not bbox:
+            raise ValueError(f"empty generated panel: {source_name}")
+        panel = source.crop(bbox).resize(size, Image.Resampling.NEAREST)
+        save(quantize(panel, 96), destination)
+
+
 def main() -> None:
     if "--skip-repair" not in sys.argv:
         subprocess.run([sys.executable, str(ROOT / "tools" / "art" / "repair-sprite-grids.py")],
                        cwd=ROOT, check=True)
     build_vfx()
+    build_archangel()
     build_frost_and_enemy_projectiles()
     build_pickups()
     build_terrain()
@@ -180,6 +203,7 @@ def main() -> None:
     build_props()
     build_merchant()
     build_frame()
+    build_menu_panels()
 
 
 if __name__ == "__main__":
