@@ -4,7 +4,9 @@ window.Meta = (function () {
 
   // ⚠ 测试期配置:新存档直接全解锁 + 商店满级,方便试玩全部内容。
   // 正式发布前把 TEST_UNLOCK_ALL 改为 false 即恢复从零开始的渐进解锁。
-  var TEST_UNLOCK_ALL = true;
+  // Release progression uses real achievements.  The separate Codex test arena
+  // exposes every visual asset without silently pre-unlocking player progress.
+  var TEST_UNLOCK_ALL = false;
 
   function allAchv() {
     var o = {};
