@@ -24,7 +24,7 @@
 }
 .menu-version { left: 0 !important; bottom: 0 !important; z-index: 5; padding: 4px 7px; }
 .menu-altar {
-  padding: 54px 42px 42px !important;
+  padding: 34px 26px 34px !important;
   background: url('../assets/art-v4/sprites/ui/holy_altar_panel.png') center / 100% 100% no-repeat !important;
   justify-content: flex-end !important;
   gap: 6px !important;
@@ -52,12 +52,13 @@
 .menu-altar-gold { color: #7b4d12 !important; text-shadow: none !important; }
 .menu-altar-icon.menu-altar-flame {
   position: relative;
-  width: 72px !important;
-  height: 76px !important;
+  width: 188px !important;
+  height: 174px !important;
+  max-width: 100%;
   border: 0 !important;
   background: url('../assets/art-v4/sprites/ui/altar_cross_states.png') 0 0 / 400% 100% no-repeat !important;
   box-shadow: none !important;
-  margin-bottom: -5px;
+  margin: -8px auto -2px;
 }
 .menu-altar-flame::before {
   content: none;
@@ -113,7 +114,8 @@
 
 @media (max-width: 760px), (max-height: 520px) {
   .menu-altar, .menu-board { width: 190px !important; height: 244px !important; }
-  .menu-altar { padding: 42px 32px 30px !important; }
+  .menu-altar { padding: 30px 22px 26px !important; }
+  .menu-altar-icon.menu-altar-flame { width: 142px !important; height: 132px !important; margin-top: -5px; }
   .menu-board { padding: 48px 34px 42px !important; }
   .menu-col .btn { width: 270px !important; }
   .board-row { font-size: 10px !important; }

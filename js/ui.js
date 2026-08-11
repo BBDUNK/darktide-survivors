@@ -115,7 +115,7 @@ window.UI = (function () {
     var body = h('div', 'menu-body');
     // 左侧:强化圣坛入口
     menuAltar = h('div', 'menu-altar');
-    menuAltar.appendChild(h('div', 'menu-altar-title', '🏛 强化圣坛'));
+    menuAltar.appendChild(h('div', 'menu-altar-title', '强化圣坛'));
     s.appendChild(menuAltar);
     // 中间:主按钮列 + 小按钮行
     var mid = h('div', 'menu-mid');
@@ -154,7 +154,7 @@ window.UI = (function () {
     iconBox.className += ' altar-cross-state-' + Math.min(3, Math.floor(Number(altarPower) * 4));
     if (menuAltar.style && menuAltar.style.setProperty) menuAltar.style.setProperty('--altar-power', altarPower);
     menuAltar.appendChild(iconBox);
-    menuAltar.appendChild(h('div', 'menu-altar-title', '🏛 强化圣坛'));
+    menuAltar.appendChild(h('div', 'menu-altar-title', '强化圣坛'));
     var goldLine = h('div', 'menu-altar-gold');
     goldLine.appendChild(iconCanvas('icon_gold', 16));
     goldLine.appendChild(h('span', '', ' ' + d.gold.toLocaleString()));

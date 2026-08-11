@@ -237,6 +237,8 @@ function assert(ok, message) {
     const button = document.querySelector('.menu-screen:not(.hidden) .menu-col .btn:not(.primary)');
     const panel = document.querySelector('.menu-screen:not(.hidden) .menu-board');
     const altar = document.querySelector('.menu-screen:not(.hidden) .menu-altar');
+    const altarIcon = altar.querySelector('.menu-altar-icon');
+    const altarTitle = altar.querySelector('.menu-altar-title');
     return {
       font: getComputedStyle(document.body).fontFamily,
       buttonBackground: getComputedStyle(button).backgroundImage,
@@ -244,6 +246,9 @@ function assert(ok, message) {
       panelBackground: getComputedStyle(panel).backgroundImage,
       panelBorder: getComputedStyle(panel).borderColor,
       altarBackground: getComputedStyle(altar).backgroundImage,
+      altarTitle: altarTitle.textContent,
+      altarIconBackground: getComputedStyle(altarIcon).backgroundImage,
+      altarIconBox: [Math.round(altarIcon.getBoundingClientRect().width), Math.round(altarIcon.getBoundingClientRect().height)],
       titleFont: getComputedStyle(document.querySelector('.gothic-title')).fontFamily,
       titleText: document.querySelector('.gothic-title').textContent,
       menuBackground: Debug.menuBackground()
@@ -254,11 +259,14 @@ function assert(ok, message) {
     'Baroque framed main-menu button skin is not active');
   assert(theme.panelBackground.includes('battle_report_panel.png') && theme.altarBackground.includes('holy_altar_panel.png'),
     'generated battle-report/altar panel art is not active');
+  assert(theme.altarTitle === '强化圣坛', 'altar title should not contain a leading emoji icon');
+  assert(theme.altarIconBackground.includes('altar_cross_states.png') && theme.altarIconBox[0] >= 180 && theme.altarIconBox[1] >= 160,
+    'altar cross emblem does not fill its presentation frame');
   assert(theme.titleFont.includes('Darktide Gothic'), 'gothic title font is not active');
   assert(theme.titleText === 'DarkEscaper', 'DarkEscaper title text is incorrect: ' + theme.titleText);
   assert(theme.menuBackground.loaded && theme.menuBackground.src.includes('menu-monolith.png'),
     'menu background asset was not loaded');
-  console.log('THEME OK  Baroque framed menu, authored report/altar panels, DarkEscaper title and local fonts');
+  console.log('THEME OK  Baroque framed menu, large altar cross, authored report/altar panels, DarkEscaper title and local fonts');
   await page.getByText('开始远征').click();
   await page.getByText('下一步').click();
   await page.getByText('出发').click();

@@ -3908,7 +3908,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime",
-      "source": "assets/art-v4/repaired/enemies/slime_actions.png",
+      "source": "assets/art-v4/repaired/enemies/slime_actions_rework.png",
       "frameSize": [
         64,
         64
@@ -3934,7 +3934,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime_walk",
-      "source": "assets/art-v4/repaired/enemies/slime_actions.png",
+      "source": "assets/art-v4/repaired/enemies/slime_actions_rework.png",
       "frameSize": [
         64,
         64
@@ -3960,7 +3960,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime_attack",
-      "source": "assets/art-v4/repaired/enemies/slime_actions.png",
+      "source": "assets/art-v4/repaired/enemies/slime_actions_rework.png",
       "frameSize": [
         64,
         64
@@ -3986,7 +3986,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime_death",
-      "source": "assets/art-v4/repaired/enemies/slime_actions.png",
+      "source": "assets/art-v4/repaired/enemies/slime_actions_rework.png",
       "frameSize": [
         64,
         64
@@ -4012,7 +4012,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime_big",
-      "source": "assets/art-v4/repaired/enemies/slime_big_actions.png",
+      "source": "assets/art-v4/repaired/enemies/slime_big_actions_rework.png",
       "frameSize": [
         64,
         64
@@ -4038,7 +4038,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime_big_walk",
-      "source": "assets/art-v4/repaired/enemies/slime_big_actions.png",
+      "source": "assets/art-v4/repaired/enemies/slime_big_actions_rework.png",
       "frameSize": [
         64,
         64
@@ -4064,7 +4064,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime_big_attack",
-      "source": "assets/art-v4/repaired/enemies/slime_big_actions.png",
+      "source": "assets/art-v4/repaired/enemies/slime_big_actions_rework.png",
       "frameSize": [
         64,
         64
@@ -4090,7 +4090,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime_big_death",
-      "source": "assets/art-v4/repaired/enemies/slime_big_actions.png",
+      "source": "assets/art-v4/repaired/enemies/slime_big_actions_rework.png",
       "frameSize": [
         64,
         64
@@ -4116,7 +4116,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "zombie",
-      "source": "assets/art-v4/repaired/enemies/zombie_actions.png",
+      "source": "assets/art-v4/repaired/enemies/mudwalker_actions_rework.png",
       "frameSize": [
         64,
         64
@@ -4142,7 +4142,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "zombie_walk",
-      "source": "assets/art-v4/repaired/enemies/zombie_actions.png",
+      "source": "assets/art-v4/repaired/enemies/mudwalker_actions_rework.png",
       "frameSize": [
         64,
         64
@@ -4168,7 +4168,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "zombie_attack",
-      "source": "assets/art-v4/repaired/enemies/zombie_actions.png",
+      "source": "assets/art-v4/repaired/enemies/mudwalker_actions_rework.png",
       "frameSize": [
         64,
         64
@@ -4194,7 +4194,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "zombie_death",
-      "source": "assets/art-v4/repaired/enemies/zombie_actions.png",
+      "source": "assets/art-v4/repaired/enemies/mudwalker_actions_rework.png",
       "frameSize": [
         64,
         64
