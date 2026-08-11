@@ -856,13 +856,11 @@ window.Entities = (function () {
       var dx = sh.vx * dt, dy = sh.vy * dt;
       var moved = Math.hypot(dx, dy);
       sh.travelled += moved;
-      // 蛛网弹超出射程自毁,且越远越慢
+      // Long-range webs retain their launch speed.  Otherwise the old
+      // multiplicative decay made a nominal 660px spider shot die far short
+      // of its authored range.
       if (sh.maxRange > 0) {
         if (sh.travelled > sh.maxRange) { sh.alive = false; continue; }
-        var decay = Math.max(0.3, 1 - sh.travelled / sh.maxRange);
-        // 在"当前速度"上衰减,而不是用 sh.spd0 重新算一遍 —— 后者会把上方
-        // 圣光领域施加的减速盖掉,让蛛网弹在领域里也满速。
-        sh.vx *= decay; sh.vy *= decay;
       }
       sh.x += sh.vx * dt; sh.y += sh.vy * dt;
       var hitEntry = null, ents2 = playerEntries(run);
@@ -878,7 +876,10 @@ window.Entities = (function () {
         sh.alive = false;
         damagePlayerAt(run, hitEntry, sh.dmg);
         // 蛛网弹:叠层减速,叠满两层则被完全包裹硬控 1 秒;触发后角色获得 5 秒蛛网免疫
-        if (sh.webType) {
+        // Spider webs now deliberately keep their authored large visual and
+        // cleanse interaction, but are no longer a stacked slow/root mechanic.
+        // Other future web effects can still opt in by supplying a slow value.
+        if (sh.webType && (sh.slow > 0 || sh.slowDur > 0)) {
           if (hp.webImmune > 0) {
             FX.burst(hp.x, hp.y, { color: '#ffaa22', n: 8, speed: 70, life: 0.3, size: 2 });
             continue;

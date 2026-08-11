@@ -959,6 +959,38 @@ try {
   }
   console.log('R8 OK 全图补给箱混合武器/实物道具，领取后永久消失');
 
+  // R9 蜘蛛是 10 秒一次的大型远程蛛网，不再偷带减速/定身，也不能在
+  // 飞行途中把射程衰减掉。贴图由 webType 保持为单张静态蛛网。
+  const r9 = fx(`
+    (() => {
+      Debug.startArtTest();
+      const r = Debug.run(), p = r.player;
+      const def = CFG.ENEMIES.spider;
+      const spider = Entities.spawnEnemy(r, 'spider', 560, 0, { allowNear: true });
+      spider.aiT = 0;
+      r.t += 0.05; r.frame++;
+      Entities.updateEnemies(r, 0.05);
+      const web = Entities.getShots().find(s => s.alive && s.webType);
+      const launch = web ? Math.hypot(web.vx, web.vy) : 0;
+      r.t += 0.5; r.frame++;
+      Entities.updateEnemies(r, 0.5);
+      const flight = web && web.alive ? Math.hypot(web.vx, web.vy) : 0;
+      const rangedStaticWeb = def.shotCd === 10 && def.shotRange >= 660 && def.slowAmt === 0 && def.slowDur === 0 &&
+        web && web.size >= 48 && web.maxRange >= 660 && Math.abs(flight - launch) < 0.01;
+      p.webStacks = 0; p.rootT = 0; p.slow = 0;
+      // Force a direct no-slow web contact to prove no hidden stack/root path remains.
+      if (web && web.alive) { web.x = p.x; web.y = p.y; }
+      r.t += 0.01; r.frame++;
+      Entities.updateEnemies(r, 0.01);
+      const noControl = p.webStacks === 0 && p.rootT === 0 && p.slow === 0;
+      return { rangedStaticWeb, noControl };
+    })()
+  `);
+  if (!Object.values(r9).every(Boolean)) {
+    throw new Error('蜘蛛远程蛛网回归失败: ' + JSON.stringify(r9));
+  }
+  console.log('R9 OK 蜘蛛大型远程蛛网无减速/定身且飞行速度稳定');
+
   console.log('\n=== 无头冒烟测试全部通过 ===');
 } catch (e) {
   console.error('\n!!! 冒烟测试失败: ' + e.stack);

@@ -173,7 +173,7 @@ window.CFG = {
     // burrow: 从地里钻出(生成时播出土动画,期间不动作),可在安全区内破土
     skeleton:       { name: '白骨兵', hp: 36, dmg: 12, spd: 58, r: 11, xp: 2, ai: 'chase', burrow: 1.0 },
     ghost:          { name: '缚地怨灵', hp: 30, dmg: 12, spd: 55, r: 11, xp: 3, ai: 'phase' },
-    // 蛛类:吐减速网。刷新量减半(spawnWeight),蛛网弹有射程上限且越远越慢
+    // 蛛类:每 10 秒吐一次大型定帧蛛网。它不再减速/定身，只以远距离命中施压。
     spider:         { name: '暗纹蛛', hp: 22, dmg: 10, spd: 96, r: 10, xp: 2, ai: 'spitter',
                       shotDmg: 9, shotCd: 10, shotSpd: 250, keepDist: 300, slowAmt: 0, slowDur: 0,
                       spawnWeight: 0.5, shotRange: 660, ranged: true },
