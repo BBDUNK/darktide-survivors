@@ -242,6 +242,17 @@ window.Weapons = (function () {
     }
     switch (w.id) {
       case 'crossblade': {
+        // Knight's sword wave is paired with a deliberate close slash: lower
+        // damage than Berserker, longer cadence, and a gentle knockback.
+        if (p.char && p.char.id === 'knight') {
+          e = nearestEnemy(p.x, p.y, 58);
+          if (e) {
+            a = Math.atan2(e.y - p.y, e.x - p.x);
+            b = spawn(run, w, st, 'melee', 'p_slash', p.x, p.y, 0, 0, 0.16);
+            b.angle = a; b.aux = 54; b.size = st.size * 0.85;
+            b.dmg = st.dmg * 0.5; b.knock = st.knock * 0.38; b.pierce = 4;
+          }
+        }
         for (i = 0; i < st.count; i++) {
           e = nearestEnemy(p.x, p.y, 300);
           a = e ? Math.atan2(e.y - p.y, e.x - p.x) + (i - (st.count - 1) / 2) * 0.2
@@ -396,10 +407,15 @@ window.Weapons = (function () {
           AudioSys.play('evolve');
           break;
         }
+        // Stable sites prevent same-cast towers from collapsing into one.
+        var firstSite = w.deploySite || 0;
+        w.deploySite = firstSite + st.count;
         for (i = 0; i < st.count; i++) {
-          a = Math.random() * Math.PI * 2;
+          var site = firstSite + i;
+          a = (site % 8) * Math.PI / 4;
+          var ring = 190 + (Math.floor(site / 8) % 3) * 42;
           b = spawn(run, w, st, 'turret', 'p_turret',
-            p.x + Math.cos(a) * 50, p.y + Math.sin(a) * 50, 0, 0, st.dur);
+            p.x + Math.cos(a) * ring, p.y + Math.sin(a) * ring, 0, 0, st.dur);
           b.aux = st.zapCd * run.player.stats.cd; // 电击间隔
           b.aux2 = 0;
           b.orbitR = st.range;
@@ -834,6 +850,10 @@ window.Weapons = (function () {
     w.rageKills = run.kills || 0;
     if (gained > 0) {
       w.rageT = 2.2 + w.lv * 0.18;
+      if (p.char && p.char.id === 'berserker') {
+        p.hp = Math.min(p.stats.hp, p.hp + gained * (2 + w.lv * 0.75));
+        FX.heal(p.x, p.y);
+      }
       if (w.evolved && p.char && p.char.id === 'berserker') {
         w.phantomStacks = Math.min(20, (w.phantomStacks || 0) + gained);
       }
@@ -1015,9 +1035,9 @@ window.Weapons = (function () {
       var auraFrames = cachedFrames('vfx_holy_aura');
       // 八帧只有纹样旋转、外径完全相同；压成贴地椭圆，不再爬到人物高度。
       var auraImg = auraFrames[Math.floor(auraT * cachedFps('vfx_holy_aura', 5)) % auraFrames.length];
-      var auraW = r * (wAura.evolved ? 2.22 : 2.08), auraH = r * 1.12;
-      ctx.globalAlpha = (wAura.evolved ? 0.9 : 0.76) + Math.sin(auraT * 1.7) * 0.045;
-      ctx.drawImage(auraImg, p.x - auraW / 2, p.y - auraH / 2 + 9, auraW, auraH);
+      var auraW = r * (wAura.evolved ? 2.42 : 2.26), auraH = auraW * 0.92;
+      ctx.globalAlpha = (wAura.evolved ? 0.72 : 0.60) + Math.sin(auraT * 1.2) * 0.035;
+      ctx.drawImage(auraImg, p.x - auraW / 2, p.y - auraH / 2, auraW, auraH);
       ctx.globalAlpha = 1;
     }
     var rageW = findWeapon(run, 'whirlaxe');
@@ -1196,6 +1216,7 @@ window.Weapons = (function () {
   function evolveWeapon(run, w) {
     var def = CFG.WEAPONS[w.id];
     w.evolved = true;
+    if (window.Entities && Entities.recomputeStats) Entities.recomputeStats(run);
     w.evoId = def.evo;
     Meta.track('evolve');
     Meta.seeCodex('e_' + def.evo);

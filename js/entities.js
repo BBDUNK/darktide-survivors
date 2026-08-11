@@ -7,7 +7,7 @@ window.Entities = (function () {
   function makePlayer(charDef) {
     return {
       x: 0, y: 0, r: 10,
-      hp: 100, iframe: 0, hurtFlash: 0,
+      hp: 100, iframe: 0, hurtFlash: 0, dashT: 0, dashCd: 0, dashX: 0, dashY: 0,
       face: 1, dir: 'down', moving: false, animT: 0,
       attackAnimT: 0, attackAnimAge: 0,
       char: charDef,
@@ -104,6 +104,17 @@ window.Entities = (function () {
       var lv = run.passives[k];
       if (lv > 0 && CFG.PASSIVES[k]) CFG.PASSIVES[k].apply(s, lv);
     }
+    // Each ultimate is a small run-wide breakthrough: +20 maximum health
+    // plus restrained all-round stats, immediately recalculated on evolve.
+    var evolvedCount = 0;
+    for (var wi = 0; wi < run.weapons.length; wi++) if (run.weapons[wi].evolved) evolvedCount++;
+    if (evolvedCount) {
+      s.hp += evolvedCount * 20;
+      s.might *= 1 + evolvedCount * 0.025;
+      s.speed *= 1 + evolvedCount * 0.012;
+      s.armor += evolvedCount * 0.35;
+      s.cd *= Math.max(0.82, 1 - evolvedCount * 0.012);
+    }
     // 联机队友光环:全属性小幅提升(每帧由 applyCoopAuras 写入 p.auraBuff)
     var ab = run.player.auraBuff || 0;
     if (ab > 0) {
@@ -121,6 +132,29 @@ window.Entities = (function () {
   function updatePlayer(run, dt) {
     var p = run.player, s = p.stats;
     var iv = E.readInput();
+    p.dashCd = Math.max(0, (p.dashCd || 0) - dt);
+    var dash = E.consumeDash && E.consumeDash();
+    if (dash && p.dashCd <= 0 && p.rootT <= 0) {
+      p.dashX = dash.x; p.dashY = dash.y; p.dashT = 0.19;
+      p.dashCd = Math.max(3.5, 10 - (run.passives.ps_boots || 0) * 1.15);
+      p.iframe = Math.max(p.iframe, 0.22);
+      p.dashHit = {};
+      FX.ring(p.x, p.y, { r: 26, color: '#d8d2ff', life: 0.16, width: 2 });
+    }
+    if (p.dashT > 0) {
+      p.dashT -= dt;
+      iv.x = p.dashX; iv.y = p.dashY;
+      p.iframe = Math.max(p.iframe, 0.08);
+      // Melee characters turn the dash into a short, controlled body check.
+      if (p.char && (p.char.id === 'knight' || p.char.id === 'berserker')) {
+        E.gridQuery(p.x, p.y, 34, function (e) {
+          if (p.dashHit[e.uid]) return false;
+          p.dashHit[e.uid] = 1;
+          damageEnemy(run, e, 12 + p.stats.might * 12, { kx: p.dashX * 180, ky: p.dashY * 180, noCrit: true });
+          return false;
+        });
+      }
+    }
     p.moving = (iv.x !== 0 || iv.y !== 0);
     // 蛛网减速 / 硬控:二层叠加后被包裹,原地无法移动
     if (p.slowT > 0) { p.slowT -= dt; if (p.slowT <= 0) { p.slow = 0; p.webStacks = 0; } }
@@ -131,6 +165,7 @@ window.Entities = (function () {
     p.terrainType = terrain.type;
     p.terrainMul = terrain.mul;
     var mspd = s.speed * (1 - (p.slow || 0)) * terrain.mul * (p._rageSpeedMul || 1) * (p._stormSpeedMul || 1);
+    if (p.dashT > 0) mspd *= 3.35;
     // 记录当前速度矢量,供敌人抛击预判落点
     p.lastVx = iv.x * mspd;
     p.lastVy = iv.y * mspd;
@@ -321,12 +356,16 @@ window.Entities = (function () {
     var isBoss = !!CFG.BOSSES[id];
     // 联机时按人数放大血量(非线性,避免 2 人难度暴涨)
     var coopHp = run.coopHpMul || 1;
-    var mul = run.map.hpMul * (1 + run.t / 60 * CFG.HP_GROWTH) * coopHp;
+    var endlessAge = run.endless ? Math.max(0, run.t - CFG.GAME.RUN_TIME) : 0;
+    var endlessHp = 1 + endlessAge / 90;
+    var mul = run.map.hpMul * (1 + run.t / 60 * CFG.HP_GROWTH) * coopHp * endlessHp;
     e.alive = true; e.uid = E.nextUid(); e.id = id; e.def = def;
     e.x = x; e.y = y; e.vx = 0; e.vy = 0;
     e.maxHp = def.hp * (isBoss ? run.map.hpMul : mul);
     e.hp = e.maxHp;
-    e.r = def.r; e.dmg = def.dmg; e.spd = def.spd * (0.9 + Math.random() * 0.2);
+    e.r = def.r;
+    e.dmg = def.dmg * (run.endless ? (1 + endlessAge / 240) : 1);
+    e.spd = def.spd * (0.9 + Math.random() * 0.2) * (run.endless ? Math.min(1.65, 1 + endlessAge / 900) : 1);
     e.armor = def.armor || 0;
     e.kx = 0; e.ky = 0; e.flash = 0; e.frozen = 0; e.slow = 0; e.slowT = 0; e.stun = 0;
     e.face = 1; e.animo = Math.random() * 10; e.alpha = 1; e.attackAnimT = 0;
@@ -626,7 +665,7 @@ window.Entities = (function () {
             // 蛛网弹:白色黏丝,施加叠层减速;有射程上限且越远越慢
             fireShot(e.x, e.y, nx, ny, e.def.shotSpd,
               e.def.shotDmg * (e.elite ? 1.5 : 1), e.def.slowAmt, e.def.slowDur, true,
-              null, 16, fireRange);
+              null, e.id === 'spider' ? 48 : 16, fireRange);
           }
           break;
         case 'shielder': // 重骑:受到攻击后举盾一次,期间完全免伤+霸体(整场只触发一次)

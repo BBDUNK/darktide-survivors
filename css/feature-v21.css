@@ -54,21 +54,17 @@
   width: 72px !important;
   height: 76px !important;
   border: 0 !important;
-  background: transparent !important;
+  background: url('../assets/art-v4/sprites/ui/altar_cross_states.png') 0 0 / 400% 100% no-repeat !important;
   box-shadow: none !important;
   margin-bottom: -5px;
 }
 .menu-altar-flame::before {
-  content: '';
-  position: absolute;
-  left: 50%; bottom: 11px;
-  width: calc(18px + 13px * var(--altar-power, 0));
-  height: calc(26px + 24px * var(--altar-power, 0));
-  transform: translateX(-50%) rotate(45deg);
-  border-radius: 60% 10% 62% 38%;
-  background: radial-gradient(circle at 65% 65%, #fff7c4 0 16%, #ffd34f 20% 42%, #f47822 48% 70%, #ad2330 74%);
-  box-shadow: 0 0 calc(10px + 18px * var(--altar-power, 0)) rgba(255,185,61,.82);
+  content: none;
 }
+.menu-altar-flame.altar-cross-state-0 { background-position: 0 0 !important; }
+.menu-altar-flame.altar-cross-state-1 { background-position: 33.333% 0 !important; }
+.menu-altar-flame.altar-cross-state-2 { background-position: 66.666% 0 !important; }
+.menu-altar-flame.altar-cross-state-3 { background-position: 100% 0 !important; }
 
 /* Generated baroque frame used as a true nine-slice: detailed corners remain
    intact while the straight edge pieces stretch to any notification or bar. */

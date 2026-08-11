@@ -37792,131 +37792,131 @@
     "vfx_holy_aura": [
       {
         "index": 0,
-        "coverage": 0.1415,
-        "colors": 55,
+        "coverage": 0.5651,
+        "colors": 24,
         "bbox": [
           4,
-          13,
-          93,
-          49
+          0,
+          92,
+          88
         ],
         "centroid": [
-          47.91,
-          31.759
+          47.461,
+          43.699
         ],
-        "signature": "f9fdac156b6b"
+        "signature": "34cb63f48120"
       },
       {
         "index": 1,
-        "coverage": 0.1419,
-        "colors": 55,
+        "coverage": 0.5633,
+        "colors": 42,
         "bbox": [
           4,
-          13,
-          93,
-          49
+          0,
+          92,
+          88
         ],
         "centroid": [
-          47.63,
-          32.186
+          47.451,
+          43.591
         ],
-        "signature": "a4701bf5a5de"
+        "signature": "9ad7a7fdca5f"
       },
       {
         "index": 2,
-        "coverage": 0.1406,
-        "colors": 55,
+        "coverage": 0.5646,
+        "colors": 39,
         "bbox": [
           4,
-          12,
-          93,
-          49
+          0,
+          92,
+          87
         ],
         "centroid": [
-          47.334,
-          31.572
+          47.491,
+          42.703
         ],
-        "signature": "097ddf5f7d9f"
+        "signature": "196ec15bc9cb"
       },
       {
         "index": 3,
-        "coverage": 0.1421,
-        "colors": 55,
+        "coverage": 0.5689,
+        "colors": 32,
         "bbox": [
-          2,
-          11,
-          94,
-          49
+          4,
+          0,
+          92,
+          87
         ],
         "centroid": [
-          47.433,
-          31.974
+          47.283,
+          43.397
         ],
-        "signature": "d9b39f3df703"
+        "signature": "8d74957b1535"
       },
       {
         "index": 4,
-        "coverage": 0.1385,
-        "colors": 55,
+        "coverage": 0.5651,
+        "colors": 24,
         "bbox": [
           4,
-          13,
-          93,
-          49
+          0,
+          92,
+          88
         ],
         "centroid": [
-          48.029,
-          32.437
+          47.461,
+          43.699
         ],
-        "signature": "3b5fdd4311eb"
+        "signature": "34cb63f48120"
       },
       {
         "index": 5,
-        "coverage": 0.1412,
-        "colors": 55,
+        "coverage": 0.5633,
+        "colors": 42,
         "bbox": [
-          3,
-          12,
-          93,
-          49
+          4,
+          0,
+          92,
+          88
         ],
         "centroid": [
-          46.284,
-          31.615
+          47.451,
+          43.591
         ],
-        "signature": "9534fa3f4178"
+        "signature": "9ad7a7fdca5f"
       },
       {
         "index": 6,
-        "coverage": 0.1368,
-        "colors": 55,
+        "coverage": 0.5646,
+        "colors": 39,
         "bbox": [
           4,
-          12,
+          0,
           92,
-          49
+          87
         ],
         "centroid": [
-          47.136,
-          31.657
+          47.491,
+          42.703
         ],
-        "signature": "2a9e6e3af928"
+        "signature": "196ec15bc9cb"
       },
       {
         "index": 7,
-        "coverage": 0.1372,
-        "colors": 55,
+        "coverage": 0.5689,
+        "colors": 32,
         "bbox": [
-          3,
-          13,
-          93,
-          49
+          4,
+          0,
+          92,
+          87
         ],
         "centroid": [
-          47.032,
-          31.737
+          47.283,
+          43.397
         ],
-        "signature": "714c3059b296"
+        "signature": "8d74957b1535"
       }
     ],
     "vfx_frost_radial": [
@@ -41468,6 +41468,14 @@
     "vfx_frost_impact[6]: silhouette touches logical frame edge",
     "vfx_frost_impact[7]: silhouette touches logical frame edge",
     "boss_darklord_attack[4]: silhouette touches logical frame edge",
+    "vfx_holy_aura[0]: silhouette touches logical frame edge",
+    "vfx_holy_aura[1]: silhouette touches logical frame edge",
+    "vfx_holy_aura[2]: silhouette touches logical frame edge",
+    "vfx_holy_aura[3]: silhouette touches logical frame edge",
+    "vfx_holy_aura[4]: silhouette touches logical frame edge",
+    "vfx_holy_aura[5]: silhouette touches logical frame edge",
+    "vfx_holy_aura[6]: silhouette touches logical frame edge",
+    "vfx_holy_aura[7]: silhouette touches logical frame edge",
     "vfx_frost_radial[0]: silhouette touches logical frame edge",
     "vfx_frost_radial[1]: silhouette touches logical frame edge",
     "vfx_frost_radial[5]: silhouette touches logical frame edge",

@@ -12,6 +12,7 @@ window.Merchant = (function () {
   var flash = 0;         // 刷新时的高亮计时
   var arrows = [];
   var combat = { prone: 0, attackAge: 9, attackCd: 0.3, face: 1, target: null };
+  var dialogue = { text: '', until: 0, nearby: false };
 
   function reset(run) {
     var M = CFG.MERCHANT;
@@ -22,6 +23,7 @@ window.Merchant = (function () {
     arrows.length = 0;
     combat.prone = 0; combat.attackAge = 9; combat.attackCd = 0.3;
     combat.face = 1; combat.target = null;
+    dialogue.text = ''; dialogue.until = 0; dialogue.nearby = false;
   }
 
   // 抽一件商品。武器/被动这两类要在运行时决定具体是哪一个。
@@ -104,6 +106,21 @@ window.Merchant = (function () {
       if (run.cb && run.cb.onWarn) run.cb.onWarn('🛒 商人补货了!');
     }
     updateCombat(run, dt);
+    var nearMerchant = E.dist2(run.player.x, run.player.y, M.x, M.y - 42) < 170 * 170;
+    if (nearMerchant && !dialogue.nearby) {
+      var charId = run.player.char && run.player.char.id;
+      var lines = {
+        knight: ['骑士，盔甲会响；金币也会响。后者更动听。', '剑气能开路，别把自己也劈进沼泽。'],
+        berserker: ['斧头要向怪物挥，不要向我的货架挥。', '血怒时见红就收一点血，别全洒地上。'],
+        ranger: ['风会带走箭，也会带回宝箱的方向。'],
+        mage: ['书页翻得快，敌人倒得也该快。'],
+        cleric: ['圣光照得见前路，不替你付账。']
+      };
+      var picks = lines[charId] || ['靠近摊位能买到当前装备的下一等级。', '双击方向键可冲刺，留一手总是好习惯。'];
+      dialogue.text = picks[Math.floor(Math.random() * picks.length)];
+      dialogue.until = run.t + 5;
+    }
+    dialogue.nearby = nearMerchant;
     // 走到商品上自动购买(任意参战玩家都可购买)
     var ents = run.coopPlayers || [{ player: run.player, downed: false }];
     for (var i = 0; i < slots.length; i++) {
@@ -299,6 +316,7 @@ window.Merchant = (function () {
     }
     // 补货倒计时小闹钟
     drawClock(ctx, run);
+    if (dialogue.until > run.t) drawDialogue(ctx, M, dialogue.text);
 
     for (var i = 0; i < slots.length; i++) {
       var s = slots[i];
@@ -376,7 +394,7 @@ window.Merchant = (function () {
     var total = M.refreshInt || 300;
     var frac = Math.max(0, Math.min(1, remain / total));   // 剩余比例 1→0
     var cx = M.x + 46, cy = M.y - 86;
-    var R = 12;
+    var R = 18;
     // 蓝:未转过的剩余区域(从指针当前位置顺时针回到 12 点)
     ctx.fillStyle = 'rgba(80,150,255,0.75)';
     ctx.beginPath();
@@ -406,6 +424,22 @@ window.Merchant = (function () {
     // 中心点
     ctx.fillStyle = '#fff';
     ctx.beginPath(); ctx.arc(cx, cy, 1.6, 0, Math.PI * 2); ctx.fill();
+  }
+
+  function drawDialogue(ctx, M, text) {
+    var x = M.x - 88, y = M.y - M.drawH - 92, w = 176, h = 42;
+    ctx.save();
+    ctx.fillStyle = 'rgba(255,253,245,.96)';
+    ctx.strokeStyle = '#69482c'; ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(x + 13, y); ctx.lineTo(x + w - 13, y); ctx.quadraticCurveTo(x + w, y, x + w, y + 13);
+    ctx.lineTo(x + w, y + h - 13); ctx.quadraticCurveTo(x + w, y + h, x + w - 13, y + h);
+    ctx.lineTo(x + 13, y + h); ctx.quadraticCurveTo(x, y + h, x, y + h - 13);
+    ctx.lineTo(x, y + 13); ctx.quadraticCurveTo(x, y, x + 13, y); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(M.x - 9, y + h); ctx.lineTo(M.x + 3, y + h); ctx.lineTo(M.x - 3, y + h + 9); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#38241a'; ctx.font = 'bold 10px "Microsoft YaHei",sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText(text.length > 20 ? text.slice(0, 20) + '…' : text, M.x, y + 25);
+    ctx.restore();
   }
 
   return { reset: reset, update: update, draw: draw, drawProjectiles: drawProjectiles, roll: roll,

@@ -8276,14 +8276,14 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 96,
       "name": "vfx_holy_aura",
-      "source": "assets/art-v4/sprites/vfx/holy_ground_actions.png",
+      "source": "assets/art-v4/sprites/vfx/holy_aura_ground.png",
       "frameSize": [
         96,
         96
       ],
       "frameRow": 0,
       "frames": 8,
-      "fps": 5,
+      "fps": 3,
       "size": [
         96,
         96

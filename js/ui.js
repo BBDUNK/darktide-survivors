@@ -151,6 +151,7 @@ window.UI = (function () {
     var totalMeta = 0;
     for (var mk in d.metaLv) totalMeta += d.metaLv[mk] || 0;
     var altarPower = Math.min(1, totalMeta / Math.max(1, CFG.META.length * 3)).toFixed(2);
+    iconBox.className += ' altar-cross-state-' + Math.min(3, Math.floor(Number(altarPower) * 4));
     if (menuAltar.style && menuAltar.style.setProperty) menuAltar.style.setProperty('--altar-power', altarPower);
     menuAltar.appendChild(iconBox);
     menuAltar.appendChild(h('div', 'menu-altar-title', '🏛 强化圣坛'));

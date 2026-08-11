@@ -147,8 +147,8 @@ rowAnimations('assets/art-v2/sprites/vfx/attack_effects.png', [
   ['p_dragon', 7, 12, [48, 32]]
 ]);
 
-add({ name: 'vfx_holy_aura', source: 'assets/art-v4/sprites/vfx/holy_ground_actions.png',
-  frameSize: [96, 96], frameRow: 0, frames: 8, fps: 5,
+add({ name: 'vfx_holy_aura', source: 'assets/art-v4/sprites/vfx/holy_aura_ground.png',
+  frameSize: [96, 96], frameRow: 0, frames: 8, fps: 3,
   size: [96, 96], anchor: [48, 48], renderScale: 1, maxBaselineDrift: 96 });
 
 add({ name: 'vfx_frost_radial', source: 'assets/art-v4/sprites/vfx/frost_radial_actions.png',

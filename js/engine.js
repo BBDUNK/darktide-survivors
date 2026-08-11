@@ -35,6 +35,7 @@ window.Engine = (function () {
   var pointer = { active: false, x: 0, y: 0, worldX: 0, worldY: 0, type: 'mouse' };
   var inputVec = { x: 0, y: 0 };
   var lastDir = { x: 1, y: 0 };
+  var dashRequest = null, lastTap = {};
 
   function initInput(canvas) {
     function trackPointer(e) {
@@ -48,6 +49,15 @@ window.Engine = (function () {
     }
     window.addEventListener('keydown', function (e) {
       keys[e.code] = true;
+      var dir = e.code === 'KeyW' || e.code === 'ArrowUp' ? { x: 0, y: -1 } :
+        (e.code === 'KeyS' || e.code === 'ArrowDown' ? { x: 0, y: 1 } :
+        (e.code === 'KeyA' || e.code === 'ArrowLeft' ? { x: -1, y: 0 } :
+        (e.code === 'KeyD' || e.code === 'ArrowRight' ? { x: 1, y: 0 } : null)));
+      if (dir && !e.repeat) {
+        var now = performance.now();
+        if (now - (lastTap[e.code] || 0) < 270) dashRequest = dir;
+        lastTap[e.code] = now;
+      }
       if (e.code === 'Escape' || e.code === 'KeyP') { if (Engine.onPause) Engine.onPause(); }
       if (e.code === 'KeyM') { if (Engine.onToggleMap) Engine.onToggleMap(); }
       if (e.code === 'Space') e.preventDefault();
@@ -412,6 +422,7 @@ window.Engine = (function () {
     fmtTime: fmtTime, pick: pick,
     initInput: initInput, readInput: readInput, keys: function () { return keys; },
     lastDir: lastDir, touchState: touch, pointerState: pointer,
+    consumeDash: function () { var d = dashRequest; dashRequest = null; return d; },
     gridClear: gridClear, gridInsert: gridInsert, gridQuery: gridQuery, gridNearest: gridNearest,
     cam: cam, start: start, fitCanvas: fitCanvas, refit: refit,
     isTouch: function () { return isTouch; },

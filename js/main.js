@@ -524,23 +524,20 @@
   var vaults = [];
   function initVaults(run) {
     var R = CFG.GAME.MAP_R - 120;   // 略缩进,别贴边界
-    vaults = [
-      { x: -R, y: -R, gold: 20, t: 0, picked: 0 },
-      { x:  R, y: -R, gold: 20, t: 0, picked: 0 },
-      { x: -R, y:  R, gold: 20, t: 0, picked: 0 },
-      { x:  R, y:  R, gold: 20, t: 0, picked: 0 }
-    ];
+    R = CFG.GAME.MAP_R - 220;
+    vaults = [];
+    for (var i = 0; i < 7; i++) {
+      var x, y, tries = 0;
+      do { x = (Math.random() * 2 - 1) * R; y = (Math.random() * 2 - 1) * R; tries++; }
+      while (tries < 40 && (Math.hypot(x, y) < 360 || vaults.some(function (v) { return E.dist2(x, y, v.x, v.y) < 360 * 360; })));
+      vaults.push({ x: x, y: y, gold: 24 + Math.floor(Math.random() * 24), alive: true });
+    }
   }
   function updateVaults(run, dt) {
     for (var i = 0; i < vaults.length; i++) {
       var v = vaults[i];
-      v.t += dt;
+      if (!v.alive) continue;
       // 金币随时间增长:每 60 秒 +20,上限 100
-      var add = Math.floor(v.t / 60);
-      if (add > v.picked) {
-        v.gold = Math.min(100, v.gold + 20 * (add - v.picked));
-        v.picked = add;
-      }
       // 任意参战玩家走到宝箱旁都能拾取
       var ents = run.coopPlayers || [{ player: run.player, downed: false }];
       var got = false;
@@ -549,7 +546,7 @@
         if (w.downed || w.player.hp <= 0) continue;
         if (E.dist2(w.player.x, w.player.y, v.x, v.y) < 40 * 40) got = true;
       }
-      if (got && v.gold > 0) {
+      if (got) {
         var g = v.gold;
         run.gold += g;
         Meta.track('gold', g);
@@ -557,7 +554,11 @@
         FX.ring(v.x, v.y, { r: 34, color: '#ffd76b', life: 0.4, width: 3 });
         AudioSys.play('coin');
         // 重置累积
-        v.gold = 20; v.t = 0; v.picked = 0;
+        v.alive = false;
+        if (Math.random() < 0.55) {
+          var loot = Weapons.chestLoot(run);
+          if (loot.length && run.cb && run.cb.onWarn) run.cb.onWarn('遗失宝箱：' + loot[0].name);
+        }
       }
     }
   }
@@ -565,6 +566,7 @@
   function drawVaults(ctx, run) {
     for (var i = 0; i < vaults.length; i++) {
       var v = vaults[i];
+      if (!v.alive) continue;
       var sx = v.x, sy = v.y;   // 世界坐标,translate 已处理好
       var bob = Math.sin(run.t * 2.5 + i * 1.2) * 3;
       ctx.globalAlpha = 0.4;
@@ -576,7 +578,7 @@
       ctx.globalAlpha = 0.4 + pulse * 0.2;
       ctx.drawImage(SpriteGen.glow('#ffd76b'), sx - 30, sy - 30, 60, 60);
       ctx.globalAlpha = 1;
-      ctx.drawImage(cimg, sx - 16, sy - 16 + bob, 32, 32);
+      ctx.drawImage(cimg, sx - 24, sy - 24 + bob, 48, 48);
       // 金币数字
       ctx.font = 'bold 10px monospace';
       ctx.textAlign = 'center';
@@ -1054,20 +1056,21 @@
   function drawGround(map, camX, camY) {
     var pal = map.palette;
     var W = CFG.GAME.W, H = CFG.GAME.H;
+    var viewW = W / worldZoom, viewH = H / worldZoom;
     var art = terrainArtId(map.id);
     var basePattern = groundPattern('terrain_' + art + '_ground');
     ctx.fillStyle = basePattern || pal.ground;
     ctx.save();
     ctx.translate((W / 2 - camX) | 0, (H / 2 - camY) | 0);
-    ctx.fillRect((camX - W / 2 - 260) | 0, (camY - H / 2 - 260) | 0, W + 520, H + 520);
+    ctx.fillRect((camX - viewW / 2 - 260) | 0, (camY - viewH / 2 - 260) | 0, viewW + 520, viewH + 520);
     ctx.restore();
 
     drawTerrainFeatures(map, camX, camY);
 
     // 少量世界坐标碎石打破大纹理规律；密度受控，避免此前“满地噪点”的脏感。
     var cell = 72;
-    var x0 = Math.floor((camX - W / 2) / cell) - 1, x1 = Math.floor((camX + W / 2) / cell) + 1;
-    var y0 = Math.floor((camY - H / 2) / cell) - 1, y1 = Math.floor((camY + H / 2) / cell) + 1;
+    var x0 = Math.floor((camX - viewW / 2) / cell) - 1, x1 = Math.floor((camX + viewW / 2) / cell) + 1;
+    var y0 = Math.floor((camY - viewH / 2) / cell) - 1, y1 = Math.floor((camY + viewH / 2) / cell) + 1;
     for (var cy = y0; cy <= y1; cy++) {
       for (var cx = x0; cx <= x1; cx++) {
         var hsh = E.hash2(cx, cy);
@@ -1086,6 +1089,7 @@
   // 镜头移动时不会出现屏幕空间纹理游移或方格闪烁。
   function drawTerrainFeatures(map, camX, camY) {
     var W = CFG.GAME.W, H = CFG.GAME.H, R = CFG.GAME.MAP_R;
+    var viewW = W / worldZoom, viewH = H / worldZoom;
     var seed = map.id === 'graveyard' ? 0.8 : (map.id === 'wilds' ? 2.4 : 4.1);
     var art = terrainArtId(map.id);
     var roadPattern = groundPattern('terrain_' + art + '_road');
@@ -1121,10 +1125,10 @@
 
     // 地貌斑块:荒野以枯草为主,墓园有泥地/浅沼,深渊是冷色黑水。
     var region = 260;
-    var rx0 = Math.floor((camX - W / 2) / region) - 1;
-    var rx1 = Math.floor((camX + W / 2) / region) + 1;
-    var ry0 = Math.floor((camY - H / 2) / region) - 1;
-    var ry1 = Math.floor((camY + H / 2) / region) + 1;
+    var rx0 = Math.floor((camX - viewW / 2) / region) - 1;
+    var rx1 = Math.floor((camX + viewW / 2) / region) + 1;
+    var ry0 = Math.floor((camY - viewH / 2) / region) - 1;
+    var ry1 = Math.floor((camY + viewH / 2) / region) + 1;
     for (var ry = ry0; ry <= ry1; ry++) {
       for (var rx = rx0; rx <= rx1; rx++) {
         var rh = E.hash2(rx * 61 + map.id.length * 13, ry * 67 - map.id.length * 7);
@@ -1192,8 +1196,8 @@
   // 装饰物按基座 y 排序绘制:pass='back' 画角色身后的,pass='front' 画角色身前的,
   // 这样墓碑/枯树能正确遮挡走到它后面的角色。refY 传玩家世界 y。
   function drawDecor(map, camX, camY, refY, pass) {
-    var minX = camX - CFG.GAME.W / 2 - 80, maxX = camX + CFG.GAME.W / 2 + 80;
-    var minY = camY - CFG.GAME.H / 2 - 100, maxY = camY + CFG.GAME.H / 2 + 60;
+    var minX = camX - CFG.GAME.W / worldZoom / 2 - 80, maxX = camX + CFG.GAME.W / worldZoom / 2 + 80;
+    var minY = camY - CFG.GAME.H / worldZoom / 2 - 100, maxY = camY + CFG.GAME.H / worldZoom / 2 + 60;
     var ordered = [];
     E.forEachDecor(map, minX, minY, maxX, maxY, function (d) { ordered.push(d); });
     // 同一层的物件也严格按落脚点排序，避免遍历格子的顺序造成装饰互相跳层。
@@ -1292,11 +1296,19 @@
     var camX = E.cam.x + shake.x, camY = E.cam.y + shake.y;
     var pal = run.map.palette;
 
+    // The complete world uses one camera transform.  Terrain and decor used
+    // to be painted before it, making zoom shrink actors while the map stayed
+    // frozen; this now behaves as a true Terraria-style view zoom.
+    ctx.save();
+    ctx.translate(CFG.GAME.W / 2, CFG.GAME.H / 2);
+    ctx.scale(worldZoom, worldZoom);
+    ctx.translate(-CFG.GAME.W / 2, -CFG.GAME.H / 2);
     drawGround(run.map, camX, camY);
     // 低矮装饰永远处于地表层,不会错误覆盖角色脚部或弹幕。
     drawDecor(run.map, camX, camY, run.player.y, 'ground');
     // 角色背后的装饰物(y 小于玩家)
     drawDecor(run.map, camX, camY, run.player.y, 'back');
+    ctx.restore();
 
     ctx.save();
     ctx.translate(CFG.GAME.W / 2, CFG.GAME.H / 2);
