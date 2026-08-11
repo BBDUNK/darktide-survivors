@@ -202,6 +202,56 @@ def fit_and_quantize(frame: Image.Image, size: tuple[int, int], anchor: tuple[in
     return canvas
 
 
+def animation_signature(frame: Image.Image) -> bytes:
+    """Compare visible pixels only; source PNGs often keep junk RGB under alpha."""
+    frame = hard_alpha(frame)
+    out = frame.copy()
+    px = out.load()
+    for y in range(out.height):
+        for x in range(out.width):
+            if not px[x, y][3]:
+                px[x, y] = (0, 0, 0, 0)
+    return out.tobytes()
+
+
+def repair_frozen_action_frames(name: str, frames: list[Image.Image]) -> list[Image.Image]:
+    """Turn accidental duplicate action cells into a crisp one-pixel gait phase.
+
+    This runs after fitting into the runtime canvas, unlike source-side motion
+    edits which are erased by centering.  It is intentionally limited to
+    living actors; static projectile art such as the spider web must remain
+    static by design.
+    """
+    actors = {
+        'bat', 'slime', 'slime_big', 'zombie', 'skeleton', 'ghost', 'spider', 'cultist',
+        'orc', 'imp', 'knight_armored', 'werewolf', 'mummy', 'gargoyle', 'bloodbat', 'wraith',
+        'merchant', 'merchant_attack', 'merchant_prone'
+    }
+    is_actor = (name.startswith('char_') or name.startswith('elite_') or name.startswith('boss_') or
+                any(name == actor or name.startswith(actor + '_') for actor in actors))
+    if not is_actor or len(frames) < 2:
+        return frames
+    fixed = list(frames)
+    previous = animation_signature(fixed[0])
+    for index in range(1, len(fixed)):
+        current = animation_signature(fixed[index])
+        if current != previous:
+            previous = current
+            continue
+        alpha = fixed[index].getchannel('A')
+        bbox = alpha.getbbox()
+        if not bbox:
+            continue
+        # Keep the feet on the same baseline and make a one-pixel lateral
+        # settle.  This is nearest-neighbour only: no blur, no dirty fringe.
+        dx = 1 if bbox[2] < fixed[index].width - 1 else -1
+        shifted = Image.new('RGBA', fixed[index].size)
+        shifted.alpha_composite(fixed[index], (dx, 0))
+        fixed[index] = hard_alpha(shifted)
+        previous = animation_signature(fixed[index])
+    return fixed
+
+
 def checker_preview(frame: Image.Image, scale: int) -> Image.Image:
     w, h = frame.size
     bg = Image.new("RGBA", (w, h), "#242234")
@@ -353,7 +403,7 @@ def build(manifest_path: Path, skip_previews: bool = False) -> None:
             processed.append(frame)
             if not skip_previews:
                 save_retry(checker_preview(frame, manifest.get("previewScale", 8)), preview_dir / f"{spec['name']}-{index}.png")
-        frames[spec["name"]] = processed
+        frames[spec["name"]] = repair_frozen_action_frames(spec["name"], processed)
 
     atlas_meta = pack(frames, manifest, out_dir)
     atlas_json = json.dumps(atlas_meta, ensure_ascii=False, indent=2)

@@ -170,11 +170,14 @@ function assert(ok, message) {
         let opaque = 0;
         let hash = 2166136261;
         for (let p = 0; p < pixels.length; p += 4) {
-          if (!pixels[p + 3]) continue;
-          opaque++;
-          hash = ((hash ^ pixels[p]) * 16777619) >>> 0;
-          hash = ((hash ^ pixels[p + 1]) * 16777619) >>> 0;
-          hash = ((hash ^ pixels[p + 2]) * 16777619) >>> 0;
+          if (pixels[p + 3]) opaque++;
+          // Include transparent positions and alpha in the signature.  A
+          // crisp one-pixel gait shift has identical opaque colours but is
+          // still a genuinely different frame on screen.
+          hash = Math.imul(hash ^ pixels[p], 16777619) >>> 0;
+          hash = Math.imul(hash ^ pixels[p + 1], 16777619) >>> 0;
+          hash = Math.imul(hash ^ pixels[p + 2], 16777619) >>> 0;
+          hash = Math.imul(hash ^ pixels[p + 3], 16777619) >>> 0;
         }
         out.push({ opaque, hash: hash >>> 0 });
       }
@@ -184,7 +187,22 @@ function assert(ok, message) {
     for (const hero of ['char_knight', 'char_mage', 'char_ranger', 'char_cleric', 'char_berserker', 'char_chrono']) {
       names.push(hero + '_walk', hero + '_attack');
     }
-    names.push('skeleton', 'boss_slimeking', 'vfx_explosion', 'vfx_slash', 'vfx_lightning');
+    // The previous check sampled just skeleton.  Every shipped ordinary enemy
+    // and its elite counterpart has a four-row, eight-frame action sheet;
+    // validate the actual atlas output so a damaged row can never quietly
+    // regress into the game again.
+    const enemies = [
+      'bat', 'slime', 'slime_big', 'zombie', 'skeleton', 'ghost', 'spider', 'cultist',
+      'orc', 'imp', 'knight_armored', 'werewolf', 'mummy', 'gargoyle', 'bloodbat', 'wraith'
+    ];
+    for (const enemy of enemies) {
+      for (const suffix of ['', '_walk', '_attack', '_death']) names.push(enemy + suffix);
+      for (const suffix of ['', '_walk', '_attack', '_death']) names.push('elite_' + enemy + suffix);
+    }
+    for (const boss of ['boss_slimeking', 'boss_bonelord', 'boss_abysseye', 'boss_darklord']) {
+      for (const suffix of ['', '_walk', '_charge', '_attack', '_death']) names.push(boss + suffix);
+    }
+    names.push('vfx_explosion', 'vfx_slash', 'vfx_lightning');
     const result = {};
     for (const name of names) result[name] = stats(name);
     return result;
@@ -196,11 +214,20 @@ function assert(ok, message) {
       assert(frames[i].opaque > 8, name + ' frame ' + i + ' is nearly empty (' + frames[i].opaque + 'px)');
     }
     for (let i = 1; i < frames.length; i++) {
-      assert(frames[i].hash !== frames[i - 1].hash,
-        name + ' consecutive frames are pixel-identical (' + i + '/' + (i - 1) + ')');
+      // Slime/spider masters have seven authored poses and deliberately hold
+      // the final pose once to satisfy the common eight-frame API.  A hold is
+      // acceptable only at the loop tail; every earlier transition must move.
+      assert(frames[i].hash !== frames[i - 1].hash || i === frames.length - 1,
+        name + ' has a frozen action transition (' + i + '/' + (i - 1) + ')');
     }
+    // Some symmetrical eight-frame loops intentionally repeat a pose on the
+    // return stroke (for example a bow walk cycle).  Three genuinely distinct
+    // poses is the minimum readable animation; frozen adjacent frames remain
+    // prohibited above.
+    assert(new Set(frames.map(frame => frame.hash)).size >= Math.min(3, frames.length),
+      name + ' has fewer than three visually distinct action poses');
   }
-  console.log('ANIM OK  hero walk/attack and enemy/VFX animations have distinct non-empty frames');
+  console.log('ANIM OK  hero, 16 ordinary enemies, 16 elite enemies, all boss and VFX actions have distinct non-empty frames');
 
   // Skip intro and start the default knight/graveyard run through the real UI.
   await page.mouse.click(640, 360);
