@@ -6,10 +6,10 @@
    sits on top of buttons or steals pointer events. */
 .menu-screen {
   box-sizing: border-box;
-  border: 32px solid transparent;
-  border-image: url('../assets/art-v4/sprites/ui/baroque_menu_frame.png') 116 104 fill / 32px / 0 stretch;
-  background-color: rgba(4, 3, 7, .30);
-  box-shadow: inset 0 0 64px rgba(0, 0, 0, .68);
+  border: 0;
+  border-image: none;
+  background: transparent;
+  box-shadow: none;
 }
 .screen .menu-logo {
   top: 5px;
@@ -33,7 +33,7 @@
   border-bottom: 1px solid rgba(77, 35, 31, .82);
   background: linear-gradient(90deg, transparent, rgba(19, 11, 13, .72) 18%, rgba(19, 11, 13, .72) 82%, transparent);
 }
-.menu-body { top: 190px; }
+.menu-body { top: 154px; gap: 30px; padding-top: 72px; }
 
 .menu-altar, .menu-board, .menu-col .btn, .menu-subrow .btn.sub {
   border-color: #b18a49;

@@ -599,6 +599,7 @@ window.UI = (function () {
   function renderArtGallery() {
     var atlas = window.SPRITE_ATLAS || { frames: {} };
     var names = Object.keys(atlas.frames || {}).sort();
+    codexBody.appendChild(btn('进入素材测试场', 'primary big', function () { if (cb.onArtTest) cb.onArtTest(); }));
     codexBody.appendChild(h('div', 'enc-intro', '当前图集：' + names.length + ' 个素材；缩略图直接读取正在运行的图集。'));
     var groups = [
       ['角色动作', function (n) { return n.indexOf('char_') === 0; }],
@@ -894,7 +895,17 @@ window.UI = (function () {
     // 警告文字
     hudRefs.warn = h('div', 'hud-warn hidden', '');
     s.appendChild(hudRefs.warn);
+    hudRefs.testPanel = h('div', 'test-panel hidden');
+    [['weapons', '全武器'], ['ultimate', '全进化'], ['enemies', '全怪物'], ['boss', '下个 Boss'], ['clear', '清场'], ['heal', '回满血']].forEach(function (entry) {
+      hudRefs.testPanel.appendChild(btn(entry[1], 'small-btn', function () { if (cb.onTestAction) cb.onTestAction(entry[0]); }));
+    });
+    s.appendChild(hudRefs.testPanel);
     screens.hud = s; root.appendChild(s);
+  }
+
+  function setTestMode(enabled) {
+    if (!hudRefs.testPanel) return;
+    hudRefs.testPanel.classList.toggle('hidden', !enabled);
   }
 
   var slotSig = '';
@@ -1231,9 +1242,14 @@ window.UI = (function () {
       resBody.appendChild(aBox);
     }
     var row = h('div', 'btn-row');
-    if (canEndless) row.appendChild(btn('∞ ' + L.t('result_continue'), 'big', function () { cb.onEndless(); }));
-    row.appendChild(btn(L.t('result_again'), 'big primary', function () { refreshChars(); show('chars'); }));
-    row.appendChild(btn(L.t('result_menu'), 'big', function () { show('menu'); AudioSys.playMusic('menu'); }));
+    if (canEndless) {
+      row.appendChild(btn(L.t('result_menu'), 'big', function () { show('menu'); AudioSys.playMusic('menu'); }));
+      row.appendChild(btn('∞ ' + L.t('result_continue'), 'big primary', function () { cb.onEndless(); }));
+      row.appendChild(btn(L.t('result_again'), 'big', function () { refreshChars(); show('chars'); }));
+    } else {
+      row.appendChild(btn(L.t('result_again'), 'big primary', function () { refreshChars(); show('chars'); }));
+      row.appendChild(btn(L.t('result_menu'), 'big', function () { show('menu'); AudioSys.playMusic('menu'); }));
+    }
     resBody.appendChild(row);
     show('result');
   }
@@ -1270,7 +1286,7 @@ window.UI = (function () {
     updateHUD: updateHUD, warn: warn, bossBanner: bossBanner,
     showLevelUp: showLevelUp, hideLevelUp: hideLevelUp,
     showChest: showChest, showPause: showPause, hidePause: hidePause,
-    showResult: showResult, toastAchv: toastAchv, toastText: toastText,
+    showResult: showResult, toastAchv: toastAchv, toastText: toastText, setTestMode: setTestMode,
     isCodexOpen: isCodexOpen, closeCodexOverlay: closeCodexOverlay,
     renderRoster: renderRoster, showLobby: showLobby, applyCoopMap: applyCoopMap,
     coopMap: function () { return coopMapId; },

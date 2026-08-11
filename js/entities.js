@@ -155,6 +155,11 @@ window.Entities = (function () {
         });
       }
     }
+    if (run.exitGate && run.exitGate.open && !run.exitGate.used && E.keys().KeyE &&
+        E.dist2(p.x, p.y, run.exitGate.x, run.exitGate.y) < 92 * 92) {
+      run.exitGate.used = true;
+      run.over = true; run.victory = true;
+    }
     p.moving = (iv.x !== 0 || iv.y !== 0);
     // 蛛网减速 / 硬控:二层叠加后被包裹,原地无法移动
     if (p.slowT > 0) { p.slowT -= dt; if (p.slowT <= 0) { p.slow = 0; p.webStacks = 0; } }
@@ -494,8 +499,20 @@ window.Entities = (function () {
     if (opts.burn) { e.burn = opts.burn; e.burnT = Math.max(e.burnT, opts.burnDur || 2); }
     FX.dmgText(e.x + (Math.random() * 12 - 6), e.y - e.r - 6, Math.round(final), { crit: crit });
     if (crit) AudioSys.play('crit');
-    if (e.hp <= 0) killEnemy(run, e, opts);
+    if (e.hp <= 0 && e.bossType === 'boss_darklord' && !e.phase2) enterDarklordPhase2(run, e);
+    else if (e.hp <= 0) killEnemy(run, e, opts);
     return final;
+  }
+
+  function enterDarklordPhase2(run, e) {
+    e.phase2 = true;
+    e.maxHp = 2500000; e.hp = e.maxHp;
+    e.dmg *= 1.8; e.spd *= 1.22; e.r = Math.max(76, e.r * 1.42);
+    e.aiT = 0.55; e.chargeSeq = 0; e.chargePhase = 0; e.atkCount = 0;
+    if (run.exitGate) run.exitGate.open = true;
+    FX.flash('#7d1530', 0.70, 0.75); FX.shake(16, 1.0); FX.explosion(e.x, e.y, 150);
+    AudioSys.play('boss_spawn');
+    if (run.cb && run.cb.onWarn) run.cb.onWarn('暗潮魔王显露真身！大门已开启：靠近后按 E 可撤离。');
   }
 
   // 火焰解除冰霜减速:清掉目标的减速状态
@@ -1243,19 +1260,25 @@ window.Entities = (function () {
         e.vx = nx * spd * sMul; e.vy = ny * spd * sMul;
         e.aiPhase += dt * 1.8;
         if (e.aiT <= 0) {
-          e.aiT = enrage ? 1.6 : 2.6;
+          e.aiT = e.phase2 ? 1.10 : (enrage ? 1.6 : 2.6);
           e.atkCount = (e.atkCount || 0) + 1;
           if (e.atkCount % 3 === 0) {          // 每三轮弹幕后冲撞
-            e.chargeSeq = enrage ? 3 : 2; e.chargePhase = 0; e.skT = 0.55;
+            e.chargeSeq = e.phase2 ? 4 : (enrage ? 3 : 2); e.chargePhase = 0; e.skT = 0.55;
             if (run.cb.onWarn) run.cb.onWarn('⚠ 暗潮魔王冲锋!');
             break;
           }
-          var nn = enrage ? 20 : 12;
+          var nn = e.phase2 ? 30 : (enrage ? 20 : 12);
           for (var q = 0; q < nn; q++) {
             var aa = (Math.PI * 2 / nn) * q + e.aiPhase;
             fireShot(e.x, e.y, Math.cos(aa), Math.sin(aa), 160, e.dmg * 0.5 * dMul, 0, 0, false, dcol);
           }
           AudioSys.play('shoot_bolt');
+          if (e.phase2 && e.atkCount % 2 === 0) {
+            for (var di = 0; di < 3; di++) {
+              var da = Math.random() * Math.PI * 2;
+              spawnEnemy(run, di === 0 ? 'imp' : 'wraith', e.x + Math.cos(da) * 95, e.y + Math.sin(da) * 95, { allowNear: true });
+            }
+          }
         }
         if ((run.frame % 22) === 0) FX.trail(e.x + (Math.random() * 40 - 20), e.y + (Math.random() * 40 - 20), '#7a3cff', 4);
         break;
@@ -1583,6 +1606,12 @@ window.Entities = (function () {
 
   function announceBoss(run, b) {
     run.boss = b;
+    if (b.bossType === 'boss_darklord') {
+      var p = run.player, R = CFG.GAME.MAP_R - 180;
+      var a = Math.random() * Math.PI * 2, d = 300 + Math.random() * 110;
+      run.exitGate = { x: E.clamp(p.x + Math.cos(a) * d, -R, R), y: E.clamp(p.y + Math.sin(a) * d, -R, R), open: false, used: false };
+      if (run.cb && run.cb.onWarn) run.cb.onWarn('远处浮现一座封闭的巨门……');
+    }
     AudioSys.play('boss_spawn');
     // 切到该 Boss 的专属战斗曲
     var bd = CFG.BOSSES[b.bossType];
@@ -1693,10 +1722,30 @@ window.Entities = (function () {
     }
   }
 
+  function drawExitGate(ctx, gate, t) {
+    var pulse = 0.5 + Math.sin(t * 2.4) * 0.5;
+    ctx.save();
+    ctx.globalAlpha = gate.open ? 0.58 + pulse * 0.22 : 0.76;
+    ctx.fillStyle = gate.open ? '#270c24' : '#140f18';
+    ctx.fillRect(gate.x - 68, gate.y - 154, 136, 154);
+    ctx.strokeStyle = gate.open ? '#d09b5f' : '#604834'; ctx.lineWidth = 7;
+    ctx.strokeRect(gate.x - 68, gate.y - 154, 136, 154);
+    ctx.strokeStyle = '#1b1116'; ctx.lineWidth = 5;
+    ctx.beginPath(); ctx.arc(gate.x, gate.y - 76, 51, Math.PI, 0); ctx.stroke();
+    if (gate.open) {
+      ctx.globalAlpha = 0.18 + pulse * 0.18;
+      ctx.fillStyle = '#b7254d'; ctx.fillRect(gate.x - 53, gate.y - 140, 106, 132);
+      ctx.globalAlpha = 1; ctx.fillStyle = '#f4d292'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('撤离之门  [E]', gate.x, gate.y - 170); ctx.textAlign = 'left';
+    }
+    ctx.restore();
+  }
+
   function draw(ctx, run) {
     var i, e, g, it, p = run.player;
     var animF = Math.floor(run.t * 6);
     var shadow = SpriteGen.get('vfx_shadow');
+    if (run.exitGate) drawExitGate(ctx, run.exitGate, run.t);
 
     // 宝石
     for (i = 0; i < gems.length; i++) {
@@ -1747,7 +1796,7 @@ window.Entities = (function () {
     for (i = 0; i < POOL; i++) {
       e = enemies[i];
       if (!e.alive) continue;
-      var sc = (e.boss ? 2 : 1) * (e.elite ? CFG.ELITE.scale : 1);
+      var sc = (e.boss ? 2 : 1) * (e.elite ? CFG.ELITE.scale : 1) * (e.phase2 ? 1.28 : 1);
       // 破土动画:翻起的土堆 + 从地下逐渐升起的怪(用裁剪实现"半截在土里")
       if (e.burrowT > 0) {
         var prog = 1 - e.burrowT / (e.burrowMax || 1);   // 0→1
@@ -1779,7 +1828,8 @@ window.Entities = (function () {
       ctx.drawImage(shadow, e.x - 12 * sc, e.y + e.r * 0.7, 24 * sc, 8 * sc);
       ctx.globalAlpha = 1;
       var tint = null;
-      if (e.guard > 0) tint = '#9cf';
+      if (e.phase2) tint = '#3c1528';
+      else if (e.guard > 0) tint = '#9cf';
       else if (e.flash > 0) tint = '#ffffff';
       else if (run.freezeT > 0 || e.frozen > 0) tint = '#5fd0ff';
       else if (e.slowT > 0) tint = '#8ab6ff';

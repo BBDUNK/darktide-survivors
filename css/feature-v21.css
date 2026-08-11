@@ -1,7 +1,7 @@
 /* feature-v21.css — 复古巴洛克统一外观与主菜单专属画板 */
 
 .menu-col .btn {
-  width: 372px !important;
+  width: 350px !important;
   min-height: 62px !important;
   padding: 0 42px 3px !important;
   display: flex !important;
@@ -13,7 +13,7 @@
 
 .menu-altar,
 .menu-board {
-  width: 236px !important;
+  width: 248px !important;
   height: 302px !important;
   box-sizing: border-box;
   border: 0 !important;
@@ -22,6 +22,7 @@
   box-shadow: 8px 10px 18px rgba(0,0,0,.65) !important;
   image-rendering: pixelated;
 }
+.menu-version { left: 0 !important; bottom: 0 !important; z-index: 5; padding: 4px 7px; }
 .menu-altar {
   padding: 54px 42px 42px !important;
   background: url('../assets/art-v4/sprites/ui/holy_altar_panel.png') center / 100% 100% no-repeat !important;
@@ -81,6 +82,8 @@
 .asset-cell { min-height:86px; padding:6px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; border:2px solid #614622; background:rgba(9,7,8,.78); }
 .asset-cell canvas { width:46px; height:46px; image-rendering:pixelated; }
 .asset-name { max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:9px; color:#e7ca88; }
+.test-panel { position:absolute; right:12px; bottom:84px; width:128px; display:flex; flex-wrap:wrap; gap:4px; padding:8px; z-index:12; background:rgba(18,10,16,.92); border:3px solid #9f783c; box-shadow:0 0 0 2px #1a1110 inset; }
+.test-panel .btn { min-width:56px; padding:5px 4px; font-size:10px; }
 .enc-section-title { margin:16px 0 8px; color:#f0d899; font-weight:900; letter-spacing:1px; }
 
 /* 全部次级界面统一为深色金纹巴洛克框；不改变各页面原有布局。 */

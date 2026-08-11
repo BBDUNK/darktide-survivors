@@ -608,6 +608,7 @@
     Entities.reset();
     Weapons.reset();
     FX.reset();
+    if (window.UI && UI.setTestMode) UI.setTestMode(false);
 
     run = {
       t: 0, frame: 0,
@@ -926,7 +927,7 @@
     Entities.updateEnemies(run, dt);
     Entities.updateGems(run, dt);
     Entities.updateItems(run, dt);
-    Entities.director(run, dt);
+    if (!run.testMode) Entities.director(run, dt);
 
     // 房主:定频给每个客户端发送按其视野裁剪的快照。
     // 逐客户端定制而非统一广播,是因为每人视野不同;裁剪后带宽大幅下降,
@@ -1531,6 +1532,42 @@
 
     UI.init({
       onStartRun: function (charId, mapId) { newRun(charId, mapId); },
+      onArtTest: function () {
+        newRun('knight', CFG.MAPS[0].id);
+        run.testMode = true; run.gold = 9999;
+        Entities.clearEnemies(run);
+        UI.setTestMode(true);
+        UI.toastText('素材测试场：不会自动刷怪，可用右侧工具生成和强化。');
+      },
+      onTestAction: function (action) {
+        if (!run || !run.testMode) return;
+        if (action === 'clear') { Entities.clearEnemies(run); return; }
+        if (action === 'heal') { run.player.hp = run.player.stats.hp; return; }
+        if (action === 'enemies') {
+          var ids = Object.keys(CFG.ENEMIES), rr = 260;
+          for (var ei = 0; ei < ids.length; ei++) {
+            var ea = Math.PI * 2 * ei / ids.length;
+            Entities.spawnEnemy(run, ids[ei], run.player.x + Math.cos(ea) * rr, run.player.y + Math.sin(ea) * rr, { allowNear: true });
+          }
+          return;
+        }
+        if (action === 'boss') {
+          var bs = Object.keys(CFG.BOSSES), id = bs[(run.testBossIdx || 0) % bs.length];
+          run.testBossIdx = (run.testBossIdx || 0) + 1;
+          var be = Entities.spawnEnemy(run, id, run.player.x + 280, run.player.y, { allowNear: true });
+          if (be) { run.boss = be; UI.bossBanner(CFG.BOSSES[id]); }
+          return;
+        }
+        if (action === 'weapons') {
+          Object.keys(CFG.WEAPONS).forEach(function (id) { if (!Weapons.findWeapon(run, id)) Weapons.addWeapon(run, id); });
+          return;
+        }
+        if (action === 'ultimate') {
+          Object.keys(CFG.PASSIVES).forEach(function (id) { run.passives[id] = CFG.PASSIVES[id].maxLv; });
+          run.weapons.forEach(function (w) { w.lv = CFG.WEAPONS[w.id].lv.length + 1; w.evolved = true; w.evoId = CFG.WEAPONS[w.id].evo; });
+          Entities.recomputeStats(run);
+        }
+      },
       onResume: function () {
         if (coop.on && Net.isClient()) {
           Net.toHost({ t: 'resumeReq' });
