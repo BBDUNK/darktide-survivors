@@ -131,7 +131,7 @@ window.CFG = {
     absolutezero: { name: '绝对零度', icon: 'we_absolutezero', of: 'frostnova',
       desc: '极寒新星,概率直接冻成冰雕。', mult: { dmg: 2.2, area: 1.5 } },
     infernosea:   { name: '地狱火海', icon: 'we_infernosea',   of: 'fireflask',
-      desc: '火瓶三连投,大地燃烧成海。', mult: { dmg: 2.0, count: 2, area: 1.5 } },
+      desc: '每枚火瓶落地绽开十字火堆，燃烧更久并封锁整片地面。', mult: { dmg: 2.0, count: 2, area: 1.5 } },
     thousandcuts: { name: '影刃千杀', icon: 'we_thousandcuts', of: 'shadowdagger',
       desc: '影匕如雨,命中后还会弹射。一千刀,一刀不少。', mult: { dmg: 1.7, count: 2 } },
     bladestorm:   { name: '剑刃风暴', icon: 'we_bladestorm',   of: 'orbitblade',

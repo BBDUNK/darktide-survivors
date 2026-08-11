@@ -818,21 +818,34 @@ window.Weapons = (function () {
     }
     // 火焰净化:烧掉角色身上的蛛网,并清掉爆点附近飞行中的蛛网弹
     Entities.cleanseWebs(run, b.x, b.y, 120);
-    // 燃烧地面
-    var pool = getBullet();
-    pool.alive = true; pool.kind = 'pool'; pool.spr = 'p_firepool'; pool.wid = b.wid;
-    pool.x = b.x; pool.y = b.y; pool.vx = 0; pool.vy = 0;
-    pool.born = run.t;
-    pool.owner = b.owner; pool.ownerX = b.ownerX; pool.ownerY = b.ownerY;
-    // 发射时已把所属玩家的火池数值固化进弹体,落地时不再误读房主 Build。
-    pool.dmg = b.poolDmg || b.dmg * 0.8;
-    pool.size = b.poolR || 90;
-    pool.ttl = b.poolDur || 3;
-    pool.pierce = 9999; pool.knock = 0; pool.slow = 0; pool.stun = 0;
-    pool.evolved = b.evolved;
-    // 灼烧:初始 5 秒,随武器等级成长到 10 秒(每次命中重置,持续伤害)
-    pool.poolBurn = b.poolBurn || b.dmg * 0.3;
-    pool.poolBurnDur = b.poolBurnDur || 5;
+    // Ground fire is a static post-impact effect: never replay the bottle
+    // shatter frames.  The evolved flask lays five persistent pools in a real
+    // cross, so the additional area is readable and has matching hit volumes.
+    function layPool(px, py, radiusMul, durationMul) {
+      var pool = getBullet();
+      pool.alive = true; pool.kind = 'pool'; pool.spr = 'p_firepool'; pool.wid = b.wid;
+      pool.x = px; pool.y = py; pool.vx = 0; pool.vy = 0;
+      pool.born = run.t;
+      pool.owner = b.owner; pool.ownerX = b.ownerX; pool.ownerY = b.ownerY;
+      // The launch snapshot owns every numeric value; in co-op, another
+      // player's build can therefore never change a landed fire field.
+      pool.dmg = (b.poolDmg || b.dmg * 0.8) * (radiusMul < 1 ? 0.76 : 1);
+      pool.size = (b.poolR || 90) * radiusMul;
+      pool.ttl = (b.poolDur || 3) * durationMul;
+      pool.pierce = 9999; pool.knock = 0; pool.slow = 0; pool.stun = 0;
+      pool.evolved = b.evolved;
+      pool.poolBurn = b.poolBurn || b.dmg * 0.3;
+      pool.poolBurnDur = (b.poolBurnDur || 5) * durationMul;
+    }
+    if (b.evolved) {
+      var step = (b.poolR || 90) * 0.76;
+      layPool(b.x, b.y, 1, 1.82);
+      layPool(b.x - step, b.y, 0.78, 1.62);
+      layPool(b.x + step, b.y, 0.78, 1.62);
+      layPool(b.x, b.y - step, 0.78, 1.62);
+      layPool(b.x, b.y + step, 0.78, 1.62);
+      FX.ring(b.x, b.y, { r: step * 1.42, color: '#ff9a45', life: 0.28, width: 3 });
+    } else layPool(b.x, b.y, 1, 1);
   }
 
   function findWeapon(run, wid) {

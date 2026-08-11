@@ -826,6 +826,39 @@ try {
   }
   console.log('R3 OK 金币/烤肉按 TTL 过期,宝箱永久保留');
 
+  // R4 终极火瓶必须是实际的十字火场(而不是单个放大的圆形贴图),
+  //    电磁战车也必须留下本体并按 3 秒节奏发射巨型电磁炮。
+  const r4 = fx(`
+    (() => {
+      const r = Debug.run();
+      function prep(weapon) {
+        Entities.reset(); Weapons.reset();
+        r.t = 0; r.frame = 0; r.map = CFG.MAPS[0]; r.coopPlayers = null;
+        r.player = Entities.makePlayer(CFG.CHARS[0]); r.weapons = [weapon]; r.passives = {};
+        r.seen = {}; r.kills = 0; r.dmgTotal = 0; r.boss = null; r._netVisual = false;
+        Entities.recomputeStats(r); r.player.hp = r.player.stats.hp;
+      }
+      prep({ id: 'fireflask', lv: 8, evolved: true, evoId: 'infernosea', cdT: 0 });
+      for (let i = 0; i < 56; i++) { r.t += 1 / 60; r.frame++; Weapons.update(r, 1 / 60); }
+      const pools = Weapons.getBullets().filter(b => b.alive && b.kind === 'pool');
+      const xs = new Set(pools.map(b => Math.round(b.x))).size;
+      const ys = new Set(pools.map(b => Math.round(b.y))).size;
+      const longest = Math.max.apply(null, pools.map(b => b.ttl));
+      prep({ id: 'teslacoil', lv: 8, evolved: true, evoId: 'skynet', cdT: 0 });
+      for (let i = 0; i < 225; i++) { r.t += 1 / 60; r.frame++; Weapons.update(r, 1 / 60); }
+      const bullets = Weapons.getBullets();
+      return {
+        pools: pools.length, xs, ys, longest,
+        tank: bullets.some(b => b.alive && b.kind === 'tank'),
+        cannon: bullets.some(b => b.alive && b.kind === 'straight' && b.spr === 'p_bolt' && b.size >= 58)
+      };
+    })()
+  `);
+  if (r4.pools < 5 || r4.pools % 5 !== 0 || r4.xs < 3 || r4.ys < 3 || r4.longest <= 5 || !r4.tank || !r4.cannon) {
+    throw new Error('终极火瓶/战车回归失败: ' + JSON.stringify(r4));
+  }
+  console.log('R4 OK 火瓶十字火场与电磁战车炮击均为真实对局机制');
+
   console.log('\n=== 无头冒烟测试全部通过 ===');
 } catch (e) {
   console.error('\n!!! 冒烟测试失败: ' + e.stack);
