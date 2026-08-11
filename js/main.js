@@ -683,6 +683,106 @@
     state = 'run';
   }
 
+  // 素材测试场不是静态图鉴：这里集中处理右侧控制台的逐项投放，
+  // 让每一把武器、每种掉落和每个怪物都能在真实渲染/碰撞/动画里验收。
+  function startArtTest() {
+    newRun('knight', CFG.MAPS[0].id);
+    run.testMode = true;
+    run.gold = 9999;
+    Entities.clearEnemies(run);
+    UI.setTestMode(true);
+    UI.toastText('素材测试场：不会自动刷怪；右侧可逐项生成、满级和进化。');
+  }
+
+  function testSpawnPoint(radius) {
+    var n = run.testSpawnIdx || 0;
+    run.testSpawnIdx = n + 1;
+    var a = n * 2.3999632297; // 黄金角：重复投放也不会堆在同一个点
+    return {
+      x: run.player.x + Math.cos(a) * radius,
+      y: run.player.y + Math.sin(a) * radius
+    };
+  }
+
+  function applyTestAction(action) {
+    if (!run || !run.testMode) return false;
+    if (action === 'clear') { Entities.clearEnemies(run); run.boss = null; return true; }
+    if (action === 'heal') { run.player.hp = run.player.stats.hp; return true; }
+    if (action === 'enemies') {
+      var ids = Object.keys(CFG.ENEMIES), rr = 260;
+      for (var ei = 0; ei < ids.length; ei++) {
+        var ea = Math.PI * 2 * ei / ids.length;
+        Entities.spawnEnemy(run, ids[ei], run.player.x + Math.cos(ea) * rr, run.player.y + Math.sin(ea) * rr, { allowNear: true });
+      }
+      return true;
+    }
+    if (action === 'boss') {
+      var bs = Object.keys(CFG.BOSSES), bid = bs[(run.testBossIdx || 0) % bs.length];
+      run.testBossIdx = (run.testBossIdx || 0) + 1;
+      var bp = testSpawnPoint(310);
+      var be = Entities.spawnEnemy(run, bid, bp.x, bp.y, { allowNear: true });
+      if (be) { run.boss = be; UI.bossBanner(CFG.BOSSES[bid]); }
+      return !!be;
+    }
+    if (action === 'weapons') {
+      Object.keys(CFG.WEAPONS).forEach(function (id) { if (!Weapons.findWeapon(run, id)) Weapons.addWeapon(run, id); });
+      return true;
+    }
+    if (action === 'ultimate') {
+      Object.keys(CFG.PASSIVES).forEach(function (id) { run.passives[id] = CFG.PASSIVES[id].maxLv; });
+      run.weapons.forEach(function (w) { w.lv = CFG.WEAPONS[w.id].lv.length + 1; w.evolved = true; w.evoId = CFG.WEAPONS[w.id].evo; });
+      Entities.recomputeStats(run);
+      run.player.hp = Math.min(run.player.hp, run.player.stats.hp);
+      return true;
+    }
+    if (!action || typeof action !== 'object' || !action.type) return false;
+
+    var id = action.id, def, w, pt, maxLv;
+    if (action.type === 'weapon') {
+      def = CFG.WEAPONS[id]; if (!def) return false;
+      w = Weapons.findWeapon(run, id);
+      if (!w) Weapons.addWeapon(run, id);
+      else w.lv = Math.min(def.lv.length + 1, w.lv + 1);
+      return true;
+    }
+    if (action.type === 'ultimateWeapon') {
+      def = CFG.WEAPONS[id]; if (!def) return false;
+      w = Weapons.findWeapon(run, id);
+      if (!w) { Weapons.addWeapon(run, id); w = Weapons.findWeapon(run, id); }
+      maxLv = def.lv.length + 1;
+      w.lv = maxLv;
+      if (def.evoNeed && CFG.PASSIVES[def.evoNeed]) run.passives[def.evoNeed] = CFG.PASSIVES[def.evoNeed].maxLv;
+      if (!w.evolved) Weapons.evolveWeapon(run, w);
+      Entities.recomputeStats(run);
+      run.player.hp = Math.min(run.player.hp, run.player.stats.hp);
+      return true;
+    }
+    if (action.type === 'passive') {
+      def = CFG.PASSIVES[id]; if (!def) return false;
+      run.passives[id] = def.maxLv;
+      Entities.recomputeStats(run);
+      run.player.hp = Math.min(run.player.hp, run.player.stats.hp);
+      return true;
+    }
+    if (action.type === 'item') {
+      pt = testSpawnPoint(76);
+      return !!Entities.spawnItem(run, id, pt.x, pt.y);
+    }
+    if (action.type === 'enemy') {
+      if (!CFG.ENEMIES[id]) return false;
+      pt = testSpawnPoint(270);
+      return !!Entities.spawnEnemy(run, id, pt.x, pt.y, { allowNear: true });
+    }
+    if (action.type === 'testBoss') {
+      if (!CFG.BOSSES[id]) return false;
+      pt = testSpawnPoint(320);
+      var boss = Entities.spawnEnemy(run, id, pt.x, pt.y, { allowNear: true });
+      if (boss) { run.boss = boss; UI.bossBanner(CFG.BOSSES[id]); }
+      return !!boss;
+    }
+    return false;
+  }
+
   function finalizeRun() {
     Meta.trackBest('survive', Math.floor(run.t), run.map.id);
     Meta.trackBest('killsRun', run.kills);
@@ -1535,42 +1635,8 @@
 
     UI.init({
       onStartRun: function (charId, mapId) { newRun(charId, mapId); },
-      onArtTest: function () {
-        newRun('knight', CFG.MAPS[0].id);
-        run.testMode = true; run.gold = 9999;
-        Entities.clearEnemies(run);
-        UI.setTestMode(true);
-        UI.toastText('素材测试场：不会自动刷怪，可用右侧工具生成和强化。');
-      },
-      onTestAction: function (action) {
-        if (!run || !run.testMode) return;
-        if (action === 'clear') { Entities.clearEnemies(run); return; }
-        if (action === 'heal') { run.player.hp = run.player.stats.hp; return; }
-        if (action === 'enemies') {
-          var ids = Object.keys(CFG.ENEMIES), rr = 260;
-          for (var ei = 0; ei < ids.length; ei++) {
-            var ea = Math.PI * 2 * ei / ids.length;
-            Entities.spawnEnemy(run, ids[ei], run.player.x + Math.cos(ea) * rr, run.player.y + Math.sin(ea) * rr, { allowNear: true });
-          }
-          return;
-        }
-        if (action === 'boss') {
-          var bs = Object.keys(CFG.BOSSES), id = bs[(run.testBossIdx || 0) % bs.length];
-          run.testBossIdx = (run.testBossIdx || 0) + 1;
-          var be = Entities.spawnEnemy(run, id, run.player.x + 280, run.player.y, { allowNear: true });
-          if (be) { run.boss = be; UI.bossBanner(CFG.BOSSES[id]); }
-          return;
-        }
-        if (action === 'weapons') {
-          Object.keys(CFG.WEAPONS).forEach(function (id) { if (!Weapons.findWeapon(run, id)) Weapons.addWeapon(run, id); });
-          return;
-        }
-        if (action === 'ultimate') {
-          Object.keys(CFG.PASSIVES).forEach(function (id) { run.passives[id] = CFG.PASSIVES[id].maxLv; });
-          run.weapons.forEach(function (w) { w.lv = CFG.WEAPONS[w.id].lv.length + 1; w.evolved = true; w.evoId = CFG.WEAPONS[w.id].evo; });
-          Entities.recomputeStats(run);
-        }
-      },
+      onArtTest: startArtTest,
+      onTestAction: applyTestAction,
       onResume: function () {
         if (coop.on && Net.isClient()) {
           Net.toHost({ t: 'resumeReq' });
@@ -1814,6 +1880,8 @@
     run: function () { return run; },
     state: function () { return state; },
     coop: function () { return coop; },
+    startArtTest: startArtTest,
+    testAction: applyTestAction,
     menuBackground: function () {
       return { loaded: !!(menuBgImg && menuBgImg.width), src: menuBgImg ? menuBgImg.src : '' };
     }

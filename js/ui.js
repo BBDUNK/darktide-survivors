@@ -597,6 +597,9 @@ window.UI = (function () {
   }
 
   function renderArtGallery() {
+    // “素材库”现在是验收入口而非静态图片墙：点击标签后直接进入无刷怪测试局。
+    // 保留下面的图集索引作为没有测试回调时的降级页面，便于独立打开 UI 模块调试。
+    if (cb.onArtTest) { cb.onArtTest(); return; }
     var atlas = window.SPRITE_ATLAS || { frames: {} };
     var names = Object.keys(atlas.frames || {}).sort();
     codexBody.appendChild(btn('进入素材测试场', 'primary big', function () { if (cb.onArtTest) cb.onArtTest(); }));
@@ -896,9 +899,41 @@ window.UI = (function () {
     hudRefs.warn = h('div', 'hud-warn hidden', '');
     s.appendChild(hudRefs.warn);
     hudRefs.testPanel = h('div', 'test-panel hidden');
-    [['weapons', '全武器'], ['ultimate', '全进化'], ['enemies', '全怪物'], ['boss', '下个 Boss'], ['clear', '清场'], ['heal', '回满血']].forEach(function (entry) {
-      hudRefs.testPanel.appendChild(btn(entry[1], 'small-btn', function () { if (cb.onTestAction) cb.onTestAction(entry[0]); }));
+    hudRefs.testPanel.appendChild(h('div', 'test-panel-title', '素材测试场'));
+    hudRefs.testPanel.appendChild(h('div', 'test-panel-note', '无自动刷怪 · 逐项实机验收'));
+    function addTestPicker(label, choices, actionType, altType, primaryText, altText) {
+      var row = h('div', 'test-picker');
+      row.appendChild(h('label', '', label));
+      var select = h('select', 'test-select');
+      choices.forEach(function (entry) {
+        var opt = document.createElement('option');
+        opt.value = entry.id;
+        opt.textContent = entry.name;
+        select.appendChild(opt);
+      });
+      row.appendChild(select);
+      var actions = h('div', 'test-picker-actions');
+      actions.appendChild(btn(primaryText, 'small-btn', function () { if (cb.onTestAction) cb.onTestAction({ type: actionType, id: select.value }); }));
+      if (altType) actions.appendChild(btn(altText, 'small-btn accent', function () { if (cb.onTestAction) cb.onTestAction({ type: altType, id: select.value }); }));
+      row.appendChild(actions);
+      hudRefs.testPanel.appendChild(row);
+    }
+    function defsToChoices(defs) {
+      return Object.keys(defs).sort().map(function (id) { return { id: id, name: defs[id].name }; });
+    }
+    addTestPicker('武器', defsToChoices(CFG.WEAPONS), 'weapon', 'ultimateWeapon', '获得/升级', '满级进化');
+    addTestPicker('被动', defsToChoices(CFG.PASSIVES), 'passive', null, '满级被动', '');
+    addTestPicker('掉落物', [
+      { id: 'coin', name: '金币' }, { id: 'meat', name: '大腿肉' }, { id: 'magnet', name: '红蓝磁铁' },
+      { id: 'bomb', name: '复古炸弹' }, { id: 'clock', name: '时之沙漏' }, { id: 'chest', name: '宝箱' }
+    ], 'item', null, '生成掉落', '');
+    addTestPicker('敌人', defsToChoices(CFG.ENEMIES), 'enemy', null, '生成敌人', '');
+    addTestPicker('首领', defsToChoices(CFG.BOSSES), 'testBoss', null, '生成首领', '');
+    var batch = h('div', 'test-batch-actions');
+    [['weapons', '全武器'], ['ultimate', '全进化'], ['enemies', '全怪物'], ['boss', '轮换 Boss'], ['clear', '清场'], ['heal', '回满血']].forEach(function (entry) {
+      batch.appendChild(btn(entry[1], 'small-btn', function () { if (cb.onTestAction) cb.onTestAction(entry[0]); }));
     });
+    hudRefs.testPanel.appendChild(batch);
     s.appendChild(hudRefs.testPanel);
     screens.hud = s; root.appendChild(s);
   }

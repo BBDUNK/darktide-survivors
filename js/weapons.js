@@ -1450,7 +1450,7 @@ window.Weapons = (function () {
     cycleTargetMode: cycleTargetMode, getTargetModeName: getTargetModeName,
     addWeapon: addWeapon, addPassive: addPassive,
     getLevelUpChoices: getLevelUpChoices, applyChoice: applyChoice,
-    chestLoot: chestLoot, canEvolve: canEvolve, findWeapon: findWeapon,
+    chestLoot: chestLoot, canEvolve: canEvolve, evolveWeapon: evolveWeapon, findWeapon: findWeapon,
     wStats: wStats
   };
 })();

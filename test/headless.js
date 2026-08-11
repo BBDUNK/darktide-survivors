@@ -859,6 +859,27 @@ try {
   }
   console.log('R4 OK 火瓶十字火场与电磁战车炮击均为真实对局机制');
 
+  // R5 素材测试场必须是可逐项实测的真实对局，而不是静态缩略图库。
+  // 覆盖：起场无自动敌人、指定武器、终极进化、被动、掉落、普通敌人与指定 Boss。
+  const r5 = fx(`
+    (() => {
+      Debug.startArtTest();
+      const r = Debug.run();
+      const emptyAtStart = r.testMode === true && Entities.countAlive() === 0;
+      const weaponOk = Debug.testAction({ type: 'weapon', id: 'fireflask' }) && !!Weapons.findWeapon(r, 'fireflask');
+      const evoOk = Debug.testAction({ type: 'ultimateWeapon', id: 'fireflask' }) && Weapons.findWeapon(r, 'fireflask').evolved;
+      const passiveOk = Debug.testAction({ type: 'passive', id: 'ps_boots' }) && r.passives.ps_boots === CFG.PASSIVES.ps_boots.maxLv;
+      const itemOk = Debug.testAction({ type: 'item', id: 'magnet' }) && Entities.getItems().some(x => x.alive && x.type === 'magnet');
+      const enemyOk = Debug.testAction({ type: 'enemy', id: 'spider' }) && Entities.pool.some(x => x.alive && x.id === 'spider');
+      const bossOk = Debug.testAction({ type: 'testBoss', id: 'boss_abysseye' }) && r.boss && r.boss.id === 'boss_abysseye';
+      return { emptyAtStart, weaponOk, evoOk, passiveOk, itemOk, enemyOk, bossOk };
+    })()
+  `);
+  if (!Object.values(r5).every(Boolean)) {
+    throw new Error('素材测试场回归失败: ' + JSON.stringify(r5));
+  }
+  console.log('R5 OK 素材测试场可逐项生成、满级进化并在真实对局中验收');
+
   console.log('\n=== 无头冒烟测试全部通过 ===');
 } catch (e) {
   console.error('\n!!! 冒烟测试失败: ' + e.stack);
