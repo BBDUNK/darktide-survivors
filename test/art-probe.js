@@ -89,6 +89,7 @@ function assert(ok, message) {
     eliteSkeleton: SpriteGen.frames('elite_skeleton_attack').map(c => [c.width, c.height]),
     merchantProne: SpriteGen.frames('merchant_prone').map(c => [c.width, c.height]),
     deadTree: SpriteGen.frames('deco_deadtree_large1').map(c => [c.width, c.height]),
+    exitGate: SpriteGen.frames('exit_gate').map(c => [c.width, c.height]),
     slimeKing: SpriteGen.frames('boss_slimeking').map(c => [c.width, c.height]),
     explosion: SpriteGen.frames('vfx_explosion').map(c => [c.width, c.height]),
     holyAura: SpriteGen.frames('vfx_holy_aura').map(c => [c.width, c.height]),
@@ -130,6 +131,7 @@ function assert(ok, message) {
   assert(atlas.eliteSkeleton.length === 8 && atlas.eliteSkeleton.every(frame => JSON.stringify(frame) === '[52,60]'), 'elite skeleton attack frames are incorrect');
   assert(atlas.merchantProne.length === 8 && atlas.merchantProne.every(frame => JSON.stringify(frame) === '[96,96]'), 'merchant prone frames are incorrect');
   assert(JSON.stringify(atlas.deadTree) === '[[128,128]]', 'large dead tree frame is incorrect');
+  assert(JSON.stringify(atlas.exitGate) === '[[128,192]]', 'Darklord exit gate atlas frame is incorrect');
   assert(atlas.slimeKing.length === 8 && atlas.slimeKing.every(frame => JSON.stringify(frame) === '[96,96]'), 'slime king atlas frames are incorrect');
   assert(atlas.arrow.length === 8 && atlas.arrow.every(frame => JSON.stringify(frame) === '[32,24]'), 'arrow atlas frames are incorrect');
   assert(atlas.tesla.length === 8 && atlas.tesla.every(frame => JSON.stringify(frame) === '[112,112]'), 'tesla tower atlas frame is incorrect');

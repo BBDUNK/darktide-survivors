@@ -40785,6 +40785,24 @@
         "signature": "62796139bb30"
       }
     ],
+    "exit_gate": [
+      {
+        "index": 0,
+        "coverage": 0.5197,
+        "colors": 56,
+        "bbox": [
+          19,
+          6,
+          109,
+          189
+        ],
+        "centroid": [
+          63.498,
+          113.306
+        ],
+        "signature": "2017a55ae7d8"
+      }
+    ],
     "hud_minimap_frame": [
       {
         "index": 0,

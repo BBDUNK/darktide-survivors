@@ -278,6 +278,14 @@ spriteGrid('assets/art-v4/sprites/environment/terrain_props.png', 96, 4, [
   size: [128, 128], anchor: [64, 124], renderScale
 }));
 
+// Darklord's escape route uses a dedicated tall, pixel-cleaned gate rather
+// than a rectangle drawn at runtime.  It is static by design: only the portal
+// light opens, so the landmark never jitters while the camera moves.
+add({ name: 'exit_gate', source: 'assets/art-v4/sprites/environment/darklord_exit_gate.png',
+  frameSize: [128, 192], frameRow: 0, frames: 1, fps: 0,
+  size: [128, 192], anchor: [64, 188], renderScale: 1,
+  minCoverage: 0.08, maxBaselineDrift: 192 });
+
 add({
   name: 'hud_minimap_frame', source: 'assets/art-v2/ui/hud_minimap_frame.png', frames: 1,
   size: [132, 132], anchor: [66, 66], renderScale: 1

@@ -510,7 +510,7 @@ window.Entities = (function () {
     e.maxHp = 2500000; e.hp = e.maxHp;
     e.dmg *= 1.8; e.spd *= 1.22; e.r = Math.max(76, e.r * 1.42);
     e.aiT = 0.55; e.chargeSeq = 0; e.chargePhase = 0; e.atkCount = 0;
-    if (run.exitGate) run.exitGate.open = true;
+    if (run.exitGate) { run.exitGate.open = true; run.exitGate.openedAt = run.t; }
     FX.flash('#7d1530', 0.70, 0.75); FX.shake(16, 1.0); FX.explosion(e.x, e.y, 150);
     AudioSys.play('boss_spawn');
     if (run.cb && run.cb.onWarn) run.cb.onWarn('暗潮魔王显露真身！大门已开启：靠近后按 E 可撤离。');
@@ -1720,7 +1720,7 @@ window.Entities = (function () {
     if (b.bossType === 'boss_darklord') {
       var p = run.player, R = CFG.GAME.MAP_R - 180;
       var a = Math.random() * Math.PI * 2, d = 300 + Math.random() * 110;
-      run.exitGate = { x: E.clamp(p.x + Math.cos(a) * d, -R, R), y: E.clamp(p.y + Math.sin(a) * d, -R, R), open: false, used: false };
+      run.exitGate = { x: E.clamp(p.x + Math.cos(a) * d, -R, R), y: E.clamp(p.y + Math.sin(a) * d, -R, R), open: false, used: false, openedAt: 0 };
       if (run.cb && run.cb.onWarn) run.cb.onWarn('远处浮现一座封闭的巨门……');
     }
     AudioSys.play('boss_spawn');
@@ -1835,19 +1835,27 @@ window.Entities = (function () {
 
   function drawExitGate(ctx, gate, t) {
     var pulse = 0.5 + Math.sin(t * 2.4) * 0.5;
+    var openAmt = gate.open ? E.clamp((t - (gate.openedAt || t)) / 1.1, 0, 1) : 0;
+    var img = SpriteGen.get('exit_gate');
+    var gw = 166, gh = 248;
     ctx.save();
-    ctx.globalAlpha = gate.open ? 0.58 + pulse * 0.22 : 0.76;
-    ctx.fillStyle = gate.open ? '#270c24' : '#140f18';
-    ctx.fillRect(gate.x - 68, gate.y - 154, 136, 154);
-    ctx.strokeStyle = gate.open ? '#d09b5f' : '#604834'; ctx.lineWidth = 7;
-    ctx.strokeRect(gate.x - 68, gate.y - 154, 136, 154);
-    ctx.strokeStyle = '#1b1116'; ctx.lineWidth = 5;
-    ctx.beginPath(); ctx.arc(gate.x, gate.y - 76, 51, Math.PI, 0); ctx.stroke();
+    // First paint the dynamic portal light, then the authored stone/iron gate.
+    // It produces a real opening seam without moving the landmark itself.
     if (gate.open) {
-      ctx.globalAlpha = 0.18 + pulse * 0.18;
-      ctx.fillStyle = '#b7254d'; ctx.fillRect(gate.x - 53, gate.y - 140, 106, 132);
+      ctx.globalAlpha = 0.24 + pulse * 0.26;
+      ctx.drawImage(SpriteGen.glow('#cf244c'), gate.x - 132, gate.y - 222, 264, 264);
+    }
+    ctx.globalAlpha = gate.open ? 0.98 : 0.88;
+    ctx.drawImage(img, gate.x - gw / 2, gate.y - gh, gw, gh);
+    if (gate.open) {
+      var slit = 5 + openAmt * 28;
+      ctx.globalAlpha = 0.52 + pulse * 0.30;
+      ctx.fillStyle = '#b91e47'; ctx.fillRect(gate.x - slit / 2, gate.y - gh + 54, slit, gh - 74);
+      ctx.globalAlpha = 0.85;
+      ctx.strokeStyle = '#f1c16c'; ctx.lineWidth = 1;
+      ctx.strokeRect(gate.x - slit / 2 - 2, gate.y - gh + 54, slit + 4, gh - 74);
       ctx.globalAlpha = 1; ctx.fillStyle = '#f4d292'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center';
-      ctx.fillText('撤离之门  [E]', gate.x, gate.y - 170); ctx.textAlign = 'left';
+      ctx.fillText('撤离之门  [E]', gate.x, gate.y - gh - 12); ctx.textAlign = 'left';
     }
     ctx.restore();
   }

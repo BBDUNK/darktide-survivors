@@ -10915,6 +10915,32 @@
     {
       "preservePixels": true,
       "allowDuplicateFrames": true,
+      "minCoverage": 0.08,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 192,
+      "name": "exit_gate",
+      "source": "assets/art-v4/sprites/environment/darklord_exit_gate.png",
+      "frameSize": [
+        128,
+        192
+      ],
+      "frameRow": 0,
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        128,
+        192
+      ],
+      "anchor": [
+        64,
+        188
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
       "minCoverage": 0.006,
       "maxColors": 256,
       "maxCentroidDrift": 64,

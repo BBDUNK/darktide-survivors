@@ -310,7 +310,7 @@
       kl: run.kills, gd: run.gold, bk: run.bossesKilled,
       fz: +(run.freezeT || 0).toFixed(2), en: run.endless ? 1 : 0,
       // 大门属于共享战场状态：客户端要能绘制它并知道何时显示触屏撤离入口。
-      eg: run.exitGate ? { x: Math.round(run.exitGate.x), y: Math.round(run.exitGate.y), o: run.exitGate.open ? 1 : 0, u: run.exitGate.used ? 1 : 0 } : null
+      eg: run.exitGate ? { x: Math.round(run.exitGate.x), y: Math.round(run.exitGate.y), o: run.exitGate.open ? 1 : 0, u: run.exitGate.used ? 1 : 0, a: +(run.exitGate.openedAt || 0).toFixed(2) } : null
     };
   }
 
@@ -1724,7 +1724,7 @@
           run.bossesKilled = m.bk || 0;
           run.freezeT = m.fz || 0;
           run.endless = !!m.en;
-          run.exitGate = m.eg ? { x: m.eg.x, y: m.eg.y, open: !!m.eg.o, used: !!m.eg.u } : null;
+          run.exitGate = m.eg ? { x: m.eg.x, y: m.eg.y, open: !!m.eg.o, used: !!m.eg.u, openedAt: m.eg.a || 0 } : null;
           if (m.bi) {
             run.boss = run.boss || {};
             run.boss.alive = m.bh > 0;
