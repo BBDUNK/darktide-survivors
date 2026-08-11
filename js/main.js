@@ -308,7 +308,9 @@
       bi: run.boss && run.boss.alive ? run.boss.bossType : '',
       bn: run.bossBarName || '',
       kl: run.kills, gd: run.gold, bk: run.bossesKilled,
-      fz: +(run.freezeT || 0).toFixed(2), en: run.endless ? 1 : 0
+      fz: +(run.freezeT || 0).toFixed(2), en: run.endless ? 1 : 0,
+      // 大门属于共享战场状态：客户端要能绘制它并知道何时显示触屏撤离入口。
+      eg: run.exitGate ? { x: Math.round(run.exitGate.x), y: Math.round(run.exitGate.y), o: run.exitGate.open ? 1 : 0, u: run.exitGate.used ? 1 : 0 } : null
     };
   }
 
@@ -961,6 +963,15 @@
       UI.hidePause();
       if (coop.on && Net.isHost()) Net.broadcast({ t: 'pause', paused: false });
     }
+  }
+
+  function requestExitGate() {
+    if (state !== 'run' || !run) return false;
+    if (coop.on && Net.isClient()) {
+      Net.toHost({ t: 'exitGate' });
+      return true;
+    }
+    return Entities.tryExitGate(run, run.player);
   }
 
   // ================= 每帧更新 =================
@@ -1637,6 +1648,7 @@
       onStartRun: function (charId, mapId) { newRun(charId, mapId); },
       onArtTest: startArtTest,
       onTestAction: applyTestAction,
+      onExitGate: requestExitGate,
       onResume: function () {
         if (coop.on && Net.isClient()) {
           Net.toHost({ t: 'resumeReq' });
@@ -1712,6 +1724,7 @@
           run.bossesKilled = m.bk || 0;
           run.freezeT = m.fz || 0;
           run.endless = !!m.en;
+          run.exitGate = m.eg ? { x: m.eg.x, y: m.eg.y, open: !!m.eg.o, used: !!m.eg.u } : null;
           if (m.bi) {
             run.boss = run.boss || {};
             run.boss.alive = m.bh > 0;
@@ -1823,6 +1836,11 @@
       onHostCommand: function (peerId, m) {
         if (m.t === 'pauseReq' && state === 'run') togglePause();
         else if (m.t === 'resumeReq' && state === 'pause') togglePause();
+        else if (m.t === 'exitGate' && state === 'run') {
+          for (var gi = 0; gi < coop.mates.length; gi++) {
+            if (coop.mates[gi].peerId === peerId) { Entities.tryExitGate(run, coop.mates[gi].player); break; }
+          }
+        }
         else if (m.t === 'giveup' && (state === 'run' || state === 'pause')) {
           UI.hidePause();
           run.over = true; run.victory = false;

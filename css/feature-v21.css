@@ -91,6 +91,8 @@
 .test-picker-actions { grid-column:2; display:flex; gap:4px; }
 .test-panel .btn { min-width:0; flex:1; padding:5px 4px; font-size:10px; white-space:nowrap; }
 .test-batch-actions { display:grid; grid-template-columns:1fr 1fr; gap:4px; padding-top:3px; border-top:1px solid rgba(198,151,74,.45); }
+.hud-exitgate { position:absolute; left:50%; bottom:96px; transform:translateX(-50%); z-index:13; min-width:154px; min-height:38px; padding:7px 18px; color:#ffe1a0; font-size:13px; letter-spacing:1px; background:linear-gradient(180deg,#6a1c34,#260b1c 62%,#12060d); border:3px solid transparent; border-image:url('../assets/art-v4/sprites/ui/baroque_menu_frame.png') 116 104 fill / 8px / 0 stretch; box-shadow:0 0 18px rgba(194,47,86,.6), 0 4px 0 rgba(0,0,0,.6); touch-action:manipulation; }
+.hud-exitgate:active { filter:brightness(1.22); transform:translateX(-50%) translateY(1px); }
 .enc-section-title { margin:16px 0 8px; color:#f0d899; font-weight:900; letter-spacing:1px; }
 
 /* 全部次级界面统一为深色金纹巴洛克框；不改变各页面原有布局。 */
@@ -118,4 +120,5 @@
   .test-panel { right:6px; bottom:52px; width:min(232px, calc(100vw - 12px)); max-height:calc(100% - 62px); padding:8px; gap:4px; }
   .test-picker { grid-template-columns:36px 1fr; gap:3px 4px; }
   .test-panel .btn { padding:4px 2px; font-size:9px; }
+  .hud-exitgate { bottom:82px; min-width:136px; min-height:34px; padding:5px 12px; font-size:11px; }
 }

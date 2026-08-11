@@ -155,11 +155,7 @@ window.Entities = (function () {
         });
       }
     }
-    if (run.exitGate && run.exitGate.open && !run.exitGate.used && E.keys().KeyE &&
-        E.dist2(p.x, p.y, run.exitGate.x, run.exitGate.y) < 92 * 92) {
-      run.exitGate.used = true;
-      run.over = true; run.victory = true;
-    }
+    if (E.keys().KeyE) tryExitGate(run, p);
     p.moving = (iv.x !== 0 || iv.y !== 0);
     // 蛛网减速 / 硬控:二层叠加后被包裹,原地无法移动
     if (p.slowT > 0) { p.slowT -= dt; if (p.slowT <= 0) { p.slow = 0; p.webStacks = 0; } }
@@ -518,6 +514,17 @@ window.Entities = (function () {
     FX.flash('#7d1530', 0.70, 0.75); FX.shake(16, 1.0); FX.explosion(e.x, e.y, 150);
     AudioSys.play('boss_spawn');
     if (run.cb && run.cb.onWarn) run.cb.onWarn('暗潮魔王显露真身！大门已开启：靠近后按 E 可撤离。');
+  }
+
+  // 同一条撤离判定同时给键盘、触屏 HUD 和联机房主使用。客户端只能发起
+  // 请求，房主仍以此处的真实世界坐标核验，不能伪造远距离的胜利结算。
+  function tryExitGate(run, player) {
+    var gate = run && run.exitGate, p = player || (run && run.player);
+    if (!gate || !gate.open || gate.used || !p) return false;
+    if (E.dist2(p.x, p.y, gate.x, gate.y) >= 92 * 92) return false;
+    gate.used = true;
+    run.over = true; run.victory = true;
+    return true;
   }
 
   function eyeTwin(run, group, except) {
@@ -2239,7 +2246,7 @@ window.Entities = (function () {
     updateEnemies: updateEnemies, updateGems: updateGems, updateItems: updateItems,
     spawnGem: spawnGem, spawnItem: spawnItem, addXp: addXp, bombBlast: bombBlast,
     director: director, draw: draw, drawLobMarkers: drawLobMarkers, reset: reset,
-    clearEnemies: clearEnemies, cleanseWebs: cleanseWebs, clearSlow: clearSlow,
+    clearEnemies: clearEnemies, cleanseWebs: cleanseWebs, clearSlow: clearSlow, tryExitGate: tryExitGate,
     pool: enemies, countAlive: countAlive, drawSprite: drawSprite,
     getGems: function () { return gems; },
     getItems: function () { return items; },

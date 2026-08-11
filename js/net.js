@@ -267,7 +267,7 @@ window.Net = (function () {
       if (cb.onClientInput) cb.onClientInput(c.peer, m);
     } else if (m.t === 'pickup') {
       if (cb.onClientPick) cb.onClientPick(c.peer, m.optIdx, m.seq);
-    } else if (m.t === 'pauseReq' || m.t === 'resumeReq' || m.t === 'giveup') {
+    } else if (m.t === 'pauseReq' || m.t === 'resumeReq' || m.t === 'giveup' || m.t === 'exitGate') {
       if (cb.onHostCommand) cb.onHostCommand(c.peer, m);
     }
   }

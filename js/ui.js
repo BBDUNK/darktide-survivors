@@ -871,6 +871,11 @@ window.UI = (function () {
       cb.onTargetChanged && cb.onTargetChanged(m.name);
     });
     s.appendChild(hudRefs.targetBtn);
+    // 大门在终局二阶段开启后才显示：触屏可点，键鼠也能看到 E 的明确提示。
+    hudRefs.exitGateBtn = btn('↪ 撤离 [E]', 'hud-exitgate hidden', function () {
+      if (cb.onExitGate) cb.onExitGate();
+    });
+    s.appendChild(hudRefs.exitGateBtn);
     // 右上
     var tr = h('div', 'hud-tr');
     var goldRow = h('div', 'hud-stat');
@@ -946,6 +951,12 @@ window.UI = (function () {
   var slotSig = '';
   function updateHUD(run) {
     var p = run.player;
+    var gate = run.exitGate;
+    var gateNear = !!(gate && gate.open && !gate.used && Engine.dist2(p.x, p.y, gate.x, gate.y) < 92 * 92);
+    if (hudCache.gateNear !== gateNear) {
+      hudCache.gateNear = gateNear;
+      hudRefs.exitGateBtn.classList.toggle('hidden', !gateNear);
+    }
     var xpPct = Math.min(100, run.xp / run.xpNeed * 100);
     var xpW = Math.round(xpPct);
     if (hudCache.xpW !== xpW) { hudCache.xpW = xpW; hudRefs.xpFill.style.width = xpW + '%'; }

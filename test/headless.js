@@ -880,6 +880,26 @@ try {
   }
   console.log('R5 OK 素材测试场可逐项生成、满级进化并在真实对局中验收');
 
+  // R6 终局撤离门：仅在门开启且玩家真的靠近时才可结束对局。
+  // 触屏 HUD 和联机客户端请求最终也复用同一条房主权威判定。
+  const r6 = fx(`
+    (() => {
+      Debug.startArtTest();
+      const r = Debug.run(), p = r.player;
+      r.exitGate = { x: p.x + 160, y: p.y, open: false, used: false };
+      const closedBlocked = !Entities.tryExitGate(r, p) && !r.over;
+      r.exitGate.open = true;
+      const distantBlocked = !Entities.tryExitGate(r, p) && !r.over;
+      r.exitGate.x = p.x + 20; r.exitGate.y = p.y;
+      const exited = Entities.tryExitGate(r, p);
+      return { closedBlocked, distantBlocked, exited, used: r.exitGate.used, victory: r.victory };
+    })()
+  `);
+  if (!Object.values(r6).every(Boolean)) {
+    throw new Error('终局撤离门回归失败: ' + JSON.stringify(r6));
+  }
+  console.log('R6 OK 终局大门距离校验、撤离结算与触屏共用入口正常');
+
   console.log('\n=== 无头冒烟测试全部通过 ===');
 } catch (e) {
   console.error('\n!!! 冒烟测试失败: ' + e.stack);

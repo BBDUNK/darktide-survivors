@@ -1842,6 +1842,9 @@
     if (base === 'vfx_frost_radial') return 'vfx_ice';
     if (base === 'vfx_archangel') return 'vfx_spirit';
     if (base === 'p_orbitblade_fly') return 'p_orbitblade';
+    // 高质量图集未加载时，首领的专属弹幕仍需降级为可见的敌方弹体，
+    // 不能走到洋红占位块。正常图集会优先使用 toxic/bone/hellfire 等独立素材。
+    if (base.indexOf('p_enemy_') === 0) return 'p_enemy_bolt';
     if (base === 'icon_gold') return 'coin';
     if (base === 'icon_kill') return 'p_slash';
     if (base === 'ps_barrier') return 'ps_core';
