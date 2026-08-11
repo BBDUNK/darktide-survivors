@@ -1063,16 +1063,17 @@ window.Weapons = (function () {
   // 地面火焰池/圣光环:画在地面层之上,角色与装饰物之下,避免遮挡
   function drawGround(ctx, run) {
     var p = run.player;
-    // 圣女光环：使用清理后的八帧像素素材。只保留很淡的底光，避免程序线条
-    // 与贴图叠在一起变成一团发脏的亮色。
+    // 圣女光环是固定贴地的领域，不做逐帧旋转。过去在八帧之间切换会让
+    // 纹样像弹跳、边缘像被截断；现在只让透明度轻微呼吸。
     var wAura = findWeapon(run, 'holyaura');
     if (wAura) {
       var r = wAura.curR || wStats(run, wAura).size;
       var auraT = run.t;
       var auraFrames = cachedFrames('vfx_holy_aura');
-      // 八帧只有纹样旋转、外径完全相同；压成贴地椭圆，不再爬到人物高度。
-      var auraImg = auraFrames[Math.floor(auraT * cachedFps('vfx_holy_aura', 5)) % auraFrames.length];
-      var auraW = r * (wAura.evolved ? 2.42 : 2.26), auraH = auraW * 0.92;
+      var auraImg = auraFrames[0];
+      // Keep the authored round seal round: it lives on the floor, not as a
+      // flattened halo at the character's chest height.
+      var auraW = r * (wAura.evolved ? 2.42 : 2.26), auraH = auraW;
       ctx.globalAlpha = (wAura.evolved ? 0.72 : 0.60) + Math.sin(auraT * 1.2) * 0.035;
       ctx.drawImage(auraImg, p.x - auraW / 2, p.y - auraH / 2, auraW, auraH);
       ctx.globalAlpha = 1;

@@ -991,6 +991,27 @@ try {
   }
   console.log('R9 OK 蜘蛛大型远程蛛网无减速/定身且飞行速度稳定');
 
+  // R10 圣女光环保留为贴地领域：初始半径已放大，并且天降圣光与满级
+  // 七位大天使都是实际子弹/伤害实体，而不是仅文案。
+  const r10 = fx(`
+    (() => {
+      Debug.startArtTest();
+      const r = Debug.run();
+      const w = { id: 'holyaura', lv: 8, cdT: 0, evolved: true, evoId: 'sanctuary', curR: 0, angelCd: 0 };
+      r.weapons = [w]; r.passives = { ps_pendant: CFG.PASSIVES.ps_pendant.maxLv };
+      Entities.recomputeStats(r);
+      r.t += 0.5; r.frame++;
+      Weapons.update(r, 0.5);
+      const st = Weapons.wStats(r, w);
+      const angels = Weapons.getBullets().filter(b => b.alive && b.kind === 'angel').length;
+      return { enlargedGroundRadius: w.curR >= 117, holyStrike: st.holyStrike >= 1, sevenArchangels: angels === 7 };
+    })()
+  `);
+  if (!Object.values(r10).every(Boolean)) {
+    throw new Error('圣女光环/大天使回归失败: ' + JSON.stringify(r10));
+  }
+  console.log('R10 OK 圣女光环贴地范围、天降圣光与七位大天使实体正常');
+
   console.log('\n=== 无头冒烟测试全部通过 ===');
 } catch (e) {
   console.error('\n!!! 冒烟测试失败: ' + e.stack);
