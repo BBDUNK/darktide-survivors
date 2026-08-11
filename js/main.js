@@ -1093,6 +1093,7 @@
       achvTimer = 0;
       Meta.trackBest('survive', Math.floor(run.t), run.map.id);
       Meta.track('playTime', 5);
+      if (run.endless) Meta.track('endlessTime', 5);
       var fresh = Meta.checkAchv();
       fresh.forEach(UI.toastAchv);
     }

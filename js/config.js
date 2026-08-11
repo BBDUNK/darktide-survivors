@@ -434,6 +434,15 @@ window.CFG = {
     { id: 'a_weapons_6',  name: '武库全开', desc: '单局同时持有 6 件武器',  cond: { type: 'bestWeapons', n: 6 }, reward: 300 },
     { id: 'a_shop_10',    name: '常客',     desc: '在商店购买 10 次强化',   cond: { type: 'shopBuys', n: 10 },  reward: 200 },
     { id: 'a_die_1',      name: '英勇牺牲', desc: '第一次倒下(每个传说都有开端)', cond: { type: 'deaths', n: 1 }, reward: 30 },
-    { id: 'a_bomb_5',     name: '爆破专家', desc: '累计使用 5 个炸弹',      cond: { type: 'bombs', n: 5 },      reward: 100 }
+    { id: 'a_bomb_5',     name: '爆破专家', desc: '累计使用 5 个炸弹',      cond: { type: 'bombs', n: 5 },      reward: 100 },
+    { id: 'a_kill_50000', name: '尸潮收割者', desc: '累计击杀 50,000 名敌人', cond: { type: 'kills', n: 50000 }, reward: 2500 },
+    { id: 'a_survive_20', name: '长夜守望', desc: '单局存活 20 分钟',       cond: { type: 'survive', n: 1200 }, reward: 800 },
+    { id: 'a_win_10',     name: '破晓十次', desc: '累计赢得 10 局胜利',       cond: { type: 'wins', n: 10 }, reward: 3000 },
+    { id: 'a_boss_50',    name: '王冠粉碎者', desc: '累计击败 50 个 Boss',    cond: { type: 'bossKills', n: 50 }, reward: 2200 },
+    { id: 'a_evolve_20',  name: '万象军火库', desc: '累计完成 20 次武器进化',  cond: { type: 'evolves', n: 20 }, reward: 1800 },
+    { id: 'a_level_80',   name: '超越极限', desc: '单局等级达到 80',         cond: { type: 'bestLevel', n: 80 }, reward: 1200 },
+    { id: 'a_endless_10', name: '无尽初见', desc: '在无尽模式累计存活 10 分钟', cond: { type: 'endlessTime', n: 600 }, reward: 1000 },
+    { id: 'a_endless_30', name: '永夜不灭', desc: '在无尽模式累计存活 30 分钟', cond: { type: 'endlessTime', n: 1800 }, reward: 3500 },
+    { id: 'a_abyss_20',   name: '深渊常客', desc: '在深渊回廊单局存活 20 分钟', cond: { type: 'survive_map', n: 1200, map: 'abyss' }, reward: 1800 }
   ]
 };

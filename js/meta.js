@@ -39,7 +39,7 @@ window.Meta = (function () {
           kills: 25000, goldEarned: 60000, deaths: 5, wins: 5, bossKills: 20,
           evolves: 10, chests: 50, shopBuys: 50, bombs: 20,
           bestSurvive: 1200, bestLevel: 80, bestWeapons: 6, bestKillsRun: 5000,
-          runs: 10, playTime: 7200,
+          runs: 10, playTime: 7200, endlessTime: 2400,
           surviveByMap: { graveyard: 1200, wilds: 900, abyss: 600 }
         }
       };
@@ -54,7 +54,7 @@ window.Meta = (function () {
         kills: 0, goldEarned: 0, deaths: 0, wins: 0, bossKills: 0,
         evolves: 0, chests: 0, shopBuys: 0, bombs: 0,
         bestSurvive: 0, bestLevel: 0, bestWeapons: 0, bestKillsRun: 0,
-        runs: 0, playTime: 0,
+        runs: 0, playTime: 0, endlessTime: 0,
         surviveByMap: {}   // {graveyard: 620, ...}
       }
     };
@@ -102,6 +102,7 @@ window.Meta = (function () {
       case 'shopBuys': return st.shopBuys;
       case 'deaths': return st.deaths;
       case 'bombs': return st.bombs;
+      case 'endlessTime': return st.endlessTime;
       default: return 0;
     }
   }
@@ -182,6 +183,7 @@ window.Meta = (function () {
       case 'bomb': st.bombs += n; break;
       case 'run': st.runs += n; break;
       case 'playTime': st.playTime += n; break;
+      case 'endlessTime': st.endlessTime += n; break;
     }
     // 高频事件节流持久化(由 endRun/checkAchv 落盘兜底)
     persistT++;

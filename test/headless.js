@@ -1041,6 +1041,26 @@ try {
   }
   console.log('R11 OK 寒霜冲击以连续半径向外扩散，使用固定圆形素材足迹');
 
+  // R12 成就必须覆盖长期挑战，而无尽时间要由真实的独立统计字段驱动。
+  const r12 = fx(`
+    (() => {
+      Meta.wipe();
+      const st = Meta.data().stats;
+      Object.assign(st, { kills: 50000, bestSurvive: 1200, wins: 10, bossKills: 50,
+        evolves: 20, bestLevel: 80, endlessTime: 1800 });
+      st.surviveByMap.abyss = 1200;
+      const ids = Meta.checkAchv().map(a => a.id);
+      const need = ['a_kill_50000', 'a_survive_20', 'a_win_10', 'a_boss_50', 'a_evolve_20',
+        'a_level_80', 'a_endless_10', 'a_endless_30', 'a_abyss_20'];
+      return { allChallengeAchievements: need.every(id => ids.includes(id)),
+        endlessStatTracked: Meta.data().stats.endlessTime === 1800 };
+    })()
+  `);
+  if (!Object.values(r12).every(Boolean)) {
+    throw new Error('高挑战成就回归失败: ' + JSON.stringify(r12));
+  }
+  console.log('R12 OK 无尽、终局、等级与长期击杀成就均可解锁');
+
   console.log('\n=== 无头冒烟测试全部通过 ===');
 } catch (e) {
   console.error('\n!!! 冒烟测试失败: ' + e.stack);
