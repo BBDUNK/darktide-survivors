@@ -8247,24 +8247,24 @@
       "allowDuplicateFrames": true,
       "minCoverage": 0.006,
       "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
+      "maxCentroidDrift": 20,
+      "maxBaselineDrift": 24,
       "name": "p_dragon",
-      "source": "assets/art-v2/sprites/vfx/attack_effects.png",
+      "source": "assets/art-v4/sprites/vfx/dragon_ultimate_actions.png",
       "frameSize": [
-        64,
-        64
+        96,
+        96
       ],
-      "frameRow": 7,
+      "frameRow": 0,
       "frames": 8,
       "fps": 12,
       "size": [
-        48,
-        32
+        96,
+        96
       ],
       "anchor": [
-        24,
-        30
+        48,
+        48
       ],
       "renderScale": 1
     },

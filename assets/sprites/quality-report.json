@@ -37662,131 +37662,131 @@
     "p_dragon": [
       {
         "index": 0,
-        "coverage": 0.1699,
-        "colors": 16,
+        "coverage": 0.1133,
+        "colors": 48,
         "bbox": [
-          6,
-          10,
-          41,
-          31
+          3,
+          8,
+          93,
+          49
         ],
         "centroid": [
-          19.395,
-          19.521
+          58.141,
+          32.706
         ],
-        "signature": "b03277d26c1c"
+        "signature": "7c995e1104bc"
       },
       {
         "index": 1,
-        "coverage": 0.2949,
-        "colors": 22,
+        "coverage": 0.1223,
+        "colors": 48,
         "bbox": [
-          1,
-          8,
-          47,
-          30
+          3,
+          0,
+          93,
+          50
         ],
         "centroid": [
-          20.415,
-          20.086
+          53.814,
+          26.665
         ],
-        "signature": "cb3fffdafed6"
+        "signature": "0ac4662cddf9"
       },
       {
         "index": 2,
-        "coverage": 0.418,
-        "colors": 23,
+        "coverage": 0.1235,
+        "colors": 48,
         "bbox": [
-          1,
           3,
-          47,
-          31
+          0,
+          93,
+          53
         ],
         "centroid": [
-          24.523,
-          17.961
+          52.239,
+          27.808
         ],
-        "signature": "57c8f116225d"
+        "signature": "d384b664c57b"
       },
       {
         "index": 3,
-        "coverage": 0.3809,
-        "colors": 25,
+        "coverage": 0.1206,
+        "colors": 48,
         "bbox": [
-          5,
-          1,
-          43,
-          31
+          3,
+          0,
+          93,
+          51
         ],
         "centroid": [
-          24.978,
-          16.821
+          54.401,
+          26.032
         ],
-        "signature": "f274b54aa8bc"
+        "signature": "c91f0c00332a"
       },
       {
         "index": 4,
-        "coverage": 0.3574,
-        "colors": 20,
+        "coverage": 0.1253,
+        "colors": 48,
         "bbox": [
-          2,
-          1,
-          46,
-          31
+          3,
+          0,
+          93,
+          55
         ],
         "centroid": [
-          21.115,
-          17.106
+          53.201,
+          28.127
         ],
-        "signature": "80450f5c49c4"
+        "signature": "54a7321d1fdd"
       },
       {
         "index": 5,
-        "coverage": 0.3841,
-        "colors": 15,
+        "coverage": 0.1286,
+        "colors": 48,
         "bbox": [
-          4,
-          1,
-          44,
-          31
+          3,
+          0,
+          93,
+          55
         ],
         "centroid": [
-          21.825,
-          15.668
+          52.484,
+          28.219
         ],
-        "signature": "e5ea1898b84a"
+        "signature": "49c4231518f9"
       },
       {
         "index": 6,
-        "coverage": 0.278,
-        "colors": 15,
+        "coverage": 0.1265,
+        "colors": 48,
         "bbox": [
-          2,
-          1,
-          44,
-          31
+          3,
+          0,
+          93,
+          54
         ],
         "centroid": [
-          15.888,
-          16.396
+          53.473,
+          27.518
         ],
-        "signature": "9ff52292ac61"
+        "signature": "43c93921dd4f"
       },
       {
         "index": 7,
-        "coverage": 0.0801,
-        "colors": 11,
+        "coverage": 0.1266,
+        "colors": 48,
         "bbox": [
-          1,
-          7,
-          47,
-          31
+          3,
+          0,
+          93,
+          59
         ],
         "centroid": [
-          14.154,
-          17.52
+          51.812,
+          31.171
         ],
-        "signature": "a1eae5c247f2"
+        "signature": "6e5b76b9f4d2"
       }
     ],
     "vfx_holy_aura": [
@@ -41468,6 +41468,13 @@
     "vfx_frost_impact[6]: silhouette touches logical frame edge",
     "vfx_frost_impact[7]: silhouette touches logical frame edge",
     "boss_darklord_attack[4]: silhouette touches logical frame edge",
+    "p_dragon[1]: silhouette touches logical frame edge",
+    "p_dragon[2]: silhouette touches logical frame edge",
+    "p_dragon[3]: silhouette touches logical frame edge",
+    "p_dragon[4]: silhouette touches logical frame edge",
+    "p_dragon[5]: silhouette touches logical frame edge",
+    "p_dragon[6]: silhouette touches logical frame edge",
+    "p_dragon[7]: silhouette touches logical frame edge",
     "vfx_holy_aura[0]: silhouette touches logical frame edge",
     "vfx_holy_aura[1]: silhouette touches logical frame edge",
     "vfx_holy_aura[2]: silhouette touches logical frame edge",

@@ -1188,7 +1188,10 @@ window.Weapons = (function () {
       ctx.rotate(b.angle);
       var dw = img.width * 2 * (b.size / 16);
       if (b.kind === 'demon') dw = img.width * 1.7 * (b.size / 16);
-      if (b.kind === 'guideDragon') dw = img.width * 4.7;
+      // The dedicated dragon sheet has a larger logical cell for crisp detail.
+      // Keep its on-screen silhouette long and lean instead of inflating it
+      // into an opaque screen-filling block.
+      if (b.kind === 'guideDragon') dw = img.width * 2.9;
       if (b.kind === 'divineSword') dw = img.width * 3.35;
       if (b.kind === 'angel') dw = img.width * 1.65;
       if (b.spr === 'p_slash' || b.spr === 'p_slash_big') {

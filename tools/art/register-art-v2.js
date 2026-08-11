@@ -143,9 +143,17 @@ rowAnimations('assets/art-v2/sprites/vfx/attack_effects.png', [
   ['vfx_lightning', 0, 15, [48, 48]], ['p_spark', 0, 15], ['p_firepool', 1, 10, [48, 32]],
   ['vfx_explosion', 2, 14, [48, 48]], ['vfx_ice', 3, 14], ['vfx_slash', 4, 15],
   ['vfx_heal', 5, 12, [48, 48]], ['vfx_shield', 5, 10, [48, 48]],
-  ['vfx_shadow', 6, 11, [48, 48]], ['vfx_spirit', 6, 11], ['vfx_smoke', 6, 10],
-  ['p_dragon', 7, 12, [48, 32]]
+  ['vfx_shadow', 6, 11, [48, 48]], ['vfx_spirit', 6, 11], ['vfx_smoke', 6, 10]
 ]);
+
+// Ultimate wind bow: keep the long Chinese-dragon silhouette in a dedicated
+// 8-frame sheet instead of squeezing it into the generic square VFX row.
+// The large logical frame preserves the fine pixels while weapons.js renders
+// a deliberately lean body, so it reads as a dragon rather than a green blur.
+add({ name: 'p_dragon', source: 'assets/art-v4/sprites/vfx/dragon_ultimate_actions.png',
+  frameSize: [96, 96], frameRow: 0, frames: 8, fps: 12,
+  size: [96, 96], anchor: [48, 48], renderScale: 1,
+  maxCentroidDrift: 20, maxBaselineDrift: 24 });
 
 add({ name: 'vfx_holy_aura', source: 'assets/art-v4/sprites/vfx/holy_aura_ground.png',
   frameSize: [96, 96], frameRow: 0, frames: 8, fps: 3,
