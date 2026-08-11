@@ -112,10 +112,39 @@
   text-shadow: 2px 2px #140907;
 }
 
+/* 选人、地图、圣坛、设置、成就等页面原先各自保留了紫色标题条。
+   使用与主菜单相同的可伸缩金纹边框，令所有主流程共享一套视觉语言。 */
+.page-title {
+  min-width: min(420px, calc(100vw - 38px)) !important;
+  min-height: 54px !important;
+  padding: 10px 42px 8px !important;
+  color: #f1d28a !important;
+  border: 14px solid transparent !important;
+  border-image: url('../assets/art-v4/sprites/ui/baroque_menu_frame.png') 116 104 fill / 14px / 0 stretch !important;
+  box-sizing: border-box;
+  background-color: rgba(20, 11, 14, .92) !important;
+  box-shadow: 0 5px 13px rgba(0,0,0,.55), inset 0 0 18px rgba(139,82,27,.22) !important;
+  text-align: center;
+  letter-spacing: 5px !important;
+}
+
+/* 结算是一次完整对局的收束，不再使用普通黑框；它和暂停、Boss 提示
+   共享同一张九宫格边框，在长成就列表下仍可无损拉伸。 */
+.result-box {
+  min-width: min(620px, calc(100vw - 30px));
+  padding: 38px 44px !important;
+  border: 18px solid transparent !important;
+  border-image: url('../assets/art-v4/sprites/ui/baroque_menu_frame.png') 116 104 fill / 18px / 0 stretch !important;
+  background-color: rgba(13,8,11,.95) !important;
+  box-sizing: border-box;
+}
+
 @media (max-width: 760px), (max-height: 520px) {
   .menu-altar, .menu-board { width: 190px !important; height: 244px !important; }
   .menu-altar { padding: 30px 22px 26px !important; }
   .menu-altar-icon.menu-altar-flame { width: 142px !important; height: 132px !important; margin-top: -5px; }
+  .page-title { min-width: min(320px, calc(100vw - 26px)) !important; min-height: 46px !important; padding: 7px 26px 6px !important; border-width: 10px !important; border-image-width: 10px !important; letter-spacing: 3px !important; }
+  .result-box { min-width: min(390px, calc(100vw - 18px)); padding: 26px 22px !important; border-width: 12px !important; border-image-width: 12px !important; }
   .menu-board { padding: 48px 34px 42px !important; }
   .menu-col .btn { width: 270px !important; }
   .board-row { font-size: 10px !important; }
