@@ -375,6 +375,9 @@ window.Entities = (function () {
     e.kx = 0; e.ky = 0; e.flash = 0; e.frozen = 0; e.slow = 0; e.slowT = 0; e.stun = 0;
     e.face = 1; e.animo = Math.random() * 10; e.alpha = 1; e.attackAnimT = 0;
     e.elite = false; e.boss = isBoss; e.bossType = isBoss ? id : '';
+    // Pool entries are reused.  Phase/role state must be cleared explicitly
+    // or a freshly spawned monster can inherit a previous boss's second phase.
+    e.phase2 = false; e.eyeRole = ''; e.eyeGroup = 0;
     e.ai = isBoss ? 'boss' : (def.ai || 'chase');
     e.aiT = def.lobCd ? Math.random() * def.lobCd : 0; // 错开抛击节奏,避免齐射
     e.aiPhase = 0;
@@ -500,7 +503,9 @@ window.Entities = (function () {
     FX.dmgText(e.x + (Math.random() * 12 - 6), e.y - e.r - 6, Math.round(final), { crit: crit });
     if (crit) AudioSys.play('crit');
     if (e.hp <= 0 && e.bossType === 'boss_darklord' && !e.phase2) enterDarklordPhase2(run, e);
+    else if (e.hp <= 0 && e.bossType === 'boss_abysseye' && !e.phase2) enterAbyssEyePhase2(run, e);
     else if (e.hp <= 0) killEnemy(run, e, opts);
+    if (e.phase2 && e.bossType === 'boss_abysseye') syncAbyssEyeBossBar(run, e.eyeGroup);
     return final;
   }
 
@@ -513,6 +518,53 @@ window.Entities = (function () {
     FX.flash('#7d1530', 0.70, 0.75); FX.shake(16, 1.0); FX.explosion(e.x, e.y, 150);
     AudioSys.play('boss_spawn');
     if (run.cb && run.cb.onWarn) run.cb.onWarn('暗潮魔王显露真身！大门已开启：靠近后按 E 可撤离。');
+  }
+
+  function eyeTwin(run, group, except) {
+    for (var i = 0; i < POOL; i++) {
+      var candidate = enemies[i];
+      if (candidate !== except && candidate.alive && candidate.bossType === 'boss_abysseye' &&
+          candidate.phase2 && candidate.eyeGroup === group) return candidate;
+    }
+    return null;
+  }
+
+  function syncAbyssEyeBossBar(run, group) {
+    var hp = 0, max = 0;
+    for (var i = 0; i < POOL; i++) {
+      var eye = enemies[i];
+      if (!eye.alive || eye.bossType !== 'boss_abysseye' || !eye.phase2 || eye.eyeGroup !== group) continue;
+      hp += Math.max(0, eye.hp); max += eye.maxHp;
+    }
+    if (max > 0) {
+      run.bossBarHp = hp; run.bossBarMax = max; run.bossBarName = '深渊双瞳 · 分裂体';
+    } else {
+      run.bossBarHp = null; run.bossBarMax = null; run.bossBarName = '';
+    }
+  }
+
+  // The Eye's apparent death is its split: phase two has exactly two separate
+  // bodies and exactly double phase-one effective health.  The caster remains
+  // at range while the charge eye commits to telegraphed rushes.
+  function enterAbyssEyePhase2(run, e) {
+    var originalMax = e.maxHp;
+    var group = E.nextUid();
+    e.phase2 = true; e.eyeGroup = group; e.eyeRole = 'caster';
+    e.maxHp = originalMax; e.hp = originalMax; e.r = Math.max(40, e.r * 0.84);
+    e.dmg *= 0.92; e.aiT = 0.45; e.blinkT = 99; e.chargeSeq = 0; e.stiffT = 0;
+    var a = Math.atan2(e.y - run.player.y, e.x - run.player.x) + Math.PI * 0.5;
+    var twin = spawnEnemy(run, 'boss_abysseye',
+      E.clamp(e.x + Math.cos(a) * 118, -CFG.GAME.MAP_R, CFG.GAME.MAP_R),
+      E.clamp(e.y + Math.sin(a) * 118, -CFG.GAME.MAP_R, CFG.GAME.MAP_R), { allowNear: true });
+    if (twin) {
+      twin.phase2 = true; twin.eyeGroup = group; twin.eyeRole = 'charger';
+      twin.maxHp = originalMax; twin.hp = originalMax; twin.r = e.r;
+      twin.dmg *= 1.18; twin.aiT = 0.8; twin.blinkT = 99; twin.chargeSeq = 0; twin.stiffT = 0;
+    }
+    syncAbyssEyeBossBar(run, group);
+    FX.flash('#663399', 0.5, 0.62); FX.shake(12, 0.65); FX.explosion(e.x, e.y, 105);
+    AudioSys.play('boss_spawn');
+    if (run.cb && run.cb.onWarn) run.cb.onWarn('深渊之眼一分为二：远程瞳与冲撞瞳！');
   }
 
   // 火焰解除冰霜减速:清掉目标的减速状态
@@ -542,11 +594,23 @@ window.Entities = (function () {
         if (c) c.hp = c.maxHp *= 0.8;
       }
     }
-    dropLoot(run, e);
+    var survivingEye = e.bossType === 'boss_abysseye' && e.phase2 ? eyeTwin(run, e.eyeGroup, e) : null;
+    // The first half of the split Eye is not a completed boss kill.  It gives
+    // no duplicate chest/XP or achievement progress; only the second kill
+    // resolves the encounter.
+    if (!survivingEye) dropLoot(run, e);
     if (e.boss) {
+      if (survivingEye) {
+        run.boss = survivingEye;
+        syncAbyssEyeBossBar(run, e.eyeGroup);
+        FX.explosion(e.x, e.y, 52);
+        AudioSys.play('enemy_die');
+        return;
+      }
       Meta.track('bossKill');
       run.bossesKilled++;
       if (run.boss === e) run.boss = null;
+      if (e.bossType === 'boss_abysseye' && e.phase2) syncAbyssEyeBossBar(run, e.eyeGroup);
       // Boss 死亡:淡出战斗曲,恢复地图背景曲
       AudioSys.playMusic(run.map.music);
       FX.shake(14, 0.8);
@@ -1169,6 +1233,46 @@ window.Entities = (function () {
       }
       case 'boss_abysseye': { // 螺旋弹幕 + 瞬移到背后 + 召唤
         var acol = bdef.shotCol;
+        if (e.phase2) {
+          if (e.eyeRole === 'charger') {
+            if (e.chargeSeq > 0) {
+              e.skT -= dt;
+              if (e.chargePhase === 0) {
+                e.vx = 0; e.vy = 0; e.flash = 0.05;
+                if (e.skT <= 0) {
+                  e.chargePhase = 1; e.skT = 0.52; e.tgtX = nx; e.tgtY = ny;
+                  FX.ring(e.x, e.y, { r: 74, color: '#d897ff', life: 0.32, width: 3 });
+                }
+              } else {
+                e.vx = e.tgtX * 470; e.vy = e.tgtY * 470;
+                if ((run.frame & 1) === 0) FX.trail(e.x, e.y, '#a64dff', 4);
+                if (e.skT <= 0) { e.chargeSeq--; e.chargePhase = 0; e.skT = 0.42; e.aiT = 1.7; FX.shake(5, 0.24); }
+              }
+              break;
+            }
+            e.vx = nx * spd * 0.82; e.vy = ny * spd * 0.82;
+            if (e.aiT <= 0) {
+              e.aiT = 3.4; e.chargeSeq = 2; e.chargePhase = 0; e.skT = 0.62;
+              if (run.cb && run.cb.onWarn) run.cb.onWarn('冲撞瞳正在蓄力！');
+            }
+            break;
+          }
+          // Caster eye maintains a clear firing lane and periodically emits a
+          // patterned burst; it never uses the old blink mechanic in phase two.
+          if (dist < 310) { e.vx = -nx * spd * 0.95; e.vy = -ny * spd * 0.95; }
+          else if (dist > 420) { e.vx = nx * spd * 0.75; e.vy = ny * spd * 0.75; }
+          else { e.vx = -ny * spd * 0.55; e.vy = nx * spd * 0.55; }
+          e.aiPhase += dt * 2.5;
+          if (e.aiT <= 0) {
+            e.aiT = 0.85;
+            for (var pi = 0; pi < 6; pi++) {
+              var pAngle = e.aiPhase + Math.PI * 2 * pi / 6;
+              fireShot(e.x, e.y, Math.cos(pAngle), Math.sin(pAngle), 178, e.dmg * 0.46, 0, 0, false, acol, 20, 560);
+            }
+            AudioSys.play('shoot_bolt');
+          }
+          break;
+        }
         // 瞬移后僵直:不能移动也不能开火,是玩家的输出窗口
         if (e.stiffT > 0) {
           e.stiffT -= dt;
@@ -2004,6 +2108,7 @@ window.Entities = (function () {
       e.r = def.r; e.dmg = def.dmg; e.spd = def.spd;
       e.boss = !!CFG.BOSSES[s.i]; e.bossType = e.boss ? s.i : '';
       e.elite = !!s.el; e.face = s.f || 1;
+      e.phase2 = !!s.ph; e.eyeRole = s.er || ''; e.eyeGroup = e.phase2 && e.bossType === 'boss_abysseye' ? 1 : 0;
       e.flash = 0; e.alpha = 1; e.animo = (s.u % 10);
       e.guard = s.g || 0; e.burrowT = s.b || 0; e.burrowMax = def.burrow || 0;
       e.buffed = !!s.bf; e.buffSpd = 1; e.buffDmg = 1;

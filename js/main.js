@@ -219,7 +219,7 @@
         el: e.elite ? 1 : 0, f: e.face,
         g: e.guard > 0 ? +e.guard.toFixed(2) : 0,
         b: e.burrowT > 0 ? +e.burrowT.toFixed(2) : 0,
-        bf: e.buffed ? 1 : 0
+        bf: e.buffed ? 1 : 0, ph: e.phase2 ? 1 : 0, er: e.eyeRole || ''
       });
     }
     var shots = Entities.getShots(), ss = [];
@@ -303,8 +303,10 @@
     return {
       t: 'snap', ti: +run.t.toFixed(2),
       e: es, s: ss, l: ls, g: gs, it: its, b: bs, p: ps,
-      bh: run.boss && run.boss.alive ? +(run.boss.hp / run.boss.maxHp).toFixed(3) : -1,
+      bh: run.boss && run.boss.alive ? +((run.bossBarHp !== null && run.bossBarHp !== undefined ? run.bossBarHp : run.boss.hp) /
+        (run.bossBarMax || run.boss.maxHp)).toFixed(3) : -1,
       bi: run.boss && run.boss.alive ? run.boss.bossType : '',
+      bn: run.bossBarName || '',
       kl: run.kills, gd: run.gold, bk: run.bossesKilled,
       fz: +(run.freezeT || 0).toFixed(2), en: run.endless ? 1 : 0
     };
@@ -1638,7 +1640,7 @@
       onSnap: function (m) {
         if (!run || !coop.on) return;
         try {
-          Entities.applySnapshot(run, { t: m.ti, e: m.e, s: m.s, l: m.l, g: m.g, it: m.it, bh: m.bh, bi: m.bi });
+          Entities.applySnapshot(run, { t: m.ti, e: m.e, s: m.s, l: m.l, g: m.g, it: m.it, bh: m.bh, bi: m.bi, bn: m.bn });
           run.kills = m.kl || 0;
           run.gold = m.gd || 0;
           run.bossesKilled = m.bk || 0;
@@ -1650,6 +1652,7 @@
             run.boss.bossType = m.bi;
             run.boss.hp = m.bh;
             run.boss.maxHp = 1;
+            run.bossBarName = m.bn || '';
           } else {
             run.boss = null;
           }

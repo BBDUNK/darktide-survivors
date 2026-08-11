@@ -972,9 +972,10 @@ window.UI = (function () {
     // Boss 条
     if (run.boss && run.boss.alive) {
       if (hudCache.bossVis !== true) { hudCache.bossVis = true; hudRefs.bossWrap.classList.remove('hidden'); }
-      var bName = CFG.BOSSES[run.boss.bossType].name;
+      var bName = run.bossBarName || CFG.BOSSES[run.boss.bossType].name;
       if (hudCache.bossName !== bName) { hudCache.bossName = bName; hudRefs.bossName.textContent = bName; }
-      var bossW = Math.round(Math.max(0, run.boss.hp / run.boss.maxHp * 100));
+      var bossW = Math.round(Math.max(0, (run.bossBarHp !== null && run.bossBarHp !== undefined ? run.bossBarHp : run.boss.hp) /
+        (run.bossBarMax || run.boss.maxHp) * 100));
       if (hudCache.bossW !== bossW) { hudCache.bossW = bossW; hudRefs.bossFill.style.width = bossW + '%'; }
     } else if (hudCache.bossVis !== false) {
       hudCache.bossVis = false; hudRefs.bossWrap.classList.add('hidden');
