@@ -407,15 +407,14 @@ window.Weapons = (function () {
           AudioSys.play('evolve');
           break;
         }
-        // Stable sites prevent same-cast towers from collapsing into one.
+        // Stable, collision-aware sites keep an entire late-game volley apart
+        // instead of stacking all towers on a single point near the hero.
         var firstSite = w.deploySite || 0;
         w.deploySite = firstSite + st.count;
         for (i = 0; i < st.count; i++) {
-          var site = firstSite + i;
-          a = (site % 8) * Math.PI / 4;
-          var ring = 190 + (Math.floor(site / 8) % 3) * 42;
+          var site = findTeslaSite(run.player, firstSite + i);
           b = spawn(run, w, st, 'turret', 'p_turret',
-            p.x + Math.cos(a) * ring, p.y + Math.sin(a) * ring, 0, 0, st.dur);
+            site.x, site.y, 0, 0, st.dur);
           b.aux = st.zapCd * run.player.stats.cd; // 电击间隔
           b.aux2 = 0;
           b.orbitR = st.range;
@@ -436,6 +435,31 @@ window.Weapons = (function () {
       if (bullets[i].alive && bullets[i].wid === wid && (!owner || bullets[i].owner === owner)) n++;
     }
     return n;
+  }
+
+  // Choose a fixed constellation slot around the current owner, but reject
+  // any candidate that would visually overlap a live tower.  The candidate
+  // order rotates between casts, retaining a natural ring distribution while
+  // preserving a clear path through the player's immediate surroundings.
+  function findTeslaSite(owner, seed) {
+    var best = null, bestClear = -1;
+    for (var i = 0; i < 48; i++) {
+      var slot = seed + i;
+      var a = (slot % 16) * Math.PI / 8;
+      var ring = [210, 270, 330][Math.floor(slot / 16) % 3];
+      var x = owner.x + Math.cos(a) * ring;
+      var y = owner.y + Math.sin(a) * ring;
+      var nearest = 1e18;
+      for (var bi = 0; bi < BMAX; bi++) {
+        var other = bullets[bi];
+        if (!other.alive || other.kind !== 'turret' || other.wid !== 'teslacoil' || other.owner !== owner) continue;
+        nearest = Math.min(nearest, E.dist2(x, y, other.x, other.y));
+      }
+      // 128 px leaves a real visual gutter around the 112 px tower art.
+      if (nearest >= 128 * 128) return { x: x, y: y };
+      if (nearest > bestClear) { bestClear = nearest; best = { x: x, y: y }; }
+    }
+    return best || { x: owner.x + 210, y: owner.y };
   }
 
   function chainZap(run, w, st, sx, sy) {

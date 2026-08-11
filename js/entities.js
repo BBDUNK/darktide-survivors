@@ -507,7 +507,9 @@ window.Entities = (function () {
 
   function enterDarklordPhase2(run, e) {
     e.phase2 = true;
-    e.maxHp = 2500000; e.hp = e.maxHp;
+    // The true form is meant to be a conscious, high-risk choice after the
+    // escape gate opens.  Keep it in the multi-million range even on map 1.
+    e.maxHp = 5000000; e.hp = e.maxHp;
     e.dmg *= 1.8; e.spd *= 1.22; e.r = Math.max(76, e.r * 1.42);
     e.aiT = 0.55; e.chargeSeq = 0; e.chargePhase = 0; e.atkCount = 0;
     if (run.exitGate) { run.exitGate.open = true; run.exitGate.openedAt = run.t; }

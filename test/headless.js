@@ -900,6 +900,42 @@ try {
   }
   console.log('R6 OK 终局大门距离校验、撤离结算与触屏共用入口正常');
 
+  // R7 点名平衡与后期电塔：三名后期 Boss 需要足够耐久；真身保持数百万
+  // 生命；血怒击杀回血；同一轮电塔必须留出大于塔身的视觉间隔。
+  const r7 = fx(`
+    (() => {
+      Debug.startArtTest();
+      const r = Debug.run(), p = r.player;
+      const bossHp = CFG.BOSSES.boss_bonelord.hp >= 180000 &&
+        CFG.BOSSES.boss_abysseye.hp >= 400000 && CFG.BOSSES.boss_darklord.hp >= 900000;
+      r.exitGate = { x: 240, y: 0, open: false, used: false, openedAt: 0 };
+      const dark = Entities.spawnEnemy(r, 'boss_darklord', 360, 0, { allowNear: true });
+      Entities.damageEnemy(r, dark, dark.hp + 1, { noCrit: true });
+      const trueForm = dark.phase2 && dark.maxHp >= 5000000 && r.exitGate && r.exitGate.open;
+      Entities.reset(); Weapons.reset();
+      p.char = CFG.CHARS.find(c => c.id === 'berserker');
+      r.weapons = [{ id: 'whirlaxe', lv: 4, cdT: 999, evolved: false, evoId: null, curR: 0 }];
+      Entities.recomputeStats(r); p.hp = Math.max(1, p.stats.hp - 35);
+      Weapons.update(r, 1 / 60); // establish the pre-kill counter baseline
+      const hpBefore = p.hp;
+      const victim = Entities.spawnEnemy(r, 'slime', 90, 0, { allowNear: true });
+      Entities.damageEnemy(r, victim, victim.hp + 1, { noCrit: true });
+      Weapons.update(r, 1 / 60);
+      const rageHeal = p.hp > hpBefore;
+      Weapons.reset(); r.weapons = [{ id: 'teslacoil', lv: 8, cdT: 0, evolved: false, evoId: null, curR: 0 }];
+      Entities.recomputeStats(r); Weapons.update(r, 1 / 60);
+      const towers = Weapons.getBullets().filter(b => b.alive && b.kind === 'turret' && b.owner === p);
+      let closest = Infinity;
+      for (let i = 0; i < towers.length; i++) for (let j = i + 1; j < towers.length; j++)
+        closest = Math.min(closest, Math.hypot(towers[i].x - towers[j].x, towers[i].y - towers[j].y));
+      return { bossHp, trueForm, rageHeal, towerCount: towers.length >= 3, towerGap: closest >= 128 };
+    })()
+  `);
+  if (!Object.values(r7).every(Boolean)) {
+    throw new Error('后期 Boss / 血怒 / 电塔布点回归失败: ' + JSON.stringify(r7));
+  }
+  console.log('R7 OK 后期 Boss 耐久、暗潮真身、血怒回血与电塔分散布点正常');
+
   console.log('\n=== 无头冒烟测试全部通过 ===');
 } catch (e) {
   console.error('\n!!! 冒烟测试失败: ' + e.stack);
