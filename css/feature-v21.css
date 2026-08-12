@@ -9,6 +9,15 @@
   background: rgba(7, 3, 15, 0.16) !important;
 }
 
+/* 选人/选图/圣坛商店/成就/设置/联机 等面板页四周补上同款巴洛克金框,
+   之前只有主菜单/图鉴/结算有,其余页面光秃秃。 */
+.panel-col {
+  box-sizing: border-box !important;
+  border: 18px solid transparent !important;
+  border-image: url('../assets/art-v4/sprites/ui/baroque_menu_frame.png') 116 104 fill / 18px / 0 stretch !important;
+  background: rgba(7, 3, 15, 0.55) !important;
+}
+
 .menu-col .btn {
   width: 388px !important;      /* 面板保持248不动时按钮能到的最大宽度 */
   min-height: 76px !important;
@@ -89,7 +98,7 @@
   color: #4a2612 !important;
   border: 0 !important;
   padding: 0 !important;
-  margin: 0 0 5px !important;
+  margin: -5px 0 8px !important;
   text-shadow: 0 1px rgba(255,238,184,.65) !important;
   font-weight: 900;
   white-space: nowrap;
