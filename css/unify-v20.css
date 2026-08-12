@@ -149,7 +149,7 @@ html, body, button, input, select, textarea,
   outline: 0;
   box-shadow: none;
   filter: saturate(1.35) brightness(1.16);
-  color: #fff7e2;
+  color: #ff4554;   /* 开始远征四个字用红色,突出主行动 */
 }
 .menu-altar .btn.ruby {
   filter: hue-rotate(-28deg) saturate(1.7) brightness(1.05);

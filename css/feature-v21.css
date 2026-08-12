@@ -12,11 +12,13 @@
 .menu-col .btn {
   width: 388px !important;      /* 面板保持248不动时按钮能到的最大宽度 */
   min-height: 76px !important;
-  padding: 0 42px 3px !important;
+  padding: 0 42px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   text-align: center !important;
+  font-size: 21px !important;
+  line-height: 1 !important;
   box-sizing: border-box;
 }
 
