@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>music-probe</title>
+</head>
+<body>
+<button id="go">unlock audio</button>
+<pre id="out"></pre>
+<script>
+  // 统计每个主题实际启动的振荡器数量,证明真的在出声
+  window.__osc = 0;
+  (function () {
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) { return; }
+    var orig = AC.prototype.createOscillator;
+    AC.prototype.createOscillator = function () {
+      var o = orig.call(this);
+      var start = o.start.bind(o);
+      o.start = function () { window.__osc++; return start.apply(o, arguments); };
+      return o;
+    };
+  })();
+</script>
+<script src="../js/audio.js"></script>
+<script>
+  // music-probe.html — 循环播放全部主题,统计振荡器数量 + 捕获调度异常
+  var out = document.getElementById('out');
+  var log = function (s) { out.textContent += s + '\n'; console.log(s); };
+  var themes = ['menu', 'boss_slime', 'boss_bone', 'boss_abyss', 'boss_dark'];
+  document.getElementById('go').addEventListener('click', function () {
+    AudioSys.unlock();
+    var i = 0, j = 0, base = 0;
+    var step = function () {
+      AudioSys.stopMusic();
+      if (j >= 4) { j = 0; i++; if (i >= themes.length) { log('done all themes'); return; } }
+      AudioSys.setIntensity(j);
+      var prev = window.__osc;
+      AudioSys.playMusic(themes[i]);
+      j++;
+      setTimeout(function () {
+        log(themes[i] + ' int' + (j - 1) + ': +' + (window.__osc - prev) + ' osc');
+        step();
+      }, 1600);
+    };
+    step();
+  });
+</script>
+</body>
+</html>
