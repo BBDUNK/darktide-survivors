@@ -1074,8 +1074,12 @@ window.Weapons = (function () {
       // Keep the authored round seal round: it lives on the floor, not as a
       // flattened halo at the character's chest height.
       var auraW = r * (wAura.evolved ? 2.42 : 2.26), auraH = auraW;
+      // 光环素材的视觉内容并不以画面中心为圆心(金色光带质心实测偏上约 0.10×高、
+      // 偏右约 0.042×宽),直接画会让角色看起来不在光环正中间。按此比例补偿偏移。
+      var auraYOff = auraH * 0.10;
+      var auraXOff = -auraW * 0.042;
       ctx.globalAlpha = (wAura.evolved ? 0.72 : 0.60) + Math.sin(auraT * 1.2) * 0.035;
-      ctx.drawImage(auraImg, p.x - auraW / 2, p.y - auraH / 2, auraW, auraH);
+      ctx.drawImage(auraImg, p.x - auraW / 2 + auraXOff, p.y - auraH / 2 + auraYOff, auraW, auraH);
       ctx.globalAlpha = 1;
     }
     var rageW = findWeapon(run, 'whirlaxe');

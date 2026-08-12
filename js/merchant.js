@@ -14,6 +14,35 @@ window.Merchant = (function () {
   var combat = { prone: 0, attackAge: 9, attackCd: 0.3, face: 1, target: null };
   var dialogue = { text: '', until: 0, nearby: false };
 
+  // 动画帧的"身体水平中心"。AI 母版每帧内容位置并不一致(质心在 43~47.5 漂移),
+  // 直接按帧中心画会让商人身体在攻击时左右跳 —— 那就是用户看到的"攻击闪烁"。
+  // 这里按不透明像素质心重锚定,让身体钉在原地,弓臂动画照常播放。
+  var anchorCache = {};
+  function frameCenters(name, frames) {
+    var key = name + '|' + frames.length;
+    if (anchorCache[key]) return anchorCache[key];
+    var out = [];
+    try {
+      var cv = document.createElement('canvas');
+      var g = cv.getContext('2d', { willReadFrequently: true });
+      for (var i = 0; i < frames.length; i++) {
+        var im = frames[i];
+        cv.width = im.width; cv.height = im.height;
+        g.clearRect(0, 0, cv.width, cv.height);
+        g.drawImage(im, 0, 0);
+        var d = g.getImageData(0, 0, cv.width, cv.height).data;
+        var n = 0, sx = 0, k;
+        for (k = 3; k < d.length; k += 4) if (d[k] > 16) { n++; sx += (k / 4) % cv.width; }
+        out.push(n ? sx / n : im.width / 2);
+      }
+    } catch (e) {
+      // file:// 下画布被污染读不了像素,退回帧中心(不重锚定,可能仍有轻微抖动)
+      out = frames.map(function (im) { return im.width / 2; });
+    }
+    anchorCache[key] = out;
+    return out;
+  }
+
   function reset(run) {
     var M = CFG.MERCHANT;
     slotCount = M.slots;
@@ -307,12 +336,16 @@ window.Merchant = (function () {
     ctx.drawImage(SpriteGen.get('vfx_shadow'), M.x - shadowW / 2, groundY - 6, shadowW, 12);
     ctx.globalAlpha = 1;
     var mTop = groundY - mh + bob;
+    // 按内容质心重锚定,让身体水平中心钉在 M.x(见 frameCenters 注释)
+    var cxs = frameCenters(actionName, merchantFrames);
+    var cx = cxs[frameIndex % cxs.length] || (mimg.width / 2);
+    var left = M.x - (cx / mimg.width) * mw;
     if (combat.face < 0 && combat.prone < 0.65) {
       ctx.save(); ctx.translate(M.x, 0); ctx.scale(-1, 1);
-      ctx.drawImage(mimg, -mw / 2, mTop, mw, mh);
+      ctx.drawImage(mimg, -(cx / mimg.width) * mw, mTop, mw, mh);
       ctx.restore();
     } else {
-      ctx.drawImage(mimg, M.x - mw / 2, mTop, mw, mh);
+      ctx.drawImage(mimg, left, mTop, mw, mh);
     }
     // 补货倒计时小闹钟
     drawClock(ctx, run);

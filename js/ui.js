@@ -132,7 +132,7 @@ window.UI = (function () {
     body.appendChild(mid);
     // 右侧:公告栏
     menuBoard = h('div', 'menu-board');
-    menuBoard.appendChild(h('div', 'menu-board-title', '📜 战报'));
+    menuBoard.appendChild(h('div', 'menu-board-title', '战报'));
     menuStats = h('div', 'menu-board-body');
     menuBoard.appendChild(menuStats);
     body.appendChild(menuBoard);
