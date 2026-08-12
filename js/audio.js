@@ -923,6 +923,10 @@
       unlocked = true;
       applyVolumes();
       if (pendingTheme) { startMusic(pendingTheme); }
+    } else if (mus.playing && mus.mediaEl && mus.mediaEl.paused) {
+      // 首个手势解锁时,重试此前被自动播放策略拦下的录音曲(过场自动跳菜单后必点才能出声的场景)
+      const p = mus.mediaEl.play();
+      if (p && typeof p.catch === 'function') { p.catch(function () {}); }
     }
   }
 

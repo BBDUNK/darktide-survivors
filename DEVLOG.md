@@ -158,6 +158,10 @@
   正在播放(ready=4),清场后停止
 - 追加:主菜单曲换用 CC-BY 录音 `The Dark Amulet — Dark Mage Theme`(OGA,作者 CruzR,黑暗法师主题);
   与四首 Boss 曲的 Battle Theme A 一起通过 `FILE_THEMES` 播放;授权与署名要求记入 `assets/THIRD_PARTY_ASSETS.md`
+- 追加:修"不点击屏幕主菜单音乐不播放"的边角回归——浏览器自动播放策略要求首次手势后才出声(所有音频一视同仁);
+  但当过场 5 秒自动跳主菜单时,录音曲的 `el.play()` 在非手势下被拦,之后首次点击只恢复了 AudioContext 却没重触发
+  `play()`,菜单曲会一直不响(程序化音乐无此问题)。`unlock()` 首次手势解锁时重试被拦下的录音曲;
+  新增 `test/autoplay-menu-probe.js` 复现验证:不点等 6.5s(曲目加载但 paused)→ 点击 → 主菜单曲响起(ready=4,t>0)
 
 ---
 
