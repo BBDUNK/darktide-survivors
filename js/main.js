@@ -1565,23 +1565,30 @@
     }
     drawMenuAsh();
 
-    // 顶部角色行:放到标题下方的独立展示带,保持完全不透明。
-    // cy 位置要让角色行避开下方的圣坛/战报面板,不被遮住。
+    // 顶部角色行:拆成左右两侧边带,中间留给大标题。
     var chars = ['char_knight', 'char_mage', 'char_ranger', 'char_cleric', 'char_berserker', 'char_chrono'];
     for (var ci = 0; ci < chars.length; ci++) {
-      var cx = (CFG.GAME.W + 220 - (menuT * 36 + ci * 165) % (CFG.GAME.W + 220)) - 110;
+      var left = ci < 3;
+      var bandC = left ? 150 : 810;                 // 左右边带中心
+      var bandR = 84;                               // 边带半径
+      var lp = Math.abs((menuT * 0.06 + ci * 0.23) % 1 * 2 - 1);   // 0→1→0 往返
+      var cx = bandC + (lp * 2 - 1) * bandR;
       var cy = 74 + Math.sin(menuT * 3.2 + ci * 0.8) * 4;
       var cfr = SpriteGen.frames(chars[ci] + '_walk_right');
       var cimg = cfr[Math.floor(menuT * 10 + ci) % cfr.length];
       ctx.drawImage(cimg, cx, cy, 56, 74);
     }
 
-    // 底部怪物行:普通怪 + Boss 随机错落排列,普通怪 32px,Boss 40px(还原比例)
+    // 底部怪物行:同样拆成左右两侧边带往返移动,贴底。
     var parade = ['bat', 'slime', 'zombie', 'skeleton', 'ghost', 'spider', 'orc',
                   'boss_slimeking', 'boss_bonelord', 'boss_abysseye', 'boss_darklord'];
     for (var i = 0; i < parade.length; i++) {
       var pid = parade[i];
-      var x = ((menuT * 40 + i * 152 + (i % 3) * 26) % (CFG.GAME.W + 200)) - 100;
+      var left = i % 2 === 0;
+      var bandC = left ? 190 : 770;
+      var bandR = 150;
+      var mp = Math.abs((menuT * 0.045 + i * 0.11) % 1 * 2 - 1);
+      var x = bandC + (mp * 2 - 1) * bandR;
       var y = CFG.GAME.H - 84 + Math.sin(menuT * 4 + i * 1.3) * 3;   // 怪物行贴底,贴着四周边框
       var isBoss = pid.indexOf('boss_') === 0;
       var frames = SpriteGen.frames(pid + (isBoss ? '' : '_walk'));
