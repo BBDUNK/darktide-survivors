@@ -10,7 +10,7 @@
 }
 
 .menu-col .btn {
-  width: 350px !important;
+  width: 300px !important;
   min-height: 62px !important;
   padding: 0 42px 3px !important;
   display: flex !important;
@@ -19,6 +19,10 @@
   text-align: center !important;
   box-sizing: border-box;
 }
+
+/* 主菜单内容区在加回 18px 巴洛克边框后被收窄,左右边距太大会把战报/圣坛挤扁,
+   缩小边距给三栏留足空间(圣坛248+按钮+战报248 才能不被 flex 压缩)。 */
+.menu-body { padding: 0 14px !important; }
 
 .menu-altar,
 .menu-board {
