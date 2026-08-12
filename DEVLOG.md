@@ -80,6 +80,8 @@
 - 最终 Boss(暗潮魔王)战斗曲换用 CC0 录音 `Battle Theme A`(OGA,史诗弦乐+号角);
   `AudioSys` 新增录音文件主题支持(HTMLAudio 循环 + MediaElementSource 进音乐总线,
   路径按脚本自身解析,文件加载失败自动退回程序化版);授权记入 `assets/THIRD_PARTY_ASSETS.md`
+- 追加:按用户要求,Battle Theme A 应用到全部四首 Boss 战斗曲(腐液之王/骸骨领主/深渊之眼/暗潮魔王),
+  统一用同一段 CC0 录音;程序化 Boss 曲保留为文件加载失败时的回退
 
 ---
 
