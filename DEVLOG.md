@@ -92,6 +92,10 @@
   路径按脚本自身解析,文件加载失败自动退回程序化版);授权记入 `assets/THIRD_PARTY_ASSETS.md`
 - 追加:按用户要求,Battle Theme A 应用到全部四首 Boss 战斗曲(腐液之王/骸骨领主/深渊之眼/暗潮魔王),
   统一用同一段 CC0 录音;程序化 Boss 曲保留为文件加载失败时的回退
+- 追加:修训练场生成 Boss 不切战斗曲——`applyTestAction` 的 `boss`/`testBoss` 直接 spawnEnemy+横幅,
+  漏了 `announceBoss` 里的 `AudioSys.playMusic(bd.music)`。新增 `testSpawnBoss()` 统一两处生成逻辑并切曲,
+  清场恢复地图曲。新增 `test/training-boss-music-probe.js` 真实浏览器验证:生成 Boss 后 Battle Theme A
+  正在播放(ready=4),清场后停止
 
 ---
 
