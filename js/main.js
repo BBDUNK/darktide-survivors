@@ -1570,11 +1570,11 @@
     var chars = ['char_knight', 'char_mage', 'char_ranger', 'char_cleric', 'char_berserker', 'char_chrono'];
     for (var ci = 0; ci < chars.length; ci++) {
       var left = ci < 3;
-      var bandC = left ? 62 : 898;                  // 边带中心贴近左右边缘,避开大标题
-      var bandR = 28;                               // 边带半径
+      var bandC = left ? 88 : 864;                  // 左右边带中心,保证角色完全在屏内
+      var bandR = left ? 42 : 34;                   // 左带空间大些,右带贴边窄些
       var ph = menuT * 0.05 + ci * 0.28;
       var cx = bandC + Math.sin(ph) * bandR;
-      var cy = 30 + Math.sin(menuT * 3.2 + ci * 0.8) * 3;   // 贴顶
+      var cy = 26 + Math.sin(menuT * 3.2 + ci * 0.8) * 3;   // 贴顶
       // 沿移动方向选行走帧:sin 的导数 cos 决定往左还是往右
       var goLeft = Math.cos(ph) < 0;
       var cfr = SpriteGen.frames(chars[ci] + (goLeft ? '_walk_left' : '_walk_right'));
@@ -1582,7 +1582,7 @@
       ctx.drawImage(cimg, cx, cy, 56, 74);
     }
 
-    // 底部怪物行:同样拆成左右两侧边带往返移动,贴底。
+    // 底部怪物行:同样拆成左右两侧边带往返移动,放在面板下方贴底。
     var parade = ['bat', 'slime', 'zombie', 'skeleton', 'ghost', 'spider', 'orc',
                   'boss_slimeking', 'boss_bonelord', 'boss_abysseye', 'boss_darklord'];
     for (var i = 0; i < parade.length; i++) {
@@ -1592,7 +1592,7 @@
       var bandR = 150;
       var mp = Math.abs((menuT * 0.045 + i * 0.11) % 1 * 2 - 1);
       var x = bandC + (mp * 2 - 1) * bandR;
-      var y = CFG.GAME.H - 84 + Math.sin(menuT * 4 + i * 1.3) * 3;   // 怪物行贴底,贴着四周边框
+      var y = CFG.GAME.H - 56 + Math.sin(menuT * 4 + i * 1.3) * 3;   // 面板下方贴底
       var isBoss = pid.indexOf('boss_') === 0;
       var frames = SpriteGen.frames(pid + (isBoss ? '' : '_walk'));
       var img = frames[Math.floor(menuT * 5 + i) % frames.length];

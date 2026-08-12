@@ -12,13 +12,13 @@
   box-shadow: none;
 }
 .screen .menu-logo {
-  top: 40px;
+  top: 24px;
   height: 128px;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
 }
-.menu-big.gothic-title { font-size: 150px; line-height: .72; }
+.menu-big.gothic-title { font-size: 150px; line-height: .72; letter-spacing: 2px; }
 .menu-tagline {
   margin-top: 8px;
   padding: 2px 16px 3px;
