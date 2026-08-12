@@ -122,12 +122,14 @@ window.UI = (function () {
     var col = h('div', 'menu-col');
     col.appendChild(btn(L.t('menu_start'), 'primary', function () { coopMode = false; refreshChars(); show('chars'); }));
     col.appendChild(btn(L.t('menu_coop'), '', function () { refreshLobbyEntry(); show('coop'); }));
-    col.appendChild(btn(L.t('menu_settings'), '', function () { refreshSettings(); show('settings'); }));
     mid.appendChild(col);
     var subRow = h('div', 'menu-subrow');
+    subRow.appendChild(btn(L.t('menu_settings'), 'sub', function () { refreshSettings(); show('settings'); }));
     subRow.appendChild(btn(L.t('menu_achv'), 'sub', function () { refreshAchv(); show('achv'); }));
-    subRow.appendChild(btn(L.t('menu_codex'), 'sub', function () { codexFrom = 'menu'; refreshCodex(); show('codex'); }));
     mid.appendChild(subRow);
+    var encRow = h('div', 'menu-encrow');
+    encRow.appendChild(btn(L.t('menu_codex'), 'sub', function () { codexFrom = 'menu'; refreshCodex(); show('codex'); }));
+    mid.appendChild(encRow);
     body.appendChild(menuAltar);
     body.appendChild(mid);
     // 右侧:公告栏

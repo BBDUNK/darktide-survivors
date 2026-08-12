@@ -40,6 +40,15 @@
   font-size: 13px !important;
   white-space: nowrap;
 }
+/* 百科全书单独一行(全宽) */
+.menu-encrow {
+  width: 388px !important;
+}
+.menu-encrow .btn.sub {
+  width: 100% !important;
+  min-height: 48px !important;
+  font-size: 13px !important;
+}
 
 /* 中间列与左右面板等高,主按钮纵向拉伸填满 */
 .menu-mid { height: 280px; justify-content: space-between; }
