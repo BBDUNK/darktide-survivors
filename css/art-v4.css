@@ -12,28 +12,28 @@
   box-shadow: none;
 }
 .screen .menu-logo {
-  top: 28px;
-  height: 92px;
+  top: 40px;
+  height: 128px;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
 }
-.menu-big.gothic-title { font-size: 72px; line-height: .84; }
+.menu-big.gothic-title { font-size: 100px; line-height: .8; }
 .menu-tagline {
-  margin-top: 5px;
+  margin-top: 8px;
   padding: 2px 16px 3px;
-  color: #ead59b;
+  color: #f0d9a0;
   font-family: var(--font-cn);
-  font-size: 13px;
-  font-weight: 800;
+  font-size: 15px;
+  font-weight: 700;
   letter-spacing: 8px;
   text-indent: 8px;
-  text-shadow: 2px 2px 0 #12080a, 0 0 8px rgba(164, 100, 36, .55);
-  border-top: 1px solid rgba(192, 147, 73, .72);
-  border-bottom: 1px solid rgba(77, 35, 31, .82);
+  text-shadow: 0 0 10px rgba(255, 190, 110, .45);   /* 去黑底:只留暖光,不叠黑色实影 */
+  border: 0;
+}
   background: linear-gradient(90deg, transparent, rgba(19, 11, 13, .72) 18%, rgba(19, 11, 13, .72) 82%, transparent);
 }
-.menu-body { top: 140px; gap: 12px; padding-top: 30px; }
+.menu-body { top: 176px; bottom: 40px; gap: 12px; padding-top: 30px; }
 
 .menu-altar, .menu-board, .menu-col .btn, .menu-subrow .btn.sub {
   border-color: #b18a49;

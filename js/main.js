@@ -1582,7 +1582,7 @@
     for (var i = 0; i < parade.length; i++) {
       var pid = parade[i];
       var x = ((menuT * 40 + i * 152 + (i % 3) * 26) % (CFG.GAME.W + 200)) - 100;
-      var y = CFG.GAME.H - 72 + Math.sin(menuT * 4 + i * 1.3) * 3;
+      var y = CFG.GAME.H - 84 + Math.sin(menuT * 4 + i * 1.3) * 3;   // 怪物行贴底,贴着四周边框
       var isBoss = pid.indexOf('boss_') === 0;
       var frames = SpriteGen.frames(pid + (isBoss ? '' : '_walk'));
       var img = frames[Math.floor(menuT * 5 + i) % frames.length];

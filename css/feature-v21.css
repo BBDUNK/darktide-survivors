@@ -23,8 +23,10 @@
 }
 
 /* 主菜单内容区在加回 18px 巴洛克边框后被收窄,左右边距太大会把战报/圣坛挤扁,
-   缩小边距给三栏留足空间(圣坛+按钮+战报 才能不被 flex 压缩)。 */
-.menu-body { padding: 0 14px !important; }
+   缩小边距给三栏留足空间(圣坛+按钮+战报 才能不被 flex 压缩)。
+   top/bottom 用 !important:art-v3 的同名规则在部分加载顺序下会反超,导致
+   圣坛/战报面板盖住下方怪物动画。 */
+.menu-body { padding: 0 14px !important; top: 154px !important; bottom: 40px !important; }
 
 /* 成就/百科 两个小按钮一行 */
 .menu-subrow {
@@ -39,14 +41,14 @@
   white-space: nowrap;
 }
 
-/* 中间列与左右面板等高(312),主按钮纵向拉伸填满 */
-.menu-mid { height: 312px; justify-content: space-between; }
+/* 中间列与左右面板等高,主按钮纵向拉伸填满 */
+.menu-mid { height: 280px; justify-content: space-between; }
 .menu-col { flex: 1; justify-content: space-evenly; }
 
 .menu-altar,
 .menu-board {
   width: 248px !important;
-  height: 312px !important;
+  height: 280px !important;
   box-sizing: border-box;
   border: 0 !important;
   outline: 0 !important;
