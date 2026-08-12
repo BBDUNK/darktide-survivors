@@ -126,10 +126,10 @@
     _noise(g, t, 0.035, 0.07 * mus.def.drumVol, 'highpass', 7000, 0, 1, 1.6);
   }
 
-  function bassNote(g, t, midi, dur, vol) {
+  function bassNote(g, t, midi, dur, vol, type) {
     const f = mtof(midi);
     const o = ctx.createOscillator();
-    o.type = 'square';
+    o.type = type || 'square';
     o.frequency.value = f;
     const flt = ctx.createBiquadFilter();
     flt.type = 'lowpass';
@@ -177,6 +177,56 @@
     _tone(g, t, dur, type, f, 0, vol * 0.65, -7, 0.005);
   }
 
+  // 音乐盒主奏:钟琴式快速衰减 + 泛音层(基音/八度/八度五度)+ 微颤音,有机的八音盒感
+  function boxNote(g, t, midi, dur, vol, vib) {
+    const f = mtof(midi);
+    const ring = Math.max(dur, 0.25) * 1.4;
+    const o = ctx.createOscillator();
+    o.type = 'triangle';
+    o.frequency.value = f;
+    const g0 = ctx.createGain();
+    g0.gain.setValueAtTime(0, t);
+    g0.gain.linearRampToValueAtTime(vol, t + 0.004);
+    g0.gain.exponentialRampToValueAtTime(0.0006, t + ring);
+    o.connect(g0);
+    g0.connect(g);
+    o.start(t);
+    o.stop(t + ring + 0.05);
+    if (vib > 0) {   // 微颤音(音分),让音色"活"一点
+      const lfo = ctx.createOscillator();
+      lfo.type = 'sine';
+      lfo.frequency.value = 5.5;
+      const lg = ctx.createGain();
+      lg.gain.value = vib;
+      lfo.connect(lg);
+      lg.connect(o.detune);
+      lfo.start(t);
+      lfo.stop(t + ring);
+    }
+    const o2 = ctx.createOscillator();   // 八度泛音(闪亮感)
+    o2.type = 'sine';
+    o2.frequency.value = f * 2;
+    const g2 = ctx.createGain();
+    g2.gain.setValueAtTime(0, t);
+    g2.gain.linearRampToValueAtTime(vol * 0.30, t + 0.004);
+    g2.gain.exponentialRampToValueAtTime(0.0005, t + ring * 0.8);
+    o2.connect(g2);
+    g2.connect(g);
+    o2.start(t);
+    o2.stop(t + ring * 0.8 + 0.05);
+    const o3 = ctx.createOscillator();   // 八度+五度泛音(更亮的一层)
+    o3.type = 'sine';
+    o3.frequency.value = f * 3;
+    const g3 = ctx.createGain();
+    g3.gain.setValueAtTime(0, t);
+    g3.gain.linearRampToValueAtTime(vol * 0.14, t + 0.004);
+    g3.gain.exponentialRampToValueAtTime(0.0004, t + ring * 0.55);
+    o3.connect(g3);
+    g3.connect(g);
+    o3.start(t);
+    o3.stop(t + ring * 0.55 + 0.05);
+  }
+
   // 旋律度数 → 半音(相对当前和弦根音;third 由和弦大小三度决定)
   function degSemi(deg, third) {
     switch (deg) {
@@ -199,11 +249,12 @@
   // sections:每段 4 小节(roots 相对主题根音 / thirds 三度性质 / pads 垫声部音)
   const N = null;
   const THEMES = {
-    menu: { // 平静小调琶音,A 小调,92 BPM
-      bpm: 92, root: 57, bassOct: -24, leadOct: 12,
-      padType: 'triangle', padVol: 0.045,
-      leadType: 'triangle', leadVol: 0.075,
-      bassVol: 0.18, drumVol: 0.55,
+    menu: { // 平静小调琶音,A 小调,92 BPM(音乐盒主奏 + 温暖弦乐垫 + 大提琴低音)
+      bpm: 92, root: 57, bassOct: -12, leadOct: 12,
+      leadVoice: 'box', leadVib: 5,
+      padType: 'sine', padVol: 0.05,
+      leadType: 'triangle', leadVol: 0.07,
+      bassType: 'triangle', bassVol: 0.16, drumVol: 0.55,
       kick: '1.......1.......',
       kickX: '....1.......1...',
       snare: '................',
@@ -484,7 +535,7 @@
     if ((inten >= 3 ? d.hat3 : d.hat).charCodeAt(s) === 49) { drumHat(g, t); }
     const b = d.bass[s];
     if (typeof b === 'number') {
-      bassNote(g, t, chordRoot + d.bassOct + b, mus.stepDur * 1.9, d.bassVol);
+      bassNote(g, t, chordRoot + d.bassOct + b, mus.stepDur * 1.9, d.bassVol, d.bassType);
     }
 
     // 层 1:+ 和弦垫(整小节)
@@ -506,9 +557,13 @@
           const oct = v >= 10 ? 12 : 0;
           midi = chordRoot + d.leadOct + oct + degSemi(deg, sec.thirds[ci]);
         }
-        leadNote(g, t, midi, mus.stepDur * durMul, d.leadVol, d.leadType);
+        // 可选主奏音色:box = 音乐盒(钟琴泛音+微颤音);默认芯片 lead
+        const box = d.leadVoice === 'box';
+        const leadFn = box ? boxNote : leadNote;
+        const arg5 = box ? (d.leadVib || 0) : d.leadType;
+        leadFn(g, t, midi, mus.stepDur * durMul, d.leadVol, arg5);
         if (inten >= 3) {
-          leadNote(g, t + mus.stepDur * 2, midi + 12, mus.stepDur * 1.7, d.leadVol * 0.45, d.leadType);
+          leadFn(g, t + mus.stepDur * 2, midi + 12, mus.stepDur * 1.7, d.leadVol * 0.45, arg5);
         }
       }
     }
@@ -736,6 +791,23 @@
     sfxBus.connect(comp);
     musicBus = ctx.createGain();
     musicBus.connect(comp);
+    try {  // 音乐总线混响:给声音放进一个"空间",去掉干巴巴的合成塑料感
+      const conv = ctx.createConvolver();
+      const irLen = (ctx.sampleRate * 2.2) | 0;
+      const ir = ctx.createBuffer(2, irLen, ctx.sampleRate);
+      for (let ch = 0; ch < 2; ch++) {
+        const d = ir.getChannelData(ch);
+        for (let i = 0; i < irLen; i++) {
+          d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / irLen, 2.6);
+        }
+      }
+      conv.buffer = ir;
+      const wet = ctx.createGain();
+      wet.gain.value = 0.16;
+      musicBus.connect(conv);
+      conv.connect(wet);
+      wet.connect(comp);
+    } catch (e) { /* 混响不可用时静默跳过,纯干声仍可播 */ }
 
     const len = (ctx.sampleRate * 1.2) | 0;
     noiseBuf = ctx.createBuffer(1, len, ctx.sampleRate);
