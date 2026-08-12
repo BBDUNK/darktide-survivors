@@ -127,7 +127,8 @@ html, body, button, input, select, textarea,
    宽度,让金色框看起来"没变宽"——改用裁掉透明边的紧贴版本,金色铺满按钮。 */
 .menu-col .btn,
 .menu-subrow .btn.sub,
-.menu-altar .btn.ruby {
+.menu-altar .btn.ruby,
+.menu-settings-row .btn {
   background: url('../assets/art-v2/ui/menu_btn_frame_edge.png') center / 100% 100% no-repeat;
   /* theme-v17 给 .btn.primary/.ruby 设过 border-image-source,
      只要 border-image 还生效就会盖掉上面的 background,必须显式清掉。 */

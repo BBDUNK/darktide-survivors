@@ -1565,24 +1565,22 @@
     }
     drawMenuAsh();
 
-    // 顶部角色行:拆成左右两侧边带,在边带内来回走动;按移动方向换朝向,
-    // 贴到屏幕最顶上(cy 小)。
+    // 顶部角色行:拆成左右两侧边带,中间留给大标题。向右循环走动(到边带右端后
+    // 从左端重进,实现无限循环),贴到最顶部。
     var chars = ['char_knight', 'char_mage', 'char_ranger', 'char_cleric', 'char_berserker', 'char_chrono'];
     for (var ci = 0; ci < chars.length; ci++) {
       var left = ci < 3;
-      var bandC = left ? 88 : 864;                  // 左右边带中心,保证角色完全在屏内
-      var bandR = left ? 42 : 34;                   // 左带空间大些,右带贴边窄些
-      var ph = menuT * 0.05 + ci * 0.28;
-      var cx = bandC + Math.sin(ph) * bandR;
-      var cy = 26 + Math.sin(menuT * 3.2 + ci * 0.8) * 3;   // 贴顶
-      // 沿移动方向选行走帧:sin 的导数 cos 决定往左还是往右
-      var goLeft = Math.cos(ph) < 0;
-      var cfr = SpriteGen.frames(chars[ci] + (goLeft ? '_walk_left' : '_walk_right'));
+      var bandC = left ? 150 : 810;                 // 左右边带中心
+      var bandR = 84;                               // 边带半径
+      var span = bandR * 2;
+      var cx = bandC + ((menuT * 48 + ci * 150) % span) - bandR;   // 向右循环
+      var cy = 30 + Math.sin(menuT * 3.2 + ci * 0.8) * 4;          // 贴顶
+      var cfr = SpriteGen.frames(chars[ci] + '_walk_right');
       var cimg = cfr[Math.floor(menuT * 10 + ci) % cfr.length];
       ctx.drawImage(cimg, cx, cy, 56, 74);
     }
 
-    // 底部怪物行:同样拆成左右两侧边带往返移动,放在面板下方贴底。
+    // 底部怪物行:同样左右两侧边带向右循环移动,贴底。
     var parade = ['bat', 'slime', 'zombie', 'skeleton', 'ghost', 'spider', 'orc',
                   'boss_slimeking', 'boss_bonelord', 'boss_abysseye', 'boss_darklord'];
     for (var i = 0; i < parade.length; i++) {
@@ -1590,9 +1588,9 @@
       var left = i % 2 === 0;
       var bandC = left ? 190 : 770;
       var bandR = 150;
-      var mp = Math.abs((menuT * 0.045 + i * 0.11) % 1 * 2 - 1);
-      var x = bandC + (mp * 2 - 1) * bandR;
-      var y = CFG.GAME.H - 56 + Math.sin(menuT * 4 + i * 1.3) * 3;   // 面板下方贴底
+      var span = bandR * 2;
+      var x = bandC + ((menuT * 40 + i * 130) % span) - bandR;     // 向右循环
+      var y = CFG.GAME.H - 84 + Math.sin(menuT * 4 + i * 1.3) * 3;   // 怪物行贴底,贴着四周边框
       var isBoss = pid.indexOf('boss_') === 0;
       var frames = SpriteGen.frames(pid + (isBoss ? '' : '_walk'));
       var img = frames[Math.floor(menuT * 5 + i) % frames.length];

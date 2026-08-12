@@ -117,19 +117,20 @@ window.UI = (function () {
     menuAltar = h('div', 'menu-altar');
     menuAltar.appendChild(h('div', 'menu-altar-title', '强化圣坛'));
     s.appendChild(menuAltar);
-    // 中间:主按钮列 + 小按钮行
+    // 中间:主按钮列 + 小按钮行 + 设置(最下面)
     var mid = h('div', 'menu-mid');
     var col = h('div', 'menu-col');
     col.appendChild(btn(L.t('menu_start'), 'primary', function () { coopMode = false; refreshChars(); show('chars'); }));
     col.appendChild(btn(L.t('menu_coop'), '', function () { refreshLobbyEntry(); show('coop'); }));
     mid.appendChild(col);
     var subRow = h('div', 'menu-subrow');
-    subRow.appendChild(btn(L.t('menu_settings'), 'sub', function () { refreshSettings(); show('settings'); }));
     subRow.appendChild(btn(L.t('menu_achv'), 'sub', function () { refreshAchv(); show('achv'); }));
+    subRow.appendChild(btn(L.t('menu_codex'), 'sub', function () { codexFrom = 'menu'; refreshCodex(); show('codex'); }));
     mid.appendChild(subRow);
-    var encRow = h('div', 'menu-encrow');
-    encRow.appendChild(btn(L.t('menu_codex'), 'sub', function () { codexFrom = 'menu'; refreshCodex(); show('codex'); }));
-    mid.appendChild(encRow);
+    // 设置单独放最下面一行
+    var settingsRow = h('div', 'menu-settings-row');
+    settingsRow.appendChild(btn(L.t('menu_settings'), '', function () { refreshSettings(); show('settings'); }));
+    mid.appendChild(settingsRow);
     body.appendChild(menuAltar);
     body.appendChild(mid);
     // 右侧:公告栏
