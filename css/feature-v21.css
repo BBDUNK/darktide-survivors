@@ -18,6 +18,34 @@
   background: rgba(7, 3, 15, 0.55) !important;
 }
 
+/* 各页面的卡片/行/面板统一成"主菜单按钮同色系"的金属框:深灰底 + 金铜描边 + 浮雕。
+   ⚠ 不能直接把按钮那张贴图整图拉伸到这些容器上 —— 贴图顶部是居中的整体冠饰,
+   一旦拉到卡片/长条那种比例,冠饰会横向抹成条纹压在正文上(图鉴/商店实测已糊字)。
+   所以这里用与该贴图取色一致的纯 CSS 金属框,任何尺寸都不变形。 */
+.card, .info-box, .shop-item, .codex-cell, .enc-card, .achv-row,
+.lu-card, .chest-item, .coop-char, .coop-member, .coop-map,
+.coop-lu-box, .coop-code, .enc-stat, .settings-body {
+  background: linear-gradient(180deg, rgba(26, 22, 20, .96), rgba(12, 9, 11, .97)) !important;
+  border: 2px solid #8b6a37 !important;
+  border-image: none !important;
+  border-radius: 0 !important;
+  box-shadow:
+    inset 0 0 0 1px #2b2420,
+    inset 0 1px 0 rgba(240, 214, 160, .14),
+    0 3px 7px rgba(0, 0, 0, .55) !important;
+}
+/* 选中/进化/当前态:亮金描边高亮 */
+.card.selected, .coop-char.sel, .coop-map.sel, .chest-item.evolved {
+  border-color: #ffd76b !important;
+  box-shadow:
+    inset 0 0 0 1px #3a2f22,
+    inset 0 1px 0 rgba(255, 235, 190, .22),
+    0 0 12px rgba(255, 215, 107, .38),
+    0 3px 8px rgba(0, 0, 0, .6) !important;
+}
+/* 锁定态:压暗描边,与可选项区分 */
+.card.locked { border-color: #4a4038 !important; }
+
 .menu-col .btn {
   width: 388px !important;      /* 面板保持248不动时按钮能到的最大宽度 */
   min-height: 76px !important;
