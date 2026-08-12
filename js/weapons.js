@@ -1079,7 +1079,8 @@ window.Weapons = (function () {
       // 按比例补偿,把光环几何圆心精确移到角色位置。
       var auraXOff = auraW * (48 - 47.5) / 96;   // +0.005×宽
       var auraYOff = auraH * (48 - 43.5) / 96;   // +0.047×高
-      ctx.globalAlpha = (wAura.evolved ? 0.72 : 0.60) + Math.sin(auraT * 1.2) * 0.035;
+      // 光环本来只是"脚下有领域"的提示,别让它糊住半屏视野。降到低可见度。
+      ctx.globalAlpha = (wAura.evolved ? 0.38 : 0.30) + Math.sin(auraT * 1.2) * 0.02;
       ctx.drawImage(auraImg, p.x - auraW / 2 + auraXOff, p.y - auraH / 2 + auraYOff, auraW, auraH);
       ctx.globalAlpha = 1;
     }

@@ -12,7 +12,7 @@ window.Merchant = (function () {
   var flash = 0;         // 刷新时的高亮计时
   var arrows = [];
   var combat = { prone: 0, attackAge: 9, attackCd: 0.3, face: 1, target: null };
-  var dialogue = { text: '', until: 0, nearby: false };
+  var dialogue = { text: '', until: 0, nextAt: 3, wasNear: false };   // 每 20 秒一句,一句 10 秒;点击可提前换话
 
   // 动画帧的"身体水平中心"。AI 母版每帧内容位置并不一致(质心在 43~47.5 漂移),
   // 直接按帧中心画会让商人身体在攻击时左右跳 —— 那就是用户看到的"攻击闪烁"。
@@ -52,7 +52,71 @@ window.Merchant = (function () {
     arrows.length = 0;
     combat.prone = 0; combat.attackAge = 9; combat.attackCd = 0.3;
     combat.face = 1; combat.target = null;
-    dialogue.text = ''; dialogue.until = 0; dialogue.nearby = false;
+    dialogue.text = ''; dialogue.until = 0; dialogue.nextAt = 3;
+  }
+
+  // ================= 闲聊 =================
+  // 商人的台词池:量大、口语化、贴合"走江湖的老摊贩"人设。
+  // 高频话题:游戏背景史、夸 DeepSeek V4F、吐槽 Codex 额度少、夸玉皇大帝长得帅。
+  // 每句控制在 18 字以内,保证不超出聊天框(绘制侧再截断一次兜底)。
+  var DIALOGUE = [
+    // ---- 游戏背景史 ----
+    '这墓园曾是一座王城,如今只剩我摆摊。',
+    '暗潮吞了半个大陆,圣骑士全没了音信。',
+    '你脚下埋着三个王朝,挖出来都能卖钱。',
+    '深渊之眼盯这儿三百年,没见它眨过眼。',
+    '腐液之王原是屠夫,被诅咒泡成了烂泥。',
+    '骸骨领主生前守财奴,金币烂在骨头里了。',
+    '当年那场大洪水,把王朝账本都冲走了。',
+    '圣坛底下镇着什么,连我都不敢多望。',
+    '商路断了三百年,我算最后一段尾巴。',
+    '战报上的字,我一个大字不识。',
+    // ---- 夸 DeepSeek V4F ----
+    '进货前问一句 V4F,亏本买卖它先摇头。',
+    'V4F 算价,比我蹲三天集市都准。',
+    'V4F 帮我压货,连天气都算进成本了。',
+    '自从有了 V4F,砍价这手艺都快忘了。',
+    'V4F 说我今日宜卖不宜买,我信了。',
+    'V4F 是真的好用,算得比我还精。',
+    '进货带上 V4F,路上遇几波怪都有数。',
+    // ---- 吐槽 Codex 额度少 ----
+    'Codex 画图是好手,就是额度总见底。',
+    '让 Codex 重画史莱姆,它说额度不够。',
+    'Codex 一高兴烧光额度,图纸剩半张。',
+    '隔壁 Codex 的额度,比货架还容易空。',
+    'Codex 改了三遍图,又改回第一遍。',
+    '别催 Codex,额度就那么点,催了白催。',
+    // ---- 夸玉皇大帝帅 ----
+    '要说天下第一好看,非玉皇大帝莫属。',
+    '玉皇大帝巡天那趟,连眼珠子都看直了。',
+    '玉皇大帝往那一站,暗潮都得绕道走。',
+    '那位玉皇大帝,端的是帅得没边。',
+    '都说玉皇大帝帅,我拿货换他画像,值了。',
+    '玉皇大帝三个字,比我的招牌还招人。',
+    // ---- 摊贩日常 ----
+    '今日货全,明日货全,钱包总不见全。',
+    '这年头怪物比顾客多,生意难做啊。',
+    '别把泥带进摊位,我刚擦的货架。',
+    '想要好东西,先掏真金白银来。',
+    '我只认钱,也认命——它俩都靠不住。',
+    '武器趁手,命才趁手,都一个理。',
+    '那边打得欢,这边数钱忙。',
+    '童叟无欺,就是价格童叟都疼。'
+  ];
+  function pickDialogue(avoid) {
+    if (DIALOGUE.length <= 1) return DIALOGUE[0];
+    var i = Math.floor(Math.random() * DIALOGUE.length);
+    // 尽量避免连续说同一句,也优先高频话题(前两类占比本就高)
+    for (var guard = 0; guard < 8 && DIALOGUE[i] === avoid; guard++) {
+      i = Math.floor(Math.random() * DIALOGUE.length);
+    }
+    return DIALOGUE[i];
+  }
+  // 玩家点击/点击商人时换一句(由 main.js 调用)
+  function poke(run) {
+    dialogue.text = pickDialogue(dialogue.text);
+    dialogue.until = run.t + 10;
+    dialogue.nextAt = run.t + 20;   // 被手动打断后,自动循环从下个 20 秒重新计时
   }
 
   // 抽一件商品。武器/被动这两类要在运行时决定具体是哪一个。
@@ -135,21 +199,18 @@ window.Merchant = (function () {
       if (run.cb && run.cb.onWarn) run.cb.onWarn('🛒 商人补货了!');
     }
     updateCombat(run, dt);
-    var nearMerchant = E.dist2(run.player.x, run.player.y, M.x, M.y - 42) < 170 * 170;
-    if (nearMerchant && !dialogue.nearby) {
-      var charId = run.player.char && run.player.char.id;
-      var lines = {
-        knight: ['骑士，盔甲会响；金币也会响。后者更动听。', '剑气能开路，别把自己也劈进沼泽。'],
-        berserker: ['斧头要向怪物挥，不要向我的货架挥。', '血怒时见红就收一点血，别全洒地上。'],
-        ranger: ['风会带走箭，也会带回宝箱的方向。'],
-        mage: ['书页翻得快，敌人倒得也该快。'],
-        cleric: ['圣光照得见前路，不替你付账。']
-      };
-      var picks = lines[charId] || ['靠近摊位能买到当前装备的下一等级。', '双击方向键可冲刺，留一手总是好习惯。'];
-      dialogue.text = picks[Math.floor(Math.random() * picks.length)];
-      dialogue.until = run.t + 5;
+    // 闲聊:每 20 秒说一句,一句持续 10 秒;走近时补一句"招呼"。
+    // 光靠"在附近"触发会让玩家站桩时每 10 秒被打断一次,所以只在"刚走近"时触发,
+    // 之后的节奏交给 20 秒定时。
+    var nearMerchant = E.dist2(run.player.x, run.player.y, M.x, M.y - 42) < 340 * 340;
+    if (dialogue.until <= run.t) {
+      if (run.t >= dialogue.nextAt || (nearMerchant && !dialogue.wasNear)) {
+        dialogue.nextAt = run.t + 20;
+        dialogue.until = run.t + 10;
+        dialogue.text = pickDialogue(dialogue.text);
+      }
     }
-    dialogue.nearby = nearMerchant;
+    dialogue.wasNear = nearMerchant;
     // 走到商品上自动购买(任意参战玩家都可购买)
     var ents = run.coopPlayers || [{ player: run.player, downed: false }];
     for (var i = 0; i < slots.length; i++) {
@@ -347,8 +408,6 @@ window.Merchant = (function () {
     } else {
       ctx.drawImage(mimg, left, mTop, mw, mh);
     }
-    // 补货倒计时小闹钟
-    drawClock(ctx, run);
     if (dialogue.until > run.t) drawDialogue(ctx, M, dialogue.text);
 
     for (var i = 0; i < slots.length; i++) {
@@ -420,47 +479,17 @@ window.Merchant = (function () {
     }
   }
 
-  // 补货倒计时单针钟:一根指针表示剩余比例,转过区域红、未转区域蓝
-  function drawClock(ctx, run) {
-    var M = CFG.MERCHANT;
-    var remain = Math.max(0, nextRefresh - run.t);
-    var total = M.refreshInt || 300;
-    var frac = Math.max(0, Math.min(1, remain / total));   // 剩余比例 1→0
-    var cx = M.x + 46, cy = M.y - 86;
-    var R = 18;
-    // 蓝:未转过的剩余区域(从指针当前位置顺时针回到 12 点)
-    ctx.fillStyle = 'rgba(80,150,255,0.75)';
-    ctx.beginPath();
-    ctx.moveTo(cx, cy);
-    ctx.arc(cx, cy, R, (1 - frac) * Math.PI * 2, Math.PI * 2);
-    ctx.closePath();
-    ctx.fill();
-    // 红:已转过的区域(从 12 点顺时针到指针当前位置)
-    ctx.fillStyle = 'rgba(230,60,70,0.85)';
-    ctx.beginPath();
-    ctx.moveTo(cx, cy);
-    ctx.arc(cx, cy, R, 0, (1 - frac) * Math.PI * 2);
-    ctx.closePath();
-    ctx.fill();
-    // 表盘描边
-    ctx.strokeStyle = 'rgba(255,220,150,0.9)';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
-    // 指针:指向剩余区域的边界(已转过的末端)
-    var ang = (1 - frac) * Math.PI * 2 - Math.PI / 2;
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(cx, cy);
-    ctx.lineTo(cx + Math.cos(ang) * (R - 1), cy + Math.sin(ang) * (R - 1));
-    ctx.stroke();
-    // 中心点
-    ctx.fillStyle = '#fff';
-    ctx.beginPath(); ctx.arc(cx, cy, 1.6, 0, Math.PI * 2); ctx.fill();
-  }
-
   function drawDialogue(ctx, M, text) {
-    var x = M.x - 88, y = M.y - M.drawH - 92, w = 176, h = 42;
+    // 长句折成最多两行,每行 18 字内 —— 保证不溢出聊天框
+    var max = 18, lines = [];
+    if (text.length <= max) lines.push(text);
+    else {
+      lines.push(text.slice(0, max));
+      lines.push(text.slice(max, max * 2));
+    }
+    var lh = 16, w = 204, h = lines.length * lh + 12;
+    // 盒子放在商人头顶上方,不再压住贴图;商人母版高 drawH,头顶约在 M.y-56-drawH
+    var x = M.x - w / 2, y = M.y - M.drawH - 112;
     ctx.save();
     ctx.fillStyle = 'rgba(255,253,245,.96)';
     ctx.strokeStyle = '#69482c'; ctx.lineWidth = 2;
@@ -471,11 +500,14 @@ window.Merchant = (function () {
     ctx.lineTo(x, y + 13); ctx.quadraticCurveTo(x, y, x + 13, y); ctx.closePath(); ctx.fill(); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(M.x - 9, y + h); ctx.lineTo(M.x + 3, y + h); ctx.lineTo(M.x - 3, y + h + 9); ctx.closePath(); ctx.fill(); ctx.stroke();
     ctx.fillStyle = '#38241a'; ctx.font = 'bold 10px "Microsoft YaHei",sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText(text.length > 20 ? text.slice(0, 20) + '…' : text, M.x, y + 25);
+    for (var i = 0; i < lines.length; i++) {
+      ctx.fillText(lines[i], M.x, y + 18 + i * lh);
+    }
     ctx.restore();
   }
 
-  return { reset: reset, update: update, draw: draw, drawProjectiles: drawProjectiles, roll: roll,
+  return { reset: reset, update: update, draw: draw, drawProjectiles: drawProjectiles, roll: roll, poke: poke,
            slots: function () { return slots; },
+           dialogueState: function () { return { text: dialogue.text, until: dialogue.until, nextAt: dialogue.nextAt }; },
            combatState: function () { return { prone: combat.prone, arrows: arrows.length, target: !!combat.target }; } };
 })();

@@ -1649,10 +1649,17 @@
       return state === 'run' && overMinimap(cx, cy);
     };
 
-    // 小地图点击/触摸切换
+    // 小地图点击/触摸切换;点击商人换一句闲聊
     canvas.addEventListener('click', function (ev) {
       if (state !== 'run') return;
-      if (overMinimap(ev.clientX, ev.clientY)) E.onToggleMap();
+      if (overMinimap(ev.clientX, ev.clientY)) { E.onToggleMap(); return; }
+      // 屏幕坐标 → 世界坐标,命中商人则让他换句话
+      var rect = canvas.getBoundingClientRect();
+      var vs = E.viewScale() || 1;
+      var lx = (ev.clientX - rect.left) / vs, ly = (ev.clientY - rect.top) / vs;
+      var m = CFG.MERCHANT;
+      var wx = lx - CFG.GAME.W / 2 + E.cam.x, wy = ly - CFG.GAME.H / 2 + E.cam.y;
+      if (E.dist2(wx, wy, m.x, m.y - 40) < 95 * 95) Merchant.poke(run);
     });
     canvas.addEventListener('pointerdown', function (ev) {
       if (ev.pointerType !== 'touch' || state !== 'run') return;

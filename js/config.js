@@ -18,7 +18,7 @@ window.CFG = {
     SAVE_KEY: 'darktide_save_v2',
     // 画布适配:contain=等比适配永不裁切(默认) / fill=拉伸铺满可裁边 / native=原尺寸不缩放
     UI_SCALE: 'contain',
-    VERSION: 'v0.20.4'
+    VERSION: 'v0.20.5'
   },
 
   // 玩家基础属性(角色/被动/商店在此之上修正)
@@ -180,9 +180,9 @@ window.CFG = {
     cultist:        { name: '深渊信徒', hp: 48, dmg: 10, spd: 48, r: 11, xp: 4, ai: 'shoot', shotDmg: 12, shotCd: 4.0, shotSpd: 150, keepDist: 200, ranged: true },
     orc:            { name: '碎颅兽人', hp: 85, dmg: 16, spd: 54, r: 13, xp: 5, ai: 'chase' },
     imp:            { name: '狱火小鬼', hp: 32, dmg: 12, spd: 86, r: 10, xp: 3, ai: 'chase' },
-    // 重骑:受击后举盾1.8秒,只触发一次(guardOnHit)
-    knight_armored: { name: '堕落重骑', hp: 220, dmg: 20, spd: 38, r: 18, xp: 10, ai: 'shielder', armor: 5,
-                      guardOnHit: true, guardDur: 1.8 },
+    // 重骑:受击后举盾1.8秒,只触发一次(guardOnHit)。drawScale=2 放大一倍,更有压迫感
+    knight_armored: { name: '堕落重骑', hp: 220, dmg: 20, spd: 38, r: 26, xp: 10, ai: 'shielder', armor: 5,
+                      guardOnHit: true, guardDur: 1.8, drawScale: 2 },
     werewolf:       { name: '血月狼人', hp: 95, dmg: 20, spd: 72, r: 12, xp: 6, ai: 'charge', chargeSpd: 240, chargeCd: 3.5 },
     mummy:          { name: '尘缚木乃伊', hp: 130, dmg: 14, spd: 34, r: 12, xp: 6, ai: 'chase' },
     // 石像鬼:远程抛物线砸击,落点有红圈预警 —— 攻击间隔拉长,避免连续砸脸
@@ -194,16 +194,16 @@ window.CFG = {
 
   // music: 专属战斗曲;shotCol: 弹幕配色(区分各 Boss);auraR: 强化小怪的光环半径
   BOSSES: {
-    boss_slimeking: { name: '腐液之王', hp: 3200, dmg: 20, spd: 46, r: 64, xp: 60,
+    boss_slimeking: { name: '腐液之王', hp: 1600, dmg: 20, spd: 46, r: 64, xp: 60,
       music: 'boss_slime', shotCol: '#7fd44f',
       desc: '第 5 分钟:巨型史莱姆,跳劈并分裂出小史莱姆' },
-    boss_bonelord:  { name: '骸骨领主', hp: 180000, dmg: 26, spd: 50, r: 48, xp: 120,
+    boss_bonelord:  { name: '骸骨领主', hp: 90000, dmg: 26, spd: 50, r: 48, xp: 120,
       music: 'boss_bone', shotCol: '#e8e0c8',
       desc: '第 10 分钟:环形骨矢弹幕,连续蓄力冲撞' },
-    boss_abysseye:  { name: '深渊之眼', hp: 400000, dmg: 30, spd: 42, r: 52, xp: 220,
+    boss_abysseye:  { name: '深渊之眼', hp: 200000, dmg: 30, spd: 42, r: 52, xp: 220,
       music: 'boss_abyss', shotCol: '#c46bff',
       desc: '第 15 分钟:螺旋弹幕,瞬移到背后并召唤怨灵' },
-    boss_darklord:  { name: '暗潮魔王', hp: 900000, dmg: 36, spd: 55, r: 56, xp: 500,
+    boss_darklord:  { name: '暗潮魔王', hp: 450000, dmg: 36, spd: 55, r: 56, xp: 500,
       music: 'boss_dark', shotCol: '#ff4d7a',
       desc: '第 18 分钟:最终决战,兼具冲撞与瞬移。20 分钟后狂暴!' }
   },

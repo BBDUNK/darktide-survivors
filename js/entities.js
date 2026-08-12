@@ -1256,13 +1256,13 @@ window.Entities = (function () {
               } else {
                 e.vx = e.tgtX * 470; e.vy = e.tgtY * 470;
                 if ((run.frame & 1) === 0) FX.trail(e.x, e.y, '#a64dff', 4);
-                if (e.skT <= 0) { e.chargeSeq--; e.chargePhase = 0; e.skT = 0.42; e.aiT = 1.7; FX.shake(5, 0.24); }
+                if (e.skT <= 0) { e.chargeSeq--; e.chargePhase = 0; e.skT = 0.9; e.aiT = 1.7; FX.shake(5, 0.24); }
               }
               break;
             }
             e.vx = nx * spd * 0.82; e.vy = ny * spd * 0.82;
             if (e.aiT <= 0) {
-              e.aiT = 3.4; e.chargeSeq = 2; e.chargePhase = 0; e.skT = 0.62;
+              e.aiT = 10; e.chargeSeq = 3; e.chargePhase = 0; e.skT = 0.62;   // 每 10 秒一轮三连冲
               if (run.cb && run.cb.onWarn) run.cb.onWarn('冲撞瞳正在蓄力！');
             }
             break;
@@ -1346,8 +1346,8 @@ window.Entities = (function () {
             if ((run.frame & 1) === 0) FX.trail(e.x, e.y, dcol, 5);
             if (e.skT <= 0) {
               e.chargeSeq--; e.chargePhase = 0;
-              e.skT = 0.4;
-              e.aiT = e.chargeSeq > 0 ? 0.4 : 1.2;
+              e.skT = 0.9;                 // 三下冲刺之间的停顿,拉长避免连撞
+              e.aiT = e.chargeSeq > 0 ? 0.9 : 1.2;
               FX.shake(6, 0.3);
               for (var dj = 0; dj < 8; dj++) {
                 var da = (Math.PI * 2 / 8) * dj + run.t;
@@ -1373,11 +1373,14 @@ window.Entities = (function () {
         }
         e.vx = nx * spd * sMul; e.vy = ny * spd * sMul;
         e.aiPhase += dt * 1.8;
+        // 冲刺冷却:每 10 秒一轮,一轮冲 3 下。冲刺进行中不计数
+        if (e.chargeSeq <= 0) e.chargeCd = (e.chargeCd || 10) - dt;
         if (e.aiT <= 0) {
           e.aiT = e.phase2 ? 1.10 : (enrage ? 1.6 : 2.6);
           e.atkCount = (e.atkCount || 0) + 1;
-          if (e.atkCount % 3 === 0) {          // 每三轮弹幕后冲撞
-            e.chargeSeq = e.phase2 ? 4 : (enrage ? 3 : 2); e.chargePhase = 0; e.skT = 0.55;
+          if (e.chargeCd <= 0) {           // 冷却到:开始一轮三连冲
+            e.chargeCd = 10;
+            e.chargeSeq = 3; e.chargePhase = 0; e.skT = 0.55;
             if (run.cb.onWarn) run.cb.onWarn('⚠ 暗潮魔王冲锋!');
             break;
           }
@@ -1518,6 +1521,8 @@ window.Entities = (function () {
       var w = nearestPlayer(run, it.x, it.y);
       if (!w) continue;
       var p = w.player;
+      // 满血时不拾取烤肉:吃到也是浪费,让它留在地上等掉血了再吃
+      if (it.type === 'meat' && p.hp >= p.stats.hp) continue;
       var pr = (it.type === 'coin') ? Math.max(30, p.stats.magnet * 0.7) : 30;
       var d2 = E.dist2(it.x, it.y, p.x, p.y);
       if (it.pull || (it.type === 'coin' && d2 < pr * pr && d2 > 24 * 24)) {
@@ -1787,22 +1792,65 @@ window.Entities = (function () {
     return cv;
   }
 
+  // 帧内容质心缓存:用于把"质心漂移"的动画重锚定回身体中心。
+  // 不少 AI 母版的某一两帧内容位置会整体跳开(实测腐液之王摆 12.7px、骸骨领主
+  // 11.2px,其他怪 <3px),直接按帧中心画会让角色在动画里左右弹——就是"动作贴图
+  // 显示不正常"。这里按各帧内容质心相对平均质心的偏移补偿,身体钉在原地。
+  // 质心摆动 <4px 的精灵视为稳定,不做处理(避免影响正常的走路摆动)。
+  var _spriteCx = {};
+  function spriteCxMeta(name) {
+    if (_spriteCx[name] !== undefined) return _spriteCx[name];
+    var fr = SpriteGen.frames(name);
+    var per = [], sum = 0, min = 1e9, max = -1, i;
+    var cv = document.createElement('canvas');
+    var g = cv.getContext('2d', { willReadFrequently: true });
+    for (i = 0; i < fr.length; i++) {
+      var im = fr[i];
+      var cx = im.width / 2;
+      try {
+        cv.width = im.width; cv.height = im.height;
+        g.clearRect(0, 0, cv.width, cv.height);
+        g.drawImage(im, 0, 0);
+        var d = g.getImageData(0, 0, cv.width, cv.height).data;
+        var nz = 0, sx = 0, k;
+        for (k = 3; k < d.length; k += 4) if (d[k] > 16) { nz++; sx += (k / 4) % im.width; }
+        if (nz) cx = sx / nz;
+      } catch (e) {
+        // file:// 下画布被跨域污染读不了像素,退回帧中心(不重锚定)
+      }
+      per.push(cx); sum += cx;
+      if (cx < min) min = cx; if (cx > max) max = cx;
+    }
+    var meta = { per: per, avg: per.length ? sum / per.length : 0, stable: (max - min) < 4 };
+    _spriteCx[name] = meta;
+    return meta;
+  }
+
   function drawSprite(ctx, name, frameIdx, x, y, scale, flip, alpha, tint) {
     var frames = getFrames(name, flip);
     var img = frames[frameIdx % frames.length];
     scale *= SpriteGen.renderScale(name);
     var w = img.width * 2 * scale, h = img.height * 2 * scale;
+    // 重锚定:把当前帧内容质心拉回整组帧的平均质心,消除动画里的横向弹跳
+    var cxOff = 0;
+    var meta = spriteCxMeta(name);
+    if (!meta.stable) {
+      var fx = meta.per[frameIdx % meta.per.length];
+      cxOff = (meta.avg - fx) / img.width;
+      if (flip) cxOff = -cxOff;
+    }
+    var ox = cxOff * w;
     if (alpha !== 1) ctx.globalAlpha = alpha;
-    ctx.drawImage(img, x - w / 2, y - h / 2, w, h);
+    ctx.drawImage(img, x - w / 2 + ox, y - h / 2, w, h);
     if (tint) {
       var tc = getTint(name, frameIdx % frames.length, tint);
       ctx.globalAlpha = (alpha !== 1 ? alpha : 1) * 0.65;
       if (flip) {
         ctx.save(); ctx.translate(x, y); ctx.scale(-1, 1);
-        ctx.drawImage(tc, -w / 2, -h / 2, w, h);
+        ctx.drawImage(tc, -w / 2 - ox, -h / 2, w, h);
         ctx.restore();
       } else {
-        ctx.drawImage(tc, x - w / 2, y - h / 2, w, h);
+        ctx.drawImage(tc, x - w / 2 + ox, y - h / 2, w, h);
       }
     }
     if (alpha !== 1 || tint) ctx.globalAlpha = 1;
@@ -1918,7 +1966,8 @@ window.Entities = (function () {
     for (i = 0; i < POOL; i++) {
       e = enemies[i];
       if (!e.alive) continue;
-      var sc = (e.boss ? 2 : 1) * (e.elite ? CFG.ELITE.scale : 1) * (e.phase2 ? 1.28 : 1);
+      var sc = (e.boss ? 2 : 1) * (e.elite ? CFG.ELITE.scale : 1) * (e.phase2 ? 1.28 : 1)
+        * ((e.def && e.def.drawScale) || 1);
       // 破土动画:翻起的土堆 + 从地下逐渐升起的怪(用裁剪实现"半截在土里")
       if (e.burrowT > 0) {
         var prog = 1 - e.burrowT / (e.burrowMax || 1);   // 0→1
