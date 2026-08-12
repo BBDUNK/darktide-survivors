@@ -1556,10 +1556,11 @@
     drawMenuAsh();
 
     // 顶部角色行:放到标题下方的独立展示带,保持完全不透明。
+    // cy 位置要让角色行避开下方的圣坛/战报面板,不被遮住。
     var chars = ['char_knight', 'char_mage', 'char_ranger', 'char_cleric', 'char_berserker', 'char_chrono'];
     for (var ci = 0; ci < chars.length; ci++) {
       var cx = (CFG.GAME.W + 220 - (menuT * 36 + ci * 165) % (CFG.GAME.W + 220)) - 110;
-      var cy = 108 + Math.sin(menuT * 3.2 + ci * 0.8) * 4;
+      var cy = 84 + Math.sin(menuT * 3.2 + ci * 0.8) * 4;
       var cfr = SpriteGen.frames(chars[ci] + '_walk_right');
       var cimg = cfr[Math.floor(menuT * 10 + ci) % cfr.length];
       ctx.drawImage(cimg, cx, cy, 56, 74);

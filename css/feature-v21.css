@@ -4,8 +4,8 @@
    art-v4 曾把 .menu-screen 的边框清掉,导致主菜单四周光秃秃。 */
 .menu-screen {
   box-sizing: border-box !important;
-  border: 18px solid transparent !important;
-  border-image: url('../assets/art-v4/sprites/ui/baroque_menu_frame.png') 116 104 fill / 18px / 0 stretch !important;
+  border: 26px solid transparent !important;
+  border-image: url('../assets/art-v4/sprites/ui/baroque_menu_frame.png') 116 104 fill / 26px / 0 stretch !important;
   background: rgba(7, 3, 15, 0.16) !important;
 }
 
@@ -27,7 +27,7 @@
 .menu-altar,
 .menu-board {
   width: 248px !important;
-  height: 302px !important;
+  height: 268px !important;
   box-sizing: border-box;
   border: 0 !important;
   outline: 0 !important;
@@ -65,8 +65,8 @@
 .menu-altar-gold { color: #7b4d12 !important; text-shadow: none !important; }
 .menu-altar-icon.menu-altar-flame {
   position: relative;
-  width: 188px !important;
-  height: 174px !important;
+  width: 148px !important;
+  height: 138px !important;
   max-width: 100%;
   border: 0 !important;
   background: url('../assets/art-v4/sprites/ui/altar_cross_states.png') 0 0 / 400% 100% no-repeat !important;
