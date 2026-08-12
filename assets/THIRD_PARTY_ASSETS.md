@@ -85,6 +85,13 @@ The original user-provided Jade Emperor opening image remains `assets/intro.jpg`
 - Previously used for: `bat` and `bloodbat` four-frame animation sources.
 - Status: no longer referenced by the atlas manifests as of 2026-08-09; superseded by DCSS-derived frames. Source files are archived under `_unused/vendor/oga/` for provenance.
 
+## Battle Theme A (final-boss music)
+
+- Author: cynicmusic.com / pixelsphere.org
+- Source: https://opengameart.org/content/battle-theme-a
+- License: Creative Commons Zero (CC0 1.0) — no attribution required.
+- Used file: `assets/audio/music/battle-theme-a.mp3`, played via WebAudio for the final boss (`boss_dark`). Author's own game/soundtrack is 100% free (pixelsphere.org).
+
 ## Downloaded, not yet imported
 
 - Kenney Tiny Dungeon 1.0 (CC0): archived at `_unused/vendor/kenney-tinydungeon.zip`; official source https://kenney.nl/assets/tiny-dungeon, local `License.txt` confirms CC0.

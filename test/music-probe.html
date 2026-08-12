@@ -22,6 +22,19 @@
     };
   })();
 </script>
+<script>
+  // 统计录音文件主题的播放元素
+  window.__audios = [];
+  (function () {
+    var Orig = window.Audio;
+    window.Audio = function () {
+      var el = new Orig();
+      window.__audios.push(el);
+      return el;
+    };
+    window.Audio.prototype = Orig.prototype;
+  })();
+</script>
 <script src="../js/audio.js"></script>
 <script>
   // music-probe.html — 循环播放全部主题,统计振荡器数量 + 捕获调度异常
@@ -33,7 +46,12 @@
     var i = 0, j = 0, base = 0;
     var step = function () {
       AudioSys.stopMusic();
-      if (j >= 4) { j = 0; i++; if (i >= themes.length) { log('done all themes'); return; } }
+      if (j >= 4) { j = 0; i++; if (i >= themes.length) {
+        var info = window.__audios.map(function (a) {
+          return a.src.split('/').pop() + ' ready=' + a.readyState + ' t=' + a.currentTime.toFixed(1);
+        }).join('; ');
+        log('audios: ' + (info || 'none'));
+        log('done all themes'); return; } }
       AudioSys.setIntensity(j);
       var prev = window.__osc;
       AudioSys.playMusic(themes[i]);

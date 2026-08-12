@@ -13,6 +13,18 @@
     'boss_spawn', 'boss_die', 'elite_spawn', 'achievement', 'gameover', 'victory'
   ];
   const THEME_NAMES = ['menu', 'graveyard', 'wilds', 'abyss'];
+  // 录音文件主题:直接播放音频文件(走音乐总线),优先于程序化主题;文件加载失败自动退程序化
+  // 路径基于本脚本自身解析,保证从任意页面/子目录加载都指向 assets/audio/music/
+  const JS_DIR = (function () {
+    try {
+      const s = document.currentScript && document.currentScript.src;
+      if (s) { return s.slice(0, s.lastIndexOf('/') + 1); }
+    } catch (e) { /* 无 DOM 环境 */ }
+    return 'js/';
+  })();
+  const FILE_THEMES = {
+    boss_dark: JS_DIR + '../assets/audio/music/battle-theme-a.mp3'
+  };
   const API_NAMES = ['unlock', 'play', 'playMusic', 'setIntensity', 'stopMusic', 'setVolumes'];
 
   const MIN_GAP = 0.04;     // 同名音效最小间隔(秒)
@@ -468,7 +480,9 @@
     bar: 0,
     nextT: 0,
     stepDur: 0,
-    intensity: 2
+    intensity: 2,
+    mediaEl: null,   // 录音文件主题:播放元素
+    mediaSrc: null   // 录音文件主题:MediaElementSource
   };
 
   function fadeOutGain(g) {
@@ -486,6 +500,7 @@
     const now = ctx.currentTime;
     if (mus.gain) { fadeOutGain(mus.gain); }       // 自动淡出上一首
     if (mus.timer) { clearInterval(mus.timer); mus.timer = 0; }
+    stopFilePlayback();
     const g = ctx.createGain();
     g.gain.setValueAtTime(0.0001, now);
     g.gain.exponentialRampToValueAtTime(1, now + 0.25);
@@ -500,6 +515,58 @@
     mus.playing = true;
     mus.timer = setInterval(tick, TICK_MS);
     pendingTheme = null;
+  }
+
+  // 停止当前录音文件播放(暂停元素 + 断开 MediaElementSource)
+  function stopFilePlayback() {
+    if (mus.mediaEl) {
+      try { mus.mediaEl.pause(); } catch (e) { /* 已停 */ }
+      mus.mediaEl = null;
+    }
+    if (mus.mediaSrc) {
+      try { mus.mediaSrc.disconnect(); } catch (e) { /* 已断 */ }
+      mus.mediaSrc = null;
+    }
+  }
+
+  // 播放录音文件主题:HTMLAudio 循环 + MediaElementSource 进音乐总线
+  function startFileTheme(name, url) {
+    const now = ctx.currentTime;
+    if (mus.gain) { fadeOutGain(mus.gain); }
+    if (mus.timer) { clearInterval(mus.timer); mus.timer = 0; }
+    stopFilePlayback();
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, now);
+    g.gain.exponentialRampToValueAtTime(1, now + 0.25);
+    g.connect(musicBus);
+    mus.gain = g;
+    mus.def = null;
+    mus.theme = name;
+    mus.playing = true;
+    pendingTheme = null;
+    const el = new Audio();
+    el.src = url;
+    el.loop = true;
+    el.preload = 'auto';
+    mus.mediaEl = el;
+    el.addEventListener('error', function () {
+      if (mus.playing && mus.theme === name) { startTheme(name); }  // 文件失败退程序化
+    });
+    try {
+      const src = ctx.createMediaElementSource(el);
+      src.connect(g);
+      mus.mediaSrc = src;
+    } catch (e) {
+      el.volume = 0.8;   // 退化:不走音乐总线,元素直放
+    }
+    const p = el.play();
+    if (p && typeof p.catch === 'function') { p.catch(function () {}); }
+  }
+
+  // 统一入口:录音文件优先,否则程序化
+  function startMusic(theme) {
+    if (FILE_THEMES[theme]) { startFileTheme(theme, FILE_THEMES[theme]); }
+    else { startTheme(theme); }
   }
 
   function tick() {
@@ -850,7 +917,7 @@
     if (!unlocked) {
       unlocked = true;
       applyVolumes();
-      if (pendingTheme) { startTheme(pendingTheme); }
+      if (pendingTheme) { startMusic(pendingTheme); }
     }
   }
 
@@ -871,7 +938,8 @@
   }
 
   function playMusic(theme) {
-    if (typeof theme !== 'string' || !THEMES[theme] || !Object.prototype.hasOwnProperty.call(THEMES, theme)) {
+    const known = THEMES[theme] || FILE_THEMES[theme];
+    if (typeof theme !== 'string' || !known) {
       warnOnce('theme:' + theme, '[AudioSys] 未知音乐主题: ' + theme);
       return;
     }
@@ -881,7 +949,7 @@
     }
     if (mus.playing && mus.theme === theme) { return; }
     try {
-      startTheme(theme);
+      startMusic(theme);
     } catch (e) {
       warnOnce('musstart', '[AudioSys] 音乐启动异常: ' + e);
     }
@@ -896,6 +964,7 @@
   function stopMusic() {
     pendingTheme = null;
     if (mus.timer) { clearInterval(mus.timer); mus.timer = 0; }
+    stopFilePlayback();
     if (!mus.playing) { return; }
     mus.playing = false;
     if (mus.gain && ctx) { fadeOutGain(mus.gain); }
