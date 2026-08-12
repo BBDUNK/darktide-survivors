@@ -239,7 +239,7 @@
 .page-title {
   min-width: min(420px, calc(100vw - 38px)) !important;
   min-height: 54px !important;
-  padding: 10px 42px 8px !important;
+  padding: 6px 42px !important;
   color: #f1d28a !important;
   border: 14px solid transparent !important;
   border-image: url('../assets/art-v4/sprites/ui/baroque_menu_frame.png') 116 104 fill / 14px / 0 stretch !important;
@@ -247,6 +247,10 @@
   background-color: rgba(20, 11, 14, .92) !important;
   box-shadow: 0 5px 13px rgba(0,0,0,.55), inset 0 0 18px rgba(139,82,27,.22) !important;
   text-align: center;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
   letter-spacing: 5px !important;
 }
 

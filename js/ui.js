@@ -583,7 +583,6 @@ window.UI = (function () {
   function renderCodexTabs() {
     codexTabs.innerHTML = '';
     var tabs = [['w', '⚔ 武器'], ['p', '💠 被动'], ['e', '☠ 敌人'], ['m', '📖 机制'], ['g', '🎮 操作指南'], ['s', '📜 故事']];
-    tabs.push(['a', '训练场']);
     tabs.forEach(function (t) {
       codexTabs.appendChild(btn(t[1], codexTab === t[0] ? 'primary small-btn' : 'small-btn',
         function () { codexTab = t[0]; refreshCodex(); }));
