@@ -123,11 +123,12 @@ html, body, button, input, select, textarea,
 
 /* ---------- 3. 主菜单按钮:换成 HUD 金币/击杀框那套华丽金属边 ---------- */
 /* 用整图拉伸而不是九宫格:顶部冠饰是居中的整体纹样,一旦切成九宫格
-   中段就会被抹成条纹。素材本身四周留白 39px,拉伸后正好当作外描边。 */
+   中段就会被抹成条纹。素材原始四周留白 39px,按钮加宽后留白会占掉大段
+   宽度,让金色框看起来"没变宽"——改用裁掉透明边的紧贴版本,金色铺满按钮。 */
 .menu-col .btn,
 .menu-subrow .btn.sub,
 .menu-altar .btn.ruby {
-  background: url('../assets/art-v2/ui/hud_coin_frame.png') center / 100% 100% no-repeat;
+  background: url('../assets/art-v2/ui/menu_btn_frame_edge.png') center / 100% 100% no-repeat;
   /* theme-v17 给 .btn.primary/.ruby 设过 border-image-source,
      只要 border-image 还生效就会盖掉上面的 background,必须显式清掉。 */
   border-image: none;
@@ -142,7 +143,7 @@ html, body, button, input, select, textarea,
    art-v3 的 .menu-col .btn.primary 是三类选择器,压得过上面的两类规则,
    所以底图必须在同等特异度上再写一次,否则主按钮还是旧的红色渐变。 */
 .menu-col .btn.primary {
-  background: url('../assets/art-v2/ui/hud_coin_frame.png') center / 100% 100% no-repeat;
+  background: url('../assets/art-v2/ui/menu_btn_frame_edge.png') center / 100% 100% no-repeat;
   border-image: none;
   border: 0;
   outline: 0;
