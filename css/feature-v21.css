@@ -76,11 +76,11 @@
   box-sizing: border-box;
 }
 .boss-wrap { width: min(780px, calc(100vw - 22px)) !important; min-height: 72px; padding: 13px 30px 15px !important; }
-/* Boss 血条:放弃 18px 巴洛克大边框,改用项目自带的 CC0 dark-dwellers 像素血条框
-   (与 HUD 血条/按钮同源素材,风格统一)。设计同 theme-v17:条身深色底 + ::after
-   叠像素框 + 红色渐变填充。 */
+/* Boss 血条:固定长度、居中、抬到左下角击杀/金币框之上,不再盖住 HUD。
+   所有 Boss 用同一根条,宽度按血量百分比由 JS 内联设置,血量高掉得慢、血量低掉得快。 */
 .boss-wrap {
-  width: min(680px, calc(100% - 20px)) !important;
+  width: 340px !important;                 /* 固定长度,窄屏也不会吞掉左侧 HUD */
+  max-width: calc(100% - 200px) !important;
   min-height: 0 !important;
   padding: 0 !important;
   border: 0 !important;
@@ -88,33 +88,34 @@
   background: none !important;
   box-shadow: none !important;
 }
-.boss-name { margin-bottom: 6px !important; color: #ff8daf !important; text-shadow: 2px 2px 0 #1f0c18 !important; }
+.boss-name {
+  margin: 0 0 4px !important;
+  text-align: center;
+  font-family: var(--font-pix, monospace);
+  font-size: 11px !important;
+  letter-spacing: 2px;
+  color: #ff8daf !important;
+  text-shadow: 1px 1px 0 #1f0c18 !important;
+}
 .boss-bar {
   position: relative !important;
-  height: 18px !important;
+  height: 14px !important;
   box-sizing: border-box;
-  padding: 4px 8px !important;
-  background: #080411 !important;
-  border: 0 !important;
+  padding: 0 !important;
+  background: #0a0712 !important;
+  border: 2px solid #4a3038 !important;
+  border-radius: 0 !important;
   outline: 0 !important;
-  box-shadow: none !important;
+  box-shadow: inset 0 0 0 1px #12080c !important;
   overflow: hidden !important;
 }
-.boss-bar::after {
-  content: '' !important;
-  position: absolute !important;
-  inset: 0 !important;
-  z-index: 5 !important;
-  pointer-events: none !important;
-  background: url('../assets/ui/dark-dwellers/bar-boss.png') center / 100% 100% no-repeat !important;
-  image-rendering: pixelated;
-  border: 0 !important;
-}
+.boss-bar::after { display: none !important; }
 .boss-fill {
   height: 100% !important;
   /* 宽度由 JS 按血量百分比内联设置,不能在这里写死 100% */
-  background: repeating-linear-gradient(90deg, #99183f 0 12px, #f04d66 12px 21px) !important;
-  box-shadow: none !important;
+  background: linear-gradient(90deg, #7a1424, #d4314a) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 190, 200, 0.22) !important;
+  transition: width 0.15s ease-out;
 }
 .hud-warn { min-width: min(680px, calc(100vw - 22px)) !important; min-height: 62px; padding: 17px 42px !important; text-align: center; }
 /* 提示条从屏幕正中的大横幅改为小地图下方的小框,不再挡视野。
