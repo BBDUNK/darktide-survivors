@@ -156,6 +156,8 @@
   漏了 `announceBoss` 里的 `AudioSys.playMusic(bd.music)`。新增 `testSpawnBoss()` 统一两处生成逻辑并切曲,
   清场恢复地图曲。新增 `test/training-boss-music-probe.js` 真实浏览器验证:生成 Boss 后 Battle Theme A
   正在播放(ready=4),清场后停止
+- 追加:主菜单曲换用 CC-BY 录音 `The Dark Amulet — Dark Mage Theme`(OGA,作者 CruzR,黑暗法师主题);
+  与四首 Boss 曲的 Battle Theme A 一起通过 `FILE_THEMES` 播放;授权与署名要求记入 `assets/THIRD_PARTY_ASSETS.md`
 
 ---
 

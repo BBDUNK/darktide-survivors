@@ -22,8 +22,9 @@
     } catch (e) { /* 无 DOM 环境 */ }
     return 'js/';
   })();
-  // 四首 Boss 战斗曲统一用 Battle Theme A(CC0 史诗弦乐+号角)
+  // 主菜单 = The Dark Amulet(Dark Mage Theme,CC-BY);四 Boss = Battle Theme A(CC0 史诗弦乐+号角)
   const FILE_THEMES = {
+    menu: JS_DIR + '../assets/audio/music/dark-amulet.mp3',
     boss_slime: JS_DIR + '../assets/audio/music/battle-theme-a.mp3',
     boss_bone: JS_DIR + '../assets/audio/music/battle-theme-a.mp3',
     boss_abyss: JS_DIR + '../assets/audio/music/battle-theme-a.mp3',

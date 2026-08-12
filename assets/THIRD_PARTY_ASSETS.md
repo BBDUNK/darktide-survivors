@@ -85,6 +85,14 @@ The original user-provided Jade Emperor opening image remains `assets/intro.jpg`
 - Previously used for: `bat` and `bloodbat` four-frame animation sources.
 - Status: no longer referenced by the atlas manifests as of 2026-08-09; superseded by DCSS-derived frames. Source files are archived under `_unused/vendor/oga/` for provenance.
 
+## The Dark Amulet — Dark Mage Theme (main-menu music)
+
+- Author: CruzR
+- Source: https://opengameart.org/content/the-dark-amulet-dark-mage-theme
+- License: Creative Commons Attribution 3.0 (CC-BY 3.0) — free to use with attribution.
+- Used file: `assets/audio/music/dark-amulet.mp3`, played via WebAudio for the main menu (`menu`).
+- Attribution (displayed in the game's credits/settings): "The Dark Amulet — Dark Mage Theme by CruzR (opengameart.org), CC-BY 3.0."
+
 ## Battle Theme A (all boss-battle music)
 
 - Author: cynicmusic.com / pixelsphere.org
