@@ -699,7 +699,7 @@
     state = 'run';
   }
 
-  // 素材测试场不是静态图鉴：这里集中处理右侧控制台的逐项投放，
+  // 训练场不是静态图鉴：这里集中处理右侧控制台的逐项投放，
   // 让每一把武器、每种掉落和每个怪物都能在真实渲染/碰撞/动画里验收。
   function startArtTest() {
     newRun('knight', CFG.MAPS[0].id);
@@ -707,7 +707,7 @@
     run.gold = 9999;
     Entities.clearEnemies(run);
     UI.setTestMode(true);
-    UI.toastText('素材测试场：不会自动刷怪；右侧可逐项生成、满级和进化。');
+    UI.toastText('训练场：不会自动刷怪；右侧可逐项生成、满级和进化。');
   }
 
   function testSpawnPoint(radius) {
@@ -1920,6 +1920,7 @@
     run: function () { return run; },
     state: function () { return state; },
     coop: function () { return coop; },
+    zoom: function () { return worldZoom; },
     startArtTest: startArtTest,
     testAction: applyTestAction,
     menuBackground: function () {

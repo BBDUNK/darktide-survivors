@@ -184,6 +184,13 @@ window.UI = (function () {
   function buildChars() {
     var s = h('div', 'screen panel-col');
     s.appendChild(h('div', 'page-title', L.t('pick_char')));
+    // 右上角:训练场入口(无刷怪实机验收)
+    var trainBtn = btn('训练场', 'small-btn accent', function () { if (cb.onArtTest) cb.onArtTest(); });
+    trainBtn.style.position = 'absolute';
+    trainBtn.style.top = '16px';
+    trainBtn.style.right = '16px';
+    trainBtn.style.zIndex = 6;
+    s.appendChild(trainBtn);
     charGrid = h('div', 'card-grid');
     s.appendChild(charGrid);
     charInfo = h('div', 'info-box');
@@ -577,7 +584,7 @@ window.UI = (function () {
   function renderCodexTabs() {
     codexTabs.innerHTML = '';
     var tabs = [['w', '⚔ 武器'], ['p', '💠 被动'], ['e', '☠ 敌人'], ['m', '📖 机制'], ['g', '🎮 操作指南'], ['s', '📜 故事']];
-    tabs.push(['a', '素材库']);
+    tabs.push(['a', '训练场']);
     tabs.forEach(function (t) {
       codexTabs.appendChild(btn(t[1], codexTab === t[0] ? 'primary small-btn' : 'small-btn',
         function () { codexTab = t[0]; refreshCodex(); }));
@@ -597,12 +604,9 @@ window.UI = (function () {
   }
 
   function renderArtGallery() {
-    // “素材库”现在是验收入口而非静态图片墙：点击标签后直接进入无刷怪测试局。
-    // 保留下面的图集索引作为没有测试回调时的降级页面，便于独立打开 UI 模块调试。
-    if (cb.onArtTest) { cb.onArtTest(); return; }
+    // “训练场”入口在选人界面右上角,这里保留图集索引作为静态参考墙。
     var atlas = window.SPRITE_ATLAS || { frames: {} };
     var names = Object.keys(atlas.frames || {}).sort();
-    codexBody.appendChild(btn('进入素材测试场', 'primary big', function () { if (cb.onArtTest) cb.onArtTest(); }));
     codexBody.appendChild(h('div', 'enc-intro', '当前图集：' + names.length + ' 个素材；缩略图直接读取正在运行的图集。'));
     var groups = [
       ['角色动作', function (n) { return n.indexOf('char_') === 0; }],
@@ -904,8 +908,16 @@ window.UI = (function () {
     hudRefs.warn = h('div', 'hud-warn hidden', '');
     s.appendChild(hudRefs.warn);
     hudRefs.testPanel = h('div', 'test-panel hidden');
-    hudRefs.testPanel.appendChild(h('div', 'test-panel-title', '素材测试场'));
+    hudRefs.testPanel.appendChild(h('div', 'test-panel-title', '训练场'));
     hudRefs.testPanel.appendChild(h('div', 'test-panel-note', '无自动刷怪 · 逐项实机验收'));
+    // 训练场里的控件用完即失焦,避免焦点留在下拉/按钮上导致键盘输入被吞
+    // (表现为"自己按住 W"或按 WASD 没反应)。
+    hudRefs.testPanel.addEventListener('change', function (ev) {
+      if (ev.target && ev.target.blur) ev.target.blur();
+    });
+    hudRefs.testPanel.addEventListener('click', function (ev) {
+      if (ev.target && ev.target.tagName === 'BUTTON' && ev.target.blur) ev.target.blur();
+    });
     function addTestPicker(label, choices, actionType, altType, primaryText, altText) {
       var row = h('div', 'test-picker');
       row.appendChild(h('label', '', label));

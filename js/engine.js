@@ -52,7 +52,14 @@ window.Engine = (function () {
       pointer.type = e.pointerType || 'mouse';
       pointer.active = true;
     }
+    // 表单控件(训练场的下拉/输入框)拿到焦点时,键盘事件不应触达游戏 —— 否则
+    // 在原生下拉里按方向键会让角色乱走,甚至 keyup 被下拉吞掉导致"自动按住 W"。
+    function uiFormEvent(e) {
+      var t = e && e.target;
+      return !!(t && (t.tagName === 'SELECT' || t.tagName === 'INPUT' || t.tagName === 'TEXTAREA'));
+    }
     window.addEventListener('keydown', function (e) {
+      if (uiFormEvent(e)) return;
       keys[e.code] = true;
       var dir = e.code === 'KeyW' || e.code === 'ArrowUp' ? { x: 0, y: -1 } :
         (e.code === 'KeyS' || e.code === 'ArrowDown' ? { x: 0, y: 1 } :
@@ -68,9 +75,13 @@ window.Engine = (function () {
       if (e.code === 'Space') e.preventDefault();
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].indexOf(e.code) >= 0) e.preventDefault();
     });
-    window.addEventListener('keyup', function (e) { keys[e.code] = false; });
-    // 滚轮:切换索敌方式
+    window.addEventListener('keyup', function (e) {
+      if (uiFormEvent(e)) return;
+      keys[e.code] = false;
+    });
+    // 滚轮:切换索敌方式。在训练场控制台上滚动只应滚动面板,不该触发游戏缩放。
     window.addEventListener('wheel', function (e) {
+      if (e.target && e.target.closest && e.target.closest('.test-panel')) return;
       if (Engine.onScroll) Engine.onScroll(e.deltaY);
     }, { passive: true });
     window.addEventListener('blur', function () { keys = {}; if (Engine.onBlur) Engine.onBlur(); });
