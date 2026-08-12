@@ -78,6 +78,39 @@
 .boss-wrap { width: min(780px, calc(100vw - 22px)) !important; min-height: 72px; padding: 13px 30px 15px !important; }
 .boss-bar { height: 30px !important; }
 .hud-warn { min-width: min(680px, calc(100vw - 22px)) !important; min-height: 62px; padding: 17px 42px !important; text-align: center; }
+/* 提示条从屏幕正中的大横幅改为小地图下方的小框,不再挡视野。
+   与左下角……不,与小地图下"索敌方式"条同宽同高、左对齐,贴在它下面。
+   短消息一行,长消息(boss 机制)可换行,但始终只占右上角一隅。 */
+.hud-warn {
+  position: absolute !important;
+  top: 180px !important;
+  left: 828px !important;                 /* = 小地图左缘 + 8,与索敌方式条对齐 */
+  transform: none !important;
+  min-width: 0 !important;
+  width: 116px !important;                /* 与索敌方式条同宽 */
+  min-height: 0 !important;
+  height: auto !important;
+  padding: 2px 6px !important;
+  margin: 0 !important;
+  border: 1px solid #4f3c63 !important;   /* 与索敌方式条同款描边 */
+  border-image: none !important;
+  border-radius: 0 !important;
+  background: rgba(12, 8, 20, 0.94) !important;
+  box-shadow: none !important;
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  line-height: 13px !important;
+  text-align: center !important;
+  color: #ffd992 !important;
+  text-shadow: none !important;
+  white-space: normal !important;
+  overflow: hidden !important;
+  animation: none !important;
+  box-sizing: border-box;
+  pointer-events: none;
+  z-index: 20;
+}
 .pause-box { min-width: min(560px, calc(100vw - 30px)); padding: 38px !important; }
 .asset-gallery { display:grid; grid-template-columns:repeat(auto-fill,minmax(104px,1fr)); gap:8px; }
 .asset-cell { min-height:86px; padding:6px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; border:2px solid #614622; background:rgba(9,7,8,.78); }
