@@ -249,27 +249,34 @@
   // sections:每段 4 小节(roots 相对主题根音 / thirds 三度性质 / pads 垫声部音)
   const N = null;
   const THEMES = {
-    menu: { // 平静小调琶音,A 小调,92 BPM(音乐盒主奏 + 温暖弦乐垫 + 大提琴低音)
-      bpm: 92, root: 57, bassOct: -12, leadOct: 12,
+    menu: { // 古典小步舞曲:a 小调 84BPM,阿尔贝蒂低音 + 音乐盒主奏 + 温暖弦乐垫
+      bpm: 84, root: 57, bassOct: -12, leadOct: 12,
+      leadAbs: true, leadEcho: false,
       leadVoice: 'box', leadVib: 5,
       padType: 'sine', padVol: 0.05,
-      leadType: 'triangle', leadVol: 0.07,
-      bassType: 'triangle', bassVol: 0.16, drumVol: 0.55,
-      kick: '1.......1.......',
-      kickX: '....1.......1...',
+      leadType: 'triangle', leadVol: 0.075,
+      bassType: 'triangle', bassVol: 0.18, drumVol: 0.35,
+      kick: '1...............',   // 仅下拍软脉冲,古典舞曲感
+      kickX: '................',
       snare: '................',
-      hat: '....1.......1...',
-      hat3: '..1...1...1...1.',
-      bass: [0, N, N, N, N, N, 7, N, 0, N, N, N, 7, N, N, N],
-      lead: [
-        [0, -1, 1, -1, 2, -1, 3, -1, 2, -1, 1, -1, 0, -1, 2, -1],
-        [0, -1, 1, -1, 2, -1, 3, -1, 5, -1, 3, -1, 2, -1, 1, -1]
+      hat: '................',
+      hat3: '................',
+      bass: [0, 7, 12, 7, 0, 7, 12, 7, 0, 7, 12, 7, 0, 7, 12, 7],   // 阿尔贝蒂:根-五-八-五
+      lead: [  // 8 小节二段式小步舞曲主题(前 4 小节半终止,后 4 小节收束主音)
+        [7, -1, -1, -1, 3, -1, -1, -1, 5, -1, -1, -1, 7, -1, -1, -1],
+        [0, -1, -1, -1, 3, -1, -1, -1, 5, -1, -1, -1, 3, -1, -1, -1],
+        [3, -1, -1, -1, 7, -1, -1, -1, 12, -1, -1, -1, 10, -1, -1, -1],
+        [7, -1, -1, -1, 5, -1, -1, -1, 2, -1, -1, -1, -1, -1, -1, -1],
+        [0, -1, -1, -1, 3, -1, -1, -1, 7, -1, -1, -1, 12, -1, -1, -1],
+        [10, -1, -1, -1, 8, -1, -1, -1, 7, -1, -1, -1, 5, -1, -1, -1],
+        [7, -1, -1, -1, 11, -1, -1, -1, 14, -1, -1, -1, 11, -1, -1, -1],
+        [12, -1, -1, -1, 7, -1, -1, -1, 3, -1, -1, -1, 0, -1, -1, -1]
       ],
       sections: [
         { roots: [0, -4, 3, -2], thirds: [3, 4, 4, 4],
           pads: [[0, 3, 7], [-4, 0, 3], [3, 7, 10], [-2, 2, 5]] },          // Am F C G
-        { roots: [0, 5, -5, 0], thirds: [3, 3, 3, 3],
-          pads: [[0, 3, 7], [-7, -4, 0], [-5, -2, 2], [0, 3, 7]] }          // Am Dm Em Am
+        { roots: [0, -7, 2, 0], thirds: [3, 3, 4, 3],
+          pads: [[0, 3, 7], [-7, -4, 0], [2, 6, 9], [0, 3, 7]] }            // Am Dm E Am
       ]
     },
     graveyard: { // 阴郁 e 小调(安达卢西亚下行),112 BPM
@@ -562,7 +569,7 @@
         const leadFn = box ? boxNote : leadNote;
         const arg5 = box ? (d.leadVib || 0) : d.leadType;
         leadFn(g, t, midi, mus.stepDur * durMul, d.leadVol, arg5);
-        if (inten >= 3) {
+        if (inten >= 3 && d.leadEcho !== false) {
           leadFn(g, t + mus.stepDur * 2, midi + 12, mus.stepDur * 1.7, d.leadVol * 0.45, arg5);
         }
       }
