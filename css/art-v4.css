@@ -33,7 +33,7 @@
   border-bottom: 1px solid rgba(77, 35, 31, .82);
   background: linear-gradient(90deg, transparent, rgba(19, 11, 13, .72) 18%, rgba(19, 11, 13, .72) 82%, transparent);
 }
-.menu-body { top: 140px; gap: 30px; padding-top: 30px; }
+.menu-body { top: 140px; gap: 12px; padding-top: 30px; }
 
 .menu-altar, .menu-board, .menu-col .btn, .menu-subrow .btn.sub {
   border-color: #b18a49;
