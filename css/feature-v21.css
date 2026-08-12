@@ -11,7 +11,7 @@
 
 .menu-col .btn {
   width: 300px !important;
-  min-height: 62px !important;
+  min-height: 72px !important;
   padding: 0 42px 3px !important;
   display: flex !important;
   align-items: center !important;
@@ -24,10 +24,17 @@
    缩小边距给三栏留足空间(圣坛248+按钮+战报248 才能不被 flex 压缩)。 */
 .menu-body { padding: 0 14px !important; }
 
+/* 成就/百科小按钮也拉高,和主按钮列协调 */
+.menu-subrow { width: 300px !important; }
+.menu-subrow .btn.sub {
+  min-height: 48px !important;
+  font-size: 13px !important;
+}
+
 .menu-altar,
 .menu-board {
   width: 248px !important;
-  height: 268px !important;
+  height: 296px !important;
   box-sizing: border-box;
   border: 0 !important;
   outline: 0 !important;
@@ -65,8 +72,8 @@
 .menu-altar-gold { color: #7b4d12 !important; text-shadow: none !important; }
 .menu-altar-icon.menu-altar-flame {
   position: relative;
-  width: 148px !important;
-  height: 138px !important;
+  width: 160px !important;
+  height: 150px !important;
   max-width: 100%;
   border: 0 !important;
   background: url('../assets/art-v4/sprites/ui/altar_cross_states.png') 0 0 / 400% 100% no-repeat !important;

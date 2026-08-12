@@ -720,9 +720,25 @@
     };
   }
 
+  // 训练场生成 Boss:挂血条横幅 + 切该 Boss 专属战斗曲(与正常对局 announceBoss 同款音乐逻辑)
+  function testSpawnBoss(bid, radius) {
+    var bp = testSpawnPoint(radius);
+    var be = Entities.spawnEnemy(run, bid, bp.x, bp.y, { allowNear: true });
+    if (be) {
+      run.boss = be;
+      UI.bossBanner(CFG.BOSSES[bid]);
+      if (CFG.BOSSES[bid].music) AudioSys.playMusic(CFG.BOSSES[bid].music);
+    }
+    return !!be;
+  }
+
   function applyTestAction(action) {
     if (!run || !run.testMode) return false;
-    if (action === 'clear') { Entities.clearEnemies(run); run.boss = null; return true; }
+    if (action === 'clear') {
+      Entities.clearEnemies(run); run.boss = null;
+      if (run.map && run.map.music) AudioSys.playMusic(run.map.music);   // 清场恢复地图曲
+      return true;
+    }
     if (action === 'heal') { run.player.hp = run.player.stats.hp; return true; }
     if (action === 'enemies') {
       var ids = Object.keys(CFG.ENEMIES), rr = 260;
@@ -735,10 +751,7 @@
     if (action === 'boss') {
       var bs = Object.keys(CFG.BOSSES), bid = bs[(run.testBossIdx || 0) % bs.length];
       run.testBossIdx = (run.testBossIdx || 0) + 1;
-      var bp = testSpawnPoint(310);
-      var be = Entities.spawnEnemy(run, bid, bp.x, bp.y, { allowNear: true });
-      if (be) { run.boss = be; UI.bossBanner(CFG.BOSSES[bid]); }
-      return !!be;
+      return testSpawnBoss(bid, 310);
     }
     if (action === 'weapons') {
       Object.keys(CFG.WEAPONS).forEach(function (id) { if (!Weapons.findWeapon(run, id)) Weapons.addWeapon(run, id); });
@@ -791,10 +804,7 @@
     }
     if (action.type === 'testBoss') {
       if (!CFG.BOSSES[id]) return false;
-      pt = testSpawnPoint(320);
-      var boss = Entities.spawnEnemy(run, id, pt.x, pt.y, { allowNear: true });
-      if (boss) { run.boss = boss; UI.bossBanner(CFG.BOSSES[id]); }
-      return !!boss;
+      return testSpawnBoss(id, 320);
     }
     return false;
   }
@@ -1560,7 +1570,7 @@
     var chars = ['char_knight', 'char_mage', 'char_ranger', 'char_cleric', 'char_berserker', 'char_chrono'];
     for (var ci = 0; ci < chars.length; ci++) {
       var cx = (CFG.GAME.W + 220 - (menuT * 36 + ci * 165) % (CFG.GAME.W + 220)) - 110;
-      var cy = 84 + Math.sin(menuT * 3.2 + ci * 0.8) * 4;
+      var cy = 74 + Math.sin(menuT * 3.2 + ci * 0.8) * 4;
       var cfr = SpriteGen.frames(chars[ci] + '_walk_right');
       var cimg = cfr[Math.floor(menuT * 10 + ci) % cfr.length];
       ctx.drawImage(cimg, cx, cy, 56, 74);

@@ -155,10 +155,6 @@ window.UI = (function () {
     if (menuAltar.style && menuAltar.style.setProperty) menuAltar.style.setProperty('--altar-power', altarPower);
     menuAltar.appendChild(iconBox);
     menuAltar.appendChild(h('div', 'menu-altar-title', '强化圣坛'));
-    var goldLine = h('div', 'menu-altar-gold');
-    goldLine.appendChild(iconCanvas('icon_gold', 16));
-    goldLine.appendChild(h('span', '', ' ' + d.gold.toLocaleString()));
-    menuAltar.appendChild(goldLine);
     var goBtn = btn(L.t('altar_enter'), 'sub ruby', function () { refreshShop(); show('shop'); });
     menuAltar.appendChild(goBtn);
     // 公告栏:总击杀等,红字
