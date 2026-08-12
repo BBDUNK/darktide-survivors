@@ -1,5 +1,14 @@
 /* feature-v21.css — 复古巴洛克统一外观与主菜单专属画板 */
 
+/* 主菜单四周恢复巴洛克金框(与选人/结算/图鉴同款 baroque_menu_frame)。
+   art-v4 曾把 .menu-screen 的边框清掉,导致主菜单四周光秃秃。 */
+.menu-screen {
+  box-sizing: border-box !important;
+  border: 18px solid transparent !important;
+  border-image: url('../assets/art-v4/sprites/ui/baroque_menu_frame.png') 116 104 fill / 18px / 0 stretch !important;
+  background: rgba(7, 3, 15, 0.16) !important;
+}
+
 .menu-col .btn {
   width: 350px !important;
   min-height: 62px !important;
