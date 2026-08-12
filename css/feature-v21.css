@@ -76,8 +76,9 @@
   box-sizing: border-box;
 }
 .boss-wrap { width: min(780px, calc(100vw - 22px)) !important; min-height: 72px; padding: 13px 30px 15px !important; }
-/* Boss 血条:放弃 18px 巴洛克大边框(整条被拉成怪异的巨框),改用专门的
-   Boss 血条素材(整图拉伸,与 HUD 金币框同款质感),窄屏也不会被挤破。 */
+/* Boss 血条:放弃 18px 巴洛克大边框,改用项目自带的 CC0 dark-dwellers 像素血条框
+   (与 HUD 血条/按钮同源素材,风格统一)。设计同 theme-v17:条身深色底 + ::after
+   叠像素框 + 红色渐变填充。 */
 .boss-wrap {
   width: min(680px, calc(100% - 20px)) !important;
   min-height: 0 !important;
@@ -87,17 +88,34 @@
   background: none !important;
   box-shadow: none !important;
 }
-.boss-name { margin-bottom: 6px !important; }
+.boss-name { margin-bottom: 6px !important; color: #ff8daf !important; text-shadow: 2px 2px 0 #1f0c18 !important; }
 .boss-bar {
-  height: 34px !important;
+  position: relative !important;
+  height: 18px !important;
   box-sizing: border-box;
-  padding: 11px 22px 12px !important;
-  background: url('../assets/art-v2/ui/hud_boss_frame.png') center / 100% 100% no-repeat !important;
+  padding: 4px 8px !important;
+  background: #080411 !important;
   border: 0 !important;
   outline: 0 !important;
   box-shadow: none !important;
+  overflow: hidden !important;
 }
-.boss-bar::after { border: 0 !important; }
+.boss-bar::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 5 !important;
+  pointer-events: none !important;
+  background: url('../assets/ui/dark-dwellers/bar-boss.png') center / 100% 100% no-repeat !important;
+  image-rendering: pixelated;
+  border: 0 !important;
+}
+.boss-fill {
+  height: 100% !important;
+  /* 宽度由 JS 按血量百分比内联设置,不能在这里写死 100% */
+  background: repeating-linear-gradient(90deg, #99183f 0 12px, #f04d66 12px 21px) !important;
+  box-shadow: none !important;
+}
 .hud-warn { min-width: min(680px, calc(100vw - 22px)) !important; min-height: 62px; padding: 17px 42px !important; text-align: center; }
 /* 提示条从屏幕正中的大横幅改为小地图下方的小框,不再挡视野。
    与左下角……不,与小地图下"索敌方式"条同宽同高、左对齐,贴在它下面。
