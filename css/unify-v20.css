@@ -13,8 +13,8 @@
 
 /* ---------- 1. 字体可读性 ---------- */
 :root {
-  /* 正文:清晰的中文像素字体优先,不再用哥特花体 */
-  --font-cn: "Fusion Pixel", "Microsoft YaHei", "PingFang SC", sans-serif;
+  /* 正文:正楷(楷体)优先,按用户要求把游戏字体换成楷书 */
+  --font-cn: "KaiTi", "STKaiti", "楷体", "Microsoft YaHei", "PingFang SC", sans-serif;
   --font-pix: "Fusion Pixel", "Press Start 2P", "Microsoft YaHei", monospace;
   /* 花体单独留一个变量,仅标题使用 */
   --font-gothic: "Darktide Gothic", Georgia, serif;
