@@ -654,14 +654,6 @@ window.Entities = (function () {
   }
 
   // ================= 敌人 AI =================
-  // 精英/Boss 不再给周围怪物附加强化光环；这里只负责清掉旧局/联机快照残留。
-  function applyAuras(run) {
-    for (var i = 0; i < POOL; i++) {
-      var e = enemies[i];
-      if (e.alive) { e.buffSpd = 1; e.buffDmg = 1; e.buffed = false; }
-    }
-  }
-
   function updateEnemies(run, dt) {
     var p = run.player;
     var hostP = run.player;   // 光环领域以"持有者"(房主)为中心。p 会在下面敌怪循环里被改写成
@@ -670,7 +662,6 @@ window.Entities = (function () {
     E.gridClear();
     var i, e;
     for (i = 0; i < POOL; i++) { e = enemies[i]; if (e.alive) E.gridInsert(e); }
-    if ((run.frame % 6) === 0) applyAuras(run);
     var frameParity = (run.frame & 1);
 
     for (i = 0; i < POOL; i++) {
@@ -1741,8 +1732,23 @@ window.Entities = (function () {
   }
 
   // ================= 绘制 =================
-  var framesCache = {};
-  var flipCache = {};
+  var framesCache = {};        // 原始帧(含 AI 母版夹带的过渡/空白帧)
+  var flipCache = {};          // 原始帧的水平翻转副本
+  var stableCache = {};        // 稳定帧(剔除几乎空白的过渡帧,消除循环闪烁)
+  var stableFlipCache = {};    // 稳定帧的水平翻转副本
+
+  function buildFlipped(src) {
+    var out = [];
+    for (var i = 0; i < src.length; i++) {
+      var cv = document.createElement('canvas');
+      cv.width = src[i].width; cv.height = src[i].height;
+      var cx = cv.getContext('2d');
+      cx.translate(cv.width, 0); cx.scale(-1, 1);
+      cx.drawImage(src[i], 0, 0);
+      out.push(cv);
+    }
+    return out;
+  }
   function getFrames(name, flip) {
     if (!flip) {
       var c0 = framesCache[name];
@@ -1750,20 +1756,29 @@ window.Entities = (function () {
       return c0;
     }
     var c = flipCache[name];
-    if (!c) {
-      var src = getFrames(name, false);
-      c = [];
-      for (var i = 0; i < src.length; i++) {
-        var cv = document.createElement('canvas');
-        cv.width = src[i].width; cv.height = src[i].height;
-        var cx = cv.getContext('2d');
-        cx.translate(cv.width, 0); cx.scale(-1, 1);
-        cx.drawImage(src[i], 0, 0);
-        c.push(cv);
-      }
-      flipCache[name] = c;
-    }
+    if (!c) { c = buildFlipped(getFrames(name, false)); flipCache[name] = c; }
     return c;
+  }
+  // 怪物/商人等 AI 母版图集里常夹着几乎空白的过渡帧,循环播到它整只怪会
+  // 消失/骤缩(就是"闪烁/动作贴图不正常")。stableFrames 按不透明覆盖率剔除
+  // 这类离群帧,动作照常播放。仅用于循环动画;倒地走"末帧"路径,不受影响。
+  function getStableFrames(name, flip) {
+    if (!flip) {
+      var c = stableCache[name];
+      if (!c) { c = SpriteGen.stableFrames(name); stableCache[name] = c; }
+      return c;
+    }
+    var c2 = stableFlipCache[name];
+    if (!c2) { c2 = buildFlipped(getStableFrames(name, false)); stableFlipCache[name] = c2; }
+    return c2;
+  }
+
+  // renderScale 每帧对名字做两次正则替换;按名缓存后 drawSprite 高频路径零正则。
+  var scaleCache = {};
+  function scaleOf(name) {
+    var s = scaleCache[name];
+    if (s === undefined) { s = SpriteGen.renderScale(name); scaleCache[name] = s; }
+    return s;
   }
 
   var fpsCache = {};
@@ -1774,33 +1789,38 @@ window.Entities = (function () {
     return f;
   }
 
-  var tintCache = {};
-  function getTint(name, frameIdx, color) {
+  function buildTint(src, color) {
+    var cv = document.createElement('canvas');
+    cv.width = src.width; cv.height = src.height;
+    var cx = cv.getContext('2d');
+    cx.drawImage(src, 0, 0);
+    cx.globalCompositeOperation = 'source-in';
+    cx.fillStyle = color;
+    cx.fillRect(0, 0, cv.width, cv.height);
+    return cv;
+  }
+  var tintCache = {};          // 原始帧染色
+  var tintStableCache = {};    // 稳定帧染色
+  // srcFrames 传未翻转的帧;翻转在 drawSpriteCore 里用 scale(-1,1) 处理,
+  // 避免染色贴图被翻转两次导致与本体镜像错位。
+  function getTint(cache, name, srcFrames, frameIdx, color) {
     var key = name + '|' + frameIdx + '|' + color;
-    var cv = tintCache[key];
-    if (!cv) {
-      var src = SpriteGen.frames(name)[frameIdx];
-      cv = document.createElement('canvas');
-      cv.width = src.width; cv.height = src.height;
-      var cx = cv.getContext('2d');
-      cx.drawImage(src, 0, 0);
-      cx.globalCompositeOperation = 'source-in';
-      cx.fillStyle = color;
-      cx.fillRect(0, 0, cv.width, cv.height);
-      tintCache[key] = cv;
-    }
+    var cv = cache[key];
+    if (!cv) { cv = buildTint(srcFrames[frameIdx], color); cache[key] = cv; }
     return cv;
   }
 
-  // 帧内容质心缓存:用于把"质心漂移"的动画重锚定回身体中心。
-  // 不少 AI 母版的某一两帧内容位置会整体跳开(实测腐液之王摆 12.7px、骸骨领主
-  // 11.2px,其他怪 <3px),直接按帧中心画会让角色在动画里左右弹——就是"动作贴图
-  // 显示不正常"。这里按各帧内容质心相对平均质心的偏移补偿,身体钉在原地。
-  // 质心摆动 <4px 的精灵视为稳定,不做处理(避免影响正常的走路摆动)。
-  var _spriteCx = {};
-  function spriteCxMeta(name) {
-    if (_spriteCx[name] !== undefined) return _spriteCx[name];
-    var fr = SpriteGen.frames(name);
+  // 帧内容质心:把"质心漂移"的动画重锚定回身体中心。不少 AI 母版的某一两帧内容
+  // 位置会整体跳开(实测腐液之王摆 12.7px、骸骨领主 11.2px,其他怪 <3px),直接按
+  // 帧中心画会让角色在动画里左右弹——就是"动作贴图显示不正常"。这里按各帧内容
+  // 质心相对平均质心的偏移补偿,身体钉在原地。摆动 <4px 的精灵视为稳定不处理。
+  var _spriteCx = {};          // 原始帧质心
+  var _spriteCxStable = {};    // 稳定帧质心
+  function computeCxMeta(fr) {
+    // 单帧素材天然稳定,不做任何 getImageData(高频路径最快)
+    if (fr.length <= 1) {
+      return { per: [fr[0].width / 2], avg: fr[0].width / 2, stable: true };
+    }
     var per = [], sum = 0, min = 1e9, max = -1, i;
     var cv = document.createElement('canvas');
     var g = cv.getContext('2d', { willReadFrequently: true });
@@ -1821,29 +1841,36 @@ window.Entities = (function () {
       per.push(cx); sum += cx;
       if (cx < min) min = cx; if (cx > max) max = cx;
     }
-    var meta = { per: per, avg: per.length ? sum / per.length : 0, stable: (max - min) < 4 };
-    _spriteCx[name] = meta;
-    return meta;
+    return { per: per, avg: per.length ? sum / per.length : 0, stable: (max - min) < 4 };
+  }
+  function cxMeta(cache, name, frames) {
+    var m = cache[name];
+    if (m === undefined) { m = computeCxMeta(frames); cache[name] = m; }
+    return m;
   }
 
-  function drawSprite(ctx, name, frameIdx, x, y, scale, flip, alpha, tint) {
-    var frames = getFrames(name, flip);
-    var img = frames[frameIdx % frames.length];
-    scale *= SpriteGen.renderScale(name);
+  function drawSpriteCore(ctx, name, frames, srcFrames, frameIdx, x, y, scale, flip, alpha, tint, cxCache, tintC) {
+    var fi = frameIdx % frames.length;
+    var img = frames[fi];
+    scale *= scaleOf(name);
     var w = img.width * 2 * scale, h = img.height * 2 * scale;
     // 重锚定:把当前帧内容质心拉回整组帧的平均质心,消除动画里的横向弹跳
     var cxOff = 0;
-    var meta = spriteCxMeta(name);
-    if (!meta.stable) {
-      var fx = meta.per[frameIdx % meta.per.length];
-      cxOff = (meta.avg - fx) / img.width;
-      if (flip) cxOff = -cxOff;
+    if (frames.length > 1) {
+      // 质心用"未翻转"帧计算,翻转时再对 cxOff 取反;若用已翻转帧算质心
+      // 再取反会双重镜像,反而让身体在翻转动画里错位。
+      var meta = cxMeta(cxCache, name, srcFrames);
+      if (!meta.stable) {
+        var fx = meta.per[fi];
+        cxOff = (meta.avg - fx) / img.width;
+        if (flip) cxOff = -cxOff;
+      }
     }
     var ox = cxOff * w;
     if (alpha !== 1) ctx.globalAlpha = alpha;
     ctx.drawImage(img, x - w / 2 + ox, y - h / 2, w, h);
     if (tint) {
-      var tc = getTint(name, frameIdx % frames.length, tint);
+      var tc = getTint(tintC, name, srcFrames, fi, tint);
       ctx.globalAlpha = (alpha !== 1 ? alpha : 1) * 0.65;
       if (flip) {
         ctx.save(); ctx.translate(x, y); ctx.scale(-1, 1);
@@ -1854,6 +1881,18 @@ window.Entities = (function () {
       }
     }
     if (alpha !== 1 || tint) ctx.globalAlpha = 1;
+  }
+
+  function drawSprite(ctx, name, frameIdx, x, y, scale, flip, alpha, tint) {
+    var src = getFrames(name, false);
+    var frames = flip ? getFrames(name, true) : src;
+    drawSpriteCore(ctx, name, frames, src, frameIdx, x, y, scale, flip, alpha, tint, _spriteCx, tintCache);
+  }
+  // 稳定帧版本:只给怪物/商人这类 AI 母版循环动画用,过滤掉空白过渡帧。
+  function drawSpriteStable(ctx, name, frameIdx, x, y, scale, flip, alpha, tint) {
+    var src = getStableFrames(name, false);
+    var frames = flip ? getStableFrames(name, true) : src;
+    drawSpriteCore(ctx, name, frames, src, frameIdx, x, y, scale, flip, alpha, tint, _spriteCxStable, tintStableCache);
   }
 
   // 抛击落点红圈:画在地面层,避免遮挡角色
@@ -1989,7 +2028,7 @@ window.Entities = (function () {
         ctx.clip();
         var rise = (1 - prog) * 26;   // 未出土时整体下沉
         var burrowF = Math.floor(run.t * animFps(e.id, 6));
-        drawSprite(ctx, e.id, burrowF + (e.animo | 0), e.x, e.y + rise, sc, e.face < 0, 1, '#8a7a5a');
+        drawSpriteStable(ctx, e.id, burrowF + (e.animo | 0), e.x, e.y + rise, sc, e.face < 0, 1, '#8a7a5a');
         ctx.restore();
         // 飞溅的土屑
         if ((run.frame & 7) === 0) FX.trail(e.x + (Math.random() * 20 - 10), e.y, '#6b5a42', 2);
@@ -2011,7 +2050,7 @@ window.Entities = (function () {
       if (!e.boss && e.attackAnimT > 0) enemySprite += '_attack';
       else if (e.vx !== 0 || e.vy !== 0) enemySprite += '_walk';
       var enemyF = Math.floor(run.t * animFps(enemySprite, (e.vx === 0 && e.vy === 0) ? 6 : 10));
-      drawSprite(ctx, enemySprite, enemyF + (e.animo | 0),
+      drawSpriteStable(ctx, enemySprite, enemyF + (e.animo | 0),
                  e.x, e.y + wob - hop, sc * sq, e.face < 0, e.alpha, tint);
       // 被强化的小怪：血气贴着身体向外逸散，不再画一圈廉价的黄色圆环。
       if (e.buffed && !e.elite && !e.boss) {

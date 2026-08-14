@@ -1139,13 +1139,12 @@ window.Weapons = (function () {
     ctx.drawImage(towerImg, bx - towerSize / 2, baseY - towerSize + rise, towerSize, towerSize);
 
     // 顶部能量只保留轻薄辉光；分叉电弧来自逐帧美术,避免随机粗线抖动。
+    // 用缓存辉光贴图替代每帧 createRadialGradient。
     var orbY = baseY - towerSize + 20;
     var glowR = 12 + pulse * 4;
-    var glow = ctx.createRadialGradient(bx, orbY, 1, bx, orbY, glowR);
-    glow.addColorStop(0, 'rgba(190,248,255,' + (0.24 + pulse * 0.12).toFixed(3) + ')');
-    glow.addColorStop(1, 'rgba(140,235,255,0)');
-    ctx.fillStyle = glow;
-    ctx.beginPath(); ctx.arc(bx, orbY, glowR, 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha *= (0.24 + pulse * 0.12);
+    ctx.drawImage(SpriteGen.glow('#bee8ff'), bx - glowR, orbY - glowR, glowR * 2, glowR * 2);
+    ctx.globalAlpha = 1;
     if (b.zapFlash > 0) {
       var zapFrames = cachedFrames('vfx_lightning');
       var zapAge = Math.max(0, 0.46 - b.zapFlash);
@@ -1223,13 +1222,12 @@ window.Weapons = (function () {
         drawTeslaTank(ctx, b, run);
         continue;
       }
-      // 受队友光环加持的弹幕:先铺一层金色光晕
+      // 受队友光环加持的弹幕:先铺一层金色光晕(缓存辉光贴图,不再每帧建渐变)
       if (b.blessed) {
-        var bg = ctx.createRadialGradient(b.x, b.y, 1, b.x, b.y, b.size * 0.9);
-        bg.addColorStop(0, 'rgba(255,233,168,0.45)');
-        bg.addColorStop(1, 'rgba(255,233,168,0)');
-        ctx.fillStyle = bg;
-        ctx.beginPath(); ctx.arc(b.x, b.y, b.size * 0.9, 0, Math.PI * 2); ctx.fill();
+        var bgR = b.size * 0.9;
+        ctx.globalAlpha = 0.45;
+        ctx.drawImage(SpriteGen.glow('#ffe9a8'), b.x - bgR, b.y - bgR, bgR * 2, bgR * 2);
+        ctx.globalAlpha = 1;
       }
       ctx.save();
       ctx.translate(b.x, b.y);

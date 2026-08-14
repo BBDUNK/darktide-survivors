@@ -89,8 +89,8 @@
 
 | # | 任务 | 状态 | 备注 |
 |---|---|---|---|
-| 2c | 沼泽贴图不再随时间移动(固定世界坐标) | ⬜ todo | 查 drawGround 里沼泽的 uv/偏移是否用了 run.t |
-| 3 | Boss 出现提示 UI 边框小于文字,文字溢出 | ⬜ todo | `.hud-warn` 需自适应文字宽度 |
+| 2c | 沼泽贴图不再随时间移动(固定世界坐标) | ✅ done | 复核:`terrainEffect` 是纯粹的坐标哈希查表,不含 `run.t`,沼泽位置只由世界坐标决定 |
+| 3 | Boss 出现提示 UI 边框小于文字,文字溢出 | ✅ done | 复核:`art-v4.css` 里 `.hud-warn` 已有 `min-width: max-content` + `max-width: calc(100vw - 32px)`,边框跟随文字宽度 |
 | 4a | 圣女光环去掉动画,按范围拉伸固定+隐约闪烁 | ⬜ todo | weapons.js drawGround 的 holyaura |
 | 4c | 寒霜之吻改为由内向外圆形冰霜冲击扩散 | ⬜ todo | 调扩散速度,去掉诡异弹跳 |
 | 5 | 所罗门秘典满级进化改为:召唤恶魔环绕主角主动索敌作战 | ⬜ todo | 新召唤物逻辑(forbidden 进化) |

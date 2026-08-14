@@ -1170,6 +1170,23 @@
     return c;
   }
 
+  // 装饰物根部与地面的泥尘过渡阴影。原来在 drawDecor 里每个装饰每帧都
+  // createRadialGradient(很贵),改成预渲染一张径向衰减贴图,drawImage 缩放复用。
+  var rootShadowTex = null;
+  function rootShadow() {
+    if (!rootShadowTex) {
+      rootShadowTex = document.createElement('canvas');
+      rootShadowTex.width = 64; rootShadowTex.height = 64;
+      var rg = rootShadowTex.getContext('2d');
+      var grad = rg.createRadialGradient(32, 32, 2, 32, 32, 32);
+      grad.addColorStop(0, 'rgba(35,27,20,0.92)');
+      grad.addColorStop(1, 'rgba(35,27,20,0)');
+      rg.fillStyle = grad;
+      rg.fillRect(0, 0, 64, 64);
+    }
+    return rootShadowTex;
+  }
+
   var groundPatterns = {};
   function terrainArtId(mapId) {
     return mapId === 'graveyard' ? 'grave' : (mapId === 'wilds' ? 'wild' : 'abyss');
@@ -1363,11 +1380,11 @@
           ctx.ellipse(sx | 0, sy | 0, dw * 0.36, dh * 0.10, 0, 0, Math.PI * 2);
           ctx.fill();
           // 根部与地面之间叠一层固定的泥尘过渡，避免立体装饰像被硬切断。
+          // 用预渲染径向衰减贴图替代每帧 createRadialGradient。
           ctx.globalAlpha = 0.22;
-          var rootGlow = ctx.createRadialGradient(sx | 0, sy | 0, 2, sx | 0, sy | 0, Math.max(12, dw * 0.46));
-          rootGlow.addColorStop(0, 'rgba(35,27,20,.92)'); rootGlow.addColorStop(1, 'rgba(35,27,20,0)');
-          ctx.fillStyle = rootGlow;
-          ctx.beginPath(); ctx.ellipse(sx | 0, sy | 0, Math.max(12, dw * 0.46), Math.max(5, dh * 0.10), 0, 0, Math.PI * 2); ctx.fill();
+          var rootRx = Math.max(12, dw * 0.46);
+          var rootRy = Math.max(5, dh * 0.10);
+          ctx.drawImage(rootShadow(), (sx | 0) - rootRx, (sy | 0) - rootRy, rootRx * 2, rootRy * 2);
           ctx.globalAlpha = 0.92;
           ctx.drawImage(img, (sx - dw / 2) | 0, (sy - dh) | 0, dw, dh);
           ctx.globalAlpha = 1;

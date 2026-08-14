@@ -19,3 +19,7 @@ __pycache__/
 
 # Regenerable chroma-key intermediates; masters and final pixel sheets are versioned.
 assets/art-v2/work/
+
+# 本地 Agent/浏览器工具的运行状态与截图(不入库)
+.omo/
+.playwright-cli/
