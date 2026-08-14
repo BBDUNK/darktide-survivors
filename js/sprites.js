@@ -1942,6 +1942,10 @@
                 var g = cv.getContext('2d');
                 g.imageSmoothingEnabled = false;
                 g.drawImage(image, frame.x, frame.y, frame.w, frame.h, 0, 0, frame.w, frame.h);
+                // Preserve authored pivot metadata on the sliced canvas.  Actor
+                // rendering uses this instead of guessing from frame bounds.
+                cv._atlasAnchor = frame.anchor ? { x: frame.anchor.x, y: frame.anchor.y }
+                  : { x: frame.w / 2, y: frame.h / 2 };
                 canvases.push(cv);
               }
               replacements[name] = canvases;
@@ -2036,6 +2040,14 @@
     stableFrames: function (name) {
       if (stableCache[name]) return stableCache[name];
       var all = this.frames(name);
+      // Atlas assets have already passed deterministic coverage, alpha,
+      // duplicate-frame and anchor validation.  Filtering them again at
+      // runtime can silently remove a legitimate anticipation/contact pose
+      // and change an eight-frame action into an uneven six-frame loop.
+      if (atlasState.names[name]) {
+        stableCache[name] = all;
+        return all;
+      }
       var keep = all;
       try {
         var cv = document.createElement('canvas');

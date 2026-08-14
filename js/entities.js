@@ -1763,6 +1763,9 @@ window.Entities = (function () {
       var cx = cv.getContext('2d');
       cx.translate(cv.width, 0); cx.scale(-1, 1);
       cx.drawImage(src[i], 0, 0);
+      if (src[i]._atlasAnchor) {
+        cv._atlasAnchor = { x: cv.width - 1 - src[i]._atlasAnchor.x, y: src[i]._atlasAnchor.y };
+      }
       out.push(cv);
     }
     return out;
@@ -1867,7 +1870,7 @@ window.Entities = (function () {
     return m;
   }
 
-  function drawSpriteCore(ctx, name, frames, srcFrames, frameIdx, x, y, scale, flip, alpha, tint, cxCache, tintC) {
+  function drawSpriteCore(ctx, name, frames, srcFrames, frameIdx, x, y, scale, flip, alpha, tint, cxCache, tintC, useAnchor) {
     var fi = frameIdx % frames.length;
     var img = frames[fi];
     scale *= scaleOf(name);
@@ -1885,17 +1888,28 @@ window.Entities = (function () {
       }
     }
     var ox = cxOff * w;
+    var left = x - w / 2 + ox, top = y - h / 2;
+    if (useAnchor && img._atlasAnchor) {
+      left = x - img._atlasAnchor.x / img.width * w;
+      top = y - img._atlasAnchor.y / img.height * h;
+      ox = 0;
+    }
     if (alpha !== 1) ctx.globalAlpha = alpha;
-    ctx.drawImage(img, x - w / 2 + ox, y - h / 2, w, h);
+    ctx.drawImage(img, left, top, w, h);
     if (tint) {
       var tc = getTint(tintC, name, srcFrames, fi, tint);
       ctx.globalAlpha = (alpha !== 1 ? alpha : 1) * 0.65;
       if (flip) {
         ctx.save(); ctx.translate(x, y); ctx.scale(-1, 1);
-        ctx.drawImage(tc, -w / 2 - ox, -h / 2, w, h);
+        if (useAnchor && srcFrames[fi]._atlasAnchor) {
+          var ta = srcFrames[fi]._atlasAnchor;
+          ctx.drawImage(tc, -ta.x / tc.width * w, -ta.y / tc.height * h, w, h);
+        } else {
+          ctx.drawImage(tc, -w / 2 - ox, -h / 2, w, h);
+        }
         ctx.restore();
       } else {
-        ctx.drawImage(tc, x - w / 2 + ox, y - h / 2, w, h);
+        ctx.drawImage(tc, left, top, w, h);
       }
     }
     if (alpha !== 1 || tint) ctx.globalAlpha = 1;
@@ -1911,6 +1925,13 @@ window.Entities = (function () {
     var src = getStableFrames(name, false);
     var frames = flip ? getStableFrames(name, true) : src;
     drawSpriteCore(ctx, name, frames, src, frameIdx, x, y, scale, flip, alpha, tint, _spriteCxStable, tintStableCache);
+  }
+
+  function drawActorSprite(ctx, name, frameIdx, x, groundY, scale, flip, alpha, tint, stable) {
+    var src = stable ? getStableFrames(name, false) : getFrames(name, false);
+    var frames = flip ? (stable ? getStableFrames(name, true) : getFrames(name, true)) : src;
+    drawSpriteCore(ctx, name, frames, src, frameIdx, x, groundY, scale, flip, alpha, tint,
+      stable ? _spriteCxStable : _spriteCx, stable ? tintStableCache : tintCache, true);
   }
 
   // 抛击落点红圈:画在地面层,避免遮挡角色
@@ -2046,7 +2067,7 @@ window.Entities = (function () {
         ctx.clip();
         var rise = (1 - prog) * 26;   // 未出土时整体下沉
         var burrowF = Math.floor(run.t * animFps(e.id, 6));
-        drawSpriteStable(ctx, e.id, burrowF + (e.animo | 0), e.x, e.y + rise, sc, e.face < 0, 1, '#8a7a5a');
+        drawActorSprite(ctx, e.id, burrowF + (e.animo | 0), e.x, e.y + 4 + rise, sc, e.face < 0, 1, '#8a7a5a', true);
         ctx.restore();
         // 飞溅的土屑
         if ((run.frame & 7) === 0) FX.trail(e.x + (Math.random() * 20 - 10), e.y, '#6b5a42', 2);
@@ -2077,8 +2098,8 @@ window.Entities = (function () {
       else if (visualState === 'walk') enemySprite += '_walk';
       var animAge = e.netAnimState ? Math.max(0, (run.frame - e.netAnimEpoch) / 60) : run.t;
       var enemyF = Math.floor(animAge * animFps(enemySprite, visualState === 'idle' ? 6 : 10));
-      drawSpriteStable(ctx, enemySprite, enemyF + (e.animo | 0),
-                 e.x, e.y + wob - hop, sc * sq, e.face < 0, e.alpha, tint);
+      drawActorSprite(ctx, enemySprite, enemyF + (e.animo | 0),
+                 e.x, e.y + e.r * 0.7 + wob - hop, sc * sq, e.face < 0, e.alpha, tint, true);
       // 被强化的小怪：血气贴着身体向外逸散，不再画一圈廉价的黄色圆环。
       if (e.buffed && !e.elite && !e.boss) {
         var mistFrames = getFrames('vfx_smoke', false);
@@ -2149,7 +2170,7 @@ window.Entities = (function () {
       var downDir = p.dir || 'down';
       var downSprite = p.char.sprite + '_death_' + downDir;
       var downFrames = getFrames(downSprite, false);
-      drawSprite(ctx, downSprite, downFrames.length - 1, p.x, p.y, 1, false, 0.55, '#ff6688');
+      drawActorSprite(ctx, downSprite, downFrames.length - 1, p.x, p.y + 8, 1, false, 0.55, '#ff6688', false);
       if (p.reviveT > 0) {
         var revivePct = E.clamp(p.reviveT / CFG.COOP.reviveTime, 0, 1);
         ctx.globalAlpha = 0.9;
@@ -2180,7 +2201,7 @@ window.Entities = (function () {
       // Four-direction sheets already contain independent left and right art.
       // Flipping the left row a second time was the root cause of missing and
       // contradictory right-facing movement.
-      drawSprite(ctx, playerSprite, pf, p.x, p.y, 1, false, 1, p.hurtFlash > 0 ? '#ff4444' : null);
+      drawActorSprite(ctx, playerSprite, pf, p.x, p.y + 8, 1, false, 1, p.hurtFlash > 0 ? '#ff4444' : null, false);
     }
     // 蛛网缠身:白色丝痕附着在角色身上,随减速结束而消失;硬控时整体被网包裹
     if (p.webStacks > 0 || p.rootT > 0) drawWebOnPlayer(ctx, run, p);
@@ -2352,7 +2373,7 @@ window.Entities = (function () {
         var mateDownDir = m.dir || (m.face < 0 ? 'left' : 'right');
         var mateDownSprite = cd.sprite + '_death_' + mateDownDir;
         var mateDownFrames = getFrames(mateDownSprite, false);
-        drawSprite(ctx, mateDownSprite, mateDownFrames.length - 1, m.x, m.y, 1, false, 0.55, '#ff6688');
+        drawActorSprite(ctx, mateDownSprite, mateDownFrames.length - 1, m.x, m.y + 8, 1, false, 0.55, '#ff6688', false);
         if (m.reviveT > 0) {
           var pr = E.clamp(m.reviveT / CFG.COOP.reviveTime, 0, 1);
           ctx.strokeStyle = '#7ce87c'; ctx.lineWidth = 3;
@@ -2372,7 +2393,7 @@ window.Entities = (function () {
           mateSprite = cd.sprite + '_walk_' + mateDir;
           mateF = Math.floor(mateAge * animFps(mateSprite, 10));
         }
-        drawSprite(ctx, mateSprite, mateF, m.x, m.y, 1, m.face < 0, 1, null);
+        drawActorSprite(ctx, mateSprite, mateF, m.x, m.y + 8, 1, false, 1, null, false);
         // 队友身上的光环增益提示
         if (m.buffed) {
           ctx.globalAlpha = 0.35 + Math.sin(run.t * 5) * 0.15;

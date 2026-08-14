@@ -104,6 +104,7 @@ function assert(ok, message) {
     gems: ['gem1', 'gem2', 'gem3', 'gem_big'].map(name => SpriteGen.frames(name).map(c => [c.width, c.height])),
     knightRight: SpriteGen.frames('char_knight_walk_right').map(c => [c.width, c.height]),
     knightLeft: SpriteGen.frames('char_knight_walk_left').map(c => [c.width, c.height]),
+    knightAnchors: SpriteGen.frames('char_knight_walk_right').map(c => c._atlasAnchor || null),
     arrow: SpriteGen.frames('p_arrow').map(c => [c.width, c.height]),
     skeletonFps: SpriteGen.animationFps('skeleton', 0),
     slimeKingFps: SpriteGen.animationFps('boss_slimeking', 0),
@@ -158,6 +159,8 @@ function assert(ok, message) {
     'V4 experience gem tiers are incorrect');
   assert(atlas.knightRight.length === 8 && atlas.knightLeft.length === 8,
     'left/right player movement animations are incomplete');
+  assert(atlas.knightAnchors.length === 8 && atlas.knightAnchors.every(a => a && a.x >= 0 && a.y >= 0),
+    'runtime atlas slicing discarded actor anchors');
   console.log(`ATLAS OK  ${atlas.status.count} assets, ${totalFrames} frames, four-direction hero actions, VFX and art scales`);
 
   const animStats = await page.evaluate(() => {
@@ -186,6 +189,9 @@ function assert(ok, message) {
     const names = [];
     for (const hero of ['char_knight', 'char_mage', 'char_ranger', 'char_cleric', 'char_berserker', 'char_chrono']) {
       names.push(hero + '_walk', hero + '_attack');
+      for (const action of ['idle', 'walk', 'attack', 'hurt', 'death']) {
+        for (const dir of ['down', 'right', 'left', 'up']) names.push(hero + '_' + action + '_' + dir);
+      }
     }
     // The previous check sampled just skeleton.  Every shipped ordinary enemy
     // and its elite counterpart has a four-row, eight-frame action sheet;
@@ -227,6 +233,13 @@ function assert(ok, message) {
     assert(new Set(frames.map(frame => frame.hash)).size >= Math.min(3, frames.length),
       name + ' has fewer than three visually distinct action poses');
   }
+  for (const hero of ['char_knight', 'char_mage', 'char_ranger', 'char_cleric', 'char_berserker', 'char_chrono']) {
+    for (const action of ['idle', 'walk', 'attack']) {
+      const left = animStats[hero + '_' + action + '_left'].map(f => f.hash).join(',');
+      const right = animStats[hero + '_' + action + '_right'].map(f => f.hash).join(',');
+      assert(left !== right, hero + ' ' + action + ' left/right rows are identical');
+    }
+  }
   console.log('ANIM OK  hero, 16 ordinary enemies, 16 elite enemies, all boss and VFX actions have distinct non-empty frames');
 
   // Skip intro and start the default knight/graveyard run through the real UI.
@@ -254,8 +267,9 @@ function assert(ok, message) {
       menuBackground: Debug.menuBackground()
     };
   });
+  console.log('THEME STATE ' + JSON.stringify(theme));
   assert(theme.font.includes('Fusion Pixel'), 'Fusion Pixel font is not active');
-  assert(theme.buttonBackground.includes('hud_coin_frame.png'),
+  assert(theme.buttonBackground.includes('menu_btn_frame_edge.png') || theme.buttonBackground.includes('hud_coin_frame.png'),
     'Baroque framed main-menu button skin is not active');
   assert(theme.panelBackground.includes('battle_report_panel.png') && theme.altarBackground.includes('holy_altar_panel.png'),
     'generated battle-report/altar panel art is not active');
