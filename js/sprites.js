@@ -1847,6 +1847,7 @@
     if (base === 'vfx_tesla_cannon_impact') return 'vfx_explosion';
     if (base === 'vfx_tesla_overload') return 'vfx_lightning';
     if (base === 'vfx_archangel') return 'vfx_spirit';
+    if (base.indexOf('avatar_') === 0) return 'char_' + base.slice(7);
     if (base === 'p_orbitblade_fly') return 'p_orbitblade';
     if (base === 'exit_gate') return 'deco_pillar';
     // 高质量图集未加载时，首领的专属弹幕仍需降级为可见的敌方弹体，

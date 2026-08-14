@@ -84,6 +84,25 @@ for (const character of characters) {
   }
 }
 
+// Six native-ultimate ancestral avatars.  Each is an upper-body, four-way
+// action system with the same 64px pivot, so runtime can lock it directly to
+// its hero without the offset and scale jitter of the former Berserker tint.
+for (const character of characters) {
+  for (const [action, , frames, fps] of [['idle', '', 4, 7], ['walk', '', 8, 11], ['attack', '', 8, 13]]) {
+    for (const [direction] of directions) {
+      add({
+        name: `avatar_${character}_${action}_${direction}`,
+        source: `assets/art-v5/sprites/avatars/avatar_${character}_${action}_${direction}.png`,
+        frameSize: [64, 64], frameRow: 0, frames, fps,
+        size: [64, 64], anchor: [32, 54], renderScale: 1,
+        // Weapon swings legitimately move arms sideways; the body pivot and
+        // baseline remain fixed, which is the criterion that prevents jitter.
+        maxCentroidDrift: 18, maxBaselineDrift: 2
+      });
+    }
+  }
+}
+
 const enemies = [
   'bat', 'slime', 'slime_big', 'zombie', 'skeleton', 'ghost', 'spider', 'cultist',
   'orc', 'imp', 'knight_armored', 'werewolf', 'mummy', 'gargoyle', 'bloodbat', 'wraith'
@@ -334,7 +353,9 @@ add({
 });
 
 const replaced = new Set(next.map(asset => asset.name));
-manifest.assets = manifest.assets.filter(asset => !replaced.has(asset.name)).concat(next);
+const retired = new Set(['east', 'southeast', 'south', 'southwest', 'west', 'northwest', 'north', 'northeast']
+  .map(direction => `p_dragon_${direction}`));
+manifest.assets = manifest.assets.filter(asset => !replaced.has(asset.name) && !retired.has(asset.name)).concat(next);
 manifest.atlasWidth = 2048;
 manifest.version = Math.max(2, Number(manifest.version) || 1);
 fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n', 'utf8');

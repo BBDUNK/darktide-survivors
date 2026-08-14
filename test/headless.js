@@ -751,7 +751,7 @@ try {
     (() => {
       const run = Debug.run();
       run.over = false; run.player.hp = run.player.stats.hp;
-      run.player.iframe = 0; run.player.revivesUsed = 0;
+      run.player.iframe = 0; run.player.knightImmuneT = 0; run.player.revivesUsed = 0;
       run.player.stats.revive = 1;
       Entities.damagePlayer(run, 99999);          // 第一次:触发复活
       const first = { hp: run.player.hp, used: run.player.revivesUsed, stats: run.player.stats.revive };
@@ -1061,6 +1061,49 @@ try {
     throw new Error('高挑战成就回归失败: ' + JSON.stringify(r12));
   }
   console.log('R12 OK 无尽、终局、等级与长期击杀成就均可解锁');
+
+  // R13 六角色终极虚影共用稳定成长规则；三套本命机制必须是实际战斗
+  // 状态，不允许只有描述或纯粒子替代。
+  const r13 = fx(`
+    (() => {
+      Debug.startArtTest();
+      const r = Debug.run(), p = r.player;
+      p.char = CFG.CHARS.find(c => c.id === 'ranger');
+      Weapons.reset();
+      const bow = { id: 'windbow', lv: 8, cdT: 0, evolved: true, evoId: 'featherstorm', curR: 0,
+        phantomBaseKills: 0 };
+      r.weapons = [bow]; r.kills = 300; Entities.recomputeStats(r);
+      for (let i = 0; i < 132; i++) { r.t += 1 / 60; r.frame++; Weapons.update(r, 1 / 60); }
+      const dragon = Weapons.getBullets().find(b => b.alive && b.kind === 'dragonLance');
+      const ranger = !!dragon && bow.dragonChargeT === 0 && bow.phantomKills === 300;
+
+      p.char = CFG.CHARS.find(c => c.id === 'knight');
+      Weapons.reset();
+      const sword = { id: 'crossblade', lv: 8, cdT: 99, evolved: true, evoId: 'crossjudge', curR: 0,
+        oathGuardCd: 0, holyJudgmentCd: 0 };
+      r.weapons = [sword]; p.knightImmuneT = 0; p.hp = p.stats.hp; Entities.recomputeStats(r);
+      r.t += 0.02; r.frame++; Weapons.update(r, 0.02);
+      const hpBefore = p.hp; Entities.damagePlayer(r, 999);
+      const knight = p.knightImmuneT > 1.9 && p._holyJudgment === true && p.hp === hpBefore;
+
+      p.char = CFG.CHARS.find(c => c.id === 'mage');
+      Weapons.reset(); Entities.clearEnemies(r);
+      const orb = { id: 'arcanebolt', lv: 8, cdT: 99, evolved: true, evoId: 'arcanestorm', curR: 0,
+        arcaneBeamTick: 0 };
+      r.weapons = [orb]; Entities.recomputeStats(r);
+      for (let i = 0; i < 5; i++) Entities.spawnEnemy(r, 'zombie', p.x + 90 + i * 32, p.y, { allowNear: true });
+      Entities.updateEnemies(r, 0.001); // rebuild the authoritative spatial grid
+      const hp0 = Entities.pool.filter(e => e.alive).reduce((n, e) => n + e.hp, 0);
+      r.t += 0.13; r.frame++; Weapons.update(r, 0.13);
+      const hp1 = Entities.pool.filter(e => e.alive).reduce((n, e) => n + e.hp, 0);
+      const mage = orb.arcaneLocks.length === 4 && hp1 < hp0;
+      return { ranger, knight, mage };
+    })()
+  `);
+  if (!Object.values(r13).every(Boolean)) {
+    throw new Error('角色终极系统回归失败: ' + JSON.stringify(r13));
+  }
+  console.log('R13 OK 六角色虚影成长、游侠蓄力龙、骑士誓约与法师四目标光束正常');
 
   console.log('\n=== 无头冒烟测试全部通过 ===');
 } catch (e) {

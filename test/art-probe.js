@@ -104,6 +104,13 @@ function assert(ok, message) {
     teslaTankActions: ['idle', 'walk', 'attack'].flatMap(action =>
       ['down', 'up', 'left', 'right'].map(dir =>
         SpriteGen.frames('tesla_battle_tank_' + action + '_' + dir).map(c => [c.width, c.height]))),
+    avatars: ['knight', 'mage', 'ranger', 'cleric', 'berserker', 'chrono'].flatMap(role =>
+      ['idle', 'walk', 'attack'].flatMap(action =>
+        ['down', 'right', 'left', 'up'].map(dir => {
+          const name = 'avatar_' + role + '_' + action + '_' + dir;
+          return { name, action, frames: SpriteGen.frames(name).map(c => [c.width, c.height]),
+            anchors: SpriteGen.frames(name).map(c => c._atlasAnchor || null), fps: SpriteGen.animationFps(name, 0) };
+        }))),
     terrain: SpriteGen.frames('tile_graveyard').map(c => [c.width, c.height]),
     terrainV4: ['terrain_grave_ground', 'terrain_grave_swamp', 'terrain_grave_road',
       'terrain_wild_ground', 'terrain_wild_grass', 'terrain_wild_road',
@@ -123,8 +130,8 @@ function assert(ok, message) {
     bossScale: SpriteGen.renderScale('boss_slimeking')
   }));
   const totalFrames = Object.values(atlasMeta.frames).reduce((sum, frames) => sum + frames.length, 0);
-  assert(atlas.status.count >= 431, 'expected at least 431 atlas assets, got ' + atlas.status.count);
-  assert(totalFrames >= 2507, 'expected at least 2507 atlas frames, got ' + totalFrames);
+  assert(atlas.status.count >= 539, 'expected at least 539 atlas assets, got ' + atlas.status.count);
+  assert(totalFrames >= 3172, 'expected at least 3172 atlas frames, got ' + totalFrames);
   for (const hero of atlas.heroes) {
     const heroSize = hero.name === 'char_berserker' ? '[56,64]' : '[48,64]';
     assert(hero.frames.length === 8 && hero.frames.every(frame => JSON.stringify(frame) === heroSize),
@@ -136,6 +143,16 @@ function assert(ok, message) {
     assert(hero.fps === 7, hero.name + ' idle animation fps is incorrect');
     assert(hero.walkFps === 11, hero.name + ' walk animation fps is incorrect');
     assert(hero.attackFps === 13, hero.name + ' attack animation fps is incorrect');
+  }
+  assert(atlas.avatars.length === 72, 'six roles must expose 72 four-direction avatar actions');
+  for (const avatar of atlas.avatars) {
+    const expectedFrames = avatar.action === 'idle' ? 4 : 8;
+    const expectedFps = avatar.action === 'idle' ? 7 : (avatar.action === 'walk' ? 11 : 13);
+    assert(avatar.frames.length === expectedFrames && avatar.frames.every(frame => JSON.stringify(frame) === '[64,64]'),
+      avatar.name + ' frame grid is incorrect');
+    assert(avatar.anchors.every(anchor => anchor && anchor.x === 32 && anchor.y === 54),
+      avatar.name + ' does not share the [32,54] body pivot');
+    assert(avatar.fps === expectedFps, avatar.name + ' animation fps is incorrect');
   }
   assert(atlas.skeleton.length === 8 && atlas.skeleton.every(frame => JSON.stringify(frame) === '[56,58]'), 'skeleton atlas frames are incorrect');
   assert(atlas.eliteSkeleton.length === 8 && atlas.eliteSkeleton.every(frame => JSON.stringify(frame) === '[52,60]'), 'elite skeleton attack frames are incorrect');
@@ -430,7 +447,25 @@ function assert(ok, message) {
     'vertical-slice boss/elite did not enter their dedicated runtime models');
   await page.waitForTimeout(220);
   await page.screenshot({ path: path.join(OUT, 'v5-slimeking-elite-archer.png') });
-  console.log('V5 COMBAT OK  arcane refraction/brand and charged 270px/s Tesla cannon run in a real browser');
+
+  await page.evaluate(() => {
+    const run = Debug.run();
+    Entities.clearEnemies(run); Weapons.reset();
+    run.player.char = CFG.CHARS.find(c => c.id === 'mage');
+    run.kills = 300;
+    run.weapons = [{ id: 'arcanebolt', lv: 8, evolved: true, evoId: 'arcanestorm', cdT: 99,
+      phantomBaseKills: 0, phantomKills: 0, arcaneBeamTick: 0 }];
+    Entities.recomputeStats(run);
+    for (let i = 0; i < 5; i++) Entities.spawnEnemy(run, 'skeleton', run.player.x + 125 + i * 42,
+      run.player.y - 80 + i * 34, { allowNear: true });
+  });
+  await page.waitForFunction(() => {
+    const run = Debug.run(), w = run.weapons[0];
+    return w.phantomKills === 300 && w.arcaneLocks && w.arcaneLocks.length === 4;
+  });
+  await page.waitForTimeout(180);
+  await page.screenshot({ path: path.join(OUT, 'v5-mage-avatar-beams-max.png') });
+  console.log('V5 COMBAT OK  arcane refraction/brand, six-role avatar runtime and charged 270px/s Tesla cannon run in a real browser');
 
   const spawned = await page.evaluate(() => {
     const run = Debug.run();

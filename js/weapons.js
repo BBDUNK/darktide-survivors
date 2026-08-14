@@ -73,6 +73,7 @@ window.Weapons = (function () {
       chains: b.chains || 0, range: b.range || 0,
       slow: b.slow || 0, slowDur: b.slowDur || 0, stun: b.stun || 0,
       zapCount: b.zapCount || 1, holyStrike: b.holyStrike || 0,
+      armorBreak: b.armorBreak || 0, leafEcho: b.leafEcho || 0,
       poolDmg: b.poolDmg || 0, poolR: b.poolR || 0, poolDur: b.poolDur || 0,
       dur: b.dur || 0, orbitR: b.orbitR || 0, zapCd: b.zapCd || 0,
       areaMul: 1, durMul: 1
@@ -95,6 +96,8 @@ window.Weapons = (function () {
       if (d.poolDur) st.poolDur += d.poolDur;
       if (d.zapCount) st.zapCount += d.zapCount;
       if (d.holyStrike) st.holyStrike += d.holyStrike;
+      if (d.armorBreak) st.armorBreak += d.armorBreak;
+      if (d.leafEcho) st.leafEcho += d.leafEcho;
     }
     if (w.evolved) {
       var m = CFG.EVOS[w.evoId].mult;
@@ -123,6 +126,7 @@ window.Weapons = (function () {
     if (p0.auraProjSpd) st.speed *= (1 + p0.auraProjSpd);
     if (p0.auraDmg) st.dmg *= (1 + p0.auraDmg);
     if (p0._bloodRageMul) st.dmg *= p0._bloodRageMul;
+    if (p0._holyJudgment) { st.dmg *= 2; st.holyBossBonus = 2.5; }
     st.blessed = !!p0.auraProjSpd;
     st.areaMul *= s.area;
     st.size *= st.areaMul;
@@ -146,6 +150,8 @@ window.Weapons = (function () {
     b.slow = st.slow; b.slowDur = st.slowDur; b.stun = 0;
     b.aux = 0; b.aux2 = 0; b.evolved = w.evolved;
     b.arcaneMark = false; b.tankAction = ''; b.tankActionAge = 0;
+    b.armorBreak = st.armorBreak || 0; b.leafEcho = st.leafEcho || 0;
+    b.leafSplit = false; b.leafChild = false; b.holyBossBonus = st.holyBossBonus || 1;
     b.tankDir = 'down'; b.chargeProgress = 0;
     b.poolDmg = 0; b.poolR = 0; b.poolDur = 0; b.poolBurn = 0; b.poolBurnDur = 0;
     b.blessed = !!st.blessed;     // 受队友光环加持:绘制时加一层金光
@@ -160,7 +166,8 @@ window.Weapons = (function () {
     queue.length = 0;
     for (var i = 0; i < QMAX; i++) {
       queue.push({ alive: false, t: 0, wid: '', angle: 0, dmg: 0, speed: 0, size: 0,
-                   pierce: 0, knock: 0, owner: null, blessed: false });
+                   pierce: 0, knock: 0, owner: null, blessed: false, armorBreak: 0, leafEcho: 0,
+                   holyBossBonus: 1 });
     }
   }
   function queueShot(run, wid, delay, angle, st) {
@@ -171,6 +178,8 @@ window.Weapons = (function () {
       q.dmg = st.dmg; q.speed = st.speed; q.size = st.size;
       q.pierce = st.pierce; q.knock = st.knock;
       q.owner = run.player; q.blessed = !!st.blessed;
+      q.armorBreak = st.armorBreak || 0; q.leafEcho = st.leafEcho || 0;
+      q.holyBossBonus = st.holyBossBonus || 1;
       return;
     }
   }
@@ -191,6 +200,8 @@ window.Weapons = (function () {
       b.angle = q.angle; b.spin = 0; b.phase = 0;
       b.slow = 0; b.slowDur = 0; b.stun = 0;
       b.aux = 0; b.aux2 = 0; b.evolved = false;
+      b.armorBreak = q.armorBreak; b.leafEcho = q.leafEcho; b.leafSplit = false; b.leafChild = false;
+      b.holyBossBonus = q.holyBossBonus;
       b.blessed = q.blessed; b.owner = p; b.ownerX = p.x; b.ownerY = p.y;
       AudioSys.play('shoot_arrow');
     }
@@ -254,6 +265,15 @@ window.Weapons = (function () {
             b.angle = a; b.aux = 54; b.size = st.size * 0.85;
             b.dmg = st.dmg * 0.5; b.knock = st.knock * 0.38; b.pierce = 4;
           }
+          if (w.evolved) {
+            e = nearestEnemy(p.x, p.y, 230);
+            a = e ? Math.atan2(e.y - p.y, e.x - p.x) : Math.atan2(E.lastDir.y, E.lastDir.x);
+            b = spawn(run, w, st, 'melee', 'p_slash_big', p.x, p.y, 0, 0, 0.28);
+            b.angle = a; b.aux = 142; b.size = st.size * 1.45;
+            b.dmg = st.dmg * 1.25; b.knock = 135; b.pierce = 9999;
+            FX.ring(p.x + Math.cos(a) * 70, p.y + Math.sin(a) * 70,
+              { r: 96, color: '#ffe79a', life: 0.25, width: 4 });
+          }
         }
         for (i = 0; i < st.count; i++) {
           e = nearestEnemy(p.x, p.y, 300);
@@ -289,15 +309,7 @@ window.Weapons = (function () {
       case 'windbow': {
         e = nearestEnemy(p.x, p.y, 300);
         var wbBase = e ? Math.atan2(e.y - p.y, e.x - p.x) : Math.atan2(E.lastDir.y, E.lastDir.x);
-        if (w.evolved) {
-          if (countKind(w.id, p) > 0) return;
-          // 常驻青龙：桌面跟随鼠标，触屏在可视范围内自主猎杀。
-          b = spawn(run, w, st, 'guideDragon', 'p_dragon', p.x, p.y, 0, 0, 1e9);
-          b.dmg = st.dmg * 2.4; b.pierce = 9999; b.size = 48; b.aux = 430;
-          AudioSys.play('shoot_arrow');
-          AudioSys.play('evolve');
-          break;
-        }
+        if (w.evolved) return; // updateRangerUltimate owns charge and release.
         // 未进化:同向连射。第一支立即发出,其余排入延迟队列,
         // 靠时间差拉开间距(同帧生成再做空间偏移会同步飞行,看起来仍是叠在一起)。
         spawn(run, w, st, 'straight', 'p_arrow', p.x, p.y,
@@ -508,7 +520,34 @@ window.Weapons = (function () {
     var d = Math.hypot(b.vx, b.vy) || 1;
     _hitOpts.kx = kb * (b.vx / d); _hitOpts.ky = kb * (b.vy / d);
     _hitOpts.slow = b.slow; _hitOpts.slowDur = b.slowDur; _hitOpts.stun = b.stun;
-    Entities.damageEnemy(_hitRun, e, b.dmg, _hitOpts);
+    var holyTarget = e.boss || e.id === 'ghost' || e.id === 'skeleton' ||
+      e.id === 'wraith' || e.id === 'zombie' || e.id === 'mummy';
+    var dealt = b.dmg * (holyTarget ? (b.holyBossBonus || 1) : 1);
+    Entities.damageEnemy(_hitRun, e, dealt, _hitOpts);
+    if (b.armorBreak) {
+      e.armorBreakValue = Math.max(e.armorBreakValue || 0, 2 + b.armorBreak * 2);
+      e.armorBreakUntil = Math.max(e.armorBreakUntil || 0, _hitRun.t + 3);
+    }
+    if (b.leafEcho && !b.leafChild && !b.leafSplit) {
+      b.leafSplit = true;
+      var leafExclude = new Set(b.hitSet);
+      for (var leafIndex = -1; leafIndex <= 1; leafIndex += 2) {
+        var leafTarget = nearestEnemy(e.x, e.y, 230, leafExclude);
+        if (leafTarget) leafExclude.add(leafTarget.uid);
+        var leafAngle = leafTarget ? Math.atan2(leafTarget.y - e.y, leafTarget.x - e.x)
+          : b.angle + leafIndex * 0.48;
+        var leaf = getBullet();
+        if (leaf === b) break;
+        leaf.alive = true; leaf.kind = 'homing'; leaf.spr = 'p_arrow'; leaf.wid = b.wid;
+        leaf.x = e.x; leaf.y = e.y; leaf.vx = Math.cos(leafAngle) * 390; leaf.vy = Math.sin(leafAngle) * 390;
+        leaf.ttl = 1.2; leaf.born = _hitRun.t; leaf.dmg = b.dmg * 0.45; leaf.pierce = 0;
+        leaf.size = b.size * 0.72; leaf.knock = b.knock * 0.4; leaf.angle = leafAngle;
+        leaf.aux = 390; leaf.owner = b.owner; leaf.ownerX = b.ownerX; leaf.ownerY = b.ownerY;
+        leaf.slow = 0; leaf.slowDur = 0; leaf.stun = 0; leaf.evolved = false;
+        leaf.armorBreak = 0; leaf.leafEcho = 0; leaf.leafChild = true; leaf.leafSplit = false;
+        leaf.holyBossBonus = b.holyBossBonus || 1; leaf.blessed = b.blessed;
+      }
+    }
     if (b.arcaneMark) {
       // A second orb detonates the existing brand, then refreshes it.  The
       // area query is authoritative only and never feeds back into this orb's
@@ -787,6 +826,15 @@ window.Weapons = (function () {
           hitEnemiesAlong(run, b, b.size * 0.78, 0.16);
           break;
         }
+        case 'dragonLance': {
+          b.x += b.vx * dt; b.y += b.vy * dt;
+          b.angle = Math.atan2(b.vy, b.vx);
+          if ((run.frame & 1) === 0) FX.trail(b.x, b.y, '#63efa8', 5);
+          // A finite 900px flight, with a per-target cadence rather than
+          // accidental per-frame damage stacking.
+          hitEnemiesAlong(run, b, b.size * 0.68, 0.18);
+          break;
+        }
         case 'divineSword': {
           var swordTarget = nearestEnemy(b.x, b.y, 1400) || nearestEnemy(ownerX, ownerY, 1800);
           var swx = swordTarget ? swordTarget.x : ownerX + Math.cos(run.t * 1.8) * 240;
@@ -960,6 +1008,97 @@ window.Weapons = (function () {
     }
   }
 
+  function updateNativeAvatar(run, w) {
+    var p = run.player;
+    if (!w.evolved || !p.char || p.char.weapon !== w.id) return false;
+    if (w.phantomBaseKills === undefined) w.phantomBaseKills = run.kills || 0;
+    w.phantomKills = E.clamp((run.kills || 0) - w.phantomBaseKills, 0, 300);
+    return true;
+  }
+
+  function updateKnightOaths(run, w, dt) {
+    var p = run.player;
+    if (!p.char || p.char.id !== 'knight') return;
+    p.knightImmuneT = Math.max(0, (p.knightImmuneT || 0) - dt);
+    w.oathGuardCd = (w.oathGuardCd === undefined ? 20 : w.oathGuardCd) - dt;
+    if (w.lv >= 3 && w.oathGuardCd <= 0) {
+      w.oathGuardCd = 20; p.knightImmuneT = 2;
+      FX.sprite(p.x, p.y - 12, 'vfx_shield', 0.72, 82, true);
+      AudioSys.play('evolve');
+    }
+    w.holyJudgmentT = Math.max(0, (w.holyJudgmentT || 0) - dt);
+    w.holyJudgmentCd = (w.holyJudgmentCd === undefined ? 10 : w.holyJudgmentCd) - dt;
+    if (w.lv >= 6 && w.holyJudgmentCd <= 0) {
+      w.holyJudgmentCd = 10; w.holyJudgmentT = 3;
+      FX.flash('#fff0a6', 0.18, 0.3);
+    }
+    if (w.holyJudgmentT > 0) p._holyJudgment = true;
+  }
+
+  function updateArcaneAvatar(run, w, dt) {
+    var p = run.player;
+    if (!w.evolved || !p.char || p.char.id !== 'mage') { w.arcaneLocks = []; return; }
+    w.arcaneBeamTick = (w.arcaneBeamTick || 0) - dt;
+    if (w.arcaneBeamTick > 0) return;
+    w.arcaneBeamTick = 0.12;
+    var candidates = collectInRange(p.x, p.y, 540).slice();
+    candidates.sort(function (a, b) {
+      var ap = a.boss ? 2000000000 : (a.elite ? 1000000000 : a.hp);
+      var bp = b.boss ? 2000000000 : (b.elite ? 1000000000 : b.hp);
+      return bp - ap || E.dist2(p.x, p.y, a.x, a.y) - E.dist2(p.x, p.y, b.x, b.y);
+    });
+    var previous = w.arcaneLocks || [], next = [];
+    var st = wStats(run, w);
+    for (var i = 0; i < Math.min(4, candidates.length); i++) {
+      var target = candidates[i], since = run.t;
+      for (var j = 0; j < previous.length; j++) if (previous[j].uid === target.uid) { since = previous[j].since; break; }
+      var ramp = 1 + E.clamp((run.t - since) / 2, 0, 1) * 3;
+      next.push({ uid: target.uid, target: target, since: since, ramp: ramp });
+      if (!run._netVisual) Entities.damageEnemy(run, target, st.dmg * 0.24 * ramp, { noCrit: true });
+    }
+    w.arcaneLocks = next;
+  }
+
+  function rangerAim(run, p) {
+    var pointer = E.pointerState;
+    if (pointer && pointer.active && pointer.type !== 'touch') {
+      return Math.atan2(E.cam.y + pointer.y - CFG.GAME.H / 2 - p.y,
+        E.cam.x + pointer.x - CFG.GAME.W / 2 - p.x);
+    }
+    var candidates = collectInRange(p.x, p.y, 620), target = null;
+    for (var i = 0; i < candidates.length; i++) if (!target || candidates[i].hp > target.hp) target = candidates[i];
+    return target ? Math.atan2(target.y - p.y, target.x - p.x) : Math.atan2(E.lastDir.y, E.lastDir.x);
+  }
+
+  function updateRangerUltimate(run, w, dt) {
+    var p = run.player, st = wStats(run, w);
+    if ((w.dragonChargeT || 0) > 0) {
+      if (w.dragonChargeT > 0.25) w.dragonAngle = rangerAim(run, p);
+      w.dragonChargeT = Math.max(0, w.dragonChargeT - dt);
+      w.dragonChargeProgress = 1 - w.dragonChargeT / 2;
+      p.attackAnimT = Math.max(p.attackAnimT, 0.14);
+      p.dir = Math.abs(Math.cos(w.dragonAngle)) > Math.abs(Math.sin(w.dragonAngle))
+        ? (Math.cos(w.dragonAngle) >= 0 ? 'right' : 'left')
+        : (Math.sin(w.dragonAngle) >= 0 ? 'down' : 'up');
+      if (w.dragonChargeT <= 0) {
+        var speed = 600;
+        var dragon = spawn(run, w, st, 'dragonLance', 'p_dragon', p.x, p.y - 10,
+          Math.cos(w.dragonAngle) * speed, Math.sin(w.dragonAngle) * speed, 1.5);
+        dragon.dmg = st.dmg * 4.5; dragon.pierce = 9999; dragon.size = 58;
+        dragon.aux = speed; dragon.angle = w.dragonAngle;
+        w.cdT = st.cd; w.dragonChargeProgress = 0;
+        AudioSys.play('evolve'); FX.shake(7, 0.28);
+      }
+      return;
+    }
+    w.cdT -= dt;
+    if (w.cdT <= 0 && countKind('windbow', p) === 0) {
+      w.dragonChargeT = 2; w.dragonChargeProgress = 0;
+      w.dragonAngle = rangerAim(run, p); w.cdT = 0;
+      FX.ring(p.x, p.y, { r: 48, color: '#69eda7', life: 0.45, width: 3 });
+    }
+  }
+
   // 联机:房主代跑某个队友的武器。共用同一子弹池,弹幕归属只影响视觉光环。
   // owner 是队友的 player 对象,list 是他的武器数组。
   function updateFor(run, owner, list, dt) {
@@ -967,11 +1106,15 @@ window.Weapons = (function () {
     var saved = run.player;
     run.player = owner;                 // 临时把武器计算的"玩家"切到队友
     try {
-      owner._bloodRageMul = 1; owner._rageSpeedMul = 1; owner._stormSpeedMul = 1;
+      owner._bloodRageMul = 1; owner._rageSpeedMul = 1; owner._stormSpeedMul = 1; owner._holyJudgment = false;
       for (var i = 0; i < list.length; i++) {
         var w = list[i];
+        updateNativeAvatar(run, w);
+        if (w.id === 'crossblade') updateKnightOaths(run, w, dt);
+        if (w.id === 'arcanebolt') updateArcaneAvatar(run, w, dt);
         if (w.id === 'whirlaxe') updateRage(run, w, dt);
         if (w.id === 'holyaura') { updateAura(run, w, dt); continue; }
+        if (w.id === 'windbow' && w.evolved) { updateRangerUltimate(run, w, dt); continue; }
         w.cdT -= dt;
         if (w.cdT <= 0) {
           var st = wStats(run, w);
@@ -991,11 +1134,15 @@ window.Weapons = (function () {
   function update(run, dt) {
     runRef = run;
     var p = run.player;
-    p._bloodRageMul = 1; p._rageSpeedMul = 1; p._stormSpeedMul = 1;
+    p._bloodRageMul = 1; p._rageSpeedMul = 1; p._stormSpeedMul = 1; p._holyJudgment = false;
     for (var i = 0; i < run.weapons.length; i++) {
       var w = run.weapons[i];
+      updateNativeAvatar(run, w);
+      if (w.id === 'crossblade') updateKnightOaths(run, w, dt);
+      if (w.id === 'arcanebolt') updateArcaneAvatar(run, w, dt);
       if (w.id === 'whirlaxe') updateRage(run, w, dt);
       if (w.id === 'holyaura') { updateAura(run, w, dt); continue; }
+      if (w.id === 'windbow' && w.evolved) { updateRangerUltimate(run, w, dt); continue; }
       w.cdT -= dt;
       if (w.cdT <= 0) {
         var st = wStats(run, w);
@@ -1126,23 +1273,46 @@ window.Weapons = (function () {
       ctx.drawImage(auraImg, p.x - auraW / 2 + auraXOff, p.y - auraH / 2 + auraYOff, auraW, auraH);
       ctx.globalAlpha = 1;
     }
-    var rageW = findWeapon(run, 'whirlaxe');
-    if (rageW && rageW.evolved && rageW.phantomStacks > 0 && p.char && p.char.id === 'berserker') {
+    var nativeW = p.char ? findWeapon(run, p.char.weapon) : null;
+    if (nativeW && nativeW.evolved && p.char) {
       var action = p.attackAnimT > 0 ? 'attack' : (p.moving ? 'walk' : 'idle');
-      var spriteId = p.char.sprite + '_' + action + '_' + (p.dir || 'down');
+      var spriteId = 'avatar_' + p.char.id + '_' + action + '_' + (p.dir || 'down');
       var phantomFrames = cachedFrames(spriteId);
       var phantom = phantomFrames[Math.floor((action === 'attack' ? p.attackAnimAge : p.animT) * cachedFps(spriteId, 10)) % phantomFrames.length];
-      var grow = 1 + Math.min(20, rageW.phantomStacks) * 0.025;
-      var pw = 70 * grow, ph = 82 * grow;
-      var dir = p.dir || 'down';
-      var back = dir === 'left' ? { x: 1, y: 0 } : dir === 'right' ? { x: -1, y: 0 } :
-        dir === 'up' ? { x: 0, y: 1 } : { x: 0, y: -1 };
-      var px = p.x + back.x * (26 + grow * 4), py = p.y + back.y * (22 + grow * 4);
+      var grow = 1 + E.clamp((nativeW.phantomKills || 0) / 300, 0, 1) * 1.5;
+      var pw = Math.round(64 * grow), ph = pw;
       ctx.save();
-      ctx.globalAlpha = 0.24 + Math.min(20, rageW.phantomStacks) * 0.012;
-      ctx.filter = 'grayscale(1) sepia(1) saturate(6) hue-rotate(305deg) brightness(1.08)';
-      ctx.drawImage(phantom, px - pw / 2, py - ph - 20, pw, ph);
+      ctx.globalAlpha = 0.42 + E.clamp((nativeW.phantomKills || 0) / 300, 0, 1) * 0.16;
+      // Shared [32,54] body pivot: exact same x/base as the hero, no offset.
+      ctx.drawImage(phantom, p.x - pw / 2, p.y + 8 - Math.round(54 * grow), pw, ph);
       ctx.restore();
+    }
+    var arcaneW = findWeapon(run, 'arcanebolt');
+    if (arcaneW && arcaneW.evolved && p.char && p.char.id === 'mage' && arcaneW.arcaneLocks) {
+      ctx.save(); ctx.globalCompositeOperation = 'lighter';
+      for (var ai = 0; ai < arcaneW.arcaneLocks.length; ai++) {
+        var lock = arcaneW.arcaneLocks[ai], target = lock.target;
+        if (!target || !target.alive) continue;
+        ctx.globalAlpha = 0.34 + 0.12 * Math.sin(run.t * 18 + ai);
+        ctx.strokeStyle = lock.ramp >= 3.6 ? '#f4c8ff' : '#9f66e8';
+        ctx.lineWidth = 1 + lock.ramp * 0.7;
+        ctx.beginPath(); ctx.moveTo(p.x, p.y - 42); ctx.lineTo(target.x, target.y); ctx.stroke();
+      }
+      ctx.restore();
+    }
+    var rangerW = findWeapon(run, 'windbow');
+    if (rangerW && rangerW.evolved && rangerW.dragonChargeT > 0) {
+      var chargeR = 28 + (rangerW.dragonChargeProgress || 0) * 36;
+      ctx.globalAlpha = 0.3 + (rangerW.dragonChargeProgress || 0) * 0.45;
+      ctx.drawImage(SpriteGen.get('vfx_circle'), p.x - chargeR, p.y - chargeR, chargeR * 2, chargeR * 2);
+      ctx.globalAlpha = 1;
+    }
+    if (p.knightImmuneT > 0) {
+      var shieldPulse = 62 + Math.sin(run.t * 8) * 3;
+      ctx.globalAlpha = 0.48;
+      ctx.drawImage(SpriteGen.get('vfx_shield'), p.x - shieldPulse / 2, p.y - shieldPulse * 0.72,
+        shieldPulse, shieldPulse);
+      ctx.globalAlpha = 1;
     }
     // 火焰池
     for (var i = 0; i < BMAX; i++) {
@@ -1282,6 +1452,11 @@ window.Weapons = (function () {
       // Keep its on-screen silhouette long and lean instead of inflating it
       // into an opaque screen-filling block.
       if (b.kind === 'guideDragon') dw = img.width * 2.9;
+      if (b.kind === 'dragonLance') {
+        dw = img.width * 3.15;
+        ctx.globalAlpha = 0.56;
+        ctx.globalCompositeOperation = 'lighter';
+      }
       if (b.kind === 'divineSword') dw = img.width * 3.35;
       if (b.kind === 'angel') dw = img.width * 1.65;
       if (b.spr === 'p_slash' || b.spr === 'p_slash_big') {
@@ -1311,6 +1486,10 @@ window.Weapons = (function () {
     w.evolved = true;
     if (window.Entities && Entities.recomputeStats) Entities.recomputeStats(run);
     w.evoId = def.evo;
+    if (run.player.char && run.player.char.weapon === w.id) {
+      w.phantomBaseKills = run.kills || 0;
+      w.phantomKills = 0;
+    }
     Meta.track('evolve');
     Meta.seeCodex('e_' + def.evo);
     AudioSys.play('evolve');
@@ -1339,7 +1518,9 @@ window.Weapons = (function () {
     holyStrike: function () { return '解锁/强化天降圣光（50%）'; },
     arcaneReflect: function () { return '解锁/强化奥术折射：命中后追踪弹射'; },
     voidMark: function () { return '解锁虚空烙印：再次命中会范围爆炸'; },
-    teslaOverload: function () { return '解锁电塔过载：消失时释放强力扩散电流'; }
+    teslaOverload: function () { return '解锁电塔过载：消失时释放强力扩散电流'; },
+    armorBreak: function () { return '解锁穿云劲：额外穿透并削弱护甲'; },
+    leafEcho: function () { return '解锁翠影回响：命中分裂两枚追踪叶箭'; }
   };
   function deltaDesc(delta) {
     var parts = [];

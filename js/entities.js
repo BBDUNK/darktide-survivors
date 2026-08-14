@@ -220,7 +220,7 @@ window.Entities = (function () {
 
   function damagePlayer(run, dmg) {
     var p = run.player;
-    if (p.iframe > 0 || run.over) return;
+    if (p.iframe > 0 || p.knightImmuneT > 0 || run.over) return;
     var real = Math.max(1, dmg - p.stats.armor);
     // 护盾优先吸收伤害
     if (p.shield > 0) {
@@ -266,7 +266,7 @@ window.Entities = (function () {
     if (!w || w.downed) return;
     if (w.isHost) { damagePlayer(run, dmg); return; }
     var p = w.player;
-    if (p.iframe > 0 || run.over || !p.stats) return;
+    if (p.iframe > 0 || p.knightImmuneT > 0 || run.over || !p.stats) return;
     var real = Math.max(1, dmg - p.stats.armor);
     if (p.shield > 0) {
       var absorbed = Math.min(p.shield, real);
@@ -489,7 +489,8 @@ window.Entities = (function () {
     var s = run.player.stats;
     var crit = opts.noCrit ? false : (Math.random() < s.crit);
     var final = dmg * (crit ? s.critDmg : 1);
-    final = Math.max(1, final - e.armor);
+    var armorBreak = e.armorBreakUntil > run.t ? (e.armorBreakValue || 0) : 0;
+    final = Math.max(1, final - Math.max(0, e.armor - armorBreak));
     e.hp -= final;
     run.dmgTotal += final;
     e.flash = 0.1;
@@ -2394,6 +2395,27 @@ window.Entities = (function () {
         } else if (m.action === 'walk' || m.moving) {
           mateSprite = cd.sprite + '_walk_' + mateDir;
           mateF = Math.floor(mateAge * animFps(mateSprite, 10));
+        }
+        var mateWeapons = m.weapons || [], nativeEvo = null;
+        for (var mw = 0; mw < mateWeapons.length; mw++) {
+          var entry = mateWeapons[mw];
+          var wid = Array.isArray(entry) ? entry[0] : entry.id;
+          var evolved = Array.isArray(entry) ? !!entry[2] : !!entry.evolved;
+          if (wid === cd.weapon && evolved) { nativeEvo = entry; break; }
+        }
+        if (nativeEvo) {
+          var mateAction = (m.action === 'attack' || m.attacking) ? 'attack'
+            : ((m.action === 'walk' || m.moving) ? 'walk' : 'idle');
+          var avatarName = 'avatar_' + cd.id + '_' + mateAction + '_' + mateDir;
+          var avatarFrames = getFrames(avatarName, false);
+          var avatarFrame = avatarFrames[Math.floor(mateAge * animFps(avatarName, mateAction === 'attack' ? 13 : 10)) % avatarFrames.length];
+          var avatarKills = Array.isArray(nativeEvo) ? (nativeEvo[3] || 0) : (nativeEvo.phantomKills || 0);
+          var avatarGrow = 1 + E.clamp(avatarKills / 300, 0, 1) * 1.5;
+          var avatarSize = Math.round(64 * avatarGrow);
+          ctx.globalAlpha = 0.42 + E.clamp(avatarKills / 300, 0, 1) * 0.16;
+          ctx.drawImage(avatarFrame, m.x - avatarSize / 2, m.y + 8 - Math.round(54 * avatarGrow),
+            avatarSize, avatarSize);
+          ctx.globalAlpha = 1;
         }
         drawActorSprite(ctx, mateSprite, mateF, m.x, m.y + 8, 1, false, 1, null, false);
         // 队友身上的光环增益提示

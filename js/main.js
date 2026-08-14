@@ -328,7 +328,7 @@
       as: stampPlayerAction(run.player), ae: run.player.netActionEpoch || run.frame,
       sh: +(run.player.shield || 0).toFixed(1), mh: +(run.player.stats.hp || 1).toFixed(1),
       lvl: run.level, xp: +(run.coopXp !== null ? run.coopXp : run.xp).toFixed(1), xn: run.xpNeed,
-      wp: run.weapons.map(function (w) { return [w.id, w.lv, w.evolved ? 1 : 0]; }),
+      wp: run.weapons.map(function (w) { return [w.id, w.lv, w.evolved ? 1 : 0, w.phantomKills || 0]; }),
       ps: Object.keys(run.passives).map(function (k) { return [k, run.passives[k]]; }),
       sl: +(run.player.slow || 0).toFixed(2), rt: run.player.rootT > 0 ? 1 : 0,
       ws: run.player.webStacks || 0
@@ -346,7 +346,7 @@
         sh: +(mp.shield || 0).toFixed(1), mh: +(mp.stats && mp.stats.hp || 1).toFixed(1),
         is: mt.lastInputSeq || 0,
         lvl: run.level, xp: +(run.coopXp !== null ? run.coopXp : run.xp).toFixed(1), xn: run.xpNeed,
-        wp: mt.weapons.map(function (w) { return [w.id, w.lv, w.evolved ? 1 : 0]; }),
+        wp: mt.weapons.map(function (w) { return [w.id, w.lv, w.evolved ? 1 : 0, w.phantomKills || 0]; }),
         ps: Object.keys(mt.passives).map(function (k) { return [k, mt.passives[k]]; }),
         sl: +(mp.slow || 0).toFixed(2), rt: mp.rootT > 0 ? 1 : 0,
         ws: mp.webStacks || 0
@@ -436,7 +436,8 @@
         name: m.name, charId: m.charId, x: p.x, y: p.y,
         face: p.face, dir: p.dir, moving: p.moving, attacking: p.attackAnimT > 0,
         hpPct: p.stats ? p.hp / p.stats.hp : 1,
-        downed: m.downed, reviveT: m.reviveT || 0, buffed: !!p.auraBuff
+        downed: m.downed, reviveT: m.reviveT || 0, buffed: !!p.auraBuff,
+        weapons: m.weapons || []
       });
     }
     return out;
@@ -1007,7 +1008,8 @@
     if (ps.wp) {
       run.weapons = ps.wp.map(function (w) {
         var def = CFG.WEAPONS[w[0]];
-        return { id: w[0], lv: w[1], evolved: !!w[2], evoId: def ? def.evo : null, cdT: 0.2, curR: 0 };
+        return { id: w[0], lv: w[1], evolved: !!w[2], evoId: def ? def.evo : null,
+          cdT: 0.2, curR: 0, phantomKills: w[3] || 0 };
       });
       run.passives = {};
       if (ps.ps) ps.ps.forEach(function (x) { run.passives[x[0]] = x[1]; });
@@ -1962,6 +1964,7 @@
             remote.action = ps.as || (ps.at ? 'attack' : (ps.mv ? 'walk' : 'idle'));
             remote.actionEpoch = run.frame - Math.max(0, (m.tk || 0) - (ps.ae || m.tk || 0));
             remote.shield = ps.sh || 0;
+            remote.weapons = ps.wp || [];
             nextRemote.push(remote);
           }
           coop.remote = nextRemote;
