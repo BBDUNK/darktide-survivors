@@ -23,6 +23,7 @@ window.Net = (function () {
     'https://cdn.bootcdn.net/ajax/libs/peerjs/1.5.4/peerjs.min.js'   // 备选镜像
   ];
   var ROOM_PREFIX = 'darktide-';
+  var PROTOCOL_VERSION = 'NET_STATE_V2';
   var SNAP_HZ = 15;          // 快照频率:够用且省带宽,客户端做插值
   var MAX_PLAYERS = 4;
 
@@ -34,6 +35,7 @@ window.Net = (function () {
   var selfName = '';
   var loaded = false;
   var cb = {};               // 回调集合,由 main.js 注入
+  var lastSnapSeq = 0;
 
   // 心跳保活:每 2 秒双向 ping/pong,连续 3 次无响应判定掉线并尝试重连
   var PING_MS = 2000, PING_TIMEOUT = 3;
@@ -267,6 +269,8 @@ window.Net = (function () {
       if (cb.onClientInput) cb.onClientInput(c.peer, m);
     } else if (m.t === 'pickup') {
       if (cb.onClientPick) cb.onClientPick(c.peer, m.optIdx, m.seq);
+    } else if (m.t === 'pickupRequest' || m.t === 'vaultRequest' || m.t === 'shopRequest') {
+      if (cb.onWorldRequest) cb.onWorldRequest(c.peer, m);
     } else if (m.t === 'pauseReq' || m.t === 'resumeReq' || m.t === 'giveup' || m.t === 'exitGate') {
       if (cb.onHostCommand) cb.onHostCommand(c.peer, m);
     }
@@ -278,6 +282,7 @@ window.Net = (function () {
     joinName = selfName;                     // 供自动重连复用
     if (!selfToken) selfToken = makeToken();  // 整局稳定,重连时复用同一个
     roomCode = (code || '').toUpperCase().trim();
+    lastSnapSeq = 0;
     return ensureLib().then(function () {
       return new Promise(function (resolve, reject) {
         peer = new window.Peer(null, { debug: 0 });
@@ -325,11 +330,20 @@ window.Net = (function () {
     if (!ackAndDedupe(m, null)) return;
     if (m.t === 'roster') { roster = m.roster; mapId = m.map || mapId; if (cb.onRoster) cb.onRoster(roster, mapId); }
     else if (m.t === 'start' && cb.onStart) cb.onStart(m);
-    else if (m.t === 'snap' && cb.onSnap) cb.onSnap(m);
+    else if (m.t === 'snap' && cb.onSnap) {
+      if (m.version !== PROTOCOL_VERSION || m.v !== 2) return;
+      if (m.sq !== undefined && m.sq <= lastSnapSeq) return;
+      lastSnapSeq = m.sq || (lastSnapSeq + 1);
+      cb.onSnap(m);
+    }
     else if (m.t === 'levelup' && cb.onRemoteLevelUp) cb.onRemoteLevelUp(m);
     else if (m.t === 'pickdone' && cb.onPickDone) cb.onPickDone(m);
     else if (m.t === 'pause' && cb.onPauseSync) cb.onPauseSync(m);
     else if (m.t === 'chest' && cb.onChest) cb.onChest(m);
+    else if ((m.t === 'gameEvent' || m.t === 'fxEvent') && cb.onGameEvent) cb.onGameEvent(m);
+    else if (m.t === 'audioEvent' && cb.onAudioEvent) cb.onAudioEvent(m);
+    else if (m.t === 'bossEvent' && cb.onBossEvent) cb.onBossEvent(m);
+    else if ((m.t === 'pickupResult' || m.t === 'vaultResult' || m.t === 'shopResult') && cb.onWorldResult) cb.onWorldResult(m);
     else if (m.t === 'over' && cb.onOver) cb.onOver(m);
   }
 
@@ -339,7 +353,12 @@ window.Net = (function () {
   // 但 levelup / pickup / over / chest / start 这类控制消息丢一次就永久失效 ——
   // 玩家的直接观感就是"升级了却没拿到武器""结算画面卡住不动"。
   // 因此给它们套一层应用层 ACK:带序号发送,收到对端 ack 才停,否则按间隔重发。
-  var RELIABLE_TYPES = { levelup: 1, pickup: 1, over: 1, chest: 1, start: 1, pickdone: 1 };
+  var RELIABLE_TYPES = {
+    levelup: 1, pickup: 1, over: 1, chest: 1, start: 1, pickdone: 1,
+    gameEvent: 1, fxEvent: 1, audioEvent: 1, pickupRequest: 1, pickupResult: 1,
+    vaultRequest: 1, vaultResult: 1, shopRequest: 1, shopResult: 1,
+    bossEvent: 1
+  };
   var relSeq = 0;
   var pendingAcks = {};      // seq -> { msg, target, tries, timer }
   var seenRel = {};          // 收端去重:已处理过的 relId 不再重复应用
@@ -483,6 +502,7 @@ window.Net = (function () {
     try { if (peer) peer.destroy(); } catch (e) {}
     peer = null; conns = []; hostConn = null; mode = 'off'; roster = []; roomCode = '';
     reconnectTries = 0;
+    lastSnapSeq = 0;
   }
 
   return {
@@ -501,6 +521,10 @@ window.Net = (function () {
     code: function () { return roomCode; },
     getRoster: function () { return roster; },
     playerCount: function () { return mode === 'off' ? 1 : roster.length; },
-    SNAP_HZ: SNAP_HZ, MAX_PLAYERS: MAX_PLAYERS
+    SNAP_HZ: SNAP_HZ, MAX_PLAYERS: MAX_PLAYERS, PROTOCOL_VERSION: PROTOCOL_VERSION,
+    protocolInfo: function () {
+      return { version: PROTOCOL_VERSION, snapshotHz: SNAP_HZ,
+        reliableTypes: Object.keys(RELIABLE_TYPES).sort() };
+    }
   };
 })();

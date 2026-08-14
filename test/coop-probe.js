@@ -130,6 +130,55 @@ async function enterMenu(pg) {
   });
   console.log('客户端弹幕数: ' + cliBullets);
 
+  // V2 协议结构必须真实存在于房主构建的快照中，且关键世界交互/表现事件走可靠层。
+  const protocolState = await host.evaluate(() => {
+    const snap = Debug.netSnapshot();
+    const info = Net.protocolInfo();
+    const required = ['fxEvent', 'audioEvent', 'bossEvent', 'pickupRequest', 'pickupResult',
+      'vaultRequest', 'vaultResult', 'shopRequest', 'shopResult'];
+    return {
+      version: snap && snap.version,
+      sequence: snap && snap.sq,
+      serverTick: snap && snap.tk,
+      serverTime: snap && snap.st,
+      seed: snap && snap.sd,
+      enemyAction: !snap.e.length || (!!snap.e[0].u && !!snap.e[0].ac && snap.e[0].ae !== undefined),
+      playerAction: !!(snap.p[0].as && snap.p[0].ae !== undefined),
+      vaultUid: !snap.va.length || !!snap.va[0].u,
+      shopUid: !snap.ms.slots.length || snap.ms.slots.every(s => !s || !!s.uid),
+      reliable: required.every(t => info.reliableTypes.includes(t))
+    };
+  });
+  console.log('NET_STATE_V2: ' + JSON.stringify(protocolState));
+  if (!protocolState || protocolState.version !== 'NET_STATE_V2' || !protocolState.sequence ||
+      protocolState.serverTick === undefined || !protocolState.serverTime || protocolState.seed === undefined ||
+      !protocolState.enemyAction || !protocolState.playerAction || !protocolState.vaultUid ||
+      !protocolState.shopUid || !protocolState.reliable) {
+    problems.push('NET_STATE_V2 字段或可靠事件类型不完整');
+  }
+
+  // 商店共享库存：双方都具备购买资格，但同一个稳定 UID 全队只能成交一次。
+  const shopRace = await host.evaluate(() => {
+    const r = Debug.run();
+    const slot = Merchant.slots().find(s => s && s.good && !s.bought);
+    if (!r || !slot || !r.coopPlayers || r.coopPlayers.length < 2) return null;
+    r.gold = 99999;
+    const first = Merchant.purchaseByUid(r, slot.uid, r.coopPlayers[1]);
+    const second = Merchant.purchaseByUid(r, slot.uid, r.coopPlayers[0]);
+    return { uid: slot.uid, first: first.ok, second: second.ok, reason: second.reason };
+  });
+  console.log('商店并发结算: ' + JSON.stringify(shopRace));
+  if (!shopRace || !shopRace.first || shopRace.second || shopRace.reason !== '商品已售出') {
+    problems.push('同一商店商品没有严格只成交一次');
+  }
+
+  const sharedXp = {
+    host: await host.evaluate(() => { const r = Debug.run(); return [r.level, +(r.coopXp || 0).toFixed(2), r.xpNeed]; }),
+    client: await client.evaluate(() => { const r = Debug.run(); return [r.level, +(r.coopXp || 0).toFixed(2), r.xpNeed]; })
+  };
+  console.log('共享经验: ' + JSON.stringify(sharedXp));
+  if (sharedXp.host.join('|') !== sharedXp.client.join('|')) problems.push('房主与客户端经验条状态不一致');
+
   // 房主暂停,客户端应同步弹出暂停界面;恢复后时间继续推进
   await host.keyboard.press('Escape');
   await host.waitForTimeout(700);

@@ -127,7 +127,13 @@
     mates: [],        // host: [{peerId,name,charId,player,input,...}]
     remote: [],       // client: 从快照解出的其他玩家渲染数据
     snapAcc: 0,       // host: 广播计时
+    snapSeq: 0,
+    eventSeq: 0,
+    worldAcc: 0,
+    worldSent: {},
     inputAcc: 0,      // client: 上报计时
+    inputSeq: 0,
+    lastSnapSeq: 0,
     myId: '',         // client: 自己的 peer id,用于从快照里剔除自己
     hostLuOpen: false, // host: 自己的联机升级悬浮卡是否已打开
     active: false      // 联机对局是否真正开始(结算后清除,防止"再来一局"带旧队友)
@@ -188,6 +194,44 @@
   // 保证屏幕边缘刚要进入视野的实体已经在快照里(不会"凭空出现")。
   var SNAP_VIEW_R = 700;
 
+  function enemySnapshotAction(e) {
+    if (e.burrowT > 0) return 'burrow';
+    if (e.attackAnimT > 0) return 'attack';
+    if (e.boss && (e.chargeSeq > 0 || e.aiPhase === 1)) return 'charge';
+    if (Math.abs(e.vx || 0) + Math.abs(e.vy || 0) > 0.5) return 'walk';
+    return 'idle';
+  }
+
+  function stampSnapshotAction(e) {
+    var action = enemySnapshotAction(e);
+    if (e.netAnimState !== action) {
+      e.netAnimState = action;
+      e.netAnimEpoch = run.frame;
+    }
+    return action;
+  }
+
+  function stampPlayerAction(p) {
+    var action = p.downed ? 'death' : (p.attackAnimT > 0 ? 'attack' : (p.moving ? 'walk' : 'idle'));
+    if (p.netActionState !== action) {
+      p.netActionState = action;
+      p.netActionEpoch = run.frame;
+    }
+    return action;
+  }
+
+  function emitNetEvent(type, kind, data) {
+    if (!coop.on || !Net.isHost()) return;
+    coop.eventSeq++;
+    Net.broadcast({ t: type, id: 'ev-' + (run ? run.seed : 0) + '-' + coop.eventSeq,
+      tick: run ? run.frame : 0,
+      kind: kind, data: data || {} });
+  }
+
+  function emitGameEvent(kind, data) { emitNetEvent('fxEvent', kind, data); }
+  function emitAudioEvent(kind, data) { emitNetEvent('audioEvent', kind, data); }
+  function emitBossEvent(kind, data) { emitNetEvent('bossEvent', kind, data); }
+
   // 按接收方视野裁剪的快照。
   // 之前是无条件全量广播:满载 400 怪时单帧 68KB,15Hz 下达 8Mbps/客户端,
   // 远超 WebRTC DataChannel 的实际吞吐,数据在发送队列积压,客户端收到的
@@ -215,11 +259,14 @@
       if (!e.boss && !e.elite && !inView(e.x, e.y)) continue;
       es.push({
         u: e.uid, i: e.id, x: Math.round(e.x), y: Math.round(e.y),
+        vx: Math.round(e.vx || 0), vy: Math.round(e.vy || 0),
         h: Math.round(e.hp), m: Math.round(e.maxHp),
         el: e.elite ? 1 : 0, f: e.face,
         g: e.guard > 0 ? +e.guard.toFixed(2) : 0,
         b: e.burrowT > 0 ? +e.burrowT.toFixed(2) : 0,
-        bf: e.buffed ? 1 : 0, ph: e.phase2 ? 1 : 0, er: e.eyeRole || ''
+        bf: e.buffed ? 1 : 0, ph: e.phase2 ? 1 : 0, er: e.eyeRole || '',
+        ac: stampSnapshotAction(e), ae: e.netAnimEpoch || run.frame,
+        ap: e.aiPhase || 0, cp: e.chargePhase || 0, es: e.eliteSkill || ''
       });
     }
     var shots = Entities.getShots(), ss = [];
@@ -243,13 +290,13 @@
     for (i = 0; i < gems.length; i++) {
       if (!gems[i].alive) continue;
       if (!inView(gems[i].x, gems[i].y)) continue;
-      gs.push({ x: Math.round(gems[i].x), y: Math.round(gems[i].y), v: gems[i].v });
+      gs.push({ u: gems[i].uid || 0, x: Math.round(gems[i].x), y: Math.round(gems[i].y), v: gems[i].v });
     }
     var items = Entities.getItems(), its = [];
     for (i = 0; i < items.length; i++) {
       if (!items[i].alive) continue;
       // 掉落物(宝箱/道具)全量下发:数量少,且客户端要在小地图上看到远处宝箱
-      its.push({ k: items[i].type, x: Math.round(items[i].x), y: Math.round(items[i].y) });
+      its.push({ u: items[i].uid || 0, k: items[i].type, x: Math.round(items[i].x), y: Math.round(items[i].y) });
     }
     // 玩家弹幕:客户端需要看到所有参战者的投射物
     var wbs = Weapons.getBullets(), bs = [];
@@ -278,6 +325,8 @@
       hp: +(run.player.hp / run.player.stats.hp).toFixed(2),
       dn: run.player.downed ? 1 : 0, rv: +(run.player.reviveT || 0).toFixed(2),
       bf: run.player.auraBuff ? 1 : 0,
+      as: stampPlayerAction(run.player), ae: run.player.netActionEpoch || run.frame,
+      sh: +(run.player.shield || 0).toFixed(1), mh: +(run.player.stats.hp || 1).toFixed(1),
       lvl: run.level, xp: +(run.coopXp !== null ? run.coopXp : run.xp).toFixed(1), xn: run.xpNeed,
       wp: run.weapons.map(function (w) { return [w.id, w.lv, w.evolved ? 1 : 0]; }),
       ps: Object.keys(run.passives).map(function (k) { return [k, run.passives[k]]; }),
@@ -293,6 +342,9 @@
         hp: mp.stats ? +(mp.hp / mp.stats.hp).toFixed(2) : 1,
         dn: mt.downed ? 1 : 0, rv: +(mt.reviveT || 0).toFixed(2),
         bf: mp.auraBuff ? 1 : 0,
+        as: stampPlayerAction(mp), ae: mp.netActionEpoch || run.frame,
+        sh: +(mp.shield || 0).toFixed(1), mh: +(mp.stats && mp.stats.hp || 1).toFixed(1),
+        is: mt.lastInputSeq || 0,
         lvl: run.level, xp: +(run.coopXp !== null ? run.coopXp : run.xp).toFixed(1), xn: run.xpNeed,
         wp: mt.weapons.map(function (w) { return [w.id, w.lv, w.evolved ? 1 : 0]; }),
         ps: Object.keys(mt.passives).map(function (k) { return [k, mt.passives[k]]; }),
@@ -300,9 +352,16 @@
         ws: mp.webStacks || 0
       });
     }
+    var audioState = AudioSys.state ? AudioSys.state() : { theme: '', intensity: 0 };
     return {
-      t: 'snap', ti: +run.t.toFixed(2),
+      t: 'snap', version: 'NET_STATE_V2', v: 2, sq: ++coop.snapSeq,
+      tk: run.frame, st: Date.now(), sd: run.seed,
+      ti: +run.t.toFixed(2),
       e: es, s: ss, l: ls, g: gs, it: its, b: bs, p: ps,
+      va: vaults.map(function (v) { return { u: v.uid, x: Math.round(v.x), y: Math.round(v.y), g: v.gold,
+        rk: v.rewardKind, ii: v.itemId || '', a: v.alive ? 1 : 0 }; }),
+      ms: Merchant.snapshot ? Merchant.snapshot() : null,
+      au: { th: audioState.theme || '', it: audioState.intensity | 0 },
       bh: run.boss && run.boss.alive ? +((run.bossBarHp !== null && run.bossBarHp !== undefined ? run.bossBarHp : run.boss.hp) /
         (run.bossBarMax || run.boss.maxHp)).toFixed(3) : -1,
       bi: run.boss && run.boss.alive ? run.boss.bossType : '',
@@ -540,7 +599,7 @@
       var rewardKind = i < 3 ? 'weapon' : 'item';
       var itemPool = ['magnet', 'meat', 'bomb', 'clock'];
       var itemId = itemPool[Math.floor(Math.random() * itemPool.length)];
-      vaults.push({ x: x, y: y, gold: 24 + Math.floor(Math.random() * 24),
+      vaults.push({ uid: E.nextUid(), x: x, y: y, gold: 24 + Math.floor(Math.random() * 24),
         rewardKind: rewardKind, itemId: itemId, alive: true });
     }
   }
@@ -566,6 +625,8 @@
         AudioSys.play('coin');
         // 重置累积
         v.alive = false;
+        emitGameEvent('vaultOpen', { uid: v.uid, x: Math.round(v.x), y: Math.round(v.y), gold: g });
+        emitAudioEvent('coin', { uid: v.uid });
         if (v.rewardKind === 'weapon') {
           var loot = Weapons.chestLoot(run);
           if (loot.length && run.cb && run.cb.onWarn) run.cb.onWarn('补给宝箱：' + loot[0].name);
@@ -579,6 +640,28 @@
     }
   }
   // 四角金库绘制(世界坐标版本,在 translate 块内调用;宝箱本身)
+  function claimVaultFor(run, uid, w) {
+    if (!w || w.downed || w.player.hp <= 0) return false;
+    for (var i = 0; i < vaults.length; i++) {
+      var v = vaults[i];
+      if (!v.alive || v.uid !== uid || E.dist2(w.player.x, w.player.y, v.x, v.y) > 52 * 52) continue;
+      v.alive = false;
+      run.gold += v.gold;
+      Meta.track('gold', v.gold);
+      FX.burst(v.x, v.y, { color: '#ffd76b', n: 14, speed: 110, life: 0.5, size: 2 });
+      emitGameEvent('vaultOpen', { uid: v.uid, x: Math.round(v.x), y: Math.round(v.y), gold: v.gold });
+      emitAudioEvent('coin', { uid: v.uid });
+      if (v.rewardKind === 'weapon') {
+        var loot = Weapons.chestLoot(run);
+        if (loot.length && run.cb && run.cb.onWarn) run.cb.onWarn('补给宝箱：' + loot[0].name);
+      } else {
+        Entities.spawnItem(run, v.itemId, v.x + 18, v.y - 10);
+      }
+      return true;
+    }
+    return false;
+  }
+
   function drawVaults(ctx, run) {
     for (var i = 0; i < vaults.length; i++) {
       var v = vaults[i];
@@ -630,6 +713,7 @@
 
     run = {
       t: 0, frame: 0,
+      seed: Math.floor(Math.random() * 0x7fffffff),
       player: Entities.makePlayer(charDef),
       map: mapDef,
       weapons: [], passives: {},
@@ -654,9 +738,17 @@
       } : null,
       onCoopPick: null,
       cb: {
-        onBoss: function (bd) { UI.bossBanner(bd); },
-        onWarn: function (msg) { UI.warn(msg); },
-        onElite: function () { UI.warn('☠ 精英怪现身,击杀掉落宝箱!'); }
+        onBoss: function (bd) {
+          UI.bossBanner(bd);
+          emitBossEvent('spawn', { id: bd && bd.id || '', name: bd && bd.name || '' });
+          emitAudioEvent('boss_spawn', { id: bd && bd.id || '' });
+        },
+        onWarn: function (msg) { UI.warn(msg); emitGameEvent('warn', { text: msg }); },
+        onElite: function (elite) {
+          UI.warn('☠ 精英怪现身,击杀掉落宝箱!');
+          emitGameEvent('eliteSpawn', { uid: elite && elite.uid || 0 });
+          emitAudioEvent('elite_spawn', { uid: elite && elite.uid || 0 });
+        }
       }
     };
     E.cam.x = 0; E.cam.y = 0;
@@ -894,11 +986,13 @@
   }
 
   // 客户端:用房主权威数据覆盖自己的显示状态(位置做平滑,不在本地积分)
-  function syncOwnPlayer(ps) {
+  function syncOwnPlayer(ps, serverTick) {
     var p = run.player;
     var prevHp = p.hp, prevStatsHp = p.stats ? p.stats.hp : 1;
     p.netX = ps.x; p.netY = ps.y;
     p.netFace = ps.f || 1; p.netDir = ps.d || 'down'; p.netMoving = !!ps.mv; p.netAttacking = !!ps.at;
+    p.netActionState = ps.as || (ps.at ? 'attack' : (ps.mv ? 'walk' : 'idle'));
+    p.netActionEpoch = run.frame - Math.max(0, (serverTick || 0) - (ps.ae || serverTick || 0));
     p.downed = !!ps.dn;
     p.reviveT = ps.rv || 0;
     p.slow = ps.sl || 0;
@@ -907,6 +1001,7 @@
     if (ps.lvl !== undefined) {
       run.level = ps.lvl;
       run.xp = ps.xp || 0;
+      if (coop.on) run.coopXp = ps.xp || 0;
       run.xpNeed = ps.xn || 1;
     }
     if (ps.wp) {
@@ -1015,12 +1110,12 @@
       coop.inputAcc += dt;
       if (coop.inputAcc >= 1 / 30) {         // 30Hz 上报足够
         coop.inputAcc = 0;
-        Net.toHost({ t: 'input', x: +iv.x.toFixed(2), y: +iv.y.toFixed(2) });
+        Net.toHost({ t: 'input', seq: ++coop.inputSeq, x: +iv.x.toFixed(2), y: +iv.y.toFixed(2) });
       }
       var cp = run.player;
-      // 位置跟随房主权威坐标,做轻量平滑(本地不积分位移,判定与画面一致)
+      // 本地只预测自己的视觉移动；伤害、拾取与最终坐标仍由房主权威决定。
       if (cp.netX !== undefined) {
-        var ck = Math.min(1, dt * 12);
+        var ck = Math.min(1, dt * 4.5);
         cp.x += (cp.netX - cp.x) * ck;
         cp.y += (cp.netY - cp.y) * ck;
         if (cp.netFace > 0.01) cp.face = 1; else if (cp.netFace < -0.01) cp.face = -1;
@@ -1029,8 +1124,46 @@
         cp.attackAnimT = cp.netAttacking ? 0.12 : 0;
         if (cp.netAttacking) cp.attackAnimAge += dt;
       }
+      if ((iv.x || iv.y) && cp.stats && !cp.downed) {
+        var il = Math.hypot(iv.x, iv.y) || 1;
+        var visualSpeed = cp.stats.speed * (1 - (cp.slow || 0)) * (1 + (cp.auraBuff || 0));
+        cp.x += iv.x / il * visualSpeed * dt;
+        cp.y += iv.y / il * visualSpeed * dt;
+        cp.x = E.clamp(cp.x, -CFG.GAME.MAP_R, CFG.GAME.MAP_R);
+        cp.y = E.clamp(cp.y, -CFG.GAME.MAP_R, CFG.GAME.MAP_R);
+      }
+      for (var nri = 0; nri < coop.remote.length; nri++) {
+        var nr = coop.remote[nri];
+        nr.x += ((nr.netX === undefined ? nr.x : nr.netX) - nr.x) * Math.min(1, dt * 12);
+        nr.y += ((nr.netY === undefined ? nr.y : nr.netY) - nr.y) * Math.min(1, dt * 12);
+      }
       if (cp.iframe > 0) cp.iframe -= dt;
       if (cp.hurtFlash > 0) cp.hurtFlash -= dt;
+      Entities.updateRemote(dt);
+      coop.worldAcc += dt;
+      if (coop.worldAcc >= 0.12) {
+        coop.worldAcc = 0;
+        var clientP = run.player, clientNow = run.t;
+        function worldRequest(kind, uid) {
+          if (uid === undefined || uid === null) return;
+          var key = kind + ':' + uid;
+          if (coop.worldSent[key] && clientNow - coop.worldSent[key] < 0.55) return;
+          coop.worldSent[key] = clientNow;
+          Net.toHost({ t: kind, uid: uid });
+        }
+        var clientItems = Entities.getItems ? Entities.getItems() : [];
+        for (var wi = 0; wi < clientItems.length; wi++) {
+          if (clientItems[wi].alive && E.dist2(clientItems[wi].x, clientItems[wi].y, clientP.x, clientP.y) < 48 * 48) worldRequest('pickupRequest', clientItems[wi].uid);
+        }
+        for (wi = 0; wi < vaults.length; wi++) {
+          if (vaults[wi].alive && E.dist2(vaults[wi].x, vaults[wi].y, clientP.x, clientP.y) < 60 * 60) worldRequest('vaultRequest', vaults[wi].uid);
+        }
+        var clientShop = Merchant.snapshot ? Merchant.snapshot() : null;
+        if (clientShop && clientShop.slots) for (wi = 0; wi < clientShop.slots.length; wi++) {
+          var shopSlot = clientShop.slots[wi];
+          if (shopSlot && shopSlot.good && E.dist2(shopSlot.x, shopSlot.y, clientP.x, clientP.y) < 60 * 60) worldRequest('shopRequest', shopSlot.uid);
+        }
+      }
       // 相机跟随自己的权威位置
       E.cam.x = E.lerp(E.cam.x, cp.x, 1 - Math.pow(0.001, dt));
       E.cam.y = E.lerp(E.cam.y, cp.y, 1 - Math.pow(0.001, dt));
@@ -1120,12 +1253,12 @@
 
     if (run.over) { finalizeRun(); return; }
     // 联机:升级用非阻塞悬浮卡,不暂停;pendingLevels 由悬浮卡结算
+    if (run.pendingChest) { enterChest(); return; }
     if (coop.on) {
       run.pendingLevels = 0;
       processMateChests();                   // 队友捡到的宝箱由房主代开
       return;
     }
-    if (run.pendingChest) { enterChest(); return; }
     if (run.pendingLevels > 0) { enterLevelUp(); return; }
   }
 
@@ -1768,6 +1901,9 @@
         coop.mates = [];
         coop.remote = [];
         coop.myId = Net.selfId();
+        coop.lastSnapSeq = 0;
+        coop.inputSeq = 0;
+        coop.worldSent = {};
         coop.active = true;
         newRun(mine, m.mapId);
         if (m.rejoin) UI.toastText('已重连,正在同步战况…');
@@ -1775,8 +1911,23 @@
       // 客户端:收到房主快照,重建世界并解出队友
       onSnap: function (m) {
         if (!run || !coop.on) return;
+        if (m.version !== 'NET_STATE_V2' || m.v !== 2) return;
+        if (m.sq !== undefined && m.sq <= coop.lastSnapSeq) return;
+        coop.lastSnapSeq = m.sq || (coop.lastSnapSeq + 1);
         try {
-          Entities.applySnapshot(run, { t: m.ti, e: m.e, s: m.s, l: m.l, g: m.g, it: m.it, bh: m.bh, bi: m.bi, bn: m.bn });
+          Entities.applySnapshot(run, { t: m.ti, tk: m.tk, e: m.e || [], s: m.s || [], l: m.l || [], g: m.g || [], it: m.it || [], bh: m.bh, bi: m.bi, bn: m.bn });
+          if (m.sd !== undefined) run.seed = m.sd;
+          if (m.va) {
+            vaults = m.va.map(function (v) { return { uid: v.u, x: v.x, y: v.y, gold: v.g,
+              rewardKind: v.rk, itemId: v.ii, alive: !!v.a }; });
+          }
+          if (m.ms && Merchant.applySnapshot) Merchant.applySnapshot(m.ms);
+          if (m.au) {
+            if (m.au.th && (!run.netMusic || run.netMusic !== m.au.th)) {
+              run.netMusic = m.au.th; AudioSys.playMusic(m.au.th);
+            }
+            AudioSys.setIntensity(m.au.it || 0);
+          }
           run.kills = m.kl || 0;
           run.gold = m.gd || 0;
           run.bossesKilled = m.bk || 0;
@@ -1793,19 +1944,27 @@
           } else {
             run.boss = null;
           }
-          coop.remote = [];
+          var oldRemote = {};
+          for (var oi = 0; oi < coop.remote.length; oi++) oldRemote[coop.remote[oi].id] = coop.remote[oi];
+          var nextRemote = [];
           for (var i = 0; i < m.p.length; i++) {
             var ps = m.p[i];
             if (ps.id === coop.myId) {
-              syncOwnPlayer(ps);
+              syncOwnPlayer(ps, m.tk);
               continue;
             }
-            coop.remote.push({
-              name: ps.name, charId: ps.charId, x: ps.x, y: ps.y,
-              face: ps.f, dir: ps.d || 'down', moving: !!ps.mv, attacking: !!ps.at, hpPct: ps.hp,
-              downed: !!ps.dn, reviveT: ps.rv, buffed: !!ps.bf
-            });
+            var remote = oldRemote[ps.id] || { id: ps.id, x: ps.x, y: ps.y };
+            remote.name = ps.name; remote.charId = ps.charId;
+            remote.netX = ps.x; remote.netY = ps.y;
+            remote.face = ps.f; remote.dir = ps.d || 'down'; remote.moving = !!ps.mv;
+            remote.attacking = !!ps.at; remote.hpPct = ps.hp; remote.downed = !!ps.dn;
+            remote.reviveT = ps.rv; remote.buffed = !!ps.bf;
+            remote.action = ps.as || (ps.at ? 'attack' : (ps.mv ? 'walk' : 'idle'));
+            remote.actionEpoch = run.frame - Math.max(0, (m.tk || 0) - (ps.ae || m.tk || 0));
+            remote.shield = ps.sh || 0;
+            nextRemote.push(remote);
           }
+          coop.remote = nextRemote;
           Weapons.applyVisual(run, m.b || []);
         } catch (e) {
           console.error('[联机] 快照应用失败:', e);
@@ -1839,6 +1998,8 @@
       onClientInput: function (peerId, m) {
         for (var i = 0; i < coop.mates.length; i++) {
           if (coop.mates[i].peerId === peerId) {
+            if (m.seq !== undefined && m.seq <= (coop.mates[i].lastInputSeq || 0)) return;
+            coop.mates[i].lastInputSeq = m.seq || ((coop.mates[i].lastInputSeq || 0) + 1);
             coop.mates[i].input.x = m.x; coop.mates[i].input.y = m.y;
             return;
           }
@@ -1891,6 +2052,22 @@
         }
       },
       // 房主:客户端申请暂停/恢复/放弃
+      onWorldRequest: function (peerId, m) {
+        if (!coop.on || !Net.isHost() || !run || !m) return;
+        var owner = null;
+        for (var oi = 0; oi < coop.mates.length; oi++) {
+          if (coop.mates[oi].peerId === peerId) { owner = coop.mates[oi]; break; }
+        }
+        if (!owner) return;
+        var ok = false, reason = '';
+        if (m.t === 'pickupRequest') ok = Entities.collectItemByUid(run, m.uid, owner);
+        else if (m.t === 'vaultRequest') ok = claimVaultFor(run, m.uid, owner);
+        else if (m.t === 'shopRequest' && Merchant.purchaseByUid) {
+          var result = Merchant.purchaseByUid(run, m.uid, owner);
+          ok = !!result.ok; reason = result.reason || '';
+        }
+        Net.sendTo(peerId, { t: m.t.replace('Request', 'Result'), uid: m.uid, ok: ok, reason: reason });
+      },
       onHostCommand: function (peerId, m) {
         if (m.t === 'pauseReq' && state === 'run') togglePause();
         else if (m.t === 'resumeReq' && state === 'pause') togglePause();
@@ -1920,6 +2097,29 @@
       onChest: function (m) {
         if (!run || !coop.on) return;
         UI.showChest(m.results || [], function () {});
+      },
+      onGameEvent: function (m) {
+        if (!run || !coop.on) return;
+        var d = m.data || {};
+        if (m.kind === 'warn' && d.text) UI.warn(d.text);
+        else if (m.kind === 'eliteSpawn') UI.warn('☠ 精英怪现身,击杀掉落宝箱!');
+        else if (m.kind === 'bossSpawn') { AudioSys.play('boss_spawn'); FX.flash('#7d1530', 0.35, 0.35); }
+        else if (m.kind === 'vaultOpen') {
+          FX.burst(d.x, d.y, { color: '#ffd76b', n: 14, speed: 110, life: 0.5, size: 2 });
+          FX.ring(d.x, d.y, { r: 34, color: '#ffd76b', life: 0.4, width: 3 });
+        }
+      },
+      onAudioEvent: function (m) {
+        if (!run || !coop.on || !m || !m.kind) return;
+        AudioSys.play(m.kind);
+      },
+      onBossEvent: function (m) {
+        if (!run || !coop.on || !m) return;
+        if (m.kind === 'spawn') { AudioSys.play('boss_spawn'); FX.flash('#7d1530', 0.35, 0.35); }
+        else if (m.kind === 'phase') { AudioSys.play('boss_roar'); FX.flash('#17020b', 0.55, 0.45); }
+      },
+      onWorldResult: function (m) {
+        if (m && m.ok === false && m.reason) UI.warn(m.reason);
       },
       // 客户端:房主宣布本局结束
       onOver: function (m) {
@@ -1964,9 +2164,10 @@
     },
     vaults: function () {
       return vaults.map(function (v) {
-        return { x: v.x, y: v.y, alive: v.alive, rewardKind: v.rewardKind, itemId: v.itemId };
+        return { uid: v.uid, x: v.x, y: v.y, alive: v.alive, rewardKind: v.rewardKind, itemId: v.itemId };
       });
     },
+    netSnapshot: function () { return run ? buildSnapshot(null, null) : null; },
     claimVault: function (index) {
       if (!run || !vaults[index] || !vaults[index].alive) return false;
       run.player.x = vaults[index].x; run.player.y = vaults[index].y;

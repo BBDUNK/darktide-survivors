@@ -310,6 +310,8 @@ window.Entities = (function () {
         r: 10, dmg: 0, spd: 0, armor: 0,
         kx: 0, ky: 0, flash: 0, frozen: 0, slow: 0, slowT: 0, stun: 0,
         face: 1, animo: 0, alpha: 1, attackAnimT: 0,
+        netX: 0, netY: 0, netVx: 0, netVy: 0,
+        netAnimState: '', netAnimEpoch: 0, netSeen: false,
         elite: false, boss: false, bossType: '',
         ai: 'chase', aiT: 0, aiPhase: 0, tgtX: 0, tgtY: 0,
         burn: 0, burnT: 0, guard: 0,
@@ -324,9 +326,9 @@ window.Entities = (function () {
     lobs.length = 0;
     for (i = 0; i < 40; i++) lobs.push({ alive: false, sx: 0, sy: 0, tx: 0, ty: 0, r: 0, dmg: 0, t: 0, dur: 0 });
     gems.length = 0; freeGem.length = 0;
-    for (i = 0; i < 320; i++) { gems.push({ alive: false, x: 0, y: 0, v: 0, pull: false, vx: 0, vy: 0, t: 0 }); freeGem.push(319 - i); }
+    for (i = 0; i < 320; i++) { gems.push({ alive: false, uid: 0, x: 0, y: 0, v: 0, pull: false, vx: 0, vy: 0, t: 0 }); freeGem.push(319 - i); }
     items.length = 0;
-    for (i = 0; i < 60; i++) items.push({ alive: false, type: '', x: 0, y: 0, v: 0, t: 0, pull: false });
+    for (i = 0; i < 60; i++) items.push({ alive: false, uid: 0, type: '', x: 0, y: 0, v: 0, t: 0, pull: false });
   }
 
   function aliveEnemies() { return enemies; }
@@ -370,6 +372,8 @@ window.Entities = (function () {
     e.armor = def.armor || 0;
     e.kx = 0; e.ky = 0; e.flash = 0; e.frozen = 0; e.slow = 0; e.slowT = 0; e.stun = 0;
     e.face = 1; e.animo = Math.random() * 10; e.alpha = 1; e.attackAnimT = 0;
+    e.netX = x; e.netY = y; e.netVx = 0; e.netVy = 0;
+    e.netAnimState = ''; e.netAnimEpoch = 0; e.netSeen = false;
     e.elite = false; e.boss = isBoss; e.bossType = isBoss ? id : '';
     // Pool entries are reused.  Phase/role state must be cleared explicitly
     // or a freshly spawned monster can inherit a previous boss's second phase.
@@ -1410,6 +1414,7 @@ window.Entities = (function () {
       return;
     }
     var g = gems[freeGem.pop()];
+    g.uid = E.nextUid();
     g.alive = true; g.x = x + (Math.random() * 10 - 5); g.y = y + (Math.random() * 10 - 5);
     g.v = value; g.pull = false; g.vx = 0; g.vy = 0; g.t = 0;
   }
@@ -1480,7 +1485,7 @@ window.Entities = (function () {
     for (var i = 0; i < items.length; i++) {
       if (!items[i].alive) {
         var it = items[i];
-        it.alive = true; it.type = type; it.x = x; it.y = y; it.t = 0; it.pull = false;
+        it.alive = true; it.uid = E.nextUid(); it.type = type; it.x = x; it.y = y; it.t = 0; it.pull = false;
         it.ttl = (type === 'chest') ? -1 : ITEM_TTL;
         it.v = (type === 'coin') ? (CFG.DROPS.goldValue[0] + Math.floor(Math.random() * (CFG.DROPS.goldValue[1] - CFG.DROPS.goldValue[0] + 1))) : 0;
         return it;
@@ -1570,6 +1575,19 @@ window.Entities = (function () {
         AudioSys.play('chest_open');
         break;
     }
+  }
+
+  function collectItemByUid(run, uid, w) {
+    if (uid === undefined || uid === null || !w || w.downed || w.player.hp <= 0) return false;
+    for (var i = 0; i < items.length; i++) {
+      var it = items[i];
+      if (!it.alive || it.uid !== uid) continue;
+      if (E.dist2(it.x, it.y, w.player.x, w.player.y) > 44 * 44) return false;
+      it.alive = false;
+      collectItem(run, it, w);
+      return true;
+    }
+    return false;
   }
 
   function bombBlast(run, dmg, cx, cy) {
@@ -2047,9 +2065,18 @@ window.Entities = (function () {
       // 史莱姆跳跃:hop 抬高机体,squash 做蓄力压扁/腾空拉伸
       var hop = e.hop || 0, sq = e.squash || 1;
       var enemySprite = e.boss ? e.bossType : (e.elite ? 'elite_' + e.id : e.id);
-      if (!e.boss && e.attackAnimT > 0) enemySprite += '_attack';
-      else if (e.vx !== 0 || e.vy !== 0) enemySprite += '_walk';
-      var enemyF = Math.floor(run.t * animFps(enemySprite, (e.vx === 0 && e.vy === 0) ? 6 : 10));
+      var visualState = e.netAnimState || '';
+      if (!visualState) {
+        if (e.attackAnimT > 0) visualState = 'attack';
+        else if (e.boss && (e.chargeSeq > 0 || e.aiPhase === 1)) visualState = 'charge';
+        else if (e.vx !== 0 || e.vy !== 0) visualState = 'walk';
+        else visualState = 'idle';
+      }
+      if (visualState === 'attack') enemySprite += '_attack';
+      else if (visualState === 'charge' && e.boss) enemySprite += '_charge';
+      else if (visualState === 'walk') enemySprite += '_walk';
+      var animAge = e.netAnimState ? Math.max(0, (run.frame - e.netAnimEpoch) / 60) : run.t;
+      var enemyF = Math.floor(animAge * animFps(enemySprite, visualState === 'idle' ? 6 : 10));
       drawSpriteStable(ctx, enemySprite, enemyF + (e.animo | 0),
                  e.x, e.y + wob - hop, sc * sq, e.face < 0, e.alpha, tint);
       // 被强化的小怪：血气贴着身体向外逸散，不再画一圈廉价的黄色圆环。
@@ -2194,31 +2221,56 @@ window.Entities = (function () {
   }
 
   // ================= 联机:快照应用与队友渲染 =================
-  // 客户端不跑敌人 AI,直接用房主快照重建世界。位置做插值以掩盖 15Hz 的快照间隔。
+  // 客户端不跑敌人 AI。按稳定 UID 保留实体与动画纪元，并使用约 100ms
+  // 的服务器 Tick 缓冲线性插值，避免 15Hz 快照到达节奏直接传到画面。
+  var netRenderTick = 0, netServerTick = 0;
   function applySnapshot(run, snap) {
     var i, s, e;
-    // 敌人:按快照重建。每次从完整的空池重建,彻底消除本地模拟残留导致的池漂移。
-    for (i = 0; i < POOL; i++) enemies[i].alive = false;
+    var byUid = {};
     freeIdx.length = 0;
-    for (i = 0; i < POOL; i++) freeIdx.push(i);
-    for (i = 0; i < snap.e.length && freeIdx.length; i++) {
+    for (i = 0; i < POOL; i++) {
+      e = enemies[i]; e.netSeen = false;
+      if (e.alive && e.uid) byUid[e.uid] = e;
+      else freeIdx.push(i);
+    }
+    for (i = 0; i < snap.e.length; i++) {
       s = snap.e[i];
-      var idx = freeIdx.pop();
-      e = enemies[idx];
-      e.poolIdx = idx;
+      e = byUid[s.u];
+      var fresh = !e;
+      if (!e) {
+        if (!freeIdx.length) break;
+        var idx = freeIdx.pop();
+        e = enemies[idx]; e.poolIdx = idx;
+      }
       var def = CFG.ENEMIES[s.i] || CFG.BOSSES[s.i];
       if (!def) continue;
       e.alive = true; e.uid = s.u; e.id = s.i; e.def = def;
-      e.x = s.x; e.y = s.y;
+      if (fresh) { e.x = s.x; e.y = s.y; e.netSamples = []; }
+      e.netX = s.x; e.netY = s.y; e.netVx = s.vx || 0; e.netVy = s.vy || 0;
+      if (!e.netSamples) e.netSamples = [];
+      var sampleTick = snap.tk || 0;
+      var lastSample = e.netSamples.length ? e.netSamples[e.netSamples.length - 1] : null;
+      if (!lastSample || sampleTick > lastSample.t) {
+        e.netSamples.push({ t: sampleTick, x: s.x, y: s.y });
+        if (e.netSamples.length > 6) e.netSamples.shift();
+      }
+      e.vx = e.netVx; e.vy = e.netVy; e.netSeen = true;
       e.hp = s.h; e.maxHp = s.m;
       e.r = def.r; e.dmg = def.dmg; e.spd = def.spd;
       e.boss = !!CFG.BOSSES[s.i]; e.bossType = e.boss ? s.i : '';
       e.elite = !!s.el; e.face = s.f || 1;
+      e.aiPhase = s.ap || 0; e.chargePhase = s.cp || 0; e.eliteSkill = s.es || '';
       e.phase2 = !!s.ph; e.eyeRole = s.er || ''; e.eyeGroup = e.phase2 && e.bossType === 'boss_abysseye' ? 1 : 0;
       e.flash = 0; e.alpha = 1; e.animo = (s.u % 10);
+      e.netAnimState = s.ac || 'idle';
+      e.netAnimEpoch = run.frame - Math.max(0, (snap.tk || 0) - (s.ae || snap.tk || 0));
       e.guard = s.g || 0; e.burrowT = s.b || 0; e.burrowMax = def.burrow || 0;
       e.buffed = !!s.bf; e.buffSpd = 1; e.buffDmg = 1;
       e.slow = 0; e.slowT = 0; e.stun = 0; e.frozen = 0; e.kx = 0; e.ky = 0;
+    }
+    for (i = 0; i < POOL; i++) {
+      e = enemies[i];
+      if (e.alive && !e.netSeen) { e.alive = false; freeIdx.push(i); }
     }
     // 客户端视觉索敌也要能用:为快照敌人重建空间哈希
     E.gridClear();
@@ -2247,17 +2299,38 @@ window.Entities = (function () {
     for (i = 0; i < snap.g.length && freeGem.length; i++) {
       s = snap.g[i];
       var g = gems[freeGem.pop()];
-      g.alive = true; g.x = s.x; g.y = s.y; g.v = s.v; g.pull = false; g.t = 0;
+      g.alive = true; g.uid = s.u || 0; g.x = s.x; g.y = s.y; g.v = s.v; g.pull = false; g.t = 0;
     }
     for (i = 0; i < items.length; i++) items[i].alive = false;
     for (i = 0; i < snap.it.length && i < items.length; i++) {
       s = snap.it[i];
-      items[i].alive = true; items[i].type = s.k;
+      items[i].alive = true; items[i].uid = s.u || 0; items[i].type = s.k;
       items[i].x = s.x; items[i].y = s.y; items[i].t = 0; items[i].pull = false;
       items[i].ttl = (s.k === 'chest') ? -1 : ITEM_TTL;   // 与 spawnItem 同规则
     }
     run.t = snap.t;
+    netServerTick = Math.max(netServerTick, snap.tk || 0);
+    if (!netRenderTick) netRenderTick = Math.max(0, netServerTick - 6);
     if (snap.bh !== undefined) run.bossHpPct = snap.bh;
+  }
+
+  function updateRemote(dt) {
+    netRenderTick = Math.min(netServerTick - 2, netRenderTick + dt * 60);
+    for (var i = 0; i < POOL; i++) {
+      var e = enemies[i];
+      if (!e.alive || e.netX === undefined) continue;
+      var samples = e.netSamples || [];
+      if (samples.length < 2) {
+        var k = Math.min(1, dt * 12);
+        e.x += (e.netX - e.x) * k; e.y += (e.netY - e.y) * k;
+        continue;
+      }
+      while (samples.length > 2 && samples[1].t <= netRenderTick) samples.shift();
+      var a = samples[0], b = samples[1] || a;
+      var span = Math.max(1, b.t - a.t);
+      var q = E.clamp((netRenderTick - a.t) / span, 0, 1);
+      e.x = E.lerp(a.x, b.x, q); e.y = E.lerp(a.y, b.y, q);
+    }
   }
 
   // 渲染远端队友(名字牌 + 倒地状态)
@@ -2291,12 +2364,13 @@ window.Entities = (function () {
         var mateDir = m.dir || (m.face < 0 ? 'left' : 'right');
         var mateSprite = cd.sprite + '_idle_' + mateDir;
         var mateF = 0;   // 静止:固定帧 0(修复队友空闲不停动画)
-        if (m.attacking) {
+        var mateAge = Math.max(0, (run.frame - (m.actionEpoch || 0)) / 60);
+        if (m.action === 'attack' || m.attacking) {
           mateSprite = cd.sprite + '_attack_' + mateDir;
-          mateF = Math.floor(run.t * animFps(mateSprite, 13));
-        } else if (m.moving) {
+          mateF = Math.floor(mateAge * animFps(mateSprite, 13));
+        } else if (m.action === 'walk' || m.moving) {
           mateSprite = cd.sprite + '_walk_' + mateDir;
-          mateF = Math.floor(run.t * animFps(mateSprite, 10));
+          mateF = Math.floor(mateAge * animFps(mateSprite, 10));
         }
         drawSprite(ctx, mateSprite, mateF, m.x, m.y, 1, m.face < 0, 1, null);
         // 队友身上的光环增益提示
@@ -2322,7 +2396,7 @@ window.Entities = (function () {
     }
   }
 
-  function reset() { initPools(); }
+  function reset() { initPools(); netRenderTick = 0; netServerTick = 0; }
 
   // 清空全部敌人并正确归还空位(测试用;直接改 alive 会让池子永久占满)
   function clearEnemies(run) {
@@ -2343,7 +2417,7 @@ window.Entities = (function () {
     spawnEnemy: spawnEnemy, spawnAtRing: spawnAtRing,
     damageEnemy: damageEnemy, killEnemy: killEnemy,
     updateEnemies: updateEnemies, updateGems: updateGems, updateItems: updateItems,
-    spawnGem: spawnGem, spawnItem: spawnItem, addXp: addXp, bombBlast: bombBlast,
+    spawnGem: spawnGem, spawnItem: spawnItem, collectItemByUid: collectItemByUid, addXp: addXp, bombBlast: bombBlast,
     director: director, draw: draw, drawLobMarkers: drawLobMarkers, reset: reset,
     clearEnemies: clearEnemies, cleanseWebs: cleanseWebs, clearSlow: clearSlow, tryExitGate: tryExitGate,
     pool: enemies, countAlive: countAlive, drawSprite: drawSprite,
@@ -2352,7 +2426,7 @@ window.Entities = (function () {
     getShots: function () { return shots; },
     getLobs: function () { return lobs; },
     // 联机:客户端用房主快照覆盖本地世界
-    applySnapshot: applySnapshot,
+    applySnapshot: applySnapshot, updateRemote: updateRemote,
     drawMates: drawMates,
     // 倒地标记的唯一入口:同时置 player.downed 与条目上的 downed,
     // 并做全员倒地判定。main.js 代跑队友时也要用它,避免各写一份走偏。

@@ -967,7 +967,9 @@ window.UI = (function () {
       hudCache.gateNear = gateNear;
       hudRefs.exitGateBtn.classList.toggle('hidden', !gateNear);
     }
-    var xpPct = Math.min(100, run.xp / run.xpNeed * 100);
+    // 联机使用房主权威的共享经验池；房主和客户端必须走同一条 HUD 路径。
+    var shownXp = (run.coopXp !== null && run.coopXp !== undefined) ? run.coopXp : run.xp;
+    var xpPct = Math.min(100, shownXp / run.xpNeed * 100);
     var xpW = Math.round(xpPct);
     if (hudCache.xpW !== xpW) { hudCache.xpW = xpW; hudRefs.xpFill.style.width = xpW + '%'; }
     if (hudCache.lv !== run.level) { hudCache.lv = run.level; hudRefs.lvText.textContent = 'Lv.' + run.level; }

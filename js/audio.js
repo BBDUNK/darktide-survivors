@@ -994,7 +994,10 @@
     playMusic: playMusic,
     setIntensity: setIntensity,
     stopMusic: stopMusic,
-    setVolumes: setVolumes
+    setVolumes: setVolumes,
+    state: function () {
+      return { theme: mus.theme || pendingTheme || '', intensity: mus.intensity | 0, playing: !!mus.playing };
+    }
   };
 
   // ---------------- 覆盖率自检(加载即执行,对照 SPEC 清单) ----------------

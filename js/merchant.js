@@ -9,6 +9,7 @@ window.Merchant = (function () {
   var slots = [];        // [{good, cost, bought, x, y} | null]
   var nextRefresh = 0;
   var slotCount = 0;
+  var stockGeneration = 0;
   var flash = 0;         // 刷新时的高亮计时
   var arrows = [];
   var combat = { prone: 0, attackAge: 9, attackCd: 0.3, face: 1, target: null };
@@ -47,6 +48,7 @@ window.Merchant = (function () {
     var M = CFG.MERCHANT;
     slotCount = M.slots;
     nextRefresh = M.refreshInt;
+    stockGeneration = 0;
     roll(run);
     flash = 0;
     arrows.length = 0;
@@ -175,17 +177,49 @@ window.Merchant = (function () {
   function roll(run) {
     var M = CFG.MERCHANT;
     slots.length = 0;
+    stockGeneration++;
     var used = {};
     var half = (slotCount - 1) / 2;
     for (var i = 0; i < slotCount; i++) {
       var g = pickGood(run, used);
       slots.push(g ? {
+        uid: 'shop-' + stockGeneration + '-' + i,
         good: g, bought: false,
         x: M.x + (i - half) * M.spacing,
         y: M.y
       } : null);
     }
     flash = 1.2;
+  }
+
+  // 联机表现快照：商品由房主生成，客户端只显示，绝不在本地结算购买。
+  function snapshot() {
+    return {
+      next: +nextRefresh.toFixed(2), count: slotCount, generation: stockGeneration,
+      slots: slots.map(function (s, index) {
+        if (!s) return null;
+        return {
+          uid: s.uid || ('shop-' + stockGeneration + '-' + index),
+          bought: !!s.bought, x: Math.round(s.x), y: Math.round(s.y),
+          good: s.good ? {
+            kind: s.good.kind, id: s.good.id || '', name: s.good.name,
+            icon: s.good.icon, cost: s.good.cost, desc: s.good.desc || ''
+          } : null
+        };
+      })
+    };
+  }
+
+  function applySnapshot(snap) {
+    if (!snap || !Array.isArray(snap.slots)) return;
+    nextRefresh = snap.next || nextRefresh;
+    stockGeneration = snap.generation || stockGeneration;
+    slotCount = snap.count || snap.slots.length;
+    slots.length = 0;
+    for (var i = 0; i < snap.slots.length; i++) {
+      var s = snap.slots[i];
+      slots.push(s ? { uid: s.uid, bought: !!s.bought, x: s.x, y: s.y, good: s.good } : null);
+    }
   }
 
   function update(run, dt) {
@@ -215,7 +249,7 @@ window.Merchant = (function () {
     var ents = run.coopPlayers || [{ player: run.player, downed: false }];
     for (var i = 0; i < slots.length; i++) {
       var s = slots[i];
-      if (!s || s.bought) continue;
+      if (!s || !s.good || s.bought) continue;
       var owner = null;
       for (var ei = 0; ei < ents.length; ei++) {
         var ew = ents[ei];
@@ -360,6 +394,21 @@ window.Merchant = (function () {
     } finally {
       run.player = savedP; run.weapons = savedW; run.passives = savedPs;
     }
+  }
+
+  function purchaseByUid(run, uid, owner) {
+    for (var i = 0; i < slots.length; i++) {
+      var s = slots[i];
+      if (!s || !s.good || uid !== s.uid) continue;
+      if (s.bought) return { ok: false, reason: '商品已售出' };
+      var buyerId = owner && (owner.peerId || (owner.isHost ? 'host' : 'local')) || 'host';
+      if (run.gold < s.good.cost) return { ok: false, reason: '金币不足' };
+      run.gold -= s.good.cost;
+      buy(run, s.good, owner);
+      s.bought = true;
+      return { ok: true, uid: s.uid, buyer: buyerId };
+    }
+    return { ok: false, reason: '商品已售罄' };
   }
 
   // 摊位与商人:画在地面层之上、角色之下
@@ -507,7 +556,7 @@ window.Merchant = (function () {
   }
 
   return { reset: reset, update: update, draw: draw, drawProjectiles: drawProjectiles, roll: roll, poke: poke,
-           slots: function () { return slots; },
+           slots: function () { return slots; }, snapshot: snapshot, applySnapshot: applySnapshot, purchaseByUid: purchaseByUid,
            dialogueState: function () { return { text: dialogue.text, until: dialogue.until, nextAt: dialogue.nextAt }; },
            combatState: function () { return { prone: combat.prone, arrows: arrows.length, target: !!combat.target }; } };
 })();
