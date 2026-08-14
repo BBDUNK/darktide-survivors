@@ -68,7 +68,7 @@ window.CFG = {
     arcanebolt: { name: '贤者光弹', icon: 'w_arcanebolt', evo: 'arcanestorm', evoNeed: 'ps_core',
       desc: '大法师随手搓的魔法弹,但会自动追人。',
       base: { dmg: 11, cd: 1.05, count: 2, speed: 280, pierce: 1, size: 9, knock: 48 },
-      lv: [ { count: 1 }, { dmg: 5 }, { count: 1 }, { cdM: 0.85 }, { dmg: 7 }, { count: 1 }, { dmg: 9, cdM: 0.85 } ] },
+      lv: [ { count: 1 }, { dmg: 5, arcaneReflect: 1 }, { count: 1 }, { cdM: 0.85, voidMark: 1 }, { dmg: 7 }, { count: 1, arcaneReflect: 1 }, { dmg: 9, cdM: 0.85 } ] },
     windbow: { name: '侠盗神箭', icon: 'w_windbow', evo: 'featherstorm', evoNeed: 'ps_eagle',
       desc: '绿林传说之弓,一箭还你一个公道。',
       base: { dmg: 6, cd: 1.0, count: 2, speed: 420, pierce: 1, size: 12, knock: 30 },
@@ -111,7 +111,7 @@ window.CFG = {
     teslacoil: { name: '特斯拉电塔', icon: 'w_teslacoil', evo: 'skynet', evoNeed: 'ps_magnetstone',
       desc: '科学怪人的发电塔。真正的电流,不用充电。',
       base: { dmg: 13, cd: 5.0, count: 1, speed: 0, pierce: 0, size: 16, dur: 6, zapCd: 0.8, range: 170, knock: 0, zapCount: 1 },
-      lv: [ { dmg: 4, zapCount: 1 }, { durM: 1.25 }, { count: 1 }, { dmg: 5, zapCount: 1 }, { cdM: 0.85 }, { areaM: 1.3, zapCount: 1 }, { count: 1, dmg: 7, zapCount: 1 } ] }
+      lv: [ { dmg: 4, zapCount: 1 }, { durM: 1.25, teslaOverload: 1 }, { count: 1 }, { dmg: 5, zapCount: 1 }, { cdM: 0.85 }, { areaM: 1.3, zapCount: 1 }, { count: 1, dmg: 7, zapCount: 1 } ] }
   },
 
   // 进化:达到 8 级 + 持有对应被动,开 Boss 宝箱触发

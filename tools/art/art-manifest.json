@@ -3908,7 +3908,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime",
-      "source": "assets/art-v4/repaired/enemies/slime_actions_rework.png",
+      "source": "assets/art-v4/repaired/enemies/slime_actions.png",
       "frameSize": [
         64,
         64
@@ -3934,7 +3934,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime_walk",
-      "source": "assets/art-v4/repaired/enemies/slime_actions_rework.png",
+      "source": "assets/art-v4/repaired/enemies/slime_actions.png",
       "frameSize": [
         64,
         64
@@ -3960,7 +3960,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime_attack",
-      "source": "assets/art-v4/repaired/enemies/slime_actions_rework.png",
+      "source": "assets/art-v4/repaired/enemies/slime_actions.png",
       "frameSize": [
         64,
         64
@@ -3986,7 +3986,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime_death",
-      "source": "assets/art-v4/repaired/enemies/slime_actions_rework.png",
+      "source": "assets/art-v4/repaired/enemies/slime_actions.png",
       "frameSize": [
         64,
         64
@@ -4012,7 +4012,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime_big",
-      "source": "assets/art-v4/repaired/enemies/slime_big_actions_rework.png",
+      "source": "assets/art-v4/repaired/enemies/slime_big_actions.png",
       "frameSize": [
         64,
         64
@@ -4038,7 +4038,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime_big_walk",
-      "source": "assets/art-v4/repaired/enemies/slime_big_actions_rework.png",
+      "source": "assets/art-v4/repaired/enemies/slime_big_actions.png",
       "frameSize": [
         64,
         64
@@ -4064,7 +4064,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime_big_attack",
-      "source": "assets/art-v4/repaired/enemies/slime_big_actions_rework.png",
+      "source": "assets/art-v4/repaired/enemies/slime_big_actions.png",
       "frameSize": [
         64,
         64
@@ -4090,7 +4090,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "slime_big_death",
-      "source": "assets/art-v4/repaired/enemies/slime_big_actions_rework.png",
+      "source": "assets/art-v4/repaired/enemies/slime_big_actions.png",
       "frameSize": [
         64,
         64
@@ -4116,7 +4116,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "zombie",
-      "source": "assets/art-v4/repaired/enemies/mudwalker_actions_rework.png",
+      "source": "assets/art-v4/repaired/enemies/zombie_actions.png",
       "frameSize": [
         64,
         64
@@ -4142,7 +4142,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "zombie_walk",
-      "source": "assets/art-v4/repaired/enemies/mudwalker_actions_rework.png",
+      "source": "assets/art-v4/repaired/enemies/zombie_actions.png",
       "frameSize": [
         64,
         64
@@ -4168,7 +4168,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "zombie_attack",
-      "source": "assets/art-v4/repaired/enemies/mudwalker_actions_rework.png",
+      "source": "assets/art-v4/repaired/enemies/zombie_actions.png",
       "frameSize": [
         64,
         64
@@ -4194,7 +4194,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "zombie_death",
-      "source": "assets/art-v4/repaired/enemies/mudwalker_actions_rework.png",
+      "source": "assets/art-v4/repaired/enemies/zombie_actions.png",
       "frameSize": [
         64,
         64
@@ -5884,7 +5884,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "elite_skeleton",
-      "source": "assets/art-v3/sprites/elites/elite_skeleton_actions.png",
+      "source": "assets/art-v5/sprites/elites/elite_skeleton_actions_repaired.png",
       "frameSize": [
         64,
         64
@@ -5910,7 +5910,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "elite_skeleton_walk",
-      "source": "assets/art-v3/sprites/elites/elite_skeleton_actions.png",
+      "source": "assets/art-v5/sprites/elites/elite_skeleton_actions_repaired.png",
       "frameSize": [
         64,
         64
@@ -5936,7 +5936,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "elite_skeleton_attack",
-      "source": "assets/art-v3/sprites/elites/elite_skeleton_actions.png",
+      "source": "assets/art-v5/sprites/elites/elite_skeleton_actions_repaired.png",
       "frameSize": [
         64,
         64
@@ -5962,7 +5962,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "elite_skeleton_death",
-      "source": "assets/art-v3/sprites/elites/elite_skeleton_actions.png",
+      "source": "assets/art-v5/sprites/elites/elite_skeleton_actions_repaired.png",
       "frameSize": [
         64,
         64
@@ -7132,7 +7132,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "boss_slimeking",
-      "source": "assets/art-v4/repaired/bosses/boss_slimeking_actions.png",
+      "source": "assets/art-v5/sprites/bosses/boss_slimeking_actions_repaired.png",
       "frameSize": [
         96,
         96
@@ -7158,7 +7158,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "boss_slimeking_walk",
-      "source": "assets/art-v4/repaired/bosses/boss_slimeking_actions.png",
+      "source": "assets/art-v5/sprites/bosses/boss_slimeking_actions_repaired.png",
       "frameSize": [
         96,
         96
@@ -7184,7 +7184,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "boss_slimeking_charge",
-      "source": "assets/art-v4/repaired/bosses/boss_slimeking_actions.png",
+      "source": "assets/art-v5/sprites/bosses/boss_slimeking_actions_repaired.png",
       "frameSize": [
         96,
         96
@@ -7210,7 +7210,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "boss_slimeking_attack",
-      "source": "assets/art-v4/repaired/bosses/boss_slimeking_actions.png",
+      "source": "assets/art-v5/sprites/bosses/boss_slimeking_actions_repaired.png",
       "frameSize": [
         96,
         96
@@ -7236,7 +7236,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "boss_slimeking_death",
-      "source": "assets/art-v4/repaired/bosses/boss_slimeking_actions.png",
+      "source": "assets/art-v5/sprites/bosses/boss_slimeking_actions_repaired.png",
       "frameSize": [
         96,
         96
@@ -8325,6 +8325,136 @@
       "allowDuplicateFrames": true,
       "minCoverage": 0.006,
       "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 48,
+      "name": "p_arcane_orb",
+      "source": "assets/art-v5/sprites/vfx/arcane_orb_actions.png",
+      "frameSize": [
+        48,
+        48
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 14,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        24,
+        24
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 160,
+      "name": "vfx_frost_kiss_radial",
+      "source": "assets/art-v5/sprites/vfx/frost_kiss_radial_actions_linear.png",
+      "frameSize": [
+        160,
+        160
+      ],
+      "frameRow": 0,
+      "frames": 12,
+      "fps": 14,
+      "size": [
+        160,
+        160
+      ],
+      "anchor": [
+        80,
+        80
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 96,
+      "name": "p_tesla_cannon",
+      "source": "assets/art-v5/sprites/weapons/tesla_cannon_projectile.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 15,
+      "size": [
+        80,
+        80
+      ],
+      "anchor": [
+        48,
+        48
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 96,
+      "name": "vfx_tesla_cannon_impact",
+      "source": "assets/art-v5/sprites/vfx/tesla_cannon_impact.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 0,
+      "frames": 10,
+      "fps": 18,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        48
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 160,
+      "name": "vfx_tesla_overload",
+      "source": "assets/art-v5/sprites/vfx/tesla_overload_ground.png",
+      "frameSize": [
+        160,
+        160
+      ],
+      "frameRow": 0,
+      "frames": 12,
+      "fps": 18,
+      "size": [
+        160,
+        160
+      ],
+      "anchor": [
+        80,
+        80
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
       "maxCentroidDrift": 24,
       "maxBaselineDrift": 12,
       "name": "vfx_archangel",
@@ -8767,6 +8897,344 @@
       "anchor": [
         32,
         62
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 2,
+      "name": "tesla_battle_tank_idle_down",
+      "source": "assets/art-v5/sprites/weapons/tesla_battle_tank_full_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        91
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 2,
+      "name": "tesla_battle_tank_walk_down",
+      "source": "assets/art-v5/sprites/weapons/tesla_battle_tank_full_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        91
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 2,
+      "name": "tesla_battle_tank_attack_down",
+      "source": "assets/art-v5/sprites/weapons/tesla_battle_tank_full_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 14,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        91
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 2,
+      "name": "tesla_battle_tank_idle_up",
+      "source": "assets/art-v5/sprites/weapons/tesla_battle_tank_full_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 3,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        91
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 2,
+      "name": "tesla_battle_tank_walk_up",
+      "source": "assets/art-v5/sprites/weapons/tesla_battle_tank_full_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 4,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        91
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 2,
+      "name": "tesla_battle_tank_attack_up",
+      "source": "assets/art-v5/sprites/weapons/tesla_battle_tank_full_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 5,
+      "frames": 8,
+      "fps": 14,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        91
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 2,
+      "name": "tesla_battle_tank_idle_left",
+      "source": "assets/art-v5/sprites/weapons/tesla_battle_tank_full_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 6,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        91
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 2,
+      "name": "tesla_battle_tank_walk_left",
+      "source": "assets/art-v5/sprites/weapons/tesla_battle_tank_full_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 7,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        91
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 2,
+      "name": "tesla_battle_tank_attack_left",
+      "source": "assets/art-v5/sprites/weapons/tesla_battle_tank_full_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 8,
+      "frames": 8,
+      "fps": 14,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        91
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 2,
+      "name": "tesla_battle_tank_idle_right",
+      "source": "assets/art-v5/sprites/weapons/tesla_battle_tank_full_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 9,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        91
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 2,
+      "name": "tesla_battle_tank_walk_right",
+      "source": "assets/art-v5/sprites/weapons/tesla_battle_tank_full_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 10,
+      "frames": 8,
+      "fps": 11,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        91
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 2,
+      "name": "tesla_battle_tank_attack_right",
+      "source": "assets/art-v5/sprites/weapons/tesla_battle_tank_full_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 11,
+      "frames": 8,
+      "fps": 14,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        91
+      ],
+      "renderScale": 1
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 2,
+      "name": "tesla_battle_tank",
+      "source": "assets/art-v5/sprites/weapons/tesla_battle_tank_full_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 7,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        91
       ],
       "renderScale": 1
     },

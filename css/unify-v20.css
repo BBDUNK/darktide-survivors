@@ -121,6 +121,63 @@ html, body, button, input, select, textarea,
   color: #ffeaee;
 }
 
+/* V5 vertical slice: character selection is the reference secondary screen.
+   The same nine-slice touches the textured interior on every side; padding is
+   carried by the element, not by a transparent moat inside the frame. */
+.panel-col.character-select-screen {
+  padding: 8px 22px 10px !important;
+  gap: 8px !important;
+  background:
+    repeating-linear-gradient(135deg, rgba(148,104,52,.035) 0 2px, transparent 2px 7px),
+    radial-gradient(ellipse at center, rgb(42,28,25), rgb(5,5,8) 72%) !important;
+}
+.character-select-screen .card-grid {
+  width: min(940px, calc(100vw - 38px));
+  padding: 8px 14px;
+  box-sizing: border-box;
+  border: 14px solid transparent;
+  border-image: url('../assets/art-v4/sprites/ui/baroque_menu_frame.png') 116 104 fill / 14px / 0 stretch;
+  background-color: rgba(12,9,11,.94);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(146px, 1fr));
+  justify-items: stretch;
+  gap: 8px 12px;
+}
+.character-select-screen .card {
+  width: auto !important;
+  min-height: 108px;
+  padding: 8px 10px 7px !important;
+  border: 12px solid transparent !important;
+  border-image: url('../assets/art-v4/sprites/ui/baroque_menu_frame.png') 116 104 fill / 12px / 0 stretch !important;
+  outline: 0 !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.character-select-screen .card.selected {
+  filter: brightness(1.20);
+  box-shadow: 0 0 0 2px #e4c27a, 0 0 22px rgba(225,178,75,.46) !important;
+}
+.character-select-screen .info-box {
+  width: min(760px, calc(100vw - 54px));
+  min-height: 60px;
+  padding: 6px 24px !important;
+  box-sizing: border-box;
+}
+.character-select-screen .info-title { font-size: 15px; line-height: 1.15; margin-bottom: 2px; }
+.character-select-screen .info-desc { font-size: 11px; line-height: 1.3; margin-bottom: 2px; }
+.character-select-screen .info-bonus { font-size: 11px; line-height: 1.2; }
+@media (max-width: 720px) {
+  .character-select-screen .card-grid {
+    grid-template-columns: repeat(2, minmax(118px, 1fr));
+    padding: 16px 12px;
+    gap: 9px;
+  }
+  .character-select-screen .card { min-height: 118px; padding: 12px 7px 8px !important; }
+}
+
 /* ---------- 3. 主菜单按钮:换成 HUD 金币/击杀框那套华丽金属边 ---------- */
 /* 用整图拉伸而不是九宫格:顶部冠饰是居中的整体纹样,一旦切成九宫格
    中段就会被抹成条纹。素材原始四周留白 39px,按钮加宽后留白会占掉大段

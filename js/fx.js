@@ -138,6 +138,12 @@
 
   // ---------- 公共接口 ----------
   var FX = {};
+  // Public atlas-driven one-shot VFX.  Gameplay systems emit a semantic
+  // effect once; the pooled renderer advances all authored frames exactly
+  // once and never loops back to a spawn/explosion frame.
+  FX.sprite = function (x, y, name, life, size, glow) {
+    return spawnVfx(x, y, name, life, size, glow);
+  };
 
   // ---------- 环境氛围粒子(浮游尘埃/萤火) ----------
   // 由游戏循环按地图配色每帧少量调用;粒子便宜,但给画面增加深度感。

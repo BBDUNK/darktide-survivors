@@ -181,7 +181,7 @@ window.UI = (function () {
   // ---------- 选人 ----------
   var charGrid, charInfo;
   function buildChars() {
-    var s = h('div', 'screen panel-col');
+    var s = h('div', 'screen panel-col character-select-screen');
     s.appendChild(h('div', 'page-title', L.t('pick_char')));
     // 右上角:训练场入口(无刷怪实机验收)
     var trainBtn = btn('训练场', 'small-btn accent', function () { if (cb.onArtTest) cb.onArtTest(); });

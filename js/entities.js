@@ -1021,7 +1021,9 @@ window.Entities = (function () {
         e.archerCd = 5.0;
         var adv = e.dmg * (1.5 + (e.elite ? 0.5 : 0)) * (e.buffDmg || 1);
         // 快箭:高速 320
-        fireShot(e.x, e.y, nx, ny, 320, adv, 0, 0, false, '#ffd76b', 10);
+        // Dedicated bone-arrow art; the previous gold colour routed this shot
+        // through the generic hellfire projectile selector.
+        fireShot(e.x, e.y, nx, ny, 320, adv, 0, 0, false, '#e8e0ca', 10);
         FX.burst(e.x, e.y, { color: '#ffd76b', n: 6, speed: 90, life: 0.3, size: 2 });
         AudioSys.play('shoot_arrow');
       }

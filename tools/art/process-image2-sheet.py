@@ -25,6 +25,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--padding", type=int, default=3)
     parser.add_argument("--colors", type=int, default=40)
     parser.add_argument("--alpha-threshold", type=int, default=96)
+    parser.add_argument("--no-color-key", action="store_true",
+                        help="Trust the source alpha channel and preserve saturated green/magenta subject colors")
     parser.add_argument("--overlap", type=int, default=0,
                         help="Expand each source cell before isolating its largest connected subject")
     parser.add_argument("--primary-only", action="store_true",
@@ -39,10 +41,15 @@ def parse_args() -> argparse.Namespace:
         default="",
         help="Optional source rows used for each output row, e.g. 0,1,2,2,3",
     )
+    parser.add_argument(
+        "--frame-map-by-row",
+        default="",
+        help="Semicolon-separated frame maps for output rows; each row must have the same length",
+    )
     return parser.parse_args()
 
 
-def harden_alpha(image: Image.Image, threshold: int) -> Image.Image:
+def harden_alpha(image: Image.Image, threshold: int, use_color_key: bool = True) -> Image.Image:
     image = image.convert("RGBA")
     px = image.load()
     for y in range(image.height):
@@ -50,7 +57,8 @@ def harden_alpha(image: Image.Image, threshold: int) -> Image.Image:
             r, g, b, a = px[x, y]
             green = g >= 145 and g >= r * 1.34 and g >= b * 1.34 and (g - max(r, b)) >= 42
             magenta = r >= 145 and b >= 115 and g <= 145 and r >= g * 1.35 and b >= g * 1.22
-            px[x, y] = (0, 0, 0, 0) if green or magenta else (r, g, b, 255 if a >= threshold else 0)
+            keyed = use_color_key and (green or magenta)
+            px[x, y] = (0, 0, 0, 0) if keyed else (r, g, b, 255 if a >= threshold else 0)
     return image
 
 
@@ -85,7 +93,7 @@ def largest_component(image: Image.Image) -> Image.Image:
 
 def main() -> None:
     args = parse_args()
-    src = harden_alpha(Image.open(args.input), args.alpha_threshold)
+    src = harden_alpha(Image.open(args.input), args.alpha_threshold, not args.no_color_key)
     cell_w = src.width / args.cols
     cell_h = src.height / args.rows
     frame_map = list(range(args.cols))
@@ -99,10 +107,23 @@ def main() -> None:
         row_map = [int(value.strip()) for value in args.row_map.split(",") if value.strip()]
         if not row_map or any(value < 0 or value >= args.rows for value in row_map):
             raise SystemExit("--row-map contains an invalid source row")
+    row_frame_maps = [frame_map for _ in row_map]
+    if args.frame_map_by_row:
+        row_frame_maps = []
+        for chunk in args.frame_map_by_row.split(";"):
+            mapping = [int(value.strip()) for value in chunk.split(",") if value.strip()]
+            if not mapping or any(value < 0 or value >= args.cols for value in mapping):
+                raise SystemExit("--frame-map-by-row contains an invalid source column")
+            row_frame_maps.append(mapping)
+        if len(row_frame_maps) != len(row_map):
+            raise SystemExit("--frame-map-by-row count must match output row count")
+        if len({len(mapping) for mapping in row_frame_maps}) != 1:
+            raise SystemExit("all --frame-map-by-row mappings must have the same length")
+        out_cols = len(row_frame_maps[0])
     out = Image.new("RGBA", (out_cols * args.cell, len(row_map) * args.cell), (0, 0, 0, 0))
 
     for out_row, row in enumerate(row_map):
-        for out_col, source_col in enumerate(frame_map):
+        for out_col, source_col in enumerate(row_frame_maps[out_row]):
             left = max(0, round(source_col * cell_w) - args.overlap)
             top = max(0, round(row * cell_h) - args.overlap)
             right = min(src.width, round((source_col + 1) * cell_w) + args.overlap)
@@ -121,7 +142,7 @@ def main() -> None:
             y = out_row * args.cell + args.cell - args.padding - subject.height
             out.alpha_composite(subject, (x, y))
 
-    out = quantize_rgba(harden_alpha(out, args.alpha_threshold), args.colors)
+    out = quantize_rgba(harden_alpha(out, args.alpha_threshold, not args.no_color_key), args.colors)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     out.save(args.out, optimize=True)
 

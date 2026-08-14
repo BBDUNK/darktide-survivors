@@ -850,7 +850,8 @@ try {
       return {
         pools: pools.length, xs, ys, longest,
         tank: bullets.some(b => b.alive && b.kind === 'tank'),
-        cannon: bullets.some(b => b.alive && b.kind === 'straight' && b.spr === 'p_bolt' && b.size >= 58)
+        cannon: bullets.some(b => b.alive && b.kind === 'teslaCannon' && b.spr === 'p_tesla_cannon' &&
+          b.size >= 76 && Math.abs(Math.hypot(b.vx, b.vy) - 270) < 0.01)
       };
     })()
   `);

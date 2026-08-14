@@ -1840,6 +1840,12 @@
     if (base === 'vfx_holy_aura') return 'vfx_circle';
     if (base === 'vfx_frost_impact') return 'vfx_ice';
     if (base === 'vfx_frost_radial') return 'vfx_ice';
+    if (base === 'vfx_frost_kiss_radial') return 'vfx_ice';
+    if (base === 'p_arcane_orb') return 'p_bolt';
+    if (base === 'tesla_battle_tank') return 'p_turret';
+    if (base === 'p_tesla_cannon') return 'p_bolt';
+    if (base === 'vfx_tesla_cannon_impact') return 'vfx_explosion';
+    if (base === 'vfx_tesla_overload') return 'vfx_lightning';
     if (base === 'vfx_archangel') return 'vfx_spirit';
     if (base === 'p_orbitblade_fly') return 'p_orbitblade';
     if (base === 'exit_gate') return 'deco_pillar';

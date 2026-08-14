@@ -145,6 +145,8 @@ window.Weapons = (function () {
     b.owner = run.player; b.ownerX = run.player.x; b.ownerY = run.player.y;
     b.slow = st.slow; b.slowDur = st.slowDur; b.stun = 0;
     b.aux = 0; b.aux2 = 0; b.evolved = w.evolved;
+    b.arcaneMark = false; b.tankAction = ''; b.tankActionAge = 0;
+    b.tankDir = 'down'; b.chargeProgress = 0;
     b.poolDmg = 0; b.poolR = 0; b.poolDur = 0; b.poolBurn = 0; b.poolBurnDur = 0;
     b.blessed = !!st.blessed;     // 受队友光环加持:绘制时加一层金光
     if (kind === 'turret') turretList.push(b);
@@ -272,9 +274,14 @@ window.Weapons = (function () {
           e = nearestEnemy(p.x, p.y, 350);
           a = e ? Math.atan2(e.y - p.y, e.x - p.x) + (Math.random() - 0.5) * 0.8
                 : Math.random() * Math.PI * 2;
-          b = spawn(run, w, st, 'homing', 'p_bolt', p.x, p.y,
+          b = spawn(run, w, st, 'homing', 'p_arcane_orb', p.x, p.y,
             Math.cos(a) * st.speed, Math.sin(a) * st.speed, 3.5);
           b.aux = st.speed;
+          // Lv3 unlocks Arcane Refraction; Lv5 adds the three-second Void
+          // Brand.  Evolved orbs gain one further jump without allowing the
+          // same orb to bounce between two already-hit targets forever.
+          b.pierce = (w.lv >= 3 ? 1 : 0) + (w.lv >= 6 ? 1 : 0) + (w.evolved ? 1 : 0);
+          b.arcaneMark = w.lv >= 5 || w.evolved;
         }
         AudioSys.play('shoot_bolt');
         break;
@@ -401,9 +408,10 @@ window.Weapons = (function () {
       case 'teslacoil': {
         if (w.evolved) {
           if (countKind(w.id, p) > 0) return;
-          b = spawn(run, w, st, 'tank', 'p_turret', p.x, p.y, 0, 0, 1e9);
-          b.fireT = 0.35; b.pierce = 9999; b.dmg = st.dmg * 4.2; b.size = 58;
+          b = spawn(run, w, st, 'tank', 'tesla_battle_tank', p.x, p.y, 0, 0, 1e9);
+          b.fireT = 3; b.pierce = 9999; b.dmg = st.dmg * 4.2; b.size = 76;
           b.zapN = st.zapCount + 2; b.orbitR = st.range * 1.15;
+          b.tankDir = p.dir || 'down'; b.tankAction = 'idle'; b.tankActionAge = 0;
           AudioSys.play('evolve');
           break;
         }
@@ -501,6 +509,20 @@ window.Weapons = (function () {
     _hitOpts.kx = kb * (b.vx / d); _hitOpts.ky = kb * (b.vy / d);
     _hitOpts.slow = b.slow; _hitOpts.slowDur = b.slowDur; _hitOpts.stun = b.stun;
     Entities.damageEnemy(_hitRun, e, b.dmg, _hitOpts);
+    if (b.arcaneMark) {
+      // A second orb detonates the existing brand, then refreshes it.  The
+      // area query is authoritative only and never feeds back into this orb's
+      // hit set, so it cannot create recursive bounce chains.
+      if (e.arcaneMarkUntil && e.arcaneMarkUntil > _hitRun.t) {
+        var markRun = _hitRun, markDmg = b.dmg * 0.6, markTarget = e;
+        E.gridQuery(e.x, e.y, 58, function (near) {
+          if (near !== markTarget) Entities.damageEnemy(markRun, near, markDmg, { noCrit: true });
+          return false;
+        });
+        FX.sprite(e.x, e.y, 'vfx_explosion', 0.38, 62, true);
+      }
+      e.arcaneMarkUntil = _hitRun.t + 3;
+    }
     AudioSys.play(Math.random() < 0.5 ? 'hit1' : 'hit2');
     FX.trail(e.x, e.y, '#fff', 2);
     // 命中火花(低配:四分之一概率,避免高频武器把粒子池打满)
@@ -541,8 +563,7 @@ window.Weapons = (function () {
       Entities.damageEnemy(run, e, damage, { stun: 0.45, kx: (e.x - b.x) * 0.75, ky: (e.y - b.y) * 0.75 });
       return false;
     });
-    FX.ring(b.x, b.y, { r: radius, color: '#9ff4ff', life: 0.65, width: 5 });
-    FX.ring(b.x, b.y, { r: radius * 0.66, color: '#e8ffff', life: 0.48, width: 3 });
+    FX.sprite(b.x, b.y, 'vfx_tesla_overload', 0.68, radius * 2.12, true);
     FX.burst(b.x, b.y, { color: '#b9f8ff', n: 18, speed: 210, life: 0.5, size: 3, glow: true });
     AudioSys.play('zap');
   }
@@ -558,6 +579,10 @@ window.Weapons = (function () {
       if (b.ttl <= 0) {
         if (b.kind === 'lob') landFlask(run, b);
         if (b.kind === 'turret') { releaseTeslaOverload(run, b); removeTurret(b); }
+        if (b.kind === 'teslaCannon') {
+          FX.sprite(b.x, b.y, 'vfx_tesla_cannon_impact', 0.56, 128, true);
+          FX.shake(8, 0.28);
+        }
         b.alive = false;
         continue;
       }
@@ -589,7 +614,7 @@ window.Weapons = (function () {
           }
           break;
         case 'homing': {
-          var tgt = nearestEnemy(b.x, b.y, 420);
+          var tgt = nearestEnemy(b.x, b.y, 420, b.hitSet);
           if (tgt) {
             var ta = Math.atan2(tgt.y - b.y, tgt.x - b.x);
             var ca = Math.atan2(b.vy, b.vx);
@@ -616,6 +641,12 @@ window.Weapons = (function () {
           }
           break;
         }
+        case 'teslaCannon':
+          b.x += b.vx * dt; b.y += b.vy * dt;
+          b.angle = Math.atan2(b.vy, b.vx);
+          hitEnemiesAlong(run, b, b.size * 0.42, 0.16);
+          if ((run.frame & 1) === 0) FX.trail(b.x, b.y, '#9ff4ff', 7);
+          break;
         case 'axe':
           b.vy += 620 * dt;
           b.x += b.vx * dt; b.y += b.vy * dt;
@@ -630,18 +661,29 @@ window.Weapons = (function () {
           break;
         }
         case 'tank': {
-          // Ultimate Tesla evolution: the player is carried by a slow visual
-          // chassis, with a fixed roof coil and an independently timed cannon.
+          // The authored chassis follows the player but keeps its own action
+          // clock.  A visible 0.85 s charge precedes every slow, readable
+          // electromagnetic shell; the roof coil remains independently live.
           b.x = ownerX; b.y = ownerY + 8;
+          var tankOwner = b.owner || p;
+          var nextDir = tankOwner.dir || b.tankDir || 'down';
+          b.tankDir = nextDir;
           b.fireT -= dt;
+          var tankAction = b.fireT <= 0.85 ? 'attack' : (tankOwner.moving ? 'walk' : 'idle');
+          if (tankAction !== b.tankAction) { b.tankAction = tankAction; b.tankActionAge = 0; }
+          else b.tankActionAge += dt;
+          b.chargeProgress = tankAction === 'attack' ? E.clamp((0.85 - b.fireT) / 0.85, 0, 1) : 0;
           if (b.fireT <= 0) {
             b.fireT = 3;
-            var tankA = Math.atan2(E.lastDir.y || 0, E.lastDir.x || 1);
+            var dirVec = b.tankDir === 'left' ? { x: -1, y: 0 }
+              : b.tankDir === 'right' ? { x: 1, y: 0 }
+              : b.tankDir === 'up' ? { x: 0, y: -1 } : { x: 0, y: 1 };
+            var tankA = Math.atan2(dirVec.y, dirVec.x);
             var tankWeapon = { id: b.wid, evolved: true };
-            var blast = spawn(run, tankWeapon, { dmg: b.dmg, size: 58, pierce: 9999, knock: 200 }, 'straight', 'p_bolt',
-              b.x + Math.cos(tankA) * 38, b.y + Math.sin(tankA) * 38, Math.cos(tankA) * 620, Math.sin(tankA) * 620, 1.25);
-            blast.size = 58; blast.pierce = 9999; blast.dmg = b.dmg; blast.knock = 230;
-            FX.ring(b.x, b.y, { r: 72, color: '#9ff4ff', life: 0.35, width: 5 });
+            var blast = spawn(run, tankWeapon, { dmg: b.dmg, size: 76, pierce: 9999, knock: 200 }, 'teslaCannon', 'p_tesla_cannon',
+              b.x + dirVec.x * 48, b.y + dirVec.y * 48, dirVec.x * 270, dirVec.y * 270, 2.15);
+            blast.size = 76; blast.pierce = 9999; blast.dmg = b.dmg; blast.knock = 230;
+            FX.sprite(b.x + dirVec.x * 44, b.y + dirVec.y * 44, 'vfx_tesla_cannon_impact', 0.24, 76, true);
             AudioSys.play('zap');
           }
           if ((run.frame % 20) === 0) chainZap(run, { id: b.wid, evolved: true }, { dmg: b.dmg * 0.25, chains: b.zapN, range: b.orbitR, stun: 0.18 }, b.x, b.y - 24);
@@ -1158,19 +1200,19 @@ window.Weapons = (function () {
 
   function drawTeslaTank(ctx, b, run) {
     var x = b.x, y = b.y;
-    ctx.save();
-    ctx.globalAlpha = 0.88;
-    ctx.fillStyle = '#0b1016'; ctx.fillRect(x - 38, y - 12, 76, 24);
-    ctx.fillStyle = '#263440'; ctx.fillRect(x - 32, y - 18, 64, 20);
-    ctx.fillStyle = '#66808c'; ctx.fillRect(x - 26, y - 14, 52, 7);
-    ctx.fillStyle = '#b88a36'; ctx.fillRect(x - 14, y - 29, 28, 14);
-    ctx.fillStyle = '#d7eaff'; ctx.fillRect(x - 6, y - 42, 12, 20);
-    ctx.fillStyle = '#80efff'; ctx.fillRect(x - 2, y - 48, 4, 8);
-    ctx.fillStyle = '#a4f6ff'; ctx.fillRect(x + 10, y - 26, 42, 5);
-    ctx.fillStyle = '#11151b'; ctx.fillRect(x - 38, y + 10, 76, 6);
-    ctx.fillStyle = '#9ff4ff'; ctx.globalAlpha = 0.5 + Math.sin(run.t * 8) * 0.22;
-    ctx.fillRect(x - 7, y - 51, 14, 4);
-    ctx.restore();
+    var action = b.tankAction || 'idle';
+    var direction = b.tankDir || 'down';
+    var name = 'tesla_battle_tank_' + action + '_' + direction;
+    var frames = cachedFrames(name);
+    var index = action === 'attack'
+      ? Math.min(frames.length - 1, Math.floor((b.chargeProgress || 0) * frames.length))
+      : Math.floor((b.tankActionAge || 0) * cachedFps(name, action === 'walk' ? 11 : 7)) % frames.length;
+    ctx.globalAlpha = 0.34;
+    ctx.drawImage(SpriteGen.get('vfx_shadow'), x - 46, y - 9, 92, 22);
+    ctx.globalAlpha = 1;
+    // 96x96 authored frame at its [48,91] ground pivot: no stretched body,
+    // no procedural replacement, and identical collision size in every pose.
+    ctx.drawImage(frames[index], x - 48, y - 91, 96, 96);
   }
 
   function draw(ctx, run) {
@@ -1183,7 +1225,7 @@ window.Weapons = (function () {
         if (rr < 1) continue;
         var novaAlpha = E.clamp(b.ttl * 3, 0, 1);
         ctx.globalAlpha = novaAlpha;
-        var frostFrames = cachedFrames('vfx_frost_radial');
+        var frostFrames = cachedFrames('vfx_frost_kiss_radial');
         var frostProgress = E.clamp(rr / Math.max(1, b.aux2), 0, 0.999);
         var frostImg = frostFrames[Math.min(frostFrames.length - 1, Math.floor(frostProgress * frostFrames.length))];
         // The authored sheet already grows its circular ring from the centre.
@@ -1233,6 +1275,8 @@ window.Weapons = (function () {
       ctx.translate(b.x, b.y);
       ctx.rotate(b.angle);
       var dw = img.width * 2 * (b.size / 16);
+      if (b.spr === 'p_arcane_orb') dw = b.evolved ? 42 : 34;
+      if (b.spr === 'p_tesla_cannon') dw = 112;
       if (b.kind === 'demon') dw = img.width * 1.7 * (b.size / 16);
       // The dedicated dragon sheet has a larger logical cell for crisp detail.
       // Keep its on-screen silhouette long and lean instead of inflating it
@@ -1292,7 +1336,10 @@ window.Weapons = (function () {
     areaM: function (v) { return '范围 +' + Math.round((v - 1) * 100) + '%'; },
     durM: function (v) { return '持续 +' + Math.round((v - 1) * 100) + '%'; },
     spdM: function (v) { return '弹速 +' + Math.round((v - 1) * 100) + '%'; },
-    holyStrike: function () { return '解锁/强化天降圣光（50%）'; }
+    holyStrike: function () { return '解锁/强化天降圣光（50%）'; },
+    arcaneReflect: function () { return '解锁/强化奥术折射：命中后追踪弹射'; },
+    voidMark: function () { return '解锁虚空烙印：再次命中会范围爆炸'; },
+    teslaOverload: function () { return '解锁电塔过载：消失时释放强力扩散电流'; }
   };
   function deltaDesc(delta) {
     var parts = [];
