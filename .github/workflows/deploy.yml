@@ -15,9 +15,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Prepare runtime-only Pages directory
+        run: |
+          mkdir -p dist
+          rsync -a --delete \
+            --exclude='dist/' \
+            --exclude='.git/' \
+            --exclude-from='.assetsignore' \
+            ./ dist/
+
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy . --project-name=darktide-survivors --branch=main
+          command: pages deploy dist --project-name=darktide-survivors --branch=main
