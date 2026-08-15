@@ -135,9 +135,12 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "READY",
+      "status": "INTEGRATED",
       "notes": "Crowned gel body, slow breath idle.",
-      "fit": "baseline"
+      "fit": "baseline",
+      "maxCentroidDrift": 8,
+      "maxBaselineDrift": 1,
+      "minCoverage": 0.08
     },
     {
       "name": "boss_slimeking_walk",
@@ -168,8 +171,11 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "READY",
-      "fit": "baseline"
+      "status": "INTEGRATED",
+      "fit": "baseline",
+      "maxCentroidDrift": 6,
+      "maxBaselineDrift": 1,
+      "minCoverage": 0.08
     },
     {
       "name": "boss_slimeking_charge",
@@ -200,7 +206,7 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "READY",
+      "status": "INTEGRATED",
       "notes": "Compress -> leap -> land mud wave, one-shot.",
       "fit": "union",
       "maxCentroidDrift": 16,
@@ -235,7 +241,7 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "READY",
+      "status": "INTEGRATED",
       "fit": "union",
       "maxCentroidDrift": 16,
       "maxBaselineDrift": 32
@@ -267,7 +273,7 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "READY",
+      "status": "INTEGRATED",
       "fit": "union",
       "maxCentroidDrift": 16,
       "maxBaselineDrift": 32
@@ -303,7 +309,7 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "READY",
+      "status": "INTEGRATED",
       "notes": "Final frame is the mud pool.",
       "fit": "union",
       "maxCentroidDrift": 16,
@@ -338,8 +344,11 @@
       ],
       "renderScale": 1,
       "layer": "projectile",
-      "status": "READY",
-      "fit": "center"
+      "status": "INTEGRATED",
+      "fit": "center",
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 1,
+      "minCoverage": 0.08
     },
     {
       "name": "vfx_boss_slimeking_ground_wave",
@@ -370,8 +379,11 @@
       ],
       "renderScale": 1,
       "layer": "ground",
-      "status": "READY",
-      "fit": "center"
+      "status": "INTEGRATED",
+      "fit": "center",
+      "maxCentroidDrift": 6,
+      "maxBaselineDrift": 32,
+      "minCoverage": 0.02
     },
     {
       "name": "boss_slimeking_hurt",
@@ -390,9 +402,13 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "TODO",
+      "status": "INTEGRATED",
       "notes": "Deterministic 4-frame white/hit-flash variant of the idle strip.",
-      "fit": "union"
+      "fit": "union",
+      "output": "assets/art-v6/game-ready/v6/boss_slimeking_hurt.png",
+      "maxCentroidDrift": 8,
+      "maxBaselineDrift": 1,
+      "minCoverage": 0.2
     },
     {
       "name": "vfx_boss_slimeking_fan_telegraph",
@@ -411,9 +427,13 @@
       ],
       "renderScale": 1,
       "layer": "ground",
-      "status": "TODO",
+      "status": "INTEGRATED",
       "notes": "Fan-shaped acid spray warning arc before acid_cast.",
-      "fit": "center"
+      "fit": "center",
+      "output": "assets/art-v6/game-ready/v6/vfx_boss_slimeking_fan_telegraph.png",
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 12,
+      "minCoverage": 0.02
     },
     {
       "name": "vfx_boss_slimeking_summon_gel",
@@ -432,9 +452,13 @@
       ],
       "renderScale": 1,
       "layer": "ground",
-      "status": "TODO",
+      "status": "INTEGRATED",
       "notes": "Gel pool + small slime birth effect for the summon skill.",
-      "fit": "center"
+      "fit": "center",
+      "output": "assets/art-v6/game-ready/v6/vfx_boss_slimeking_summon_gel.png",
+      "maxCentroidDrift": 8,
+      "maxBaselineDrift": 1,
+      "minCoverage": 0.02
     },
     {
       "name": "vfx_boss_slimeking_bounce_afterimage",
@@ -453,9 +477,13 @@
       ],
       "renderScale": 1,
       "layer": "fx",
-      "status": "TODO",
+      "status": "INTEGRATED",
       "notes": "Translucent afterimages used by the low-health multi-bounce skill.",
-      "fit": "center"
+      "fit": "center",
+      "output": "assets/art-v6/game-ready/v6/vfx_boss_slimeking_bounce_afterimage.png",
+      "maxCentroidDrift": 8,
+      "maxBaselineDrift": 1,
+      "minCoverage": 0.1
     },
     {
       "name": "vfx_boss_slimeking_wave_dissipate",
@@ -474,9 +502,13 @@
       ],
       "renderScale": 1,
       "layer": "ground",
-      "status": "TODO",
+      "status": "INTEGRATED",
       "notes": "End-of-mud-wave dissolve derived from the last ground-wave frame.",
-      "fit": "center"
+      "fit": "center",
+      "output": "assets/art-v6/game-ready/v6/vfx_boss_slimeking_wave_dissipate.png",
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 1,
+      "minCoverage": 0.02
     },
     {
       "name": "boss_bonelord",
