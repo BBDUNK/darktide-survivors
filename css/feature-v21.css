@@ -1,5 +1,15 @@
 /* feature-v21.css — 复古巴洛克统一外观与主菜单专属画板 */
 
+/* 全站正楷：所有界面文字统一使用楷体（KaiTi / 华文楷体 / DFKai-SB）。
+   放在最后一个样式表，用 !important 覆盖此前各主题的像素/黑体字体。 */
+:root {
+  --font-cn: "KaiTi", "楷体", "STKaiti", "华文楷体", "DFKai-SB", "AR PL UKai CN", "Noto Serif CJK SC", serif !important;
+  --font-pix: "KaiTi", "楷体", "STKaiti", "华文楷体", "DFKai-SB", "AR PL UKai CN", "Noto Serif CJK SC", serif !important;
+}
+html, body, button, input, select, textarea, * {
+  font-family: var(--font-cn) !important;
+}
+
 /* 主菜单四周恢复巴洛克金框(与选人/结算/图鉴同款 baroque_menu_frame)。
    art-v4 曾把 .menu-screen 的边框清掉,导致主菜单四周光秃秃。 */
 .menu-screen {
@@ -281,10 +291,10 @@
   max-width: calc(100vw - 32px) !important;
   min-width: 0 !important;
   padding: 42px 50px 40px !important;
-  border: 2px solid #c19a55 !important;
+  border: 3px solid #d4af37 !important;
   border-image: none !important;
-  outline: 1px solid #221811 !important;
-  outline-offset: 4px !important;
+  outline: none !important;
+  outline-offset: 0 !important;
   border-radius: 0 !important;
   background:
     radial-gradient(120% 70% at 50% 0%, rgba(218,168,86,.12), rgba(0,0,0,0) 58%),
@@ -293,8 +303,8 @@
     inset 0 0 0 1px #0e0a0b,
     inset 0 0 0 3px #3c2d19,
     inset 0 0 36px rgba(0,0,0,.5),
-    0 0 0 5px rgba(0,0,0,.55),
-    0 16px 42px rgba(0,0,0,.8) !important;
+    0 0 0 3px rgba(0,0,0,.7),
+    0 14px 38px rgba(0,0,0,.8) !important;
 }
 .pause-box .modal-title {
   width: 100%;

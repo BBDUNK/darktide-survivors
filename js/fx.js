@@ -20,9 +20,9 @@
   var SH_BEAM = 2;    // 竖直光柱(str = 定高)
   var SH_SPRITE = 3;  // 图集多帧特效(str = SpriteGen 名字)
 
-  var FONT_N = 'bold 10px "Courier New", monospace';
-  var FONT_C = 'bold 15px "Courier New", monospace';
-  var FONT_H = 'bold 11px "Courier New", monospace';
+  var FONT_N = 'bold 10px "KaiTi","楷体","STKaiti","华文楷体",serif';
+  var FONT_C = 'bold 15px "KaiTi","楷体","STKaiti","华文楷体",serif';
+  var FONT_H = 'bold 11px "KaiTi","楷体","STKaiti","华文楷体",serif';
   var FONTS = [FONT_N, FONT_C, FONT_H];
 
   var FIRE_COLS = ['#fff3b0', '#ffd24a', '#ff9531', '#ff5722'];
