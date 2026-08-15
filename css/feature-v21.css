@@ -360,10 +360,10 @@ html, body, button, input, select, textarea, * {
    边框改用主菜单按钮同款贴图，保持界面统一。 */
 .hud-timer {
   top: 18px !important;
-  min-width: 250px !important;
+  min-width: 200px !important;
   max-width: calc(100vw - 40px) !important;
-  min-height: 66px !important;
-  padding: 10px 34px 9px !important;
+  min-height: 96px !important;
+  padding: 16px 24px 14px !important;
   box-sizing: border-box !important;
   display: flex !important;
   flex-direction: column !important;
@@ -514,11 +514,11 @@ html, body, button, input, select, textarea, * {
   z-index: 3;
   font-size: 15px;
   line-height: 1;
-  color: #ff8a8a;
+  color: #a8e000;
   letter-spacing: 2px;
   white-space: nowrap;
   pointer-events: none;
-  text-shadow: 0 0 10px rgba(255, 80, 80, .95), 0 1px 0 #4a0808, 0 -1px 0 #4a0808, 1px 0 0 #4a0808, -1px 0 0 #4a0808;
+  text-shadow: 0 0 10px rgba(150, 230, 0, .9), 0 1px 0 #1f3a00, 0 -1px 0 #1f3a00, 1px 0 0 #1f3a00, -1px 0 0 #1f3a00;
   animation: char-badge-pulse .8s ease-in-out infinite;
 }
 

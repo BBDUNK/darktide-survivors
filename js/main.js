@@ -1348,40 +1348,16 @@
     if (groundPatterns[name]) return groundPatterns[name];
     var tile = SpriteGen.get(name);
     if (!tile || tile.width < 2) return null;
-    var tw = tile.width, th = tile.height;
-    // 只处理图块最外圈 2px 的深色描边：用紧邻内侧像素替换，让重复拼接时
-    // 图块边缘完美重合，同时保留图块内部的原始纹理效果（不去除内部网格/裂纹）。
-    var clean = document.createElement('canvas');
-    clean.width = tw; clean.height = th;
-    var cg = clean.getContext('2d');
-    cg.imageSmoothingEnabled = false;
-    cg.drawImage(tile, 0, 0);
-    if (tw > 4 && th > 4) {
-      var img = cg.getImageData(0, 0, tw, th);
-      var d = img.data;
-      var inset = 2;
-      function pxi(x, y) { return (y * tw + x) * 4; }
-      for (var y = 0; y < th; y++) {
-        for (var x = 0; x < tw; x++) {
-          if (x < inset || x >= tw - inset || y < inset || y >= th - inset) {
-            var sx = Math.min(Math.max(x, inset), tw - 1 - inset);
-            var sy = Math.min(Math.max(y, inset), th - 1 - inset);
-            var si = pxi(sx, sy), di = pxi(x, y);
-            d[di] = d[si]; d[di + 1] = d[si + 1]; d[di + 2] = d[si + 2]; d[di + 3] = d[si + 3];
-          }
-        }
-      }
-      cg.putImageData(img, 0, 0);
-    }
     // 2×2 镜像拼接消除大块纹理四边的接缝，同时保持最近邻硬像素。
     var patternTile = document.createElement('canvas');
+    var tw = tile.width, th = tile.height;
     patternTile.width = tw * 2; patternTile.height = th * 2;
     var pg = patternTile.getContext('2d');
     pg.imageSmoothingEnabled = false;
-    pg.drawImage(clean, 0, 0);
-    pg.save(); pg.translate(tw * 2, 0); pg.scale(-1, 1); pg.drawImage(clean, 0, 0); pg.restore();
-    pg.save(); pg.translate(0, th * 2); pg.scale(1, -1); pg.drawImage(clean, 0, 0); pg.restore();
-    pg.save(); pg.translate(tw * 2, th * 2); pg.scale(-1, -1); pg.drawImage(clean, 0, 0); pg.restore();
+    pg.drawImage(tile, 0, 0);
+    pg.save(); pg.translate(tw * 2, 0); pg.scale(-1, 1); pg.drawImage(tile, 0, 0); pg.restore();
+    pg.save(); pg.translate(0, th * 2); pg.scale(1, -1); pg.drawImage(tile, 0, 0); pg.restore();
+    pg.save(); pg.translate(tw * 2, th * 2); pg.scale(-1, -1); pg.drawImage(tile, 0, 0); pg.restore();
     groundPatterns[name] = ctx.createPattern(patternTile, 'repeat');
     return groundPatterns[name];
   }
