@@ -177,7 +177,36 @@
 - 回归：`headless.js`、`art-probe.js`、`boss-phase-probe.js`、`coop-probe.js` 全部通过；400 怪 57.4 FPS、p95 16.8ms。
 - 提交：`art(v6): process bone lord game-ready assets`、`feat(v6): integrate bone lord six-skill boss`。
 
-### 3.3 深渊之眼（进行中）
+### 3.3 深渊之眼 ✅
+
+**素材（16 条 `READY → INTEGRATED`，P1/双瞳 80×80 主体 + 64×192 光束 / 112×112 重力井 / 96×96 裂口 VFX，40 色、硬 Alpha）：**
+
+| 运行时名 | 帧 | 说明 |
+|---|---|---|
+| `boss_abysseye` / `_walk` / `_hurt` / `_death` | 6/8/4/8 | P1 巨眼完整动作 |
+| `boss_abysseye_split` | 8 | 分裂过渡，一次性，结束后双实体独立 |
+| `boss_abysseye_remote` / `_cast` / `_hurt` / `_death` | 4/8/4/6 | 远程瞳完整动作，非换色 |
+| `boss_abysseye_charge` / `_dash` / `_hurt` / `_death` | 4/8/4/6 | 冲撞瞳完整动作，非换色 |
+| `vfx_abysseye_gaze_beam` | 4 | 凝视光束四档加粗 |
+| `vfx_abysseye_gravity_well` | 6 | 重力井循环 |
+| `vfx_abysseye_rift` | 6 | 瞬移裂口，一次性 |
+
+**运行时接入（不升级联机协议）：**
+
+- P1 五技能状态机：螺旋弹幕、凝视光束（闪电表现 + 沿视线 380px×30px 判定）、重力井（拉扯玩家并收束伤害）、瞬移裂口（旧瞬移改为带裂口 VFX 的可靠事件）、怨灵召唤；
+- P2 双瞳：远程瞳保持射程并用 `boss_abysseye_remote_cast` 施法，每两次循环一次持续光束；冲撞瞳用 `boss_abysseye_charge_dash` 长预警冲刺；
+- 分裂过渡播放 `boss_abysseye_split` 一次后进入双实体；保留双瞳共享血条、单次宝箱；
+- 一只死亡后另一只 `eyeRage = 1.25`（攻速提高 25%），死亡的一只用各自 `remote_death/charge_death` 条，不再重复掉宝；
+- 全部离散技能经可靠 `bossEvent` 同步。
+
+**验收：**
+
+- `test/v6-abysseye-probe.js` 真实浏览器全绿：五技能、双角色分裂、角色专属条、共享血量、rage×1.25 与单次结算；截图 `shots/v6-abysseye/`。
+- 图集：`567 assets / 3334 frames`，`0 errors / 161 warnings`（深渊之眼新素材 0 新增警告）。
+- 回归：`headless.js`、`art-probe.js`、`boss-phase-probe.js` 通过；`coop-probe.js` 首次因客户端首波敌人快照迟到偶发失败，单独重跑通过（记录为环境时序抖动，非代码失败），最终以重跑通过为准。
+- 提交：`art(v6): process abyss eye game-ready assets`、`feat(v6): integrate abyss eye five-skill P1 and split roles`。
+
+### 3.4 暗潮魔王（进行中）
 
 ## 阶段 4：普通怪、地图和掉落（待开始）
 

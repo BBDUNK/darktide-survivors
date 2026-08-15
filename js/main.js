@@ -2186,6 +2186,26 @@
         } else if (m.kind === 'boneResurrectCast') {
           FX.sprite(d.x, d.y, 'vfx_bonelord_soul_return', 0.7, 90, true);
           AudioSys.play('elite_spawn');
+        } else if (m.kind === 'eyeChargeWarn') {
+          FX.ring(d.x, d.y, { r: 74, color: '#d897ff', life: 0.32, width: 3 });
+        } else if (m.kind === 'eyeBeamWarn') {
+          FX.ring(d.x, d.y, { r: 92, color: '#d897ff', life: 0.55, width: 4 });
+        } else if (m.kind === 'eyeGazeWarn') {
+          FX.ring(d.x, d.y, { r: 92, color: '#d897ff', life: 0.55, width: 4 });
+        } else if (m.kind === 'eyeGazeCast') {
+          FX.lightning(d.x, d.y, d.x + Math.cos(d.a || 0) * 360, d.y + Math.sin(d.a || 0) * 360, '#d897ff');
+          AudioSys.play('zap');
+        } else if (m.kind === 'eyeWellWarn') {
+          FX.sprite(d.x, d.y, 'vfx_abysseye_gravity_well', 0.9, 120, true);
+        } else if (m.kind === 'eyeWellBurst') {
+          FX.ring(d.x, d.y, { r: 54, color: '#d897ff', life: 0.4, width: 5 });
+          AudioSys.play('freeze');
+        } else if (m.kind === 'eyeRiftWarn' || m.kind === 'eyeRiftCast') {
+          FX.sprite(d.x, d.y, 'vfx_abysseye_rift', 0.45, 96, true);
+        } else if (m.kind === 'eyeSummonWarn') {
+          FX.ring(d.x, d.y, { r: 84, color: '#d897ff', life: 0.55, width: 4 });
+        } else if (m.kind === 'eyeSummonCast') {
+          AudioSys.play('elite_spawn');
         } else if (m.kind === 'death') {
           AudioSys.play('boss_die');
           FX.explosion(d.x, d.y, 96);
