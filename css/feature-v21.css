@@ -302,6 +302,17 @@
   box-sizing: border-box;
 }
 
+@media (max-width: 520px) {
+  /* 390px 手机宽度:主菜单三段横排会互相挤压,改为纵向堆叠并隐藏公告板,
+     保证所有按钮完整可点且不遮挡。 */
+  .menu-body { flex-direction: column !important; gap: 12px !important; padding-top: 136px !important; }
+  .menu-big { font-size: 46px !important; letter-spacing: 5px !important; }
+  .menu-board { display: none !important; }
+  .menu-altar { width: 190px !important; height: 158px !important; padding: 8px 12px !important; gap: 5px !important; }
+  .menu-altar-icon.menu-altar-flame { width: 112px !important; height: 102px !important; margin-top: 0 !important; }
+  .menu-altar .btn.ruby, .menu-altar .btn.sub { height: 30px !important; }
+}
+
 @media (max-width: 760px), (max-height: 520px) {
   .menu-altar, .menu-board { width: 190px !important; height: 244px !important; }
   .menu-altar { padding: 30px 22px 26px !important; }

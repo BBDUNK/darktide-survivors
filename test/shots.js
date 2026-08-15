@@ -55,7 +55,7 @@ const URL = 'file://' + path.join(ROOT, 'index.html').replace(/\\/g, '/');
 
   // 百科全书:四个页签都截
   const vis = (sel) => page.locator(sel).locator('visible=true').first();
-  await vis('text=📖 百科全书').click();
+  await vis('text=百科全书').click();
   await page.waitForTimeout(500);
   await shot('03-enc-weapons');
   for (const [label, name] of [['💠 被动', '04-enc-passives'], ['☠ 敌人', '05-enc-enemies'], ['📖 机制', '06-enc-mechanics']]) {
