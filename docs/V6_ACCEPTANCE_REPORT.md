@@ -142,7 +142,42 @@
 - 主体 80×80 明显大于 32×32 巨腐史莱姆，王冠/凝胶主体/底部接地点稳定，无透明洞、缺块；未发现脏像素。
 - 提交：`art(v6): process slime king game-ready assets`、`feat(v6): integrate slime king six-skill boss`。
 
-### 3.2 骸骨领主（待开始）
+### 3.2 骸骨领主 ✅
+
+**素材（11 条 `READY → INTEGRATED`，96×96 主体 + 64×64 地面 VFX，40 色、硬 Alpha）：**
+
+| 运行时名 | 帧 | 画布 | FPS | 说明 |
+|---|---|---|---|---|
+| `boss_bonelord` | 6 | 96×96 | 7 | 漂浮王座待机 |
+| `boss_bonelord_walk` | 8 | 96×96 | 9 | 由待机确定性派生，共享脚底基线 |
+| `boss_bonelord_attack` | 8 | 96×96 | 10 | 巨镰横扫 |
+| `boss_bonelord_charge` | 8 | 96×96 | 10 | 骨冠环射 |
+| `boss_bonelord_resurrect` | 8 | 96×96 | 10 | 亡者再生施法 |
+| `boss_bonelord_death` | 10 | 96×96 | 10 | 王座分解为骨片与魂火 |
+| `boss_bonelord_hurt` | 4 | 96×96 | 10 | 受击闪白派生 |
+| `vfx_bonelord_bone_prison` | 8 | 96×96 | 10 | 骨牢生成→破碎 |
+| `vfx_bonelord_spear_rain` | 8 | 96×96 | 10 | 骨矛雨预警→落矛→命中 |
+| `vfx_bonelord_grave_mark` | 6 | 64×64 | 8 | 坟墓标记 + 魂光升起 |
+| `vfx_bonelord_soul_return` | 6 | 64×64 | 8 | 亡者灵魂回流 |
+
+**技能接入（六技能状态机 `idle → telegraph → cast/charge → recover`）：**
+
+- 巨镰横扫：118px 近身范围伤害 + 骨色爆发；
+- 骨冠环射：20 发骨矢，限程 420；
+- 骨牢：玩家位置生成骨牢 VFX，0.4s 后破碎并对 66px 内玩家造成伤害 + 8 发向外骨片；
+- 骨矛雨：玩家周围 3 个 80～190px 落点，坟墓标记预警 0.6s → 落矛 lob 伤害 36px 半径；
+- 近身召唤：玩家周围 100～180px 生成 6 具破土骷髅（沿用 `skeleton` burrow 出土）；
+- 亡者再生：`run.corpsePool` 记录普通怪尸体（Boss/精英永不入池），每次最多复活 6 具、每具只消耗一次，复活体为原生命 50% 并标记 `resurrected`（不可再入池）；无尸体则只播放施法不生成。
+- 绘制新增 `boss_bonelord_resurrect` 动作；客户端 `onBossEvent` 重放全部骨系离散表现；快照与协议版本不变。
+
+**验收：**
+
+- `test/v6-bonelord-probe.js` 真实浏览器全绿：六技能动作/弹幕/骨牢/骨矛雨/召唤数量/尸体一次性规则（3 具尸体→3 只 50% 血复活→尸体池清空）/死亡条；截图 `shots/v6-bonelord/`。
+- 图集：`555 assets / 3272 frames`，`0 errors / 161 warnings`（骸骨领主新素材 0 新增警告）。
+- 回归：`headless.js`、`art-probe.js`、`boss-phase-probe.js`、`coop-probe.js` 全部通过；400 怪 57.4 FPS、p95 16.8ms。
+- 提交：`art(v6): process bone lord game-ready assets`、`feat(v6): integrate bone lord six-skill boss`。
+
+### 3.3 深渊之眼（进行中）
 
 ## 阶段 4：普通怪、地图和掉落（待开始）
 

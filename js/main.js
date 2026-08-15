@@ -2154,6 +2154,38 @@
         } else if (m.kind === 'slimeJumpLand') {
           FX.ring(d.x, d.y, { r: 85, color: '#7fd44f', life: 0.45, width: 5 });
           FX.explosion(d.x, d.y, 85); FX.shake(8, 0.35); AudioSys.play('splat');
+        } else if (m.kind === 'boneScytheWarn') {
+          FX.ring(d.x, d.y, { r: 96, color: '#e8e0d0', life: 0.55, width: 4 });
+        } else if (m.kind === 'boneScytheCast') {
+          FX.ring(d.x, d.y, { r: 118, color: '#e8e0d0', life: 0.4, width: 5 });
+          FX.burst(d.x, d.y, { color: '#e8e0d0', n: 18, speed: 180, life: 0.45, size: 3 });
+          AudioSys.play('hit2');
+        } else if (m.kind === 'boneRingWarn') {
+          FX.ring(d.x, d.y, { r: 122, color: '#e8e0d0', life: 0.6, width: 5 });
+        } else if (m.kind === 'boneRingCast') {
+          AudioSys.play('shoot_bolt');
+        } else if (m.kind === 'bonePrisonWarn') {
+          FX.sprite(d.x, d.y, 'vfx_bonelord_bone_prison', 0.8, 150, false, 0.9);
+        } else if (m.kind === 'bonePrisonBurst') {
+          FX.sprite(d.x, d.y, 'vfx_bonelord_bone_prison', 0.5, 150, false, 0.9);
+          FX.ring(d.x, d.y, { r: 62, color: '#d8e8ff', life: 0.35, width: 4 });
+          AudioSys.play('splat');
+        } else if (m.kind === 'boneSpearWarn') {
+          var pts = d.pts || [];
+          for (var bi = 0; bi < pts.length; bi++) FX.sprite(pts[bi][0], pts[bi][1], 'vfx_bonelord_grave_mark', 0.6, 74, false, 0.85);
+        } else if (m.kind === 'boneSpearCast') {
+          var pts2 = d.pts || [];
+          for (var bj = 0; bj < pts2.length; bj++) FX.sprite(pts2[bj][0], pts2[bj][1], 'vfx_bonelord_spear_rain', 0.55, 92, true);
+          AudioSys.play('shoot_bolt');
+        } else if (m.kind === 'boneSummonWarn') {
+          FX.ring(d.x, d.y, { r: 90, color: '#e8e0d0', life: 0.55, width: 4 });
+        } else if (m.kind === 'boneSummonCast') {
+          FX.shake(3, 0.2); AudioSys.play('elite_spawn');
+        } else if (m.kind === 'boneResurrectWarn') {
+          FX.ring(d.x, d.y, { r: 110, color: '#d8e8ff', life: 0.6, width: 4 });
+        } else if (m.kind === 'boneResurrectCast') {
+          FX.sprite(d.x, d.y, 'vfx_bonelord_soul_return', 0.7, 90, true);
+          AudioSys.play('elite_spawn');
         } else if (m.kind === 'death') {
           AudioSys.play('boss_die');
           FX.explosion(d.x, d.y, 96);

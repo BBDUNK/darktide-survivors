@@ -9127,71 +9127,64 @@
       "maxBaselineDrift": 32
     },
     {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
       "name": "boss_bonelord",
-      "source": "assets/art-v4/repaired/bosses/boss_bonelord_actions.png",
+      "source": "assets/art-v6/game-ready/v6/boss_bonelord.png",
       "frameSize": [
         96,
         96
       ],
-      "frameRow": 0,
-      "frames": 8,
-      "fps": 6,
+      "frames": 6,
+      "fps": 7,
       "size": [
         96,
         96
       ],
       "anchor": [
         48,
-        93
+        92
       ],
-      "renderScale": 0.58
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.08,
+      "maxColors": 40,
+      "maxCentroidDrift": 6,
+      "maxBaselineDrift": 1
     },
     {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
       "name": "boss_bonelord_walk",
-      "source": "assets/art-v4/repaired/bosses/boss_bonelord_actions.png",
+      "source": "assets/art-v6/game-ready/v6/boss_bonelord_walk.png",
       "frameSize": [
         96,
         96
       ],
-      "frameRow": 1,
       "frames": 8,
-      "fps": 8,
+      "fps": 9,
       "size": [
         96,
         96
       ],
       "anchor": [
         48,
-        93
+        92
       ],
-      "renderScale": 0.58
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.2,
+      "maxColors": 40,
+      "maxCentroidDrift": 8,
+      "maxBaselineDrift": 4
     },
     {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
       "name": "boss_bonelord_charge",
-      "source": "assets/art-v4/repaired/bosses/boss_bonelord_actions.png",
+      "source": "assets/art-v6/game-ready/v6/boss_bonelord_charge.png",
       "frameSize": [
         96,
         96
       ],
-      "frameRow": 2,
       "frames": 8,
       "fps": 10,
       "size": [
@@ -9200,61 +9193,68 @@
       ],
       "anchor": [
         48,
-        93
+        92
       ],
-      "renderScale": 0.58
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.08,
+      "maxColors": 40,
+      "maxCentroidDrift": 8,
+      "maxBaselineDrift": 8
     },
     {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
       "name": "boss_bonelord_attack",
-      "source": "assets/art-v4/repaired/bosses/boss_bonelord_actions.png",
+      "source": "assets/art-v6/game-ready/v6/boss_bonelord_attack.png",
       "frameSize": [
         96,
         96
       ],
-      "frameRow": 3,
       "frames": 8,
-      "fps": 11,
+      "fps": 10,
       "size": [
         96,
         96
       ],
       "anchor": [
         48,
-        93
+        92
       ],
-      "renderScale": 0.58
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.08,
+      "maxColors": 40,
+      "maxCentroidDrift": 10,
+      "maxBaselineDrift": 12
     },
     {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
       "name": "boss_bonelord_death",
-      "source": "assets/art-v4/repaired/bosses/boss_bonelord_actions.png",
+      "source": "assets/art-v6/game-ready/v6/boss_bonelord_death.png",
       "frameSize": [
         96,
         96
       ],
-      "frameRow": 4,
-      "frames": 8,
-      "fps": 8,
+      "frames": 10,
+      "fps": 10,
       "size": [
         96,
         96
       ],
       "anchor": [
         48,
-        93
+        92
       ],
-      "renderScale": 0.58
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.05,
+      "maxColors": 40,
+      "maxCentroidDrift": 24,
+      "maxBaselineDrift": 16
     },
     {
       "preservePixels": true,
@@ -13557,6 +13557,162 @@
       "maxColors": 40,
       "maxCentroidDrift": 4,
       "maxBaselineDrift": 1
+    },
+    {
+      "name": "boss_bonelord_resurrect",
+      "source": "assets/art-v6/game-ready/v6/boss_bonelord_resurrect.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        92
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.08,
+      "maxColors": 40,
+      "maxCentroidDrift": 10,
+      "maxBaselineDrift": 12
+    },
+    {
+      "name": "boss_bonelord_hurt",
+      "source": "assets/art-v6/game-ready/v6/boss_bonelord_hurt.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frames": 4,
+      "fps": 10,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        92
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.2,
+      "maxColors": 40,
+      "maxCentroidDrift": 8,
+      "maxBaselineDrift": 4
+    },
+    {
+      "name": "vfx_bonelord_bone_prison",
+      "source": "assets/art-v6/game-ready/v6/vfx_bonelord_bone_prison.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        92
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.02,
+      "maxColors": 40,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 16
+    },
+    {
+      "name": "vfx_bonelord_bone_spear_rain",
+      "source": "assets/art-v6/game-ready/v6/vfx_bonelord_spear_rain.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        92
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.01,
+      "maxColors": 40,
+      "maxCentroidDrift": 8,
+      "maxBaselineDrift": 48
+    },
+    {
+      "name": "vfx_bonelord_grave_mark",
+      "source": "assets/art-v6/game-ready/v6/vfx_bonelord_grave_mark.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frames": 6,
+      "fps": 8,
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        60
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.02,
+      "maxColors": 40,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4
+    },
+    {
+      "name": "vfx_bonelord_soul_return",
+      "source": "assets/art-v6/game-ready/v6/vfx_bonelord_soul_return.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frames": 6,
+      "fps": 8,
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.006,
+      "maxColors": 40,
+      "maxCentroidDrift": 16,
+      "maxBaselineDrift": 40
     }
   ]
 }

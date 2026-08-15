@@ -377,6 +377,7 @@ window.Entities = (function () {
     e.elite = false; e.boss = isBoss; e.bossType = isBoss ? id : '';
     e.bossAction = ''; e.bossActionTick = 0; e.bossActionPhase = 0; e.bossSkill = '';
     e.dying = false; e.dyingT = 0; e.hurtT = 0;
+    e.resurrected = false;
     // Pool entries are reused.  Phase/role state must be cleared explicitly
     // or a freshly spawned monster can inherit a previous boss's second phase.
     e.phase2 = false; e.eyeRole = ''; e.eyeGroup = 0;
@@ -619,6 +620,12 @@ window.Entities = (function () {
 
   function killEnemy(run, e, opts) {
     if (!e.alive) return;
+    // Ordinary fallen enemies leave a deterministic corpse record for the
+    // bone lord's resurrection skill.  Bosses and elites are never recorded.
+    if (!e.boss && !e.elite && !e.resurrected && run) {
+      run.corpsePool = run.corpsePool || [];
+      if (run.corpsePool.length < 12) run.corpsePool.push({ id: e.id, x: e.x, y: e.y });
+    }
     e.alive = false;
     freeIdx.push(e.poolIdx !== undefined ? e.poolIdx : enemies.indexOf(e));
     run.kills++;
@@ -1178,8 +1185,56 @@ window.Entities = (function () {
     return c % 3 === 0 ? 'jump' : (c % 3 === 1 ? 'fan' : 'ring');
   }
 
-  function slimeBeginTelegraph(run, e, nx, ny, scol) {
-    var aim = Math.atan2(ny, nx);
+  function bonelordPick(e) {
+    e.skillCycle = (e.skillCycle || 0) + 1;
+    var c = e.skillCycle;
+    if (c >= 6 && c % 6 === 0) return 'resurrect';
+    if (c >= 5 && c % 5 === 0) return 'summon';
+    return c % 4 === 0 ? 'scythe' : (c % 4 === 1 ? 'ring' : (c % 4 === 2 ? 'prison' : 'spear'));
+  }
+
+  function bonelordTelegraph(run, e, nx, ny, bcol) {
+    var data = { x: Math.round(e.x), y: Math.round(e.y) };
+    if (e.bossSkill === 'scythe') {
+      FX.ring(e.x, e.y, { r: 96, color: bcol, life: 0.55, width: 4 });
+      AudioSys.play('elite_spawn');
+      bossEmitFx(run, 'boneScytheWarn', data);
+    } else if (e.bossSkill === 'ring') {
+      FX.ring(e.x, e.y, { r: 122, color: bcol, life: 0.6, width: 5 });
+      AudioSys.play('elite_spawn');
+      bossEmitFx(run, 'boneRingWarn', data);
+    } else if (e.bossSkill === 'prison') {
+      var p = run.player;
+      FX.sprite(p.x, p.y, 'vfx_bonelord_bone_prison', 0.8, 150, false, 0.9);
+      AudioSys.play('elite_spawn');
+      bossEmitFx(run, 'bonePrisonWarn', { x: Math.round(p.x), y: Math.round(p.y) });
+    } else if (e.bossSkill === 'spear') {
+      var pts = [];
+      for (var pi = 0; pi < 3; pi++) {
+        var pa = Math.random() * Math.PI * 2;
+        var pd = 80 + Math.random() * 110;
+        pts.push({
+          x: E.clamp(run.player.x + Math.cos(pa) * pd, -CFG.GAME.MAP_R, CFG.GAME.MAP_R),
+          y: E.clamp(run.player.y + Math.sin(pa) * pd, -CFG.GAME.MAP_R, CFG.GAME.MAP_R)
+        });
+      }
+      e.skillPts = pts;
+      for (var gi = 0; gi < pts.length; gi++) {
+        FX.sprite(pts[gi].x, pts[gi].y, 'vfx_bonelord_grave_mark', 0.6, 74, false, 0.85);
+      }
+      bossEmitFx(run, 'boneSpearWarn', { pts: pts.map(function (pt) { return [Math.round(pt.x), Math.round(pt.y)]; }) });
+    } else if (e.bossSkill === 'summon') {
+      FX.ring(e.x, e.y, { r: 90, color: bcol, life: 0.55, width: 4 });
+      AudioSys.play('elite_spawn');
+      bossEmitFx(run, 'boneSummonWarn', data);
+    } else {
+      FX.ring(e.x, e.y, { r: 110, color: '#d8e8ff', life: 0.6, width: 4 });
+      AudioSys.play('elite_spawn');
+      bossEmitFx(run, 'boneResurrectWarn', data);
+    }
+  }
+
+  function slimeBeginTelegraph(run, e, nx, ny, scol) {    var aim = Math.atan2(ny, nx);
     e.skillAim = aim;
     var data = { x: Math.round(e.x), y: Math.round(e.y), a: +aim.toFixed(2) };
     if (e.bossSkill === 'fan') {
@@ -1367,56 +1422,148 @@ window.Entities = (function () {
         }
         break;
       }
-      case 'boss_bonelord': { // 环形骨矢 + 在玩家周围召唤破土骷髅
-        var bcol = bdef.shotCol;
-        // 召唤序列:原地吟唱,然后在玩家四周让骷髅从地里爬出来
-        if (e.chargeSeq > 0) {
-          e.skT -= dt;
-          if (e.chargePhase === 0) {          // 吟唱(原地闪烁,给玩家反应时间)
-            e.vx = 0; e.vy = 0; e.flash = 0.05;
-            if ((run.frame & 3) === 0) FX.trail(e.x + (Math.random() * 40 - 20), e.y - 10, bcol, 3);
-            if (e.skT <= 0) {
-              e.chargePhase = 1; e.skT = 0.25;
-              FX.ring(e.x, e.y, { r: 80, color: bcol, life: 0.4, width: 4 });
-              AudioSys.play('elite_spawn');
-              if (run.cb.onWarn) run.cb.onWarn('骸骨领主召唤亡者!');
-            }
-          } else {                             // 分批破土,每批 3 只
-            e.vx = 0; e.vy = 0;
-            if (e.skT <= 0) {
-              e.chargeSeq--;
-              e.skT = 0.35;
-              for (var bj = 0; bj < 3; bj++) {
-                var ba = Math.random() * Math.PI * 2;
-                var bdst = 110 + Math.random() * 130;
-                var bR = CFG.GAME.MAP_R;
-                // skeleton 自带 burrow,会播出土动画且期间免伤
-                spawnEnemy(run, 'skeleton',
-                  E.clamp(p.x + Math.cos(ba) * bdst, -bR, bR),
-                  E.clamp(p.y + Math.sin(ba) * bdst, -bR, bR));
-              }
-              FX.shake(3, 0.2);
-              if (e.chargeSeq <= 0) e.aiT = 1.6;
-            }
+      case 'boss_bonelord': { // 六技能循环:巨镰 / 骨冠环射 / 骨牢 / 骨矛雨 / 召唤 / 亡者再生
+        var bcol = bdef.shotCol || '#e8e0d0';
+        if (e.dying) { e.vx = 0; e.vy = 0; break; }
+        if (!e.bossAction) setBossAction(run, e, 'idle');
+        if (e.bossAction === 'idle' || e.bossAction === 'walk') {
+          e.vx = nx * spd * 0.78; e.vy = ny * spd * 0.78;
+          e.aiT -= dt;
+          if (e.aiT <= 0) {
+            var bk = bonelordPick(e);
+            e.bossSkill = bk; e.bossActionPhase = 1; e.skillMarked = false;
+            setBossAction(run, e, 'telegraph');
+            if (bk === 'scythe') e.skillT = 0.55;
+            else if (bk === 'ring') e.skillT = 0.6;
+            else if (bk === 'prison') e.skillT = 0.5;
+            else if (bk === 'spear') e.skillT = 0.6;
+            else e.skillT = 0.6;
           }
           break;
         }
-        e.vx = nx * spd * 0.8; e.vy = ny * spd * 0.8;
-        if (e.aiT <= 0) {
-          e.aiT = 3.2;
-          e.aiPhase++;
-          // 用独立计数器决定冲撞时机:aiPhase 同时被当作弹幕旋转角,不能兼作节奏计数
-          e.atkCount = (e.atkCount || 0) + 1;
-          if (e.atkCount % 3 === 0) {          // 每三轮转入召唤(3 批 × 3 只)
-            e.chargeSeq = 4; e.chargePhase = 0; e.skT = 0.9;
-            break;
+        e.vx = 0; e.vy = 0;
+        if (e.bossActionPhase === 1) {                 // telegraph
+          if (!e.skillMarked) { e.skillMarked = true; bonelordTelegraph(run, e, nx, ny, bcol); }
+          e.skillT -= dt;
+          if (e.skillT <= 0) {
+            e.bossActionPhase = 2;
+            if (e.bossSkill === 'scythe') { e.skillT = 0.5; e.castStep = 0; setBossAction(run, e, 'attack'); }
+            else if (e.bossSkill === 'ring') { e.skillT = 0.6; e.castStep = 0; setBossAction(run, e, 'charge'); }
+            else if (e.bossSkill === 'prison') { e.skillT = 0.8; e.castStep = 0; setBossAction(run, e, 'attack'); }
+            else if (e.bossSkill === 'spear') { e.skillT = 0.6; e.castStep = 0; setBossAction(run, e, 'attack'); }
+            else { e.skillT = 0.7; e.castStep = 0; setBossAction(run, e, 'resurrect'); }
           }
-          var n = 20;
-          for (var j = 0; j < n; j++) {
-            var a = (Math.PI * 2 / n) * j + e.aiPhase * 0.3;
-            fireShot(e.x, e.y, Math.cos(a), Math.sin(a), 130, e.dmg * 0.6 * dMul, 0, 0, false, bcol);
+          break;
+        }
+        if (e.bossActionPhase === 2) {                 // cast
+          if (e.bossSkill === 'scythe') {
+            if (e.castStep === 0) {
+              e.castStep = 1;
+              var entsB = playerEntries(run);
+              for (var si = 0; si < entsB.length; si++) {
+                var sw = entsB[si];
+                if (sw.downed || sw.player.hp <= 0) continue;
+                if (E.dist2(sw.player.x, sw.player.y, e.x, e.y) < 118 * 118) {
+                  damagePlayerAt(run, sw, e.dmg * 1.25 * dMul);
+                }
+              }
+              FX.ring(e.x, e.y, { r: 118, color: bcol, life: 0.4, width: 5 });
+              FX.burst(e.x, e.y, { color: bcol, n: 18, speed: 180, life: 0.45, size: 3 });
+              AudioSys.play('hit2');
+              bossEmitFx(run, 'boneScytheCast', { x: Math.round(e.x), y: Math.round(e.y) });
+            }
+          } else if (e.bossSkill === 'ring') {
+            if (e.castStep === 0) {
+              e.castStep = 1;
+              for (var bj = 0; bj < 20; bj++) {
+                var ba = (Math.PI * 2 / 20) * bj + run.t * 0.4;
+                fireShot(e.x, e.y, Math.cos(ba), Math.sin(ba), 132, e.dmg * 0.6 * dMul,
+                  0, 0, false, bcol, 14, 420);
+              }
+              AudioSys.play('shoot_bolt');
+              bossEmitFx(run, 'boneRingCast', { x: Math.round(e.x), y: Math.round(e.y) });
+            }
+          } else if (e.bossSkill === 'prison') {
+            if (e.castStep === 0 && e.skillT <= 0.4) {
+              e.castStep = 1;
+              var ppos = run.player;
+              FX.sprite(ppos.x, ppos.y, 'vfx_bonelord_bone_prison', 0.5, 150, false, 0.9);
+              FX.ring(ppos.x, ppos.y, { r: 62, color: '#d8e8ff', life: 0.35, width: 4 });
+              AudioSys.play('splat');
+              var entsP = playerEntries(run);
+              for (var pj = 0; pj < entsP.length; pj++) {
+                var pw = entsP[pj];
+                if (!pw.downed && pw.player.hp > 0 &&
+                    E.dist2(pw.player.x, pw.player.y, ppos.x, ppos.y) < 66 * 66) {
+                  damagePlayerAt(run, pw, e.dmg * 0.9 * dMul);
+                }
+              }
+              for (var sh = 0; sh < 8; sh++) {
+                var shA = Math.PI * 2 * sh / 8;
+                fireShot(ppos.x, ppos.y, Math.cos(shA), Math.sin(shA), 120,
+                  e.dmg * 0.3 * dMul, 0.3, 1.6, false, bcol, 12, 130);
+              }
+              bossEmitFx(run, 'bonePrisonBurst', { x: Math.round(ppos.x), y: Math.round(ppos.y) });
+            }
+          } else if (e.bossSkill === 'spear') {
+            if (e.castStep === 0) {
+              e.castStep = 1;
+              var pts = e.skillPts || [];
+              for (var ti = 0; ti < pts.length; ti++) {
+                fireLob(pts[ti].x, pts[ti].y, e.x, e.y, 36, e.dmg * 0.85 * dMul, 0.5);
+                FX.sprite(pts[ti].x, pts[ti].y, 'vfx_bonelord_spear_rain', 0.55, 92, true);
+              }
+              AudioSys.play('shoot_bolt');
+              bossEmitFx(run, 'boneSpearCast', { pts: pts.map(function (pt) { return [Math.round(pt.x), Math.round(pt.y)]; }) });
+            }
+          } else if (e.bossSkill === 'summon') {
+            if (e.castStep === 0) {
+              e.castStep = 1;
+              var R = CFG.GAME.MAP_R;
+              for (var ni = 0; ni < 6; ni++) {
+                var na = Math.PI * 2 * ni / 6 + 0.4;
+                var nd = 100 + (ni % 3) * 40;
+                spawnEnemy(run, 'skeleton',
+                  E.clamp(run.player.x + Math.cos(na) * nd, -R, R),
+                  E.clamp(run.player.y + Math.sin(na) * nd, -R, R));
+              }
+              FX.shake(3, 0.2);
+              AudioSys.play('elite_spawn');
+              bossEmitFx(run, 'boneSummonCast', { x: Math.round(e.x), y: Math.round(e.y) });
+            }
+          } else {
+            if (e.castStep === 0) {
+              e.castStep = 1;
+              run.corpsePool = run.corpsePool || [];
+              var raised = 0;
+              for (var ci = run.corpsePool.length - 1; ci >= 0 && raised < 6; ci--) {
+                var corpse = run.corpsePool[ci];
+                if (!corpse || E.dist2(corpse.x, corpse.y, e.x, e.y) > 420 * 420) continue;
+                var reborn = spawnEnemy(run, corpse.id, corpse.x, corpse.y, { allowNear: true });
+                if (reborn) {
+                  reborn.hp = reborn.maxHp = Math.max(1, Math.round(reborn.maxHp * 0.5));
+                  reborn.resurrected = true;
+                  FX.sprite(corpse.x, corpse.y, 'vfx_bonelord_grave_mark', 0.6, 74, false, 0.85);
+                  raised++;
+                }
+                run.corpsePool.splice(ci, 1);
+              }
+              if (raised > 0) {
+                FX.sprite(e.x, e.y, 'vfx_bonelord_soul_return', 0.7, 90, true);
+                AudioSys.play('elite_spawn');
+                bossEmitFx(run, 'boneResurrectCast', { x: Math.round(e.x), y: Math.round(e.y), n: raised });
+              }
+            }
           }
-          AudioSys.play('shoot_bolt');
+          e.skillT -= dt;
+          if (e.skillT <= 0) { e.bossActionPhase = 3; e.skillT = 0.4; }
+          break;
+        }
+        e.skillT -= dt;                               // recover
+        if (e.skillT <= 0) {
+          e.bossActionPhase = 0; e.bossSkill = '';
+          setBossAction(run, e, 'idle');
+          e.aiT = 1.9;
         }
         break;
       }
@@ -2285,7 +2432,7 @@ window.Entities = (function () {
       if (e.boss) {
         if (visualState === 'telegraph') visualState = e.bossSkill === 'jump' || e.bossSkill === 'bounce' ? 'charge' : 'attack';
         var actionSuffix = { idle: '', walk: '_walk', attack: '_attack', charge: '_charge',
-          shield: '_shield', hurt: '_hurt', death: '_death' }[visualState];
+          shield: '_shield', hurt: '_hurt', death: '_death', resurrect: '_resurrect' }[visualState];
         if (actionSuffix === undefined) actionSuffix = '';
         enemySprite += actionSuffix;
         oneShotBoss = actionSuffix !== '' && actionSuffix !== '_walk';
