@@ -339,6 +339,9 @@
 /* 选人界面背景透出主菜单动画背景,不再被深色径向渐变整块挡住。 */
 .panel-col.character-select-screen {
   background: rgba(7, 3, 15, 0.38) !important;
+  border-width: 8px !important;
+  border-image-width: 8px !important;
+  padding: 6px 10px 8px !important;
 }
 .character-select-screen .card {
   position: relative !important;
@@ -360,6 +363,39 @@
 @keyframes char-badge-pulse {
   0%, 100% { opacity: .65; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.12); }
+}
+
+/* 选人角色一行排开:放大角色、压缩边框和卡片留白。 */
+.panel-col.character-select-screen .card-grid {
+  grid-template-columns: repeat(6, minmax(120px, 1fr)) !important;
+  gap: 8px 10px !important;
+  width: min(1200px, calc(100vw - 26px)) !important;
+  padding: 6px 4px !important;
+}
+.panel-col.character-select-screen .card {
+  min-height: 148px !important;
+  padding: 6px 4px 5px !important;
+}
+.panel-col.character-select-screen .card canvas.pix {
+  width: 76px !important;
+  height: 76px !important;
+}
+.panel-col.character-select-screen .card-name {
+  font-size: 12px !important;
+  line-height: 1.1 !important;
+}
+.panel-col.character-select-screen .card-sub {
+  font-size: 10px !important;
+  line-height: 1.1 !important;
+}
+@media (max-width: 900px) {
+  .panel-col.character-select-screen .card-grid {
+    grid-template-columns: repeat(3, minmax(118px, 1fr)) !important;
+  }
+  .panel-col.character-select-screen .card canvas.pix {
+    width: 60px !important;
+    height: 60px !important;
+  }
 }
 
 /* 用户反馈轮 2:去掉选人页内部重复金色边框,只保留屏幕最外层边框。 */

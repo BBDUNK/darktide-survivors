@@ -205,7 +205,7 @@ window.UI = (function () {
     CFG.CHARS.forEach(function (c) {
       var unlocked = Meta.isCharUnlocked(c);
       var card = h('div', 'card' + (unlocked ? '' : ' locked') + (sel.charId === c.id ? ' selected' : ''));
-      card.appendChild(iconCanvas(unlocked ? c.sprite : c.sprite, 48));
+      card.appendChild(iconCanvas(unlocked ? c.sprite : c.sprite, 72));
       card.appendChild(h('div', 'card-name', unlocked ? c.name : '???'));
       if (!unlocked) {
         var a = achvById(c.unlock.achv);

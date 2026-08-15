@@ -9439,30 +9439,30 @@
       "renderScale": 1
     },
     {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
       "name": "boss_darklord_charge",
-      "source": "assets/art-v4/repaired/bosses/boss_darklord_actions.png",
+      "source": "assets/art-v6/game-ready/v6/boss_darklord_charge.png",
       "frameSize": [
-        96,
-        96
+        144,
+        144
       ],
-      "frameRow": 2,
       "frames": 8,
       "fps": 10,
       "size": [
-        96,
-        96
+        144,
+        144
       ],
       "anchor": [
-        48,
-        93
+        72,
+        140
       ],
-      "renderScale": 1
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.08,
+      "maxColors": 40,
+      "maxCentroidDrift": 32,
+      "maxBaselineDrift": 32
     },
     {
       "preservePixels": true,
@@ -14467,6 +14467,32 @@
       "maxColors": 256,
       "maxCentroidDrift": 4,
       "maxBaselineDrift": 4
+    },
+    {
+      "name": "boss_darklord_phase2_death",
+      "source": "assets/art-v6/game-ready/v6/boss_darklord_death.png",
+      "frameSize": [
+        144,
+        144
+      ],
+      "frames": 10,
+      "fps": 10,
+      "size": [
+        144,
+        144
+      ],
+      "anchor": [
+        72,
+        140
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.02,
+      "maxColors": 40,
+      "maxCentroidDrift": 28,
+      "maxBaselineDrift": 20
     }
   ]
 }

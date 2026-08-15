@@ -20,6 +20,15 @@
 
 ---
 
+## 2026-08-15 — v0.21.8:Boss 素材串场修复 + 选人一行布局
+
+- **暗潮魔王尺寸/动画修复**：`boss_darklord_charge` 恢复为 V6（它是 P2 翼冲专用，不能换成 V4 小图）；新增 `boss_darklord_phase2_death` 作为 P2 专属死亡条，P1 死亡继续用 V4，避免 P1/P2 共用一条 144px 死亡动画导致忽大忽小
+- **深渊之眼 P1 不再串到 V6**：P1 的 attack/charge 动作从 `boss_abysseye_remote_cast`（V6 P2 远程施法）改回 `boss_abysseye_attack`（V4 重复素材），P1 全程保持 V4
+- **选人界面一行排开**：六张角色卡改为单行 `repeat(6, 1fr)`，角色头像 48→72px，屏幕外边框 18→8px、内边距压缩，卡片更小留白更少
+- 回归：`headless.js`、`art-probe.js`、`v6-abysseye-probe.js`、`v6-darklord-probe.js` 全绿
+
+---
+
 ## 2026-08-15 — v0.21.7:选人背景与 Boss 混合素材微调
 
 - **选人界面背景透出**：`character-select-screen` 背景从深色径向渐变改为 `rgba(7,3,15,0.38)`，不再挡住主菜单动画背景

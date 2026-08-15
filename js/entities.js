@@ -2407,6 +2407,7 @@ window.Entities = (function () {
     boss_abysseye_charge: 96,
     boss_abysseye: 96,
     boss_darklord_phase2: 144,
+    boss_darklord_charge: 144,
     boss_darklord: 112
   };
   var bossActionScaleCache = {};
@@ -2787,7 +2788,7 @@ window.Entities = (function () {
         if (e.bossType === 'boss_darklord') {
           enemySprite = e.phase2 ? 'boss_darklord_phase2' : 'boss_darklord';
           if (visualState === 'transform') enemySprite = 'boss_darklord_transform';
-          else if (visualState === 'death') enemySprite = 'boss_darklord_death';
+          else if (visualState === 'death') enemySprite = e.phase2 ? 'boss_darklord_phase2_death' : 'boss_darklord_death';
           else if (visualState === 'hurt') enemySprite = e.phase2 ? 'boss_darklord_phase2_hurt' : 'boss_darklord_hurt';
           else if (visualState === 'walk') enemySprite = e.phase2 ? 'boss_darklord_phase2_walk' : 'boss_darklord_walk';
           else if (visualState === 'attack') enemySprite = e.phase2 ? 'boss_darklord_phase2_breath' : 'boss_darklord_attack';
@@ -2811,7 +2812,8 @@ window.Entities = (function () {
             else if (visualState === 'hurt') enemySprite = 'boss_abysseye_hurt';
             else if (visualState === 'death') enemySprite = 'boss_abysseye_death';
             else if (visualState === 'walk') enemySprite = 'boss_abysseye_walk';
-            else if (visualState === 'attack' || visualState === 'charge') enemySprite = 'boss_abysseye_remote_cast';
+            // P1 动作一律用 V4 素材,不再串到 V6 的远程施法条。
+            else if (visualState === 'attack' || visualState === 'charge') enemySprite = 'boss_abysseye_attack';
           }
           oneShotBoss = visualState === 'attack' || visualState === 'charge' || visualState === 'death' ||
             visualState === 'split' || visualState === 'hurt';
