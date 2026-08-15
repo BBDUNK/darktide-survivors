@@ -809,8 +809,11 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "FRAMES",
-      "fit": "baseline"
+      "status": "INTEGRATED",
+      "fit": "baseline",
+      "maxCentroidDrift": 12,
+      "maxBaselineDrift": 4,
+      "minCoverage": 0.08
     },
     {
       "name": "boss_abysseye_split",
@@ -841,8 +844,11 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "FRAMES",
-      "fit": "union"
+      "status": "INTEGRATED",
+      "fit": "union",
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 12,
+      "minCoverage": 0.08
     },
     {
       "name": "boss_abysseye_remote_cast",
@@ -873,8 +879,11 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "FRAMES",
-      "fit": "union"
+      "status": "INTEGRATED",
+      "fit": "union",
+      "maxCentroidDrift": 12,
+      "maxBaselineDrift": 12,
+      "minCoverage": 0.08
     },
     {
       "name": "boss_abysseye_charge_dash",
@@ -905,8 +914,11 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "FRAMES",
-      "fit": "union"
+      "status": "INTEGRATED",
+      "fit": "union",
+      "maxCentroidDrift": 10,
+      "maxBaselineDrift": 40,
+      "minCoverage": 0.08
     },
     {
       "name": "boss_abysseye_remote",
@@ -925,9 +937,13 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "TODO",
+      "status": "INTEGRATED",
       "notes": "Remote-eye idle/move loop to be derived from cast sheet frame 0.",
-      "fit": "baseline"
+      "fit": "baseline",
+      "output": "assets/art-v6/game-ready/v6/boss_abysseye_remote.png",
+      "minCoverage": 0.1,
+      "maxCentroidDrift": 12,
+      "maxBaselineDrift": 4
     },
     {
       "name": "boss_abysseye_walk",
@@ -946,8 +962,12 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "TODO",
-      "fit": "baseline"
+      "status": "INTEGRATED",
+      "fit": "baseline",
+      "output": "assets/art-v6/game-ready/v6/boss_abysseye_walk.png",
+      "minCoverage": 0.2,
+      "maxCentroidDrift": 12,
+      "maxBaselineDrift": 4
     },
     {
       "name": "boss_abysseye_death",
@@ -966,8 +986,13 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "TODO",
-      "fit": "union"
+      "status": "INTEGRATED",
+      "fit": "union",
+      "output": "assets/art-v6/game-ready/v6/boss_abysseye_death.png",
+      "minCoverage": 0.03,
+      "maxCentroidDrift": 12,
+      "maxBaselineDrift": 12,
+      "m": 0.03
     },
     {
       "name": "boss_darklord",
@@ -1341,6 +1366,231 @@
       "maxCentroidDrift": 16,
       "maxBaselineDrift": 40,
       "minCoverage": 0.006
+    },
+    {
+      "loop": false,
+      "maxCentroidDrift": 12,
+      "fit": "center",
+      "frames": 4,
+      "layer": "actor",
+      "output": "assets/art-v6/game-ready/v6/boss_abysseye_hurt.png",
+      "maxBaselineDrift": 4,
+      "fps": 10,
+      "renderScale": 1,
+      "source": null,
+      "status": "INTEGRATED",
+      "deriveFrom": "boss_abysseye",
+      "frameSize": [
+        80,
+        80
+      ],
+      "notes": "P1 hurt flash.",
+      "anchor": [
+        40,
+        76
+      ],
+      "name": "boss_abysseye_hurt",
+      "minCoverage": 0.2
+    },
+    {
+      "frames": 4,
+      "deriveFrom": "boss_abysseye_remote",
+      "fit": "center",
+      "minCoverage": 0.1,
+      "layer": "actor",
+      "renderScale": 1,
+      "maxCentroidDrift": 12,
+      "frameSize": [
+        80,
+        80
+      ],
+      "name": "boss_abysseye_remote_hurt",
+      "status": "INTEGRATED",
+      "source": null,
+      "fps": 10,
+      "anchor": [
+        40,
+        76
+      ],
+      "output": "assets/art-v6/game-ready/v6/boss_abysseye_remote_hurt.png",
+      "loop": false,
+      "maxBaselineDrift": 4
+    },
+    {
+      "frames": 6,
+      "deriveFrom": "boss_abysseye_remote",
+      "fit": "center",
+      "minCoverage": 0.03,
+      "layer": "actor",
+      "renderScale": 1,
+      "maxCentroidDrift": 12,
+      "frameSize": [
+        80,
+        80
+      ],
+      "name": "boss_abysseye_remote_death",
+      "status": "INTEGRATED",
+      "source": null,
+      "fps": 10,
+      "anchor": [
+        40,
+        76
+      ],
+      "output": "assets/art-v6/game-ready/v6/boss_abysseye_remote_death.png",
+      "loop": false,
+      "maxBaselineDrift": 12,
+      "m": 0.03
+    },
+    {
+      "loop": true,
+      "maxCentroidDrift": 12,
+      "fit": "center",
+      "frames": 4,
+      "layer": "actor",
+      "output": "assets/art-v6/game-ready/v6/boss_abysseye_charge.png",
+      "maxBaselineDrift": 4,
+      "fps": 7,
+      "renderScale": 1,
+      "source": null,
+      "status": "INTEGRATED",
+      "deriveFrom": "boss_abysseye_charge_dash",
+      "frameSize": [
+        80,
+        80
+      ],
+      "notes": "Charger eye idle loop.",
+      "anchor": [
+        40,
+        76
+      ],
+      "name": "boss_abysseye_charge",
+      "minCoverage": 0.1
+    },
+    {
+      "frames": 4,
+      "deriveFrom": "boss_abysseye_charge",
+      "fit": "center",
+      "minCoverage": 0.1,
+      "layer": "actor",
+      "renderScale": 1,
+      "maxCentroidDrift": 12,
+      "frameSize": [
+        80,
+        80
+      ],
+      "name": "boss_abysseye_charge_hurt",
+      "status": "INTEGRATED",
+      "source": null,
+      "fps": 10,
+      "anchor": [
+        40,
+        76
+      ],
+      "output": "assets/art-v6/game-ready/v6/boss_abysseye_charge_hurt.png",
+      "loop": false,
+      "maxBaselineDrift": 4
+    },
+    {
+      "frames": 6,
+      "deriveFrom": "boss_abysseye_charge",
+      "fit": "center",
+      "minCoverage": 0.03,
+      "layer": "actor",
+      "renderScale": 1,
+      "maxCentroidDrift": 12,
+      "frameSize": [
+        80,
+        80
+      ],
+      "name": "boss_abysseye_charge_death",
+      "status": "INTEGRATED",
+      "source": null,
+      "fps": 10,
+      "anchor": [
+        40,
+        76
+      ],
+      "output": "assets/art-v6/game-ready/v6/boss_abysseye_charge_death.png",
+      "loop": false,
+      "maxBaselineDrift": 12,
+      "m": 0.03
+    },
+    {
+      "loop": true,
+      "maxCentroidDrift": 4,
+      "fit": "center",
+      "frames": 4,
+      "layer": "projectile",
+      "output": "assets/art-v6/game-ready/v6/vfx_abysseye_gaze_beam.png",
+      "maxBaselineDrift": 4,
+      "fps": 8,
+      "renderScale": 1,
+      "source": null,
+      "status": "INTEGRATED",
+      "deriveFrom": null,
+      "frameSize": [
+        64,
+        192
+      ],
+      "notes": "Vertical sustained gaze beam, runtime rotates toward the player.",
+      "anchor": [
+        32,
+        4
+      ],
+      "name": "vfx_abysseye_gaze_beam",
+      "minCoverage": 0.15,
+      "b": 4,
+      "m": 0.15
+    },
+    {
+      "frames": 6,
+      "deriveFrom": null,
+      "fit": "center",
+      "minCoverage": 0.01,
+      "layer": "ground",
+      "renderScale": 1,
+      "maxCentroidDrift": 4,
+      "frameSize": [
+        112,
+        112
+      ],
+      "name": "vfx_abysseye_gravity_well",
+      "status": "INTEGRATED",
+      "source": null,
+      "fps": 10,
+      "anchor": [
+        56,
+        56
+      ],
+      "output": "assets/art-v6/game-ready/v6/vfx_abysseye_gravity_well.png",
+      "loop": true,
+      "maxBaselineDrift": 40,
+      "b": 40
+    },
+    {
+      "frames": 6,
+      "deriveFrom": null,
+      "fit": "center",
+      "minCoverage": 0.05,
+      "layer": "ground",
+      "renderScale": 1,
+      "maxCentroidDrift": 4,
+      "frameSize": [
+        96,
+        96
+      ],
+      "name": "vfx_abysseye_rift",
+      "status": "INTEGRATED",
+      "source": null,
+      "fps": 10,
+      "anchor": [
+        48,
+        48
+      ],
+      "output": "assets/art-v6/game-ready/v6/vfx_abysseye_rift.png",
+      "loop": false,
+      "maxBaselineDrift": 8,
+      "b": 8
     }
   ]
 }
