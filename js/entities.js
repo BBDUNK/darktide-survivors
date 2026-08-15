@@ -2720,7 +2720,7 @@ window.Entities = (function () {
     for (i = 0; i < POOL; i++) {
       e = enemies[i];
       if (!e.alive) continue;
-      var sc = (e.boss ? 2 : 1) * (e.elite ? CFG.ELITE.scale : 1) * (e.phase2 ? 1.1 : 1)
+      var sc = (e.boss ? 2 : 1) * (e.elite ? CFG.ELITE.scale : 1) * (e.phase2 ? 1 : 1)
         * ((e.def && e.def.drawScale) || 1);
       // 破土动画:翻起的土堆 + 从地下逐渐升起的怪(用裁剪实现"半截在土里")
       if (e.burrowT > 0) {
