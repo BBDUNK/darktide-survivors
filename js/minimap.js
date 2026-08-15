@@ -43,8 +43,6 @@ window.Minimap = (function () {
 
   function drawFrame(ctx, x, y) {
     var totalH = SIZE + FOOTER;
-    ctx.fillStyle = 'rgba(4,3,10,0.84)';
-    ctx.fillRect(x - 4, y + 4, SIZE + 8, totalH + 5);
     ctx.fillStyle = '#0b0913';
     ctx.fillRect(x, y, SIZE, totalH);
     ctx.strokeStyle = '#161124';
