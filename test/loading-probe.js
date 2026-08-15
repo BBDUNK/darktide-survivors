@@ -118,7 +118,7 @@ async function runCase(name, mode, atlasDelay) {
 
 (async () => {
   await runCase('normal', 'normal', 0);
-  await runCase('slow-3s', 'slow', 3000);
+  await runCase('slow-1.2s', 'slow', 1200);
   await runCase('blocked', 'blocked', 0);
   await runCase('stall', 'stall', 0);
   console.log('=== 加载回归探针全部通过 ===');

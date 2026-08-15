@@ -1,8 +1,8 @@
 # 项目交接文档 (HANDOFF)
 
 > 本文件用于把《暗黑逃跑神》(Darktide Survivors) 项目完整交接给任何后续开发工具/会话。
-> 生成时间:2026-08-08,当前版本 **v0.19.0**。
-> 若你在新会话接手,请先读本文件,再读 `DEVLOG.md`(完整迭代历史)与 `SPEC.md`(原始设计)。
+> 生成时间:2026-08-15,当前版本 **v0.21.0**(V6 美术接力已全量接入)。
+> 若你在新会话接手,请先读本文件,再读 `DEVLOG.md`(完整迭代历史)、`docs/V6_ACCEPTANCE_REPORT.md`(V6 验收报告)与 `SPEC.md`(原始设计)。
 
 ---
 
@@ -20,11 +20,12 @@
 流程:`git add + git commit + git push origin main` → `.github/workflows/deploy.yml` 自动部署。
 
 - GitHub 仓库:`BBDUNK/darktide-survivors` (origin)
-- Gitee 私有备份:`ZTY20060226/darktide-survivors` (remote 名 `gitee`)
+- **不再同步 Gitee**;不要向任何 Gitee remote 推送。
 - Cloudflare token/accountID 存在 GitHub Secrets(`CLOUDFLARE_API_TOKEN`/`CLOUDFLARE_ACCOUNT_ID`),无需手动处理
 - ⚠ **用户要求:任何改动(无论大小)改完即自动提交推送,不用问。**
 - 每个大版本要更新两处:`js/config.js` 的 `CFG.GAME.VERSION`,以及 `DEVLOG.md` 顶部新条目
 - Vercel 已下架,不要碰 `.vercel` 目录
+- `assets/art-v6/**` 通过 `.assetsignore` 排除在 Cloudflare Pages 运行目录之外;运行时图集只来自 `assets/sprites/atlas.png|json|atlas-data.js`
 
 ## 三、技术栈与文件结构
 
@@ -52,7 +53,17 @@
 | `test/art-probe.js` | 真浏览器图集加载与 400 敌人 180 帧性能验收 |
 | `DEVLOG.md` | 版本迭代日志(每次大版本必更新) |
 
-## 四、UI 风格与设计约定
+## 四、V6 当前状态（2026-08-15）
+
+- 图集：`584 assets / 3408 frames`，`quality-report.json` = `0 errors / 153 warnings`。
+- 联机：`NET_STATE_V2` 协议未升级；快照 `ac/ae/ap/cp/ph/er` 继续承载 Boss 动作/动作纪元/阶段/双瞳角色。
+- Boss：腐液之王、骸骨领主、深渊之眼、暗潮魔王均已接入统一 `bossAction` 状态机与角色专属 V6 素材；死亡条结束才结算掉落。
+- 翠玉神龙：`p_dragon` 8×224×112 侧向飞行 + `vfx_jade_dragon_summon/dissipate`，运行时旋转复用，无八方向副本。
+- 普通怪：腐液/巨腐史莱姆、蜘蛛已换 V6 概念板五动作；烂泥行者有 `zombie_emerge` 出土条；其余沿用 V4。
+- 美术加工入口：`assets/art-v6/production-manifest.json` + `tools/art/process-v6-production.py` + `merge-v6-ready.js`；只有 `READY` 条目能进运行时清单。
+- 后续模型不得恢复精英重绘、不得为龙做八方向素材、不得直接加载 `sources/production` 高分辨率源图。
+
+## 五、UI 风格与设计约定
 
 - **Minecraft 风格**:直角石砖按钮、背包深色面板、像素大字标题(硬色块阴影)、木牌公告栏
 - 标题:`暗黑逃跑神`(主菜单 92px,带血色辉光+撕裂条+灰烬粒子动画)
@@ -60,7 +71,7 @@
 - 主按钮 300×50、成就/百科小按钮 142×34(与主列左右对齐)、按钮文字用下padding上移
 - 移动端 HUD:暂停键⏸+索敌键🎯 在小地图左侧(44×44),**必须显式 pointer-events:auto**否则点不到
 
-## 五、当前存档与测试配置
+## 六、当前存档与测试配置
 
 `js/meta.js` 的 `TEST_UNLOCK_ALL = true`(测试期):
 - 圣坛点数为 **0**(新手难度,不提供永久加成)
@@ -70,7 +81,7 @@
 
 正式发布前:把 `TEST_UNLOCK_ALL` 改为 `false` 即恢复从零开始。
 
-## 六、角色与命名(最新)
+## 七、角色与命名(最新)
 
 角色名取职业对应著名人物(形似字),武器名取有名典故:
 
@@ -83,7 +94,7 @@
 | 狂战士 | 项禹 | 项羽 | 风暴战斧 | 雷神 |
 | 时行者 | 爱因斯 | 爱因斯坦 | 特斯拉电塔 | 特斯拉 |
 
-## 七、历史 bug 经验(改代码前先想)
+## 八、历史 bug 经验(改代码前先想)
 
 - **寒冰新星卡死**:`ctx.arc` 负半径抛 IndexSizeError。渲染问题必须真浏览器验证
 - **HUD 点击被吞/点不到**:`#ui > .hud` 是 pointer-events:none,需要点击的按钮必须显式 `pointer-events:auto`
@@ -92,7 +103,7 @@
 - **暂停双窗口**:暂停按钮列误用 `.menu-col`(absolute)导致脱出弹窗,用独立 `.pause-menu`
 - **每帧 createRadialGradient 很贵**:已用 `SpriteGen.glow(color)` 缓存贴图替代
 
-## 八、常用命令
+## 九、常用命令
 
 ```bash
 # 冒烟测试(改完代码必跑)
@@ -108,7 +119,7 @@ git add -A && git commit -m "..." && git push origin main
 gh run list --limit 1
 ```
 
-## 九、后续可能的方向(未做)
+## 十、后续可能的方向(未做)
 
 - 继续逐项手工修整个别开放素材的轮廓与调色板;图集已覆盖 143 个运行时命名,动作图集缺失时自动退回角色基础帧
 - 美术改造前稳定回退标签:`pre-art-overhaul-v0.15.0`(提交 `b9f102e`,已推送 GitHub/Gitee)

@@ -260,10 +260,6 @@
 - 回归：`headless.js` 适配烂泥行者出土后通过（R2 冻结接触与 R13 法师光束目标改为非出土怪），`art-probe.js`、`terrain-touch-probe.js` 通过。
 - 提交：`art(v6): process ordinary enemies and swamp variants`、`feat(v6): integrate ordinary enemy emergence and terrain fixes`。
 
-## 阶段 4：普通怪、地图和掉落（待开始）
-
-## 阶段 5：武器、虚影和 UI 验收（待开始）
-
 ## 阶段 5：武器、虚影和 UI 验收 ✅
 
 按接力规则先检查现有 V5 素材与代码，未重复制作已合格资源。
@@ -277,4 +273,27 @@
 - 首屏加载复测 1001ms（本地 HTTP，图集最长 85.8ms）；400 怪压力 38.3 FPS / p95 33.4ms（测试机负载较高，仍 ≥30 FPS）。
 - 提交：`ui(v6): stack mobile main menu and complete secondary interface acceptance`。
 
-## 阶段 6：联机与最终验收（进行中）
+## 阶段 6：联机与最终验收 ✅
+
+- **10 分钟真实双浏览器浸泡**：`test/v6-coop-soak.js` 通过。会话 A 房主/客户端各 5 分钟 + 会话 B 交换房主/客户端角色各 5 分钟；每 10 秒断言两端仍在 `run`、快照持续到达（60 次检查全部通过）。会话 A 峰值 80 怪 / 637 击杀，会话 B 峰值 83 怪 / 650 击杀；无 DataChannel 快照积压、无页面错误。升级/宝箱弹层在浸泡中自动点掉，不视为会话中断。
+- **`coop-live-probe.js`**：双浏览器 P2P 全链路通过（快照 46 帧/3 秒、0.94Mbps、视野裁剪 53/51、客户端击杀结算、远程升级应用）。
+- 最终命令矩阵全部 `[exit: 0]`：
+
+```powershell
+node tools/art/build-atlas.js        # 584 assets / 3408 frames, PASS
+node test/headless.js                # R1–R13 全通过
+node test/art-probe.js               # 400 怪 47.2 FPS, p95 33.4ms
+node test/combat-vfx-probe.js
+node test/boss-phase-probe.js
+node test/coop-probe.js
+node test/coop-live-probe.js
+node test/resp-probe.js
+node test/terrain-touch-probe.js
+node test/loading-probe.js           # normal/slow/blocked/stall 四案全通过
+```
+
+- 版本号升级：`v0.20.28 → v0.21.0`；`DEVLOG.md`、`HANDOFF.md`、`docs/ART_V6_PRODUCTION_LOG.md` 已同步。
+- 最终图集：`assets/sprites/atlas.png/json/atlas-data.js` + 584 组 3408 帧；`quality-report.json` = `0 errors / 153 warnings`（较基线 168 减少 15 条，全部为已说明触边警告）。
+- 四分辨率截图：`shots/v6-baseline/`（1280×720、960×540、390×844、844×390）。
+- GitHub `main` 已推送；Cloudflare Pages 由现有工作流自动部署。
+- 本报告最终提交：`test(v6): complete coop and visual acceptance`。

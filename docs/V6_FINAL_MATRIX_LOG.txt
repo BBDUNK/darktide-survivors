@@ -1,0 +1,357 @@
+
+Built 3408 frames into C:\Users\10254\Documents\AAA��ѧ\���\��\dick\fable\��Ϸ\darktide-survivors\assets\sprites\atlas.png
+WARN deco_grave[0]: silhouette touches logical frame edge
+WARN deco_deadtree[0]: silhouette touches logical frame edge
+WARN vfx_frost_impact[0]: silhouette touches logical frame edge
+WARN vfx_frost_impact[1]: silhouette touches logical frame edge
+WARN vfx_frost_impact[2]: silhouette touches logical frame edge
+WARN vfx_frost_impact[3]: silhouette touches logical frame edge
+WARN vfx_frost_impact[4]: silhouette touches logical frame edge
+WARN vfx_frost_impact[5]: silhouette touches logical frame edge
+WARN vfx_frost_impact[6]: silhouette touches logical frame edge
+WARN vfx_frost_impact[7]: silhouette touches logical frame edge
+WARN char_knight_death_down[3]: silhouette touches logical frame edge
+WARN char_knight_death_up[3]: silhouette touches logical frame edge
+WARN char_mage_walk_right[5]: silhouette touches logical frame edge
+WARN char_mage_death_down[3]: silhouette touches logical frame edge
+WARN char_ranger_attack_right[4]: silhouette touches logical frame edge
+WARN char_ranger_attack_right[6]: silhouette touches logical frame edge
+WARN char_ranger_death_down[3]: silhouette touches logical frame edge
+WARN char_cleric_death_right[3]: silhouette touches logical frame edge
+WARN char_cleric_death_left[3]: silhouette touches logical frame edge
+WARN char_berserker_idle_down[5]: silhouette touches logical frame edge
+WARN char_berserker_idle_up[5]: silhouette touches logical frame edge
+WARN char_berserker[5]: silhouette touches logical frame edge
+WARN char_berserker_attack_left[6]: silhouette touches logical frame edge
+WARN char_berserker_death_down[3]: silhouette touches logical frame edge
+WARN char_berserker_death_right[3]: silhouette touches logical frame edge
+WARN char_berserker_death_left[3]: silhouette touches logical frame edge
+WARN char_berserker_death_up[3]: silhouette touches logical frame edge
+WARN werewolf_attack[4]: silhouette touches logical frame edge
+WARN vfx_holy_aura[0]: silhouette touches logical frame edge
+WARN vfx_holy_aura[1]: silhouette touches logical frame edge
+WARN vfx_holy_aura[2]: silhouette touches logical frame edge
+WARN vfx_holy_aura[3]: silhouette touches logical frame edge
+WARN vfx_holy_aura[4]: silhouette touches logical frame edge
+WARN vfx_holy_aura[5]: silhouette touches logical frame edge
+WARN vfx_holy_aura[6]: silhouette touches logical frame edge
+WARN vfx_holy_aura[7]: silhouette touches logical frame edge
+WARN vfx_frost_radial[0]: silhouette touches logical frame edge
+WARN vfx_frost_radial[1]: silhouette touches logical frame edge
+WARN vfx_frost_radial[5]: silhouette touches logical frame edge
+WARN vfx_frost_radial[6]: silhouette touches logical frame edge
+WARN vfx_frost_radial[7]: silhouette touches logical frame edge
+WARN p_arcane_orb[0]: silhouette touches logical frame edge
+WARN p_arcane_orb[1]: silhouette touches logical frame edge
+WARN p_arcane_orb[2]: silhouette touches logical frame edge
+WARN p_arcane_orb[4]: silhouette touches logical frame edge
+WARN p_arcane_orb[5]: silhouette touches logical frame edge
+WARN p_arcane_orb[7]: silhouette touches logical frame edge
+WARN vfx_frost_kiss_radial[0]: silhouette touches logical frame edge
+WARN vfx_frost_kiss_radial[1]: silhouette touches logical frame edge
+WARN vfx_frost_kiss_radial[2]: silhouette touches logical frame edge
+WARN vfx_frost_kiss_radial[3]: silhouette touches logical frame edge
+WARN vfx_frost_kiss_radial[4]: silhouette touches logical frame edge
+WARN vfx_frost_kiss_radial[5]: silhouette touches logical frame edge
+WARN vfx_frost_kiss_radial[6]: silhouette touches logical frame edge
+WARN vfx_frost_kiss_radial[7]: silhouette touches logical frame edge
+WARN vfx_frost_kiss_radial[8]: silhouette touches logical frame edge
+WARN vfx_frost_kiss_radial[9]: silhouette touches logical frame edge
+WARN vfx_frost_kiss_radial[10]: silhouette touches logical frame edge
+WARN vfx_frost_kiss_radial[11]: silhouette touches logical frame edge
+WARN p_tesla_cannon[0]: silhouette touches logical frame edge
+WARN p_tesla_cannon[1]: silhouette touches logical frame edge
+WARN p_tesla_cannon[2]: silhouette touches logical frame edge
+WARN p_tesla_cannon[3]: silhouette touches logical frame edge
+WARN p_tesla_cannon[4]: silhouette touches logical frame edge
+WARN p_tesla_cannon[5]: silhouette touches logical frame edge
+WARN p_tesla_cannon[6]: silhouette touches logical frame edge
+WARN p_tesla_cannon[7]: silhouette touches logical frame edge
+WARN vfx_tesla_cannon_impact[0]: silhouette touches logical frame edge
+WARN vfx_tesla_cannon_impact[1]: silhouette touches logical frame edge
+WARN vfx_tesla_cannon_impact[2]: silhouette touches logical frame edge
+WARN vfx_tesla_cannon_impact[3]: silhouette touches logical frame edge
+WARN vfx_tesla_cannon_impact[4]: silhouette touches logical frame edge
+WARN vfx_tesla_cannon_impact[5]: silhouette touches logical frame edge
+WARN vfx_tesla_cannon_impact[6]: silhouette touches logical frame edge
+WARN vfx_tesla_cannon_impact[7]: silhouette touches logical frame edge
+WARN vfx_tesla_cannon_impact[8]: silhouette touches logical frame edge
+WARN vfx_tesla_cannon_impact[9]: silhouette touches logical frame edge
+WARN vfx_tesla_overload[0]: silhouette touches logical frame edge
+WARN vfx_tesla_overload[1]: silhouette touches logical frame edge
+WARN vfx_tesla_overload[2]: silhouette touches logical frame edge
+WARN vfx_tesla_overload[3]: silhouette touches logical frame edge
+WARN vfx_tesla_overload[4]: silhouette touches logical frame edge
+WARN vfx_tesla_overload[5]: silhouette touches logical frame edge
+WARN vfx_tesla_overload[6]: silhouette touches logical frame edge
+WARN vfx_tesla_overload[7]: silhouette touches logical frame edge
+WARN vfx_tesla_overload[8]: silhouette touches logical frame edge
+WARN vfx_tesla_overload[9]: silhouette touches logical frame edge
+WARN vfx_tesla_overload[10]: silhouette touches logical frame edge
+WARN vfx_tesla_overload[11]: silhouette touches logical frame edge
+WARN vfx_archangel[1]: silhouette touches logical frame edge
+WARN vfx_archangel[2]: silhouette touches logical frame edge
+WARN p_enemy_toxic[0]: silhouette touches logical frame edge
+WARN p_enemy_blood[0]: silhouette touches logical frame edge
+WARN p_enemy_bone[0]: silhouette touches logical frame edge
+WARN p_enemy_hellfire[0]: silhouette touches logical frame edge
+WARN p_enemy_ice[0]: silhouette touches logical frame edge
+WARN p_enemy_electric[0]: silhouette touches logical frame edge
+WARN terrain_grave_ground[0]: little transparent padding (100.0%)
+WARN terrain_grave_ground[0]: silhouette touches logical frame edge
+WARN terrain_grave_swamp[0]: little transparent padding (100.0%)
+WARN terrain_grave_swamp[0]: silhouette touches logical frame edge
+WARN terrain_grave_road[0]: little transparent padding (100.0%)
+WARN terrain_grave_road[0]: silhouette touches logical frame edge
+WARN terrain_wild_ground[0]: little transparent padding (100.0%)
+WARN terrain_wild_ground[0]: silhouette touches logical frame edge
+WARN terrain_wild_grass[0]: little transparent padding (100.0%)
+WARN terrain_wild_grass[0]: silhouette touches logical frame edge
+WARN terrain_wild_road[0]: little transparent padding (100.0%)
+WARN terrain_wild_road[0]: silhouette touches logical frame edge
+WARN terrain_abyss_ground[0]: little transparent padding (100.0%)
+WARN terrain_abyss_ground[0]: silhouette touches logical frame edge
+WARN terrain_abyss_water[0]: little transparent padding (100.0%)
+WARN terrain_abyss_water[0]: silhouette touches logical frame edge
+WARN terrain_abyss_road[0]: little transparent padding (100.0%)
+WARN terrain_abyss_road[0]: silhouette touches logical frame edge
+WARN terrain_grave_swamp_puddle1[0]: silhouette touches logical frame edge
+WARN terrain_grave_swamp_puddle2[0]: silhouette touches logical frame edge
+WARN terrain_grave_swamp_puddle3[0]: silhouette touches logical frame edge
+WARN terrain_grave_swamp_puddle4[0]: silhouette touches logical frame edge
+WARN hud_minimap_frame[0]: silhouette touches logical frame edge
+WARN vfx_glow[0]: silhouette touches logical frame edge
+WARN icon_gold[0]: silhouette touches logical frame edge
+WARN icon_hp[0]: silhouette touches logical frame edge
+WARN icon_armor[0]: silhouette touches logical frame edge
+WARN icon_speed[0]: silhouette touches logical frame edge
+WARN icon_magnet[0]: silhouette touches logical frame edge
+WARN icon_revive[0]: silhouette touches logical frame edge
+WARN icon_cd[0]: silhouette touches logical frame edge
+WARN icon_area[0]: silhouette touches logical frame edge
+WARN icon_time[0]: silhouette touches logical frame edge
+WARN elite_crown[0]: silhouette touches logical frame edge
+WARN deco_bone[0]: silhouette touches logical frame edge
+WARN deco_fence[0]: silhouette touches logical frame edge
+WARN deco_skullpost[0]: silhouette touches logical frame edge
+WARN deco_tree2[0]: silhouette touches logical frame edge
+WARN deco_rock[0]: silhouette touches logical frame edge
+WARN deco_bush[0]: silhouette touches logical frame edge
+WARN deco_mushroom[0]: silhouette touches logical frame edge
+WARN deco_pillar[0]: silhouette touches logical frame edge
+WARN deco_crystal[0]: silhouette touches logical frame edge
+WARN deco_rune[0]: silhouette touches logical frame edge
+WARN deco_stalag[0]: silhouette touches logical frame edge
+WARN tile_graveyard[0]: silhouette touches logical frame edge
+WARN tile_wilds[0]: silhouette touches logical frame edge
+WARN tile_abyss[0]: silhouette touches logical frame edge
+WARN vfx_spark[0]: silhouette touches logical frame edge
+WARN vfx_spark[1]: silhouette touches logical frame edge
+WARN vfx_spark[2]: silhouette touches logical frame edge
+WARN vfx_spark[3]: silhouette touches logical frame edge
+WARN vfx_spark[4]: silhouette touches logical frame edge
+WARN vfx_circle[0]: silhouette touches logical frame edge
+WARN vfx_circle[1]: silhouette touches logical frame edge
+WARN vfx_circle[2]: silhouette touches logical frame edge
+Validated 584 assets: PASS
+[exit: 0] tools/art/build-atlas.js
+LOAD OK   js/config.js
+LOAD OK   js/i18n.js
+LOAD OK   js/sprites.js
+LOAD OK   js/audio.js
+LOAD OK   js/fx.js
+LOAD OK   js/engine.js
+LOAD OK   js/meta.js
+LOAD OK   js/entities.js
+LOAD OK   js/weapons.js
+LOAD OK   js/minimap.js
+LOAD OK   js/encyclopedia.js
+LOAD OK   js/net.js
+LOAD OK   js/merchant.js
+LOAD OK   js/ui.js
+LOAD OK   js/main.js
+BOOT OK   引擎循环运行中
+[AudioSys] 本环境不支持 WebAudio,音频停用
+RUN OK    开局成功(骑士 · 幽暗墓园)
+  probe t=20s alive=14 kills=12 picks=0
+  probe t=40s alive=15 kills=35 picks=1
+  probe t=60s alive=10 kills=66 picks=2
+SIM OK    第一阶段完成,升级选择 2 次,累计击杀 66
+PAUSE OK  暂停/恢复正常
+[SpriteGen] 未知素材名: zombie_emerge
+  死亡于第二阶段 t≈148s
+SIM2 OK   击杀 208(1.42/秒),金币获得 80,最佳存活 146s
+RUN2 OK   第二局 20 秒,新增击杀 12
+  WEAPON OK crossblade (已进化)
+  WEAPON OK arcanebolt (已进化)
+[SpriteGen] 未知素材名: vfx_jade_dragon_summon
+[SpriteGen] 未知素材名: vfx_jade_dragon_dissipate
+  WEAPON OK windbow (已进化)
+  WEAPON OK holyaura (已进化)
+  WEAPON OK whirlaxe
+  WEAPON OK chainlight (已进化)
+  WEAPON OK frostnova (已进化)
+  WEAPON OK fireflask (已进化)
+  WEAPON OK shadowdagger (已进化)
+  WEAPON OK orbitblade (已进化)
+  WEAPON OK holytome (已进化)
+  WEAPON OK teslacoil (已进化)
+WEAPONS OK 全部 12 把武器满级/进化渲染无崩溃
+COOP1 OK  敌人能攻击队友,房主不受波及 (队友 100→92)
+COOP1B OK 房主致命伤进入可救援倒地,对局继续
+COOP2 OK  队友武器能打怪 (13.001624999999999→0)
+COOP2B OK 延迟箭与环绕武器按玩家独立运行
+COOP3 OK  客户端快照池稳定,反复重建无漂移
+COOP4 OK  客户端弹幕纯视觉,不产生本地伤害
+COOP5 OK  队友可拾取烤肉/宝箱
+COOP6 OK  队友升级生效 (选项 3 个,武器 1 被动 0,房主武器未被污染 1)
+COOP7 OK  banished 集合互不污染,房主引用已复原
+COOP8 OK  3 分钟高压刷怪受上限约束 (峰值存活 400/上限 400,峰值弹幕 30,收尾存活 400)
+COOP9 OK  视野裁剪前置场景就绪 (视野内 2,视野外普通 2,视野外精英 1)
+COOP10 OK 断线重连保留进度 (角色 berserker,武器 lv7,被动 4,无幽灵记录,输入已清零,积压升级重推)
+COOP11 OK 共享经验池从 0 起累加 (触发 onCoopLevel 1 次,等级 → 2,待选 1)
+COOP12 OK 倒地标记双字段一致 (w.downed 与 player.downed 同时置位)
+R1 OK 复活只生效一次,不会因属性重算无限复活
+R2 OK 冻结/眩晕敌人无接触伤害,未冻结的对照仍会咬人
+R3 OK 金币/烤肉按 TTL 过期,宝箱永久保留
+R4 OK 火瓶十字火场与电磁战车炮击均为真实对局机制
+R5 OK 训练场可逐项生成、满级进化并在真实对局中验收
+R6 OK 终局大门距离校验、撤离结算与触屏共用入口正常
+R7 OK 后期 Boss 耐久、暗潮真身、血怒回血与电塔分散布点正常
+R8 OK 全图补给箱混合武器/实物道具，领取后永久消失
+R9 OK 蜘蛛大型远程蛛网无减速/定身且飞行速度稳定
+R10 OK 圣女光环贴地范围、天降圣光与七位大天使实体正常
+R11 OK 寒霜冲击以连续半径向外扩散，使用固定圆形素材足迹
+R12 OK 无尽、终局、等级与长期击杀成就均可解锁
+R13 OK 六角色虚影成长、游侠蓄力龙、骑士誓约与法师四目标光束正常
+
+=== 无头冒烟测试全部通过 ===
+[exit: 0] test/headless.js
+ANCHOR OK  every atlas frame anchor is inside its bounds
+ATLAS OK  584 assets, 3408 frames, four-direction hero actions, VFX and art scales
+ANIM OK  hero, 16 ordinary enemies, 16 elite enemies, all boss and VFX actions have distinct non-empty frames
+THEME STATE {"font":"\"Fusion Pixel\", \"Microsoft YaHei\", \"PingFang SC\", sans-serif","buttonBackground":"url(\"http://127.0.0.1:49896/assets/art-v2/ui/menu_btn_frame_edge.png\")","buttonBorder":"rgb(243, 230, 198)","panelBackground":"url(\"http://127.0.0.1:49896/assets/art-v4/sprites/ui/battle_report_panel.png\")","panelBorder":"rgb(222, 211, 188)","altarBackground":"url(\"http://127.0.0.1:49896/assets/art-v4/sprites/ui/holy_altar_panel.png\")","altarTitle":"强化圣坛","altarIconBackground":"url(\"http://127.0.0.1:49896/assets/art-v4/sprites/ui/altar_cross_states.png\")","altarIconBox":[213,197],"titleFont":"\"Darktide Gothic\", Georgia, serif","titleText":"DarkEscaper","menuBackground":{"loaded":true,"src":"http://127.0.0.1:49896/assets/backgrounds/menu-monolith.png"}}
+THEME OK  Baroque framed menu, large altar cross, authored report/altar panels, DarkEscaper title and local fonts
+SECONDARY UI STATE {"gridBorder":"url(\"http://127.0.0.1:49896/assets/art-v4/sprites/ui/baroque_menu_frame.png\")","gridColumns":"266.656px 266.672px 266.656px","cardBorders":["url(\"http://127.0.0.1:49896/assets/art-v4/sprites/ui/baroque_menu_frame.png\")","url(\"http://127.0.0.1:49896/assets/art-v4/sprites/ui/baroque_menu_frame.png\")","url(\"http://127.0.0.1:49896/assets/art-v4/sprites/ui/baroque_menu_frame.png\")","url(\"http://127.0.0.1:49896/assets/art-v4/sprites/ui/baroque_menu_frame.png\")","url(\"http://127.0.0.1:49896/assets/art-v4/sprites/ui/baroque_menu_frame.png\")","url(\"http://127.0.0.1:49896/assets/art-v4/sprites/ui/baroque_menu_frame.png\")"],"cardBoxes":[[356,179],[356,179],[356,179],[356,174],[356,174],[356,174]],"infoWidth":1013,"contentBottoms":[630,700,720],"infoChildBottom":627,"background":"repeating-linear-gradient(135deg, rgba(148, 104, 52, 0.035) 0px, rgba(148, 104, 52, 0.035) 2px, rgba(0, 0, 0, 0) 2px, rgba(0, 0, 0, 0) 7px), radial-gradient(rgb(42, 28, 25), rgb(5, 5, 8) 72%) / rgba(0, 0, 0, 0)","centerStack":["DIV#.card locked","DIV#.card-grid","DIV#.screen panel-col character-select-screen","CANVAS#game.","DIV#stage.","BODY#.","HTML#."],"visible":true}
+SECONDARY UI OK  framed character grid/cards/detail panel fit at 1280x720
+V5 COMBAT OK  arcane refraction/brand, six-role avatar runtime and charged 270px/s Tesla cannon run in a real browser
+PERF OK   400 enemies: 47.2 FPS mean, p95 33.4ms, 400 alive
+ART OK    real-browser atlas, render and load acceptance passed
+[exit: 0] test/art-probe.js
+VFX TESLA OK   bbox 64x159 (3436px), copper 107px, orb 432px, top cyan 157px
+VFX SLASH OK   angle stays 1.230 while moving horizontally
+VFX ARROW OK   horizontal 43x10 (179px), vertical 11x43 (170px), 8 frames
+VFX OK    real-browser tower/slash/arrow pixel acceptance passed
+[exit: 0] test/combat-vfx-probe.js
+BOSS OK   abyss eye splits into two roles, doubles phase health, and rewards once
+[exit: 0] test/boss-phase-probe.js
+房间号: KBFZD
+房主看到成员数: 2
+已准备人数: 2
+进入战斗: host=true client=true
+客户端世界: {"t":6.7,"enemies":2,"kills":8}
+客户端弹幕数: 5
+NET_STATE_V2: {"version":"NET_STATE_V2","sequence":102,"serverTick":406,"serverTime":1786775867008,"seed":1351859003,"enemyAction":true,"playerAction":true,"vaultUid":true,"shopUid":true,"reliable":true}
+商店并发结算: {"uid":"shop-1-0","first":true,"second":false,"reason":"商品已售出"}
+共享经验: {"host":[1,0,4],"client":[1,0,4]}
+暂停同步: host=true client=true
+恢复后时间推进: 7.5→9.3
+房主倒地: {"downed":true,"over":false,"hp":0}
+房主救援: {"downed":false,"hp":42}
+客户端放弃结算: {"host":"result","client":"result","clientChar":"mage","hostBroadcasts":["pause","over"],"clientCoop":{"on":false,"active":false,"mode":"client"}}
+
+=== 联机全链路验证通过 ===
+[exit: 0] test/coop-probe.js
+两端已进入菜单
+房间号: BFRQR
+客户端已加入房间
+✓ 客户端已进入战斗
+3 秒内收到快照 46 帧,平均 1.1 KB/帧
+房主端总存活 256 (队友视野内 48,视野外 208)
+客户端单帧最多收到 49 个,快照 7.6 KB/帧 (0.89 Mbps)
+✓ 快照按视野下发,数量与房主视野一致,带宽在安全区
+队友武器数 1,敌人 20.4230325 → 0 (已击杀)
+✓ 客户端(队友)能打到怪
+客户端收到 3 个升级选项(首项"圣女光环贴地缓慢旋转的圣光领域；升级后会呼唤天降圣光轰击领域")
+队友 Build: 武器 1→2,被动 0→0,待选 0
+✓ 客户端升级链路通(选项下发 → 上报 → 房主应用)
+
+pageerror: 无
+=== 双端联机探针全部通过 ===
+[exit: 0] test/coop-live-probe.js
+[d16x9] 1280×720 canvas=1280×720 pos=(0,0) ar=1.778 inView=true uiAlign=true aspect=true OK
+  视口富余:左右 0px,上下 0px
+[ultra] 2560×1080 canvas=1920×1080 pos=(320,0) ar=1.778 inView=true uiAlign=true aspect=true OK
+  视口富余:左右 320px,上下 0px
+[v43] 1024×768 canvas=1024×576 pos=(0,96) ar=1.778 inView=true uiAlign=true aspect=true OK
+  视口富余:左右 0px,上下 96px
+[phone] 375×667 canvas=375×211 pos=(0,228) ar=1.777 inView=true uiAlign=true aspect=true OK
+  视口富余:左右 0px,上下 228px
+[land] 844×390 canvas=693×390 pos=(76,0) ar=1.777 inView=true uiAlign=true aspect=true OK
+  视口富余:左右 76px,上下 0px
+[sq] 800×800 canvas=800×450 pos=(0,175) ar=1.778 inView=true uiAlign=true aspect=true OK
+  视口富余:左右 0px,上下 175px
+
+=== 等比适配验证:全部分辨率下画布完整可见且不变形 ===
+[exit: 0] test/resp-probe.js
+TERRAIN OK  road×1.2, swamp×0.6, deco_deadroots collision, 45 clear props
+TOUCH OK  movement remains active while pause and target-mode buttons use a second finger
+[exit: 0] test/terrain-touch-probe.js
+{
+  "name": "normal",
+  "domMs": 139,
+  "firstPaintMs": 222,
+  "atlasMs": 820,
+  "firstPaintNonzero": 518400,
+  "atlas": {
+    "loaded": true,
+    "error": null
+  },
+  "state": "menu",
+  "menuPainted": 518400,
+  "errors": []
+}
+{
+  "name": "slow-1.2s",
+  "domMs": 110,
+  "firstPaintMs": 171,
+  "atlasMs": 1809,
+  "firstPaintNonzero": 518400,
+  "atlas": {
+    "loaded": true,
+    "error": null
+  },
+  "state": "menu",
+  "menuPainted": 518400,
+  "errors": []
+}
+{
+  "name": "blocked",
+  "domMs": 90,
+  "firstPaintMs": 186,
+  "atlasMs": 216,
+  "firstPaintNonzero": 518400,
+  "atlas": {
+    "loaded": false,
+    "error": "image load failed: assets/sprites/atlas.png"
+  },
+  "state": "menu",
+  "menuPainted": 518400,
+  "errors": []
+}
+{
+  "name": "stall",
+  "domMs": 91,
+  "firstPaintMs": 147,
+  "atlasMs": 8264,
+  "firstPaintNonzero": 518400,
+  "atlas": {
+    "loaded": false,
+    "error": "atlas load timed out: assets/sprites/atlas.png"
+  },
+  "state": "menu",
+  "menuPainted": 518400,
+  "errors": []
+}
+=== 加载回归探针全部通过 ===
+[exit: 0] test/loading-probe.js
