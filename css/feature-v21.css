@@ -356,8 +356,8 @@ html, body, button, input, select, textarea, * {
   transform: translateY(-1px) !important;
 }
 
-/* 顶部中央计时：去掉原图里的左侧皇冠装饰，改用干净暗金面板；
-   下一事件倒计时直接放进同一个框里（第二行），框整体加高。 */
+/* 顶部中央计时：下一事件倒计时放进同一个框里（第二行），
+   边框改用主菜单按钮同款贴图，保持界面统一。 */
 .hud-timer {
   top: 18px !important;
   min-width: 180px !important;
@@ -368,17 +368,15 @@ html, body, button, input, select, textarea, * {
   align-items: center !important;
   justify-content: center !important;
   gap: 2px !important;
-  background: linear-gradient(180deg, rgba(24,17,15,.96), rgba(10,7,9,.97)) !important;
-  border: 2px solid #c19a55 !important;
-  outline: 1px solid #221811 !important;
-  outline-offset: 2px !important;
-  box-shadow:
-    inset 0 0 0 1px #0e0a0b,
-    inset 0 0 0 3px #3c2d19,
-    0 3px 6px rgba(0,0,0,.5) !important;
+  background: url('../assets/art-v2/ui/menu_btn_frame_edge.png') center / 100% 100% no-repeat !important;
+  border: 0 !important;
+  outline: 0 !important;
+  outline-offset: 0 !important;
+  box-shadow: none !important;
   font-family: var(--font-cn) !important;
   font-size: 19px !important;
   letter-spacing: 2px !important;
+  color: #f4dda3 !important;
 }
 .hud-timer::before, .hud-timer::after { content: none !important; }
 .hud-timer-time {
@@ -505,16 +503,16 @@ html, body, button, input, select, textarea, * {
 }
 .menu-logo .menu-logo-badge {
   position: absolute;
-  top: -8px;
-  right: -12px;
+  top: 6px;
+  right: 36px;
   z-index: 3;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1;
-  color: #ff3b3b;
+  color: #ff8a8a;
   letter-spacing: 2px;
   white-space: nowrap;
   pointer-events: none;
-  text-shadow: 0 0 8px rgba(255, 30, 30, .9), 0 1px 0 #3a0505, 0 -1px 0 #3a0505, 1px 0 0 #3a0505, -1px 0 0 #3a0505;
+  text-shadow: 0 0 10px rgba(255, 80, 80, .95), 0 1px 0 #4a0808, 0 -1px 0 #4a0808, 1px 0 0 #4a0808, -1px 0 0 #4a0808;
   animation: char-badge-pulse .8s ease-in-out infinite;
 }
 
