@@ -4,6 +4,7 @@ window.UI = (function () {
 
   var root, cb = {};
   var screens = {};
+  var currentScreen = null;
   var sel = { charId: 'knight', mapId: 'graveyard' };
   var hudRefs = {};
   var hudCache = {};
@@ -62,6 +63,7 @@ window.UI = (function () {
     return b;
   }
   function show(id) {
+    currentScreen = id;
     for (var k in screens) {
       if (k === 'toasts') continue;
       screens[k].classList.toggle('hidden', k !== id);
@@ -70,6 +72,25 @@ window.UI = (function () {
   }
   function overlay(id, visible) {
     if (screens[id]) screens[id].classList.toggle('hidden', !visible);
+  }
+  // ESC 返回上一级：局内百科盖层先关；其余按当前全屏页面回退到父页面。
+  var PARENT = {
+    chars: 'menu', maps: 'chars', shop: 'menu', achv: 'menu',
+    codex: 'menu', settings: 'menu', result: 'menu'
+  };
+  function back() {
+    // 暂停时打开的百科是覆盖层，先退回暂停菜单（不改变当前全屏页）
+    if (isCodexOpen()) { closeCodexOverlay(); return; }
+    if (currentScreen === 'coop') {
+      if (coopMode && typeof Net !== 'undefined' && Net.close) Net.close();
+      coopMode = false;
+      if (coopLobby) coopLobby.classList.add('hidden');
+      if (coopEntry) coopEntry.classList.remove('hidden');
+      show('menu');
+      return;
+    }
+    var p = PARENT[currentScreen];
+    if (p) show(p);
   }
 
   // ---------- 构建 ----------
@@ -859,12 +880,13 @@ window.UI = (function () {
     tl.appendChild(hudRefs.slotW);
     tl.appendChild(hudRefs.slotP);
     s.appendChild(tl);
-    // 顶部中央计时
-    hudRefs.timer = h('div', 'hud-timer', '00:00');
-    s.appendChild(hudRefs.timer);
-    // 下一事件倒计时
+    // 顶部中央计时：下一事件倒计时塞进同一个框里（第二行），不再单独悬浮在下面
+    hudRefs.timer = h('div', 'hud-timer');
+    hudRefs.timerTime = h('span', 'hud-timer-time', '00:00');
+    hudRefs.timer.appendChild(hudRefs.timerTime);
     hudRefs.nextEv = h('div', 'hud-nextev hidden', '');
-    s.appendChild(hudRefs.nextEv);
+    hudRefs.timer.appendChild(hudRefs.nextEv);
+    s.appendChild(hudRefs.timer);
     // 触屏暂停按钮(仅移动端显示):小地图左侧,贴顶部边缘
     hudRefs.pauseBtn = btn('⏸', 'hud-pausebtn', function () {
       cb.onPauseToggle && cb.onPauseToggle();
@@ -1009,7 +1031,7 @@ window.UI = (function () {
     if (hudCache.hp !== hpTxt) { hudCache.hp = hpTxt; hudRefs.hpText.textContent = hpTxt; }
     var t = Engine.fmtTime(run.t);
     if (hudCache.t !== t) {
-      hudCache.t = t; hudRefs.timer.textContent = t;
+      hudCache.t = t; hudRefs.timerTime.textContent = t;
       hudRefs.timer.classList.toggle('endless', !!run.endless);
     }
     // 下一事件倒计时(≤10s 转红闪烁)
@@ -1360,7 +1382,7 @@ window.UI = (function () {
   }
 
   return {
-    init: init, show: show, showHud: showHud, hideAllScreens: hideAllScreens,
+    init: init, show: show, back: back, showHud: showHud, hideAllScreens: hideAllScreens,
     refreshIcons: refreshIcons,
     updateHUD: updateHUD, warn: warn, bossBanner: bossBanner,
     showLevelUp: showLevelUp, hideLevelUp: hideLevelUp,

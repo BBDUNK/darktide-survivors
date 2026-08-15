@@ -70,7 +70,8 @@ window.Engine = (function () {
         if (now - (lastTap[e.code] || 0) < 270) dashRequest = dir;
         lastTap[e.code] = now;
       }
-      if (e.code === 'Escape' || e.code === 'KeyP') { if (Engine.onPause) Engine.onPause(); }
+      if (e.code === 'Escape') { if (Engine.onEscape) Engine.onEscape(); }
+      else if (e.code === 'KeyP') { if (Engine.onPause) Engine.onPause(); }
       if (e.code === 'KeyM') { if (Engine.onToggleMap) Engine.onToggleMap(); }
       if (e.code === 'Space') e.preventDefault();
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].indexOf(e.code) >= 0) e.preventDefault();

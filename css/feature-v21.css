@@ -287,51 +287,50 @@ html, body, button, input, select, textarea, * {
 /* 暂停界面：干净精致的暗金面板，不再用厚重巴洛克整图九宫格。
    深色底 + 金铜双描边 + 顶部柔光 + 标题分隔线，按钮保留主菜单同款金属贴图。 */
 .pause-box {
-  width: min(560px, calc(100vw - 32px)) !important;
+  width: min(440px, calc(100vw - 32px)) !important;
   max-width: calc(100vw - 32px) !important;
   min-width: 0 !important;
-  padding: 42px 50px 40px !important;
+  padding: 28px 38px 26px !important;
   border: 3px solid #d4af37 !important;
   border-image: none !important;
   outline: none !important;
   outline-offset: 0 !important;
   border-radius: 0 !important;
   background:
-    radial-gradient(120% 70% at 50% 0%, rgba(218,168,86,.12), rgba(0,0,0,0) 58%),
-    linear-gradient(180deg, rgba(26,18,16,.98), rgba(11,7,9,.98)) !important;
+    radial-gradient(120% 70% at 50% 0%, rgba(218,168,86,.10), rgba(0,0,0,0) 58%),
+    linear-gradient(180deg, rgba(24,17,15,.98), rgba(10,7,9,.98)) !important;
   box-shadow:
     inset 0 0 0 1px #0e0a0b,
     inset 0 0 0 3px #3c2d19,
-    inset 0 0 36px rgba(0,0,0,.5),
-    0 0 0 3px rgba(0,0,0,.7),
-    0 14px 38px rgba(0,0,0,.8) !important;
+    inset 0 0 26px rgba(0,0,0,.45),
+    0 10px 26px rgba(0,0,0,.65) !important;
 }
 .pause-box .modal-title {
   width: 100%;
-  padding-bottom: 14px;
-  margin-bottom: 4px;
-  border-bottom: 2px solid rgba(193,154,85,.45);
-  font-size: 26px;
-  letter-spacing: 8px;
+  padding-bottom: 10px;
+  margin-bottom: 2px;
+  border-bottom: 1px solid rgba(193,154,85,.45);
+  font-size: 22px;
+  letter-spacing: 6px;
   text-align: center;
   color: #f3d99a !important;
-  text-shadow: 2px 2px 0 #1a0d05, 0 0 18px rgba(255,190,90,.28) !important;
+  text-shadow: 2px 2px 0 #1a0d05, 0 0 14px rgba(255,190,90,.25) !important;
 }
 .pause-menu {
   width: 100% !important;
-  gap: 14px !important;
+  gap: 10px !important;
 }
 .pause-menu .btn {
-  width: min(420px, calc(100% - 20px)) !important;
-  min-height: 58px !important;
-  padding: 0 30px !important;
+  width: min(340px, calc(100% - 16px)) !important;
+  min-height: 46px !important;
+  padding: 0 22px !important;
   border: 0 !important;
   border-image: none !important;
   outline: 0 !important;
   background: url('../assets/art-v2/ui/menu_btn_frame_edge.png') center / 100% 100% no-repeat !important;
   color: #f1d28a !important;
-  font-size: 17px !important;
-  letter-spacing: 2px !important;
+  font-size: 15px !important;
+  letter-spacing: 1px !important;
   line-height: 1 !important;
   box-shadow: none !important;
   text-shadow: 1px 1px 0 #201300 !important;
@@ -342,15 +341,67 @@ html, body, button, input, select, textarea, * {
 }
 .pause-menu .btn.primary {
   color: #ffe9a8 !important;
-  text-shadow: 1px 1px 0 #3a1605, 0 0 10px rgba(255, 190, 90, .35) !important;
+  text-shadow: 1px 1px 0 #3a1605, 0 0 8px rgba(255, 190, 90, .3) !important;
 }
 .pause-menu .btn.danger {
   color: #ffb0a0 !important;
   text-shadow: 1px 1px 0 #3a0505 !important;
 }
 .pause-menu .btn:hover {
-  filter: brightness(1.15) !important;
+  filter: brightness(1.12) !important;
   transform: translateY(-1px) !important;
+}
+
+/* 顶部中央计时：去掉原图里的左侧皇冠装饰，改用干净暗金面板；
+   下一事件倒计时直接放进同一个框里（第二行），框整体加高。 */
+.hud-timer {
+  top: 18px !important;
+  min-width: 180px !important;
+  min-height: 62px !important;
+  padding: 8px 24px 7px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 2px !important;
+  background: linear-gradient(180deg, rgba(24,17,15,.96), rgba(10,7,9,.97)) !important;
+  border: 2px solid #c19a55 !important;
+  outline: 1px solid #221811 !important;
+  outline-offset: 2px !important;
+  box-shadow:
+    inset 0 0 0 1px #0e0a0b,
+    inset 0 0 0 3px #3c2d19,
+    0 3px 6px rgba(0,0,0,.5) !important;
+  font-family: var(--font-cn) !important;
+  font-size: 19px !important;
+  letter-spacing: 2px !important;
+}
+.hud-timer::before, .hud-timer::after { content: none !important; }
+.hud-timer-time {
+  font-size: 19px !important;
+  line-height: 1.2 !important;
+  color: inherit !important;
+}
+.hud-nextev {
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  padding: 0 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 1px !important;
+  line-height: 1.2 !important;
+  color: #e9cf8e !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  white-space: nowrap !important;
+}
+.hud-nextev.urgent {
+  color: #ffb0a0 !important;
+  background: transparent !important;
+  animation: none !important;
 }
 
 .page-title, .modal-title, .info-title {

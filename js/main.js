@@ -1284,9 +1284,9 @@
 
   // 计算下一个将要发生的事件(定点事件 / 精英 / 无尽Boss),供 HUD 倒计时
   var EVENT_LABEL = {
-    boss: '☠ BOSS',
-    ring: '⭕ 包围圈',
-    swarm: '🐾 兽潮'
+    boss: 'BOSS',
+    ring: '包围圈',
+    swarm: '兽潮'
   };
   function computeNextEvent(run) {
     var best = null;
@@ -1300,7 +1300,7 @@
     }
     // 精英刷新
     if (run.nextElite > run.t && (!best || run.nextElite < best.t)) {
-      best = { t: run.nextElite, label: '👑 精英' };
+      best = { t: run.nextElite, label: '精英' };
     }
     // 无尽模式的循环 Boss
     if (run.endless && run.nextEndlessBoss > run.t && (!best || run.nextEndlessBoss < best.t)) {
@@ -1804,6 +1804,12 @@
     });
     E.onPause = function () {
       if (state === 'run' || state === 'pause') togglePause();
+    };
+    // ESC：对局内仍是暂停/恢复；升级/开箱不响应避免误跳；其余菜单页面返回上一级
+    E.onEscape = function () {
+      if (state === 'run' || state === 'pause') { togglePause(); return; }
+      if (state === 'levelup' || state === 'chest') return;
+      UI.back();
     };
     E.onBlur = function () {
       if (state === 'run') togglePause();
