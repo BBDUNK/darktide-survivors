@@ -1727,6 +1727,524 @@
       ],
       "name": "vfx_darklord_rift",
       "minCoverage": 0.02
+    },
+    {
+      "name": "slime",
+      "source": null,
+      "deriveFrom": null,
+      "output": "assets/art-v6/game-ready/v6/slime.png",
+      "cols": null,
+      "rows": null,
+      "frameMap": null,
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 4,
+      "fps": 7,
+      "loop": true,
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "INTEGRATED",
+      "fit": "baseline",
+      "minCoverage": 0.05,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4,
+      "allowDuplicateFrames": true,
+      "notes": "V6 corrupted slime idle (concept row 0)."
+    },
+    {
+      "name": "slime_attack",
+      "source": null,
+      "deriveFrom": null,
+      "output": "assets/art-v6/game-ready/v6/slime_attack.png",
+      "cols": null,
+      "rows": null,
+      "frameMap": null,
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "INTEGRATED",
+      "fit": "baseline",
+      "minCoverage": 0.05,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4,
+      "allowDuplicateFrames": true,
+      "notes": "V6 corrupted slime acid-spit attack."
+    },
+    {
+      "name": "slime_walk",
+      "source": null,
+      "deriveFrom": null,
+      "output": "assets/art-v6/game-ready/v6/slime_walk.png",
+      "cols": null,
+      "rows": null,
+      "frameMap": null,
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "fps": 9,
+      "loop": true,
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "INTEGRATED",
+      "fit": "baseline",
+      "minCoverage": 0.05,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4,
+      "allowDuplicateFrames": true,
+      "notes": ""
+    },
+    {
+      "name": "slime_hurt",
+      "source": null,
+      "deriveFrom": null,
+      "output": "assets/art-v6/game-ready/v6/slime_hurt.png",
+      "cols": null,
+      "rows": null,
+      "frameMap": null,
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 4,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "INTEGRATED",
+      "fit": "baseline",
+      "minCoverage": 0.05,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4,
+      "allowDuplicateFrames": true,
+      "notes": ""
+    },
+    {
+      "name": "slime_death",
+      "source": null,
+      "deriveFrom": null,
+      "output": "assets/art-v6/game-ready/v6/slime_death.png",
+      "cols": null,
+      "rows": null,
+      "frameMap": null,
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "INTEGRATED",
+      "fit": "baseline",
+      "minCoverage": 0.05,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4,
+      "allowDuplicateFrames": true,
+      "notes": ""
+    },
+    {
+      "name": "slime_big",
+      "source": null,
+      "deriveFrom": null,
+      "output": "assets/art-v6/game-ready/v6/slime_big.png",
+      "cols": null,
+      "rows": null,
+      "frameMap": null,
+      "frameSize": [
+        48,
+        48
+      ],
+      "frames": 4,
+      "fps": 7,
+      "loop": true,
+      "anchor": [
+        24,
+        45
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "INTEGRATED",
+      "fit": "baseline",
+      "minCoverage": 0.05,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4,
+      "allowDuplicateFrames": true,
+      "notes": "Large 48x48 variant; collision radius stays CFG-driven."
+    },
+    {
+      "name": "slime_big_attack",
+      "source": null,
+      "deriveFrom": null,
+      "output": "assets/art-v6/game-ready/v6/slime_big_attack.png",
+      "cols": null,
+      "rows": null,
+      "frameMap": null,
+      "frameSize": [
+        48,
+        48
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        24,
+        45
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "INTEGRATED",
+      "fit": "baseline",
+      "minCoverage": 0.05,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4,
+      "allowDuplicateFrames": true,
+      "notes": ""
+    },
+    {
+      "name": "slime_big_walk",
+      "source": null,
+      "deriveFrom": null,
+      "output": "assets/art-v6/game-ready/v6/slime_big_walk.png",
+      "cols": null,
+      "rows": null,
+      "frameMap": null,
+      "frameSize": [
+        48,
+        48
+      ],
+      "frames": 8,
+      "fps": 9,
+      "loop": true,
+      "anchor": [
+        24,
+        45
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "INTEGRATED",
+      "fit": "baseline",
+      "minCoverage": 0.05,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4,
+      "allowDuplicateFrames": true,
+      "notes": ""
+    },
+    {
+      "name": "slime_big_hurt",
+      "source": null,
+      "deriveFrom": null,
+      "output": "assets/art-v6/game-ready/v6/slime_big_hurt.png",
+      "cols": null,
+      "rows": null,
+      "frameMap": null,
+      "frameSize": [
+        48,
+        48
+      ],
+      "frames": 4,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        24,
+        45
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "INTEGRATED",
+      "fit": "baseline",
+      "minCoverage": 0.05,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4,
+      "allowDuplicateFrames": true,
+      "notes": ""
+    },
+    {
+      "name": "slime_big_death",
+      "source": null,
+      "deriveFrom": null,
+      "output": "assets/art-v6/game-ready/v6/slime_big_death.png",
+      "cols": null,
+      "rows": null,
+      "frameMap": null,
+      "frameSize": [
+        48,
+        48
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        24,
+        45
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "INTEGRATED",
+      "fit": "baseline",
+      "minCoverage": 0.05,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4,
+      "allowDuplicateFrames": true,
+      "notes": ""
+    },
+    {
+      "name": "spider",
+      "source": null,
+      "deriveFrom": null,
+      "output": "assets/art-v6/game-ready/v6/spider.png",
+      "cols": null,
+      "rows": null,
+      "frameMap": null,
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 4,
+      "fps": 7,
+      "loop": true,
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "INTEGRATED",
+      "fit": "baseline",
+      "minCoverage": 0.05,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4,
+      "allowDuplicateFrames": true,
+      "notes": "V6 demon spider idle (concept row 0)."
+    },
+    {
+      "name": "spider_attack",
+      "source": null,
+      "deriveFrom": null,
+      "output": "assets/art-v6/game-ready/v6/spider_attack.png",
+      "cols": null,
+      "rows": null,
+      "frameMap": null,
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "INTEGRATED",
+      "fit": "baseline",
+      "minCoverage": 0.05,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4,
+      "allowDuplicateFrames": true,
+      "notes": "V6 spider web attack (concept row 1)."
+    },
+    {
+      "name": "spider_walk",
+      "source": null,
+      "deriveFrom": null,
+      "output": "assets/art-v6/game-ready/v6/spider_walk.png",
+      "cols": null,
+      "rows": null,
+      "frameMap": null,
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "fps": 9,
+      "loop": true,
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "INTEGRATED",
+      "fit": "baseline",
+      "minCoverage": 0.05,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4,
+      "allowDuplicateFrames": true,
+      "notes": ""
+    },
+    {
+      "name": "spider_hurt",
+      "source": null,
+      "deriveFrom": null,
+      "output": "assets/art-v6/game-ready/v6/spider_hurt.png",
+      "cols": null,
+      "rows": null,
+      "frameMap": null,
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 4,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "INTEGRATED",
+      "fit": "baseline",
+      "minCoverage": 0.05,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4,
+      "allowDuplicateFrames": true,
+      "notes": ""
+    },
+    {
+      "name": "spider_death",
+      "source": null,
+      "deriveFrom": null,
+      "output": "assets/art-v6/game-ready/v6/spider_death.png",
+      "cols": null,
+      "rows": null,
+      "frameMap": null,
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "INTEGRATED",
+      "fit": "baseline",
+      "minCoverage": 0.05,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4,
+      "allowDuplicateFrames": true,
+      "notes": ""
+    },
+    {
+      "name": "zombie_emerge",
+      "source": null,
+      "deriveFrom": null,
+      "output": "assets/art-v6/game-ready/v6/zombie_emerge.png",
+      "cols": null,
+      "rows": null,
+      "frameMap": null,
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "INTEGRATED",
+      "fit": "baseline",
+      "minCoverage": 0.05,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 8,
+      "allowDuplicateFrames": true,
+      "notes": "V6 mudwalker emergence one-shot; zombie keeps V4 normal actions."
+    },
+    {
+      "name": "terrain_grave_swamp_puddle5",
+      "source": null,
+      "deriveFrom": "terrain_grave_swamp_puddle1",
+      "output": "assets/art-v6/game-ready/v6/terrain_grave_swamp_puddle5.png",
+      "frameSize": [
+        320,
+        224
+      ],
+      "frames": 1,
+      "fps": 0,
+      "loop": false,
+      "anchor": [
+        160,
+        112
+      ],
+      "renderScale": 1,
+      "layer": "ground",
+      "status": "INTEGRATED",
+      "fit": "center",
+      "minCoverage": 0.1,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4,
+      "allowDuplicateFrames": true,
+      "notes": "Deterministic mirrored variant so the graveyard has six large mud-rimmed swamp shapes.",
+      "maxColors": 256
+    },
+    {
+      "name": "terrain_grave_swamp_puddle6",
+      "source": null,
+      "deriveFrom": "terrain_grave_swamp_puddle1",
+      "output": "assets/art-v6/game-ready/v6/terrain_grave_swamp_puddle6.png",
+      "frameSize": [
+        320,
+        224
+      ],
+      "frames": 1,
+      "fps": 0,
+      "loop": false,
+      "anchor": [
+        160,
+        112
+      ],
+      "renderScale": 1,
+      "layer": "ground",
+      "status": "INTEGRATED",
+      "fit": "center",
+      "minCoverage": 0.1,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4,
+      "allowDuplicateFrames": true,
+      "notes": "Deterministic mirrored variant so the graveyard has six large mud-rimmed swamp shapes.",
+      "maxColors": 256
     }
   ]
 }

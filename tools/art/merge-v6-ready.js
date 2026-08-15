@@ -29,9 +29,9 @@ for (const entry of prod.entries) {
     renderScale: entry.renderScale,
     asIs: true,
     preservePixels: false,
-    allowDuplicateFrames: entry.loop ? true : false,
+    allowDuplicateFrames: entry.allowDuplicateFrames !== undefined ? !!entry.allowDuplicateFrames : (entry.loop ? true : false),
     minCoverage: entry.minCoverage || 0.08,
-    maxColors: 40,
+    maxColors: entry.maxColors || 40,
     maxCentroidDrift: entry.maxCentroidDrift || 4,
     maxBaselineDrift: entry.maxBaselineDrift || 1
   };
