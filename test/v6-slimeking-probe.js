@@ -59,10 +59,10 @@ function assert(ok, message) { if (!ok) throw new Error(message); }
     death: SpriteGen.frames('boss_slimeking_death').length,
     hurt: SpriteGen.frames('boss_slimeking_hurt').length
   }));
-  assert(facts.idle === 6 && facts.walk === 8 && facts.charge === 8 && facts.attack === 8 &&
-    facts.shield === 6 && facts.death === 10 && facts.hurt === 4,
-    'slime king strip lengths are incorrect: ' + JSON.stringify(facts));
-  console.log('SLIMEKING ATLAS OK  6 idle / 8 walk / 8 charge / 8 attack / 6 shield / 10 death / 4 hurt');
+  assert(facts.idle === 8 && facts.walk === 8 && facts.charge === 8 && facts.attack === 8 &&
+    facts.shield === 8 && facts.death === 8 && facts.hurt === 8,
+    'legacy V2 slime king strip lengths are incorrect: ' + JSON.stringify(facts));
+  console.log('SLIMEKING ATLAS OK  legacy V2 8-frame idle/walk/charge/attack/shield/death/hurt');
 
   await page.evaluate(() => {
     const r = Debug.run();
@@ -148,6 +148,10 @@ function assert(ok, message) { if (!ok) throw new Error(message); }
   await page.evaluate(() => {
     const r = Debug.run();
     r.pendingLevels = 0;
+    // 先回满血/清除倒地，避免死亡动画期间玩家先死导致 run 结束、Boss 卡在 dying。
+    r.player.hp = r.player.stats.hp;
+    r.player.downed = false;
+    r.over = false;
     const card = document.querySelector('.modal:not(.hidden) .lu-card');
     if (card) card.click();
   });
@@ -169,7 +173,7 @@ function assert(ok, message) { if (!ok) throw new Error(message); }
       over: r.over, hp: r.player.hp, downed: r.player.downed } : null;
   })));
   await page.waitForFunction(() => { const b = Debug.run().boss; return !b || !b.alive; }, null, { timeout: 8000 });
-  console.log('SLIMEKING DEATH OK  10-frame strip resolved before loot');
+  console.log('SLIMEKING DEATH OK  8-frame legacy V2 strip resolved before loot');
 
   await browser.close();
   await new Promise(resolve => server.close(resolve));

@@ -2400,11 +2400,12 @@ window.Entities = (function () {
   // 深渊之眼 attack 用 96×96 且 renderScale 0.58)。这里按 Boss 形态给一个基准视觉宽度,
   // 再补偿该条带实际画布宽度与 renderScale,保证同一 Boss 的每个动作在屏幕上始终一样大。
   var BOSS_VISUAL_BASE = {
-    boss_slimeking: 80,
+    // 史莱姆王/深渊之眼已切回 96×96 的 V2/V4 素材，基准宽度同步为 96。
+    boss_slimeking: 96,
     boss_bonelord: 96,
-    boss_abysseye_remote: 80,
-    boss_abysseye_charge: 80,
-    boss_abysseye: 80,
+    boss_abysseye_remote: 96,
+    boss_abysseye_charge: 96,
+    boss_abysseye: 96,
     boss_darklord_phase2: 144,
     boss_darklord: 112
   };

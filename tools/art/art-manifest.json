@@ -8997,134 +8997,134 @@
       "renderScale": 0.52
     },
     {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
       "name": "boss_slimeking",
-      "source": "assets/art-v6/game-ready/v6/boss_slimeking.png",
+      "source": "assets/art-v2/sprites/bosses/boss_slimeking_actions.png",
       "frameSize": [
-        80,
-        80
+        96,
+        96
       ],
-      "frames": 6,
-      "fps": 7,
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 6,
       "size": [
-        80,
-        80
+        96,
+        96
       ],
       "anchor": [
-        40,
-        76
+        48,
+        93
       ],
-      "renderScale": 1,
-      "asIs": true,
-      "preservePixels": false,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.08,
-      "maxColors": 40,
-      "maxCentroidDrift": 8,
-      "maxBaselineDrift": 1
+      "renderScale": 0.72
     },
     {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
       "name": "boss_slimeking_walk",
-      "source": "assets/art-v6/game-ready/v6/boss_slimeking_walk.png",
+      "source": "assets/art-v2/sprites/bosses/boss_slimeking_actions.png",
       "frameSize": [
-        80,
-        80
+        96,
+        96
       ],
+      "frameRow": 1,
       "frames": 8,
-      "fps": 9,
+      "fps": 8,
       "size": [
-        80,
-        80
+        96,
+        96
       ],
       "anchor": [
-        40,
-        76
+        48,
+        93
       ],
-      "renderScale": 1,
-      "asIs": true,
-      "preservePixels": false,
+      "renderScale": 0.72
+    },
+    {
+      "preservePixels": true,
       "allowDuplicateFrames": true,
-      "minCoverage": 0.08,
-      "maxColors": 40,
-      "maxCentroidDrift": 6,
-      "maxBaselineDrift": 1
-    },
-    {
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
       "name": "boss_slimeking_charge",
-      "source": "assets/art-v6/game-ready/v6/boss_slimeking_charge.png",
+      "source": "assets/art-v2/sprites/bosses/boss_slimeking_actions.png",
       "frameSize": [
-        80,
-        80
+        96,
+        96
       ],
+      "frameRow": 2,
       "frames": 8,
       "fps": 10,
       "size": [
-        80,
-        80
+        96,
+        96
       ],
       "anchor": [
-        40,
-        76
+        48,
+        93
       ],
-      "renderScale": 1,
-      "asIs": true,
-      "preservePixels": false,
-      "allowDuplicateFrames": false,
-      "minCoverage": 0.08,
-      "maxColors": 40,
-      "maxCentroidDrift": 16,
-      "maxBaselineDrift": 32
+      "renderScale": 0.72
     },
     {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
       "name": "boss_slimeking_attack",
-      "source": "assets/art-v6/game-ready/v6/boss_slimeking_attack.png",
+      "source": "assets/art-v2/sprites/bosses/boss_slimeking_actions.png",
       "frameSize": [
-        80,
-        80
+        96,
+        96
       ],
+      "frameRow": 0,
       "frames": 8,
-      "fps": 10,
+      "fps": 6,
       "size": [
-        80,
-        80
+        96,
+        96
       ],
       "anchor": [
-        40,
-        76
+        48,
+        93
       ],
-      "renderScale": 1,
-      "asIs": true,
-      "preservePixels": false,
-      "allowDuplicateFrames": false,
-      "minCoverage": 0.08,
-      "maxColors": 40,
-      "maxCentroidDrift": 16,
-      "maxBaselineDrift": 32
+      "renderScale": 0.72
     },
     {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
       "name": "boss_slimeking_death",
-      "source": "assets/art-v6/game-ready/v6/boss_slimeking_death.png",
+      "source": "assets/art-v2/sprites/bosses/boss_slimeking_actions.png",
       "frameSize": [
-        80,
-        80
+        96,
+        96
       ],
-      "frames": 10,
-      "fps": 10,
+      "frameRow": 4,
+      "frames": 8,
+      "fps": 8,
       "size": [
-        80,
-        80
+        96,
+        96
       ],
       "anchor": [
-        40,
-        76
+        48,
+        93
       ],
-      "renderScale": 1,
-      "asIs": true,
-      "preservePixels": false,
-      "allowDuplicateFrames": false,
-      "minCoverage": 0.08,
-      "maxColors": 40,
-      "maxCentroidDrift": 16,
-      "maxBaselineDrift": 32
+      "renderScale": 0.72
     },
     {
       "name": "boss_bonelord",
@@ -9257,82 +9257,82 @@
       "maxBaselineDrift": 16
     },
     {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
       "name": "boss_abysseye",
-      "source": "assets/art-v6/game-ready/v6/boss_abysseye.png",
+      "source": "assets/art-v4/repaired/bosses/boss_abysseye_actions.png",
       "frameSize": [
-        80,
-        80
+        96,
+        96
       ],
-      "frames": 6,
-      "fps": 7,
-      "size": [
-        80,
-        80
-      ],
-      "anchor": [
-        40,
-        76
-      ],
-      "renderScale": 1,
-      "asIs": true,
-      "preservePixels": false,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.08,
-      "maxColors": 40,
-      "maxCentroidDrift": 12,
-      "maxBaselineDrift": 4
-    },
-    {
-      "name": "boss_abysseye_walk",
-      "source": "assets/art-v6/game-ready/v6/boss_abysseye_walk.png",
-      "frameSize": [
-        80,
-        80
-      ],
+      "frameRow": 0,
       "frames": 8,
-      "fps": 9,
+      "fps": 6,
       "size": [
-        80,
-        80
+        96,
+        96
       ],
       "anchor": [
-        40,
-        76
+        48,
+        93
       ],
-      "renderScale": 1,
-      "asIs": true,
-      "preservePixels": false,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.2,
-      "maxColors": 40,
-      "maxCentroidDrift": 12,
-      "maxBaselineDrift": 4
+      "renderScale": 0.58
     },
     {
-      "name": "boss_abysseye_charge",
-      "source": "assets/art-v6/game-ready/v6/boss_abysseye_charge.png",
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "boss_abysseye_walk",
+      "source": "assets/art-v4/repaired/bosses/boss_abysseye_actions.png",
       "frameSize": [
-        80,
-        80
+        96,
+        96
       ],
-      "frames": 4,
-      "fps": 7,
+      "frameRow": 1,
+      "frames": 8,
+      "fps": 8,
       "size": [
-        80,
-        80
+        96,
+        96
       ],
       "anchor": [
-        40,
-        76
+        48,
+        93
       ],
-      "renderScale": 1,
-      "asIs": true,
-      "preservePixels": false,
+      "renderScale": 0.58
+    },
+    {
+      "preservePixels": true,
       "allowDuplicateFrames": true,
-      "minCoverage": 0.1,
-      "maxColors": 40,
-      "maxCentroidDrift": 12,
-      "maxBaselineDrift": 4
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "boss_abysseye_charge",
+      "source": "assets/art-v4/repaired/bosses/boss_abysseye_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        93
+      ],
+      "renderScale": 0.58
     },
     {
       "preservePixels": true,
@@ -9347,9 +9347,9 @@
         96,
         96
       ],
-      "frameRow": 3,
+      "frameRow": 0,
       "frames": 8,
-      "fps": 11,
+      "fps": 6,
       "size": [
         96,
         96
@@ -9361,30 +9361,30 @@
       "renderScale": 0.58
     },
     {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
       "name": "boss_abysseye_death",
-      "source": "assets/art-v6/game-ready/v6/boss_abysseye_death.png",
+      "source": "assets/art-v4/repaired/bosses/boss_abysseye_actions.png",
       "frameSize": [
-        80,
-        80
+        96,
+        96
       ],
+      "frameRow": 4,
       "frames": 8,
-      "fps": 10,
+      "fps": 8,
       "size": [
-        80,
-        80
+        96,
+        96
       ],
       "anchor": [
-        40,
-        76
+        48,
+        93
       ],
-      "renderScale": 1,
-      "asIs": true,
-      "preservePixels": false,
-      "allowDuplicateFrames": false,
-      "minCoverage": 0.03,
-      "maxColors": 40,
-      "maxCentroidDrift": 12,
-      "maxBaselineDrift": 12
+      "renderScale": 0.58
     },
     {
       "name": "boss_darklord",
@@ -13351,30 +13351,30 @@
       "maxBaselineDrift": 16
     },
     {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
       "name": "boss_slimeking_shield",
-      "source": "assets/art-v6/game-ready/v6/boss_slimeking_shield.png",
+      "source": "assets/art-v2/sprites/bosses/boss_slimeking_actions.png",
       "frameSize": [
-        80,
-        80
+        96,
+        96
       ],
-      "frames": 6,
-      "fps": 9,
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 6,
       "size": [
-        80,
-        80
+        96,
+        96
       ],
       "anchor": [
-        40,
-        76
+        48,
+        93
       ],
-      "renderScale": 1,
-      "asIs": true,
-      "preservePixels": false,
-      "allowDuplicateFrames": false,
-      "minCoverage": 0.08,
-      "maxColors": 40,
-      "maxCentroidDrift": 16,
-      "maxBaselineDrift": 32
+      "renderScale": 0.72
     },
     {
       "name": "p_boss_slimeking_acid_orb",
@@ -13429,30 +13429,30 @@
       "maxBaselineDrift": 32
     },
     {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
       "name": "boss_slimeking_hurt",
-      "source": "assets/art-v6/game-ready/v6/boss_slimeking_hurt.png",
+      "source": "assets/art-v2/sprites/bosses/boss_slimeking_actions.png",
       "frameSize": [
-        80,
-        80
+        96,
+        96
       ],
-      "frames": 4,
-      "fps": 10,
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 6,
       "size": [
-        80,
-        80
+        96,
+        96
       ],
       "anchor": [
-        40,
-        76
+        48,
+        93
       ],
-      "renderScale": 1,
-      "asIs": true,
-      "preservePixels": false,
-      "allowDuplicateFrames": false,
-      "minCoverage": 0.2,
-      "maxColors": 40,
-      "maxCentroidDrift": 8,
-      "maxBaselineDrift": 1
+      "renderScale": 0.72
     },
     {
       "name": "vfx_boss_slimeking_fan_telegraph",
@@ -13715,238 +13715,238 @@
       "maxBaselineDrift": 40
     },
     {
-      "name": "boss_abysseye_split",
-      "source": "assets/art-v6/game-ready/v6/boss_abysseye_split.png",
-      "frameSize": [
-        80,
-        80
-      ],
-      "frames": 8,
-      "fps": 10,
-      "size": [
-        80,
-        80
-      ],
-      "anchor": [
-        40,
-        76
-      ],
-      "renderScale": 1,
-      "asIs": true,
-      "preservePixels": false,
-      "allowDuplicateFrames": false,
-      "minCoverage": 0.08,
-      "maxColors": 40,
-      "maxCentroidDrift": 4,
-      "maxBaselineDrift": 12
-    },
-    {
-      "name": "boss_abysseye_remote_cast",
-      "source": "assets/art-v6/game-ready/v6/boss_abysseye_remote_cast.png",
-      "frameSize": [
-        80,
-        80
-      ],
-      "frames": 8,
-      "fps": 10,
-      "size": [
-        80,
-        80
-      ],
-      "anchor": [
-        40,
-        76
-      ],
-      "renderScale": 1,
-      "asIs": true,
-      "preservePixels": false,
-      "allowDuplicateFrames": false,
-      "minCoverage": 0.08,
-      "maxColors": 40,
-      "maxCentroidDrift": 12,
-      "maxBaselineDrift": 12
-    },
-    {
-      "name": "boss_abysseye_charge_dash",
-      "source": "assets/art-v6/game-ready/v6/boss_abysseye_charge_dash.png",
-      "frameSize": [
-        80,
-        80
-      ],
-      "frames": 8,
-      "fps": 10,
-      "size": [
-        80,
-        80
-      ],
-      "anchor": [
-        40,
-        76
-      ],
-      "renderScale": 1,
-      "asIs": true,
-      "preservePixels": false,
-      "allowDuplicateFrames": false,
-      "minCoverage": 0.08,
-      "maxColors": 40,
-      "maxCentroidDrift": 10,
-      "maxBaselineDrift": 40
-    },
-    {
-      "name": "boss_abysseye_remote",
-      "source": "assets/art-v6/game-ready/v6/boss_abysseye_remote.png",
-      "frameSize": [
-        80,
-        80
-      ],
-      "frames": 4,
-      "fps": 7,
-      "size": [
-        80,
-        80
-      ],
-      "anchor": [
-        40,
-        76
-      ],
-      "renderScale": 1,
-      "asIs": true,
-      "preservePixels": false,
+      "preservePixels": true,
       "allowDuplicateFrames": true,
-      "minCoverage": 0.1,
-      "maxColors": 40,
-      "maxCentroidDrift": 12,
-      "maxBaselineDrift": 4
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "boss_abysseye_split",
+      "source": "assets/art-v4/repaired/bosses/boss_abysseye_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 6,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        93
+      ],
+      "renderScale": 0.58
     },
     {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "boss_abysseye_remote_cast",
+      "source": "assets/art-v4/repaired/bosses/boss_abysseye_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 6,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        93
+      ],
+      "renderScale": 0.58
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "boss_abysseye_charge_dash",
+      "source": "assets/art-v4/repaired/bosses/boss_abysseye_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 2,
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        93
+      ],
+      "renderScale": 0.58
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
+      "name": "boss_abysseye_remote",
+      "source": "assets/art-v4/repaired/bosses/boss_abysseye_actions.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 6,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        93
+      ],
+      "renderScale": 0.58
+    },
+    {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
       "name": "boss_abysseye_hurt",
-      "source": "assets/art-v6/game-ready/v6/boss_abysseye_hurt.png",
+      "source": "assets/art-v4/repaired/bosses/boss_abysseye_actions.png",
       "frameSize": [
-        80,
-        80
+        96,
+        96
       ],
-      "frames": 4,
-      "fps": 10,
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 6,
       "size": [
-        80,
-        80
+        96,
+        96
       ],
       "anchor": [
-        40,
-        76
+        48,
+        93
       ],
-      "renderScale": 1,
-      "asIs": true,
-      "preservePixels": false,
-      "allowDuplicateFrames": false,
-      "minCoverage": 0.2,
-      "maxColors": 40,
-      "maxCentroidDrift": 12,
-      "maxBaselineDrift": 4
+      "renderScale": 0.58
     },
     {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
       "name": "boss_abysseye_remote_hurt",
-      "source": "assets/art-v6/game-ready/v6/boss_abysseye_remote_hurt.png",
+      "source": "assets/art-v4/repaired/bosses/boss_abysseye_actions.png",
       "frameSize": [
-        80,
-        80
+        96,
+        96
       ],
-      "frames": 4,
-      "fps": 10,
+      "frameRow": 0,
+      "frames": 8,
+      "fps": 6,
       "size": [
-        80,
-        80
+        96,
+        96
       ],
       "anchor": [
-        40,
-        76
+        48,
+        93
       ],
-      "renderScale": 1,
-      "asIs": true,
-      "preservePixels": false,
-      "allowDuplicateFrames": false,
-      "minCoverage": 0.1,
-      "maxColors": 40,
-      "maxCentroidDrift": 12,
-      "maxBaselineDrift": 4
+      "renderScale": 0.58
     },
     {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
       "name": "boss_abysseye_remote_death",
-      "source": "assets/art-v6/game-ready/v6/boss_abysseye_remote_death.png",
+      "source": "assets/art-v4/repaired/bosses/boss_abysseye_actions.png",
       "frameSize": [
-        80,
-        80
+        96,
+        96
       ],
-      "frames": 6,
-      "fps": 10,
+      "frameRow": 4,
+      "frames": 8,
+      "fps": 8,
       "size": [
-        80,
-        80
+        96,
+        96
       ],
       "anchor": [
-        40,
-        76
+        48,
+        93
       ],
-      "renderScale": 1,
-      "asIs": true,
-      "preservePixels": false,
-      "allowDuplicateFrames": false,
-      "minCoverage": 0.03,
-      "maxColors": 40,
-      "maxCentroidDrift": 12,
-      "maxBaselineDrift": 12
+      "renderScale": 0.58
     },
     {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
       "name": "boss_abysseye_charge_hurt",
-      "source": "assets/art-v6/game-ready/v6/boss_abysseye_charge_hurt.png",
+      "source": "assets/art-v4/repaired/bosses/boss_abysseye_actions.png",
       "frameSize": [
-        80,
-        80
+        96,
+        96
       ],
-      "frames": 4,
+      "frameRow": 2,
+      "frames": 8,
       "fps": 10,
       "size": [
-        80,
-        80
+        96,
+        96
       ],
       "anchor": [
-        40,
-        76
+        48,
+        93
       ],
-      "renderScale": 1,
-      "asIs": true,
-      "preservePixels": false,
-      "allowDuplicateFrames": false,
-      "minCoverage": 0.1,
-      "maxColors": 40,
-      "maxCentroidDrift": 12,
-      "maxBaselineDrift": 4
+      "renderScale": 0.58
     },
     {
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.006,
+      "maxColors": 256,
+      "maxCentroidDrift": 64,
+      "maxBaselineDrift": 8,
       "name": "boss_abysseye_charge_death",
-      "source": "assets/art-v6/game-ready/v6/boss_abysseye_charge_death.png",
+      "source": "assets/art-v4/repaired/bosses/boss_abysseye_actions.png",
       "frameSize": [
-        80,
-        80
+        96,
+        96
       ],
-      "frames": 6,
-      "fps": 10,
+      "frameRow": 4,
+      "frames": 8,
+      "fps": 8,
       "size": [
-        80,
-        80
+        96,
+        96
       ],
       "anchor": [
-        40,
-        76
+        48,
+        93
       ],
-      "renderScale": 1,
-      "asIs": true,
-      "preservePixels": false,
-      "allowDuplicateFrames": false,
-      "minCoverage": 0.03,
-      "maxColors": 40,
-      "maxCentroidDrift": 12,
-      "maxBaselineDrift": 12
+      "renderScale": 0.58
     },
     {
       "name": "vfx_abysseye_gaze_beam",

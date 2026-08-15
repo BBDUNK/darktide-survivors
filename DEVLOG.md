@@ -20,6 +20,17 @@
 
 ---
 
+## 2026-08-15 — v0.21.6:Boss 素材回退（深渊之眼 V4 / 史莱姆王 V2）
+
+- **深渊之眼改用 V4 版素材**：全部动作（idle/walk/charge/death/分裂/远程/受击）统一从 `assets/art-v4/repaired/bosses/boss_abysseye_actions.png` 的 96×96 行切取
+- **史莱姆王改用 V2 版素材**：全部动作统一从 `assets/art-v2/sprites/bosses/boss_slimeking_actions.png` 的 96×96 行切取
+- **动作简化**：攻击动作不再使用复杂攻击条，改为重复使用 idle 素材；缺失的分裂/远程/受击/护盾动作也按“重复素材”映射到对应 idle/charge/death 行
+- **尺寸同步**：`BOSS_VISUAL_BASE` 将这两个 Boss 的基准宽度改为 96，保持整数倍缩放和统一动作尺寸
+- 新增 `tools/art/legacy-boss-swap.js`：以后想一键切回/重切这些旧素材可用
+- 回归：图集重建 + 无头冒烟/艺术探针验证
+
+---
+
 ## 2026-08-15 — v0.21.5:Boss 尺寸回调 + 整数像素缩放
 
 - **Boss 不再过小**：四 Boss `drawScale` 统一提到 `0.75`，腐液/深渊约 240px、骸骨约 288px、暗潮 P1 约 336px，恢复 Boss 的压迫感

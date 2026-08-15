@@ -159,13 +159,13 @@ function assert(ok, message) {
   assert(atlas.merchantProne.length === 8 && atlas.merchantProne.every(frame => JSON.stringify(frame) === '[96,96]'), 'merchant prone frames are incorrect');
   assert(JSON.stringify(atlas.deadTree) === '[[128,128]]', 'large dead tree frame is incorrect');
   assert(JSON.stringify(atlas.exitGate) === '[[128,192]]', 'Darklord exit gate atlas frame is incorrect');
-  assert(atlas.slimeKing.length === 6 && atlas.slimeKing.every(frame => JSON.stringify(frame) === '[80,80]'), 'V6 slime king atlas frames are incorrect');
+  assert(atlas.slimeKing.length === 8 && atlas.slimeKing.every(frame => JSON.stringify(frame) === '[96,96]'), 'legacy V2 slime king atlas frames are incorrect');
   assert(atlas.arrow.length === 8 && atlas.arrow.every(frame => JSON.stringify(frame) === '[32,24]'), 'arrow atlas frames are incorrect');
   assert(atlas.tesla.length === 8 && atlas.tesla.every(frame => JSON.stringify(frame) === '[112,112]'), 'tesla tower atlas frame is incorrect');
-  assert(atlas.skeletonFps === 7 && atlas.slimeKingFps === 7, 'enemy animation fps values are incorrect');
+  assert(atlas.skeletonFps === 7 && atlas.slimeKingFps === 6, 'enemy animation fps values are incorrect');
   assert(atlas.arrowFps === 14, 'arrow animation fps is incorrect');
   assert(atlas.teslaFps === 8, 'tesla tower animation fps is incorrect');
-  assert(atlas.knightScale === 0.58 && atlas.bossScale === 1,
+  assert(atlas.knightScale === 0.58 && atlas.bossScale === 0.72,
     'atlas art scales are incorrect');
   assert(atlas.explosion.length === 8 && atlas.explosion.every(frame => JSON.stringify(frame) === '[48,48]'),
     'explosion VFX atlas frames are incorrect');
