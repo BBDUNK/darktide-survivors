@@ -1245,7 +1245,7 @@ window.UI = (function () {
   var pauseBuild;
   function buildPause() {
     var s = h('div', 'modal hidden');
-    var box = h('div', 'modal-box');
+    var box = h('div', 'modal-box pause-box');
     box.appendChild(h('div', 'modal-title', L.t('pause_title')));
     pauseBuild = h('div', 'pause-build');
     box.appendChild(pauseBuild);
