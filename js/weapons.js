@@ -622,6 +622,9 @@ window.Weapons = (function () {
           FX.sprite(b.x, b.y, 'vfx_tesla_cannon_impact', 0.56, 128, true);
           FX.shake(8, 0.28);
         }
+        if (b.kind === 'dragonLance') {
+          FX.sprite(b.x, b.y, 'vfx_jade_dragon_dissipate', 0.62, 296, true);
+        }
         b.alive = false;
         continue;
       }
@@ -1082,6 +1085,8 @@ window.Weapons = (function () {
         : (Math.sin(w.dragonAngle) >= 0 ? 'down' : 'up');
       if (w.dragonChargeT <= 0) {
         var speed = 600;
+        // 召唤阵:只在起飞的瞬间播放一次,不混入飞行循环。
+        FX.sprite(p.x, p.y - 10, 'vfx_jade_dragon_summon', 0.8, 240, true);
         var dragon = spawn(run, w, st, 'dragonLance', 'p_dragon', p.x, p.y - 10,
           Math.cos(w.dragonAngle) * speed, Math.sin(w.dragonAngle) * speed, 1.5);
         dragon.dmg = st.dmg * 4.5; dragon.pierce = 9999; dragon.size = 58;
@@ -1448,12 +1453,12 @@ window.Weapons = (function () {
       if (b.spr === 'p_arcane_orb') dw = b.evolved ? 42 : 34;
       if (b.spr === 'p_tesla_cannon') dw = 112;
       if (b.kind === 'demon') dw = img.width * 1.7 * (b.size / 16);
-      // The dedicated dragon sheet has a larger logical cell for crisp detail.
-      // Keep its on-screen silhouette long and lean instead of inflating it
-      // into an opaque screen-filling block.
-      if (b.kind === 'guideDragon') dw = img.width * 2.9;
+      // The V6 dragon strip is 224x112. Scale it to the same ~300px flight
+      // silhouette as before, preserving aspect instead of inflating the
+      // larger logical cell into a screen-filling block.
+      if (b.kind === 'guideDragon') dw = img.width * 1.35;
       if (b.kind === 'dragonLance') {
-        dw = img.width * 3.15;
+        dw = img.width * 1.35;
         ctx.globalAlpha = 0.56;
         ctx.globalCompositeOperation = 'lighter';
       }

@@ -322,7 +322,10 @@
     } else {
       var frames = cachedFrames(p.str);
       var frame = frames[Math.min(frames.length - 1, Math.floor(t01 * frames.length))];
-      ctx.drawImage(frame, p.x - s * 0.5, p.y - s * 0.5, s, s);
+      // Preserve authored aspect ratio: non-square strips such as the jade
+      // spirit dragon must never be squashed into a square particle quad.
+      var drawH = frame.height === frame.width ? s : s * frame.height / frame.width;
+      ctx.drawImage(frame, p.x - s * 0.5, p.y - drawH * 0.5, s, drawH);
     }
   }
 

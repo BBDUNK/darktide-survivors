@@ -10115,30 +10115,30 @@
       "renderScale": 1
     },
     {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 20,
-      "maxBaselineDrift": 24,
       "name": "p_dragon",
-      "source": "assets/art-v4/sprites/vfx/dragon_ultimate_actions.png",
+      "source": "assets/art-v6/game-ready/v6/p_dragon.png",
       "frameSize": [
-        96,
-        96
+        224,
+        112
       ],
-      "frameRow": 0,
       "frames": 8,
-      "fps": 12,
+      "fps": 10,
       "size": [
-        96,
-        96
+        224,
+        112
       ],
       "anchor": [
-        48,
-        48
+        112,
+        56
       ],
-      "renderScale": 1
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.08,
+      "maxColors": 40,
+      "maxCentroidDrift": 16,
+      "maxBaselineDrift": 32
     },
     {
       "preservePixels": true,
@@ -13297,6 +13297,58 @@
         66
       ],
       "renderScale": 1
+    },
+    {
+      "name": "vfx_jade_dragon_summon",
+      "source": "assets/art-v6/game-ready/v6/vfx_jade_dragon_summon.png",
+      "frameSize": [
+        224,
+        112
+      ],
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        224,
+        112
+      ],
+      "anchor": [
+        112,
+        56
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.003,
+      "maxColors": 40,
+      "maxCentroidDrift": 16,
+      "maxBaselineDrift": 32
+    },
+    {
+      "name": "vfx_jade_dragon_dissipate",
+      "source": "assets/art-v6/game-ready/v6/vfx_jade_dragon_dissipate.png",
+      "frameSize": [
+        224,
+        112
+      ],
+      "frames": 6,
+      "fps": 10,
+      "size": [
+        224,
+        112
+      ],
+      "anchor": [
+        112,
+        56
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.02,
+      "maxColors": 40,
+      "maxCentroidDrift": 16,
+      "maxBaselineDrift": 16
     }
   ]
 }

@@ -45486,131 +45486,131 @@
     "p_dragon": [
       {
         "index": 0,
-        "coverage": 0.1133,
-        "colors": 48,
+        "coverage": 0.2983,
+        "colors": 40,
         "bbox": [
-          3,
-          8,
-          93,
-          49
+          7,
+          7,
+          216,
+          105
         ],
         "centroid": [
-          58.141,
-          32.706
+          117.382,
+          56.597
         ],
-        "signature": "7c995e1104bc"
+        "signature": "11b6cfd4407f"
       },
       {
         "index": 1,
-        "coverage": 0.1223,
-        "colors": 48,
+        "coverage": 0.2994,
+        "colors": 40,
         "bbox": [
-          3,
-          0,
-          93,
-          50
+          4,
+          5,
+          220,
+          107
         ],
         "centroid": [
-          53.814,
-          26.665
+          122.819,
+          53.686
         ],
-        "signature": "0ac4662cddf9"
+        "signature": "a8b26b64dc3f"
       },
       {
         "index": 2,
-        "coverage": 0.1235,
-        "colors": 48,
+        "coverage": 0.3005,
+        "colors": 40,
         "bbox": [
           3,
-          0,
-          93,
-          53
+          4,
+          221,
+          108
         ],
         "centroid": [
-          52.239,
-          27.808
+          116.526,
+          56.522
         ],
-        "signature": "d384b664c57b"
+        "signature": "c183af39f9f6"
       },
       {
         "index": 3,
-        "coverage": 0.1206,
-        "colors": 48,
+        "coverage": 0.2941,
+        "colors": 40,
         "bbox": [
-          3,
-          0,
-          93,
-          51
+          9,
+          6,
+          215,
+          106
         ],
         "centroid": [
-          54.401,
-          26.032
+          119.069,
+          57.208
         ],
-        "signature": "c91f0c00332a"
+        "signature": "6765148c6620"
       },
       {
         "index": 4,
-        "coverage": 0.1253,
-        "colors": 48,
+        "coverage": 0.3006,
+        "colors": 40,
         "bbox": [
-          3,
-          0,
-          93,
-          55
+          9,
+          9,
+          215,
+          103
         ],
         "centroid": [
-          53.201,
-          28.127
+          118.418,
+          54.981
         ],
-        "signature": "54a7321d1fdd"
+        "signature": "b57ff659f69a"
       },
       {
         "index": 5,
-        "coverage": 0.1286,
-        "colors": 48,
+        "coverage": 0.2939,
+        "colors": 40,
         "bbox": [
-          3,
-          0,
-          93,
-          55
+          4,
+          6,
+          220,
+          105
         ],
         "centroid": [
-          52.484,
-          28.219
+          118.024,
+          51.184
         ],
-        "signature": "49c4231518f9"
+        "signature": "4eec6f644050"
       },
       {
         "index": 6,
-        "coverage": 0.1265,
-        "colors": 48,
+        "coverage": 0.2978,
+        "colors": 40,
         "bbox": [
-          3,
-          0,
-          93,
-          54
+          4,
+          5,
+          221,
+          106
         ],
         "centroid": [
-          53.473,
-          27.518
+          114.839,
+          56.828
         ],
-        "signature": "43c93921dd4f"
+        "signature": "09d237233ec6"
       },
       {
         "index": 7,
-        "coverage": 0.1266,
-        "colors": 48,
+        "coverage": 0.299,
+        "colors": 40,
         "bbox": [
-          3,
-          0,
-          93,
-          59
+          9,
+          9,
+          215,
+          104
         ],
         "centroid": [
-          51.812,
-          31.171
+          114.723,
+          52.266
         ],
-        "signature": "6e5b76b9f4d2"
+        "signature": "824df15cc564"
       }
     ],
     "vfx_holy_aura": [
@@ -51145,6 +51145,234 @@
         "signature": "205b976db012"
       }
     ],
+    "vfx_jade_dragon_summon": [
+      {
+        "index": 0,
+        "coverage": 0.0039,
+        "colors": 25,
+        "bbox": [
+          78,
+          33,
+          146,
+          79
+        ],
+        "centroid": [
+          114.134,
+          60.897
+        ],
+        "signature": "1d397cea4be9"
+      },
+      {
+        "index": 1,
+        "coverage": 0.0621,
+        "colors": 40,
+        "bbox": [
+          71,
+          24,
+          153,
+          87
+        ],
+        "centroid": [
+          111.694,
+          67.717
+        ],
+        "signature": "b1aa697753c5"
+      },
+      {
+        "index": 2,
+        "coverage": 0.0985,
+        "colors": 40,
+        "bbox": [
+          64,
+          18,
+          159,
+          94
+        ],
+        "centroid": [
+          110.45,
+          69.292
+        ],
+        "signature": "8df6101d12d9"
+      },
+      {
+        "index": 3,
+        "coverage": 0.1226,
+        "colors": 40,
+        "bbox": [
+          64,
+          14,
+          160,
+          98
+        ],
+        "centroid": [
+          111.312,
+          68.271
+        ],
+        "signature": "97a05f770cae"
+      },
+      {
+        "index": 4,
+        "coverage": 0.1556,
+        "colors": 40,
+        "bbox": [
+          64,
+          3,
+          159,
+          108
+        ],
+        "centroid": [
+          110.284,
+          70.612
+        ],
+        "signature": "4777bb0480bc"
+      },
+      {
+        "index": 5,
+        "coverage": 0.1689,
+        "colors": 40,
+        "bbox": [
+          64,
+          3,
+          159,
+          109
+        ],
+        "centroid": [
+          109.653,
+          67.407
+        ],
+        "signature": "ac6deb44b9f7"
+      },
+      {
+        "index": 6,
+        "coverage": 0.1752,
+        "colors": 40,
+        "bbox": [
+          60,
+          10,
+          164,
+          101
+        ],
+        "centroid": [
+          105.54,
+          61.412
+        ],
+        "signature": "ba3161f6212d"
+      },
+      {
+        "index": 7,
+        "coverage": 0.1587,
+        "colors": 40,
+        "bbox": [
+          64,
+          17,
+          160,
+          94
+        ],
+        "centroid": [
+          111.148,
+          57.845
+        ],
+        "signature": "9cfa99529e8c"
+      }
+    ],
+    "vfx_jade_dragon_dissipate": [
+      {
+        "index": 0,
+        "coverage": 0.2584,
+        "colors": 40,
+        "bbox": [
+          11,
+          12,
+          216,
+          105
+        ],
+        "centroid": [
+          115.062,
+          52.486
+        ],
+        "signature": "4e87d306f5b1"
+      },
+      {
+        "index": 1,
+        "coverage": 0.2158,
+        "colors": 40,
+        "bbox": [
+          10,
+          12,
+          215,
+          105
+        ],
+        "centroid": [
+          115.497,
+          52.357
+        ],
+        "signature": "f611f526ab51"
+      },
+      {
+        "index": 2,
+        "coverage": 0.1781,
+        "colors": 40,
+        "bbox": [
+          10,
+          12,
+          216,
+          105
+        ],
+        "centroid": [
+          115.807,
+          52.056
+        ],
+        "signature": "ea32b6fbb858"
+      },
+      {
+        "index": 3,
+        "coverage": 0.1425,
+        "colors": 40,
+        "bbox": [
+          11,
+          12,
+          215,
+          105
+        ],
+        "centroid": [
+          116.798,
+          51.976
+        ],
+        "signature": "44fa3025e82b"
+      },
+      {
+        "index": 4,
+        "coverage": 0.1083,
+        "colors": 40,
+        "bbox": [
+          11,
+          13,
+          216,
+          102
+        ],
+        "centroid": [
+          118.289,
+          51.573
+        ],
+        "signature": "67ca6de22cde"
+      },
+      {
+        "index": 5,
+        "coverage": 0.0771,
+        "colors": 40,
+        "bbox": [
+          11,
+          13,
+          216,
+          97
+        ],
+        "centroid": [
+          118.654,
+          51.989
+        ],
+        "signature": "40617963d5e1"
+      }
+    ],
     "vfx_glow": [
       {
         "index": 0,
@@ -51873,13 +52101,6 @@
     "spider_attack[7]: silhouette touches logical frame edge",
     "werewolf_attack[4]: silhouette touches logical frame edge",
     "boss_darklord_attack[4]: silhouette touches logical frame edge",
-    "p_dragon[1]: silhouette touches logical frame edge",
-    "p_dragon[2]: silhouette touches logical frame edge",
-    "p_dragon[3]: silhouette touches logical frame edge",
-    "p_dragon[4]: silhouette touches logical frame edge",
-    "p_dragon[5]: silhouette touches logical frame edge",
-    "p_dragon[6]: silhouette touches logical frame edge",
-    "p_dragon[7]: silhouette touches logical frame edge",
     "vfx_holy_aura[0]: silhouette touches logical frame edge",
     "vfx_holy_aura[1]: silhouette touches logical frame edge",
     "vfx_holy_aura[2]: silhouette touches logical frame edge",
