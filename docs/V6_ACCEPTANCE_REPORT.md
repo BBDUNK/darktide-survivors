@@ -314,3 +314,24 @@ node test/loading-probe.js           # normal/slow/blocked/stall 四案全通过
 - 四分辨率截图：`shots/v6-baseline/`（1280×720、960×540、390×844、844×390）。
 - GitHub `main` 已推送；Cloudflare Pages 由现有工作流自动部署。
 - 本报告最终提交：`test(v6): complete coop and visual acceptance`。
+
+## v0.21.2 最终验收矩阵 ✅
+
+- 在 v0.21.2 反馈轮 2 之后跑验收矩阵，10 项全部 `[exit: 0]`（验收摘要：`docs/V6_FINAL_MATRIX_V0212_LOG.txt`）：
+
+```powershell
+node tools/art/build-atlas.js        # 584 assets / 3408 frames, PASS
+node test/headless.js                # R1–R13 全通过
+node test/art-probe.js               # 400 怪 56.0 FPS, p95 33.3ms
+node test/combat-vfx-probe.js
+node test/boss-phase-probe.js
+node test/coop-probe.js
+node test/coop-live-probe.js         # 双端 P2P 全链路通过（静态服务器 8123 就绪）
+node test/resp-probe.js
+node test/terrain-touch-probe.js
+node test/loading-probe.js           # normal/slow/blocked/stall 四案全通过
+```
+
+- 因 v0.21.2 选人页改为“只保留最外层金框、内部扁平细线”，同步更新 `test/art-probe.js` 的选人页断言：网格 `border-image: none`、卡片为 1px 深色细线（选中态 `rgb(107, 86, 54)`），不再要求内部巴洛克九宫格边框。
+- 图集保持 `584 assets / 3408 frames`，`quality-report.json` = `0 errors / 153 warnings`。
+- `DEVLOG.md` 已同步记录本轮最终验收。

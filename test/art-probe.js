@@ -341,6 +341,8 @@ function assert(ok, message) {
       gridBorder: getComputedStyle(grid).borderImageSource,
       gridColumns: getComputedStyle(grid).gridTemplateColumns,
       cardBorders: cards.map(card => getComputedStyle(card).borderImageSource),
+      cardBorderColors: cards.map(card => getComputedStyle(card).borderTopColor),
+      cardBorderWidths: cards.map(card => getComputedStyle(card).borderTopWidth),
       cardBoxes: cards.map(card => [Math.round(card.getBoundingClientRect().width), Math.round(card.getBoundingClientRect().height)]),
       infoWidth: Math.round(info.getBoundingClientRect().width),
       contentBottoms: [Math.round(infoBox.bottom), Math.round(buttonBox.bottom), Math.round(screenBox.bottom)],
@@ -351,10 +353,17 @@ function assert(ok, message) {
       visible: !!screen && screen.getBoundingClientRect().width > 0
     };
   });
+  console.log('SECONDARY UI STATE ' + JSON.stringify(characterUi));
   assert(characterUi.visible, 'character selection screen is not visible');
-  assert(characterUi.gridBorder.includes('baroque_menu_frame.png'), 'character grid does not use the gapless Baroque nine-slice');
-  assert(characterUi.cardBorders.every(value => value.includes('baroque_menu_frame.png')),
-    'one or more character cards are missing their Baroque frame');
+  // v0.21.2 反馈轮 2:选人页只保留屏幕最外层巴洛克金框,内部网格/卡片/信息框/按钮
+  // 全部去掉 border-image,改为扁平深色细线,避免同屏出现第二圈金框。
+  assert(characterUi.gridBorder === 'none', 'character grid should be borderless in v0.21.2 flat style');
+  assert(characterUi.cardBorders.every(value => value === 'none'),
+    'one or more character cards still use a frame border-image');
+  assert(characterUi.cardBorderWidths.every(value => value === '1px'),
+    'one or more character cards are missing the 1px dark thin line');
+  assert(characterUi.cardBorderColors.every(value => value === 'rgb(58, 47, 34)' || value === 'rgb(107, 86, 54)'),
+    'one or more character cards are missing the dark thin line color');
   assert(characterUi.cardBoxes.every(box => box[0] >= 146 && box[1] >= 142),
     'character cards are too small or clipped: ' + JSON.stringify(characterUi.cardBoxes));
   assert(characterUi.infoWidth >= 600, 'character detail panel is too narrow: ' + characterUi.infoWidth);
@@ -363,9 +372,8 @@ function assert(ok, message) {
     'character detail/actions are clipped below the screen: ' + JSON.stringify(characterUi.contentBottoms));
   assert(characterUi.infoChildBottom <= characterUi.contentBottoms[0],
     'character detail text overflows its frame: ' + characterUi.infoChildBottom + ' > ' + characterUi.contentBottoms[0]);
-  console.log('SECONDARY UI STATE ' + JSON.stringify(characterUi));
   await page.screenshot({ path: path.join(OUT, 'v5-character-select.png') });
-  console.log('SECONDARY UI OK  framed character grid/cards/detail panel fit at 1280x720');
+  console.log('SECONDARY UI OK  borderless character grid/cards/detail panel fit at 1280x720');
   await page.getByText('下一步').click();
   await page.getByText('出发').click();
   await page.waitForFunction(() => Debug.state() === 'run' && !!Debug.run(), null, { timeout: 10000 });

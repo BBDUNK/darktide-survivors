@@ -1,7 +1,7 @@
 # 项目交接文档 (HANDOFF)
 
 > 本文件用于把《暗黑逃跑神》(Darktide Survivors) 项目完整交接给任何后续开发工具/会话。
-> 生成时间:2026-08-15,当前版本 **v0.21.0**(V6 美术接力已全量接入)。
+> 生成时间:2026-08-15,当前版本 **v0.21.2**(V6 美术接力已全量接入 + 两轮用户反馈修复)。
 > 若你在新会话接手,请先读本文件,再读 `DEVLOG.md`(完整迭代历史)、`docs/V6_ACCEPTANCE_REPORT.md`(V6 验收报告)与 `SPEC.md`(原始设计)。
 
 ---
@@ -62,6 +62,8 @@
 - 普通怪：腐液/巨腐史莱姆、蜘蛛已换 V6 概念板五动作；烂泥行者有 `zombie_emerge` 出土条；其余沿用 V4。
 - 美术加工入口：`assets/art-v6/production-manifest.json` + `tools/art/process-v6-production.py` + `merge-v6-ready.js`；只有 `READY` 条目能进运行时清单。
 - 后续模型不得恢复精英重绘、不得为龙做八方向素材、不得直接加载 `sources/production` 高分辨率源图。
+- v0.21.1/v0.21.2 已合入：Boss 一次性动画相位修复、后期 Boss 血量砍半、训练场收放/角色切换/键盘修复、骑士与法师终极、选人页去内部金框、图鉴缩小、训练场面板扁平化；`art-probe` 断言已随 v0.21.2 选人页样式更新。
+- v0.21.2 最终验收矩阵 10 项全绿：`docs/V6_FINAL_MATRIX_V0212_LOG.txt`。
 
 ## 五、UI 风格与设计约定
 

@@ -26,6 +26,7 @@
 - 百科全书页缩小:内容区 1200px→820px,卡片最小宽 360px→260px,字号/内边距同步收紧
 - 训练场“展开/收起”把手与面板按钮去掉不适配的厚边框,改为扁平深色 1px 细边
 - 识图链路新增阿里云百炼兼容模式备用通道(`custom-1 / qwen-vl-plus`),约 1.7s 返回,供视觉验收继续使用
+- **最终验收矩阵全绿**:`build-atlas / headless / art-probe / combat-vfx / boss-phase / coop-probe / coop-live / resp / terrain-touch / loading` 10 项全部 `[exit: 0]`;图集 `584 assets / 3408 frames`、`0 errors / 153 warnings`;`art-probe` 断言同步改为 v0.21.2 扁平细线选人页样式(不再要求内部巴洛克金框)
 
 ---
 

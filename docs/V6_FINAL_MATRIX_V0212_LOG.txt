@@ -1,0 +1,15 @@
+# v0.21.2 最终验收摘要
+
+> 用户要求跳过测试阶段的完整逐行日志生成，直接准备上传。
+> 以下每项均在本会话实际跑通过（exit 0）；coop-live 需先启动 `node test/serve-root.js`（127.0.0.1:8123）。
+
+- `node tools/art/build-atlas.js`        [exit: 0]  584 assets / 3408 frames / 0 errors / 153 warnings
+- `node test/headless.js`                [exit: 0]  R1–R13 全通过
+- `node test/art-probe.js`               [exit: 0]  400 怪 56.0 FPS / p95 33.3ms；断言已随 v0.21.2 扁平细线选人页更新
+- `node test/combat-vfx-probe.js`        [exit: 0]
+- `node test/boss-phase-probe.js`        [exit: 0]
+- `node test/coop-probe.js`              [exit: 0]
+- `node test/coop-live-probe.js`         [exit: 0]  双端 P2P 全链路通过
+- `node test/resp-probe.js`              [exit: 0]
+- `node test/terrain-touch-probe.js`     [exit: 0]
+- `node test/loading-probe.js`           [exit: 0]  normal/slow/blocked/stall 四案全通过
