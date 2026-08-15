@@ -9,6 +9,10 @@
 html, body, button, input, select, textarea, * {
   font-family: var(--font-cn) !important;
 }
+/* 大标题/艺术字保留原来的哥特展示体，不被全站正楷覆盖 */
+.logo-main, .menu-big, .gothic-title {
+  font-family: var(--font-gothic, "Darktide Gothic", Georgia, serif) !important;
+}
 
 /* 主菜单四周恢复巴洛克金框(与选人/结算/图鉴同款 baroque_menu_frame)。
    art-v4 曾把 .menu-screen 的边框清掉,导致主菜单四周光秃秃。 */
