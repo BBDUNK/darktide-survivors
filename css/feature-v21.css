@@ -512,19 +512,20 @@ html, body, button, input, select, textarea, * {
   top: 2px;
   right: 30px;
   z-index: 5;
-  padding: 5px 12px 6px;
-  font-size: 13px;
-  font-weight: 700;
+  padding: 0;
+  font-size: 17px;
+  font-weight: 900;
   line-height: 1;
-  color: #d8ffb0;
-  letter-spacing: 1px;
+  color: #a8ff00;
+  letter-spacing: 2px;
   white-space: nowrap;
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(0, 90, 40, .92), rgba(0, 35, 16, .96));
-  border: 2px solid #00e05a;
+  background: none;
+  border: 0;
   border-radius: 0;
-  box-shadow: 0 0 14px rgba(0, 224, 90, .35), 0 3px 6px rgba(0, 0, 0, .55), inset 0 1px 0 rgba(255, 255, 255, .08);
-  text-shadow: 0 1px 0 #001a0a, 0 0 8px rgba(0, 224, 90, .6);
+  box-shadow: none;
+  -webkit-text-stroke: 1px #003300;
+  text-shadow: 2px 2px 0 #001a00, -2px 2px 0 #001a00, 2px -2px 0 #001a00, -2px -2px 0 #001a00;
   animation: char-badge-pulse .8s ease-in-out infinite;
 }
 
