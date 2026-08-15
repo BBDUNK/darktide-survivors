@@ -537,8 +537,11 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "FRAMES",
-      "fit": "baseline"
+      "status": "INTEGRATED",
+      "fit": "baseline",
+      "maxCentroidDrift": 6,
+      "maxBaselineDrift": 1,
+      "minCoverage": 0.08
     },
     {
       "name": "boss_bonelord_attack",
@@ -569,8 +572,11 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "FRAMES",
-      "fit": "union"
+      "status": "INTEGRATED",
+      "fit": "union",
+      "maxCentroidDrift": 10,
+      "maxBaselineDrift": 12,
+      "minCoverage": 0.08
     },
     {
       "name": "boss_bonelord_charge",
@@ -601,8 +607,11 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "FRAMES",
-      "fit": "union"
+      "status": "INTEGRATED",
+      "fit": "union",
+      "maxCentroidDrift": 8,
+      "maxBaselineDrift": 8,
+      "minCoverage": 0.08
     },
     {
       "name": "boss_bonelord_resurrect",
@@ -633,8 +642,11 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "FRAMES",
-      "fit": "union"
+      "status": "INTEGRATED",
+      "fit": "union",
+      "maxCentroidDrift": 10,
+      "maxBaselineDrift": 12,
+      "minCoverage": 0.08
     },
     {
       "name": "boss_bonelord_death",
@@ -667,8 +679,11 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "FRAMES",
-      "fit": "union"
+      "status": "INTEGRATED",
+      "fit": "union",
+      "maxCentroidDrift": 24,
+      "maxBaselineDrift": 16,
+      "minCoverage": 0.05
     },
     {
       "name": "boss_bonelord_walk",
@@ -687,9 +702,13 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "TODO",
+      "status": "INTEGRATED",
       "notes": "Floating-throne drift derived from the idle strip until a dedicated sheet is authored.",
-      "fit": "baseline"
+      "fit": "baseline",
+      "output": "assets/art-v6/game-ready/v6/boss_bonelord_walk.png",
+      "minCoverage": 0.2,
+      "maxCentroidDrift": 8,
+      "maxBaselineDrift": 4
     },
     {
       "name": "boss_bonelord_hurt",
@@ -708,8 +727,12 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "TODO",
-      "fit": "union"
+      "status": "INTEGRATED",
+      "fit": "union",
+      "output": "assets/art-v6/game-ready/v6/boss_bonelord_hurt.png",
+      "minCoverage": 0.2,
+      "maxCentroidDrift": 8,
+      "maxBaselineDrift": 4
     },
     {
       "name": "vfx_bonelord_bone_prison",
@@ -728,8 +751,12 @@
       ],
       "renderScale": 1,
       "layer": "ground",
-      "status": "TODO",
-      "fit": "center"
+      "status": "INTEGRATED",
+      "fit": "center",
+      "output": "assets/art-v6/game-ready/v6/vfx_bonelord_bone_prison.png",
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 16,
+      "minCoverage": 0.02
     },
     {
       "name": "vfx_bonelord_bone_spear_rain",
@@ -748,8 +775,12 @@
       ],
       "renderScale": 1,
       "layer": "projectile",
-      "status": "TODO",
-      "fit": "center"
+      "status": "INTEGRATED",
+      "fit": "center",
+      "output": "assets/art-v6/game-ready/v6/vfx_bonelord_spear_rain.png",
+      "maxCentroidDrift": 8,
+      "maxBaselineDrift": 48,
+      "minCoverage": 0.01
     },
     {
       "name": "boss_abysseye",
@@ -1260,6 +1291,56 @@
       "layer": "fx",
       "status": "TODO",
       "fit": "center"
+    },
+    {
+      "loop": false,
+      "fit": "center",
+      "frames": 6,
+      "layer": "ground",
+      "output": "assets/art-v6/game-ready/v6/vfx_bonelord_grave_mark.png",
+      "fps": 8,
+      "renderScale": 1,
+      "source": null,
+      "status": "INTEGRATED",
+      "deriveFrom": "boss_bonelord_charge",
+      "frameSize": [
+        64,
+        64
+      ],
+      "notes": "Deterministic grave marker + rising soul, pairs with the built-in skeleton burrow emerge.",
+      "anchor": [
+        32,
+        60
+      ],
+      "name": "vfx_bonelord_grave_mark",
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4,
+      "minCoverage": 0.02
+    },
+    {
+      "loop": false,
+      "fit": "center",
+      "frames": 6,
+      "layer": "fx",
+      "output": "assets/art-v6/game-ready/v6/vfx_bonelord_soul_return.png",
+      "fps": 8,
+      "renderScale": 1,
+      "source": null,
+      "status": "INTEGRATED",
+      "deriveFrom": "boss_bonelord_resurrect",
+      "frameSize": [
+        64,
+        64
+      ],
+      "notes": "Soul wisps returning to the bone lord during corpse resurrection.",
+      "anchor": [
+        32,
+        32
+      ],
+      "name": "vfx_bonelord_soul_return",
+      "maxCentroidDrift": 16,
+      "maxBaselineDrift": 40,
+      "minCoverage": 0.006
     }
   ]
 }
