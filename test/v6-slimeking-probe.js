@@ -100,6 +100,11 @@ function assert(ok, message) { if (!ok) throw new Error(message); }
   ];
   for (const [name, cycle, expectedAction, lowHp] of skills) {
     await driveSkill(cycle, lowHp);
+    await page.evaluate(() => {
+      const card = document.querySelector('.modal:not(.hidden) .lu-card');
+      if (card) card.click();
+    });
+    await page.waitForFunction(() => Debug.state() === 'run', null, { timeout: 3000 }).catch(() => {});
     await page.waitForFunction(({ action }) => {
       const b = Debug.run().boss;
       return b && b.alive && b.bossAction === action && b.bossActionPhase >= 1;
@@ -124,6 +129,11 @@ function assert(ok, message) { if (!ok) throw new Error(message); }
 
   // low-HP multi-bounce
   await driveSkill(0, true);
+  await page.evaluate(() => {
+    const card = document.querySelector('.modal:not(.hidden) .lu-card');
+    if (card) card.click();
+  });
+  await page.waitForFunction(() => Debug.state() === 'run', null, { timeout: 3000 }).catch(() => {});
   await page.waitForTimeout(800);
   console.log('BOUNCE DEBUG ' + JSON.stringify(await boss()));
   await page.waitForFunction(() => {
@@ -155,7 +165,8 @@ function assert(ok, message) { if (!ok) throw new Error(message); }
   console.log('DEATH DEBUG ' + JSON.stringify(await boss()));
   console.log('DEATH DEBUG2 ' + JSON.stringify(await page.evaluate(() => {
     const r = Debug.run(); const b = r.boss;
-    return b ? { alive: b.alive, dying: b.dying, dyingT: b.dyingT, frame: r.frame, state: Debug.state() } : null;
+    return b ? { alive: b.alive, dying: b.dying, dyingT: b.dyingT, frame: r.frame, state: Debug.state(),
+      over: r.over, hp: r.player.hp, downed: r.player.downed } : null;
   })));
   await page.waitForFunction(() => { const b = Debug.run().boss; return !b || !b.alive; }, null, { timeout: 8000 });
   console.log('SLIMEKING DEATH OK  10-frame strip resolved before loot');

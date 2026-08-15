@@ -912,8 +912,8 @@ try {
     (() => {
       Debug.startArtTest();
       const r = Debug.run(), p = r.player;
-      const bossHp = CFG.BOSSES.boss_bonelord.hp >= 90000 &&
-        CFG.BOSSES.boss_abysseye.hp >= 200000 && CFG.BOSSES.boss_darklord.hp >= 450000;
+      const bossHp = CFG.BOSSES.boss_bonelord.hp >= 45000 &&
+        CFG.BOSSES.boss_abysseye.hp >= 100000 && CFG.BOSSES.boss_darklord.hp >= 225000;
       r.exitGate = { x: 240, y: 0, open: false, used: false, openedAt: 0 };
       const dark = Entities.spawnEnemy(r, 'boss_darklord', 360, 0, { allowNear: true });
       Entities.damageEnemy(r, dark, dark.hp + 1, { noCrit: true });

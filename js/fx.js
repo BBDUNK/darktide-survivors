@@ -67,7 +67,7 @@
   var L = new Array(L_MAX);   // 闪电
   var lCur = 0;
   for (var i3 = 0; i3 < L_MAX; i3++) {
-    L[i3] = { pts: new Float32Array((L_SEG + 1) * 2), n: 0, life: 0, max: 0.15, color: '#8fd8ff' };
+    L[i3] = { pts: new Float32Array((L_SEG + 1) * 2), n: 0, life: 0, max: 0.15, color: '#8fd8ff', width: 3 };
   }
 
   var F = new Array(F_MAX);   // 全屏闪光
@@ -382,14 +382,14 @@
       var pts = b.pts, n2 = b.n * 2, j;
       ctx.globalAlpha = la * 0.4;                            // 外晕
       ctx.strokeStyle = b.color;
-      ctx.lineWidth = 4.5;
+      ctx.lineWidth = b.width * 1.6;
       ctx.beginPath();
       ctx.moveTo(pts[0], pts[1]);
       for (j = 2; j < n2; j += 2) { ctx.lineTo(pts[j], pts[j + 1]); }
       ctx.stroke();
       ctx.globalAlpha = la;                                  // 亮心
       ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 1.6;
+      ctx.lineWidth = Math.max(1.2, b.width * 0.6);
       ctx.beginPath();
       ctx.moveTo(pts[0], pts[1]);
       for (j = 2; j < n2; j += 2) { ctx.lineTo(pts[j], pts[j + 1]); }
@@ -558,11 +558,13 @@
     spawnRing(x, y, r, color, life, w);
   };
 
-  FX.lightning = function (x1, y1, x2, y2, color) {
+  FX.lightning = function (x1, y1, x2, y2, color, width) {
     if (!isFinite(x1) || !isFinite(y1) || !isFinite(x2) || !isFinite(y2)) { return; }
     var b = L[lCur];
     lCur++; if (lCur >= L_MAX) { lCur = 0; }
     b.color = (typeof color === 'string') ? color : '#8fd8ff';
+    b.width = (typeof width === 'number' && width > 0) ? width : 3;
+    if (b.width > 12) b.width = 12;
     b.max = 0.15;
     b.life = 0.15;
     genBolt(b, x1, y1, x2, y2);

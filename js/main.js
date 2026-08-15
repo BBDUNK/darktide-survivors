@@ -869,6 +869,15 @@
     if (!action || typeof action !== 'object' || !action.type) return false;
 
     var id = action.id, def, w, pt, maxLv;
+    if (action.type === 'char') {
+      def = CFG.CHARS.find(function (c) { return c.id === id; });
+      if (!def) return false;
+      run.player.char = def;
+      Entities.recomputeStats(run);
+      run.player.hp = Math.min(run.player.hp, run.player.stats.hp);
+      UI.toastText('训练场角色切换: ' + def.name);
+      return true;
+    }
     if (action.type === 'weapon') {
       def = CFG.WEAPONS[id]; if (!def) return false;
       w = Weapons.findWeapon(run, id);

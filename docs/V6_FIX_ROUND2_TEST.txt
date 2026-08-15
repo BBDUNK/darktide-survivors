@@ -1,0 +1,97 @@
+
+LOAD OK   js/config.js
+LOAD OK   js/i18n.js
+LOAD OK   js/sprites.js
+LOAD OK   js/audio.js
+LOAD OK   js/fx.js
+LOAD OK   js/engine.js
+LOAD OK   js/meta.js
+LOAD OK   js/entities.js
+LOAD OK   js/weapons.js
+LOAD OK   js/minimap.js
+LOAD OK   js/encyclopedia.js
+LOAD OK   js/net.js
+LOAD OK   js/merchant.js
+LOAD OK   js/ui.js
+LOAD OK   js/main.js
+BOOT OK   引擎循环运行中
+[AudioSys] 本环境不支持 WebAudio,音频停用
+RUN OK    开局成功(骑士 · 幽暗墓园)
+  probe t=20s alive=12 kills=14 picks=0
+  probe t=40s alive=14 kills=37 picks=2
+  probe t=60s alive=10 kills=67 picks=2
+SIM OK    第一阶段完成,升级选择 2 次,累计击杀 67
+PAUSE OK  暂停/恢复正常
+[SpriteGen] 未知素材名: zombie_emerge
+  死亡于第二阶段 t≈86s
+SIM2 OK   击杀 100(1.18/秒),金币获得 80,最佳存活 85s
+RUN2 OK   第二局 20 秒,新增击杀 16
+  WEAPON OK crossblade (已进化)
+  WEAPON OK arcanebolt (已进化)
+[SpriteGen] 未知素材名: vfx_jade_dragon_summon
+[SpriteGen] 未知素材名: vfx_jade_dragon_dissipate
+  WEAPON OK windbow (已进化)
+  WEAPON OK holyaura (已进化)
+  WEAPON OK whirlaxe
+  WEAPON OK chainlight (已进化)
+  WEAPON OK frostnova (已进化)
+  WEAPON OK fireflask (已进化)
+  WEAPON OK shadowdagger (已进化)
+  WEAPON OK orbitblade (已进化)
+  WEAPON OK holytome (已进化)
+  WEAPON OK teslacoil (已进化)
+WEAPONS OK 全部 12 把武器满级/进化渲染无崩溃
+COOP1 OK  敌人能攻击队友,房主不受波及 (队友 100→92)
+COOP1B OK 房主致命伤进入可救援倒地,对局继续
+COOP2 OK  队友武器能打怪 (13.001624999999999→0)
+COOP2B OK 延迟箭与环绕武器按玩家独立运行
+COOP3 OK  客户端快照池稳定,反复重建无漂移
+COOP4 OK  客户端弹幕纯视觉,不产生本地伤害
+COOP5 OK  队友可拾取烤肉/宝箱
+COOP6 OK  队友升级生效 (选项 3 个,武器 1 被动 0,房主武器未被污染 1)
+COOP7 OK  banished 集合互不污染,房主引用已复原
+COOP8 OK  3 分钟高压刷怪受上限约束 (峰值存活 400/上限 400,峰值弹幕 30,收尾存活 400)
+COOP9 OK  视野裁剪前置场景就绪 (视野内 2,视野外普通 2,视野外精英 1)
+COOP10 OK 断线重连保留进度 (角色 berserker,武器 lv7,被动 4,无幽灵记录,输入已清零,积压升级重推)
+COOP11 OK 共享经验池从 0 起累加 (触发 onCoopLevel 1 次,等级 → 2,待选 1)
+COOP12 OK 倒地标记双字段一致 (w.downed 与 player.downed 同时置位)
+R1 OK 复活只生效一次,不会因属性重算无限复活
+R2 OK 冻结/眩晕敌人无接触伤害,未冻结的对照仍会咬人
+R3 OK 金币/烤肉按 TTL 过期,宝箱永久保留
+R4 OK 火瓶十字火场与电磁战车炮击均为真实对局机制
+R5 OK 训练场可逐项生成、满级进化并在真实对局中验收
+R6 OK 终局大门距离校验、撤离结算与触屏共用入口正常
+R7 OK 后期 Boss 耐久、暗潮真身、血怒回血与电塔分散布点正常
+R8 OK 全图补给箱混合武器/实物道具，领取后永久消失
+R9 OK 蜘蛛大型远程蛛网无减速/定身且飞行速度稳定
+R10 OK 圣女光环贴地范围、天降圣光与七位大天使实体正常
+R11 OK 寒霜冲击以连续半径向外扩散，使用固定圆形素材足迹
+R12 OK 无尽、终局、等级与长期击杀成就均可解锁
+R13 OK 六角色虚影成长、游侠蓄力龙、骑士誓约与法师四目标光束正常
+
+=== 无头冒烟测试全部通过 ===
+[exit: 0] test/headless.js
+ANCHOR OK  every atlas frame anchor is inside its bounds
+ATLAS OK  584 assets, 3408 frames, four-direction hero actions, VFX and art scales
+ANIM OK  hero, 16 ordinary enemies, 16 elite enemies, all boss and VFX actions have distinct non-empty frames
+THEME STATE {"font":"\"Fusion Pixel\", \"Microsoft YaHei\", \"PingFang SC\", sans-serif","buttonBackground":"url(\"http://127.0.0.1:56563/assets/art-v2/ui/menu_btn_frame_edge.png\")","buttonBorder":"rgb(243, 230, 198)","panelBackground":"url(\"http://127.0.0.1:56563/assets/art-v4/sprites/ui/battle_report_panel.png\")","panelBorder":"rgb(222, 211, 188)","altarBackground":"url(\"http://127.0.0.1:56563/assets/art-v4/sprites/ui/holy_altar_panel.png\")","altarTitle":"强化圣坛","altarIconBackground":"url(\"http://127.0.0.1:56563/assets/art-v4/sprites/ui/altar_cross_states.png\")","altarIconBox":[213,197],"titleFont":"\"Darktide Gothic\", Georgia, serif","titleText":"DarkEscaper","menuBackground":{"loaded":true,"src":"http://127.0.0.1:56563/assets/backgrounds/menu-monolith.png"}}
+THEME OK  Baroque framed menu, large altar cross, authored report/altar panels, DarkEscaper title and local fonts
+SECONDARY UI STATE {"gridBorder":"url(\"http://127.0.0.1:56563/assets/art-v4/sprites/ui/baroque_menu_frame.png\")","gridColumns":"266.656px 266.672px 266.656px","cardBorders":["url(\"http://127.0.0.1:56563/assets/art-v4/sprites/ui/baroque_menu_frame.png\")","url(\"http://127.0.0.1:56563/assets/art-v4/sprites/ui/baroque_menu_frame.png\")","url(\"http://127.0.0.1:56563/assets/art-v4/sprites/ui/baroque_menu_frame.png\")","url(\"http://127.0.0.1:56563/assets/art-v4/sprites/ui/baroque_menu_frame.png\")","url(\"http://127.0.0.1:56563/assets/art-v4/sprites/ui/baroque_menu_frame.png\")","url(\"http://127.0.0.1:56563/assets/art-v4/sprites/ui/baroque_menu_frame.png\")"],"cardBoxes":[[356,179],[356,179],[356,179],[356,174],[356,174],[356,174]],"infoWidth":1013,"contentBottoms":[630,700,720],"infoChildBottom":627,"background":"repeating-linear-gradient(135deg, rgba(148, 104, 52, 0.035) 0px, rgba(148, 104, 52, 0.035) 2px, rgba(0, 0, 0, 0) 2px, rgba(0, 0, 0, 0) 7px), radial-gradient(rgb(42, 28, 25), rgb(5, 5, 8) 72%) / rgba(0, 0, 0, 0)","centerStack":["DIV#.card locked","DIV#.card-grid","DIV#.screen panel-col character-select-screen","CANVAS#game.","DIV#stage.","BODY#.","HTML#."],"visible":true}
+SECONDARY UI OK  framed character grid/cards/detail panel fit at 1280x720
+V5 COMBAT OK  arcane refraction/brand, six-role avatar runtime and charged 270px/s Tesla cannon run in a real browser
+PERF OK   400 enemies: 54.5 FPS mean, p95 33.3ms, 400 alive
+ART OK    real-browser atlas, render and load acceptance passed
+[exit: 0] test/art-probe.js
+BOSS OK   abyss eye splits into two roles, doubles phase health, and rewards once
+[exit: 0] test/boss-phase-probe.js
+PANEL VISIBLE OK
+PANEL COLLAPSE OK
+CHAR SWITCH OK  knight -> mage
+TRAINING PANEL OK  collapsible console, character switching and keyboard-safety blur active
+[exit: 0] test/v6-training-panel-probe.js
+ORDINARY ATLAS OK  slime/slime_big/spider full actions + 8-frame mudwalker emergence
+ORDINARY SHOT OK  slime / slime_big / spider / emerging mudwalker
+PICKUP SHOT OK  11 drop/interactable types captured in one viewport
+MUDWALKER EMERGE OK  zombie uses authored emergence strip during burrow
+ORDINARY OK   priority monsters accepted; remaining 11 keep audited V4 assets
+[exit: 0] test/v6-ordinary-probe.js

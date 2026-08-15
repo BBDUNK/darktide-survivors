@@ -2798,7 +2798,11 @@ window.Entities = (function () {
         var authored = SpriteGen.frames(enemySprite);
         if (authored && authored.length > 1) enemyF = Math.min(enemyF, authored.length - 1);
       }
-      drawActorSprite(ctx, enemySprite, enemyF + (e.animo | 0),
+      // 一次性动作(变招/死亡/变身/受击)必须从服务器动作纪元精确推进,
+      // 不能叠加每个敌人随机的 animo 相位:否则 8 帧动画 + animo 取模会
+      // 跳到中间帧,把残缺的动作帧画出来。循环动画仍用 animo 错相。
+      var enemyFrameIdx = oneShotBoss ? enemyF : enemyF + (e.animo | 0);
+      drawActorSprite(ctx, enemySprite, enemyFrameIdx,
                  e.x, e.y + e.r * 0.7 + wob - hop, sc * sq, e.face < 0, e.alpha, tint, true);
       // 被强化的小怪：血气贴着身体向外逸散，不再画一圈廉价的黄色圆环。
       if (e.buffed && !e.elite && !e.boss) {

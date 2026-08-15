@@ -906,15 +906,30 @@ window.UI = (function () {
     hudRefs.warn = h('div', 'hud-warn hidden', '');
     s.appendChild(hudRefs.warn);
     hudRefs.testPanel = h('div', 'test-panel hidden');
-    hudRefs.testPanel.appendChild(h('div', 'test-panel-title', '训练场'));
-    hudRefs.testPanel.appendChild(h('div', 'test-panel-note', '无自动刷怪 · 逐项实机验收'));
+    var testHead = h('div', 'test-panel-head');
+    testHead.appendChild(h('div', 'test-panel-title', '训练场'));
+    testHead.appendChild(h('div', 'test-panel-note', '无自动刷怪 · 逐项实机验收'));
+    var testToggle = btn('收起 ▸', 'small-btn test-panel-toggle', function () {
+      var panel = hudRefs.testPanel;
+      var body = panel.querySelector('.test-panel-body');
+      var collapsed = panel.classList.toggle('collapsed');
+      body.classList.toggle('hidden', collapsed);
+      testToggle.textContent = collapsed ? '展开 ◂' : '收起 ▸';
+      if (window.Engine && Engine.clearKeys) Engine.clearKeys();
+    });
+    testHead.appendChild(testToggle);
+    hudRefs.testPanel.appendChild(testHead);
+    var testBody = h('div', 'test-panel-body');
+    hudRefs.testPanel.appendChild(testBody);
     // 训练场里的控件用完即失焦,避免焦点留在下拉/按钮上导致键盘输入被吞
     // (表现为"自己按住 W"或按 WASD 没反应)。
     hudRefs.testPanel.addEventListener('change', function (ev) {
       if (ev.target && ev.target.blur) ev.target.blur();
+      if (window.Engine && Engine.clearKeys) Engine.clearKeys();
     });
     hudRefs.testPanel.addEventListener('click', function (ev) {
       if (ev.target && ev.target.tagName === 'BUTTON' && ev.target.blur) ev.target.blur();
+      if (window.Engine && Engine.clearKeys) Engine.clearKeys();
     });
     function addTestPicker(label, choices, actionType, altType, primaryText, altText) {
       var row = h('div', 'test-picker');
@@ -931,11 +946,13 @@ window.UI = (function () {
       actions.appendChild(btn(primaryText, 'small-btn', function () { if (cb.onTestAction) cb.onTestAction({ type: actionType, id: select.value }); }));
       if (altType) actions.appendChild(btn(altText, 'small-btn accent', function () { if (cb.onTestAction) cb.onTestAction({ type: altType, id: select.value }); }));
       row.appendChild(actions);
-      hudRefs.testPanel.appendChild(row);
+      testBody.appendChild(row);
     }
     function defsToChoices(defs) {
+      if (Array.isArray(defs)) return defs.map(function (c) { return { id: c.id, name: c.name }; });
       return Object.keys(defs).sort().map(function (id) { return { id: id, name: defs[id].name }; });
     }
+    addTestPicker('角色', defsToChoices(CFG.CHARS), 'char', null, '切换角色', '');
     addTestPicker('武器', defsToChoices(CFG.WEAPONS), 'weapon', 'ultimateWeapon', '获得/升级', '满级进化');
     addTestPicker('被动', defsToChoices(CFG.PASSIVES), 'passive', null, '满级被动', '');
     addTestPicker('掉落物', [
@@ -948,7 +965,7 @@ window.UI = (function () {
     [['weapons', '全武器'], ['ultimate', '全进化'], ['enemies', '全怪物'], ['boss', '轮换 Boss'], ['clear', '清场'], ['heal', '回满血']].forEach(function (entry) {
       batch.appendChild(btn(entry[1], 'small-btn', function () { if (cb.onTestAction) cb.onTestAction(entry[0]); }));
     });
-    hudRefs.testPanel.appendChild(batch);
+    testBody.appendChild(batch);
     s.appendChild(hudRefs.testPanel);
     screens.hud = s; root.appendChild(s);
   }

@@ -1036,6 +1036,25 @@ window.Weapons = (function () {
       FX.flash('#fff0a6', 0.18, 0.3);
     }
     if (w.holyJudgmentT > 0) p._holyJudgment = true;
+
+    // 誓约圣剑终极进化:天降黄金巨剑自动追击敌人,审判期间额外高频剑围。
+    if (w.evolved) {
+      w.holySwordCd = (w.holySwordCd === undefined ? 0.4 : w.holySwordCd) - dt;
+      if (w.holySwordCd <= 0) {
+        w.holySwordCd = p._holyJudgment ? 1.6 : 3.2;
+        var st0 = wStats(run, w);
+        var swordCount = p._holyJudgment ? 2 : 1;
+        for (var si = 0; si < swordCount; si++) {
+          var te = nearestEnemy(p.x, p.y, 520);
+          var hs = spawn(run, w, st0, 'divineSword', 'p_slash_big', p.x, p.y - 8, 0, 0, 1e9);
+          hs.dmg = st0.dmg * (p._holyJudgment ? 2.2 : 1.65);
+          hs.pierce = 9999; hs.size = 42; hs.aux = 620;
+          hs.holyBossBonus = st0.holyBossBonus || 1;
+        }
+        FX.sprite(p.x, p.y - 6, 'vfx_shield', 0.5, 96, true);
+        AudioSys.play('evolve');
+      }
+    }
   }
 
   function updateArcaneAvatar(run, w, dt) {
@@ -1044,7 +1063,7 @@ window.Weapons = (function () {
     w.arcaneBeamTick = (w.arcaneBeamTick || 0) - dt;
     if (w.arcaneBeamTick > 0) return;
     w.arcaneBeamTick = 0.12;
-    var candidates = collectInRange(p.x, p.y, 540).slice();
+    var candidates = collectInRange(p.x, p.y, 1080).slice();
     candidates.sort(function (a, b) {
       var ap = a.boss ? 2000000000 : (a.elite ? 1000000000 : a.hp);
       var bp = b.boss ? 2000000000 : (b.elite ? 1000000000 : b.hp);
@@ -1052,12 +1071,17 @@ window.Weapons = (function () {
     });
     var previous = w.arcaneLocks || [], next = [];
     var st = wStats(run, w);
+    var beamColors = ['#dcc6ff', '#c9a0ff', '#a66bff', '#8b3fd8', '#6b1fa8'];
     for (var i = 0; i < Math.min(4, candidates.length); i++) {
       var target = candidates[i], since = run.t;
       for (var j = 0; j < previous.length; j++) if (previous[j].uid === target.uid) { since = previous[j].since; break; }
       var ramp = 1 + E.clamp((run.t - since) / 2, 0, 1) * 3;
       next.push({ uid: target.uid, target: target, since: since, ramp: ramp });
       if (!run._netVisual) Entities.damageEnemy(run, target, st.dmg * 0.24 * ramp, { noCrit: true });
+      // 光束持续打在目标身上:越锁越深、越锁越粗。
+      FX.lightning(p.x, p.y - 10, target.x, target.y - 6,
+        beamColors[Math.min(4, Math.floor(ramp))],
+        1 + ramp * 0.8);
     }
     w.arcaneLocks = next;
   }

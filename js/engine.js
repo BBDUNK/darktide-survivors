@@ -87,6 +87,9 @@ window.Engine = (function () {
     window.addEventListener('blur', function () { keys = {}; if (Engine.onBlur) Engine.onBlur(); });
     // 触屏虚拟摇杆
     canvas.addEventListener('pointerdown', function (e) {
+      // 点回游戏画面时,把焦点从训练场控件上收回来并清掉可能卡住的按键。
+      if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+      keys = {};
       trackPointer(e);
       if (e.pointerType === 'mouse' && e.button === 1) {
         e.preventDefault();
@@ -494,6 +497,7 @@ window.Engine = (function () {
     clamp: clamp, lerp: lerp, dist2: dist2, mulberry32: mulberry32, hash2: hash2,
     fmtTime: fmtTime, pick: pick,
     initInput: initInput, readInput: readInput, keys: function () { return keys; },
+    clearKeys: function () { keys = {}; },
     lastDir: lastDir, touchState: touch, pointerState: pointer,
     consumeDash: function () { var d = dashRequest; dashRequest = null; return d; },
     gridClear: gridClear, gridInsert: gridInsert, gridQuery: gridQuery, gridNearest: gridNearest,

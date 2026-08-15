@@ -245,6 +245,14 @@
 .test-panel { position:absolute; right:12px; bottom:74px; width:250px; max-height:calc(100% - 102px); overflow:auto; display:flex; flex-direction:column; gap:7px; padding:11px; z-index:12; box-sizing:border-box; background:rgba(18,10,16,.96); border:14px solid transparent; border-image:url('../assets/art-v4/sprites/ui/baroque_menu_frame.png') 116 104 fill / 14px / 0 stretch; box-shadow:0 0 0 2px #1a1110 inset, 0 5px 16px rgba(0,0,0,.5); pointer-events:auto; }
 .test-panel-title { color:#f0d899; text-align:center; font-weight:900; font-size:14px; letter-spacing:2px; text-shadow:2px 2px #1b0c0b; }
 .test-panel-note { color:#c9a86b; text-align:center; font-size:9px; margin-top:-4px; }
+.test-panel-head { display:flex; flex-direction:column; align-items:center; gap:4px; position:sticky; top:0; background:rgba(18,10,16,.96); z-index:2; }
+.test-panel-body { display:flex; flex-direction:column; gap:7px; }
+.test-panel-toggle { position:absolute; right:6px; top:8px; flex:none; min-width:52px !important; }
+.test-panel.collapsed { width:auto; max-height:none; overflow:visible; }
+.test-panel.collapsed .test-panel-head { gap:2px; }
+.test-panel.collapsed .test-panel-note { display:none; }
+.test-panel.collapsed .test-panel-title { display:none; }
+.test-panel.collapsed .test-panel-toggle { position:static; }
 .test-picker { display:grid; grid-template-columns:42px 1fr; gap:4px 6px; align-items:center; }
 .test-picker label { color:#dfc687; font-size:10px; font-weight:700; text-align:right; }
 .test-select { width:100%; min-width:0; height:23px; color:#f4dfaa; background:#150e10; border:1px solid #936e39; font:10px var(--font-cn, monospace); }

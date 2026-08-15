@@ -18,7 +18,7 @@ window.CFG = {
     SAVE_KEY: 'darktide_save_v2',
     // 画布适配:contain=等比适配永不裁切(默认) / fill=拉伸铺满可裁边 / native=原尺寸不缩放
     UI_SCALE: 'contain',
-    VERSION: 'v0.21.0'
+    VERSION: 'v0.21.1'
   },
 
   // 玩家基础属性(角色/被动/商店在此之上修正)
@@ -198,13 +198,13 @@ window.CFG = {
     boss_slimeking: { name: '腐液之王', hp: 1600, dmg: 20, spd: 46, r: 64, xp: 60,
       music: 'boss_slime', shotCol: '#7fd44f',
       desc: '第 5 分钟:巨型史莱姆,跳劈并分裂出小史莱姆' },
-    boss_bonelord:  { name: '骸骨领主', hp: 90000, dmg: 26, spd: 50, r: 48, xp: 120,
+    boss_bonelord:  { name: '骸骨领主', hp: 45000, dmg: 26, spd: 50, r: 48, xp: 120,
       music: 'boss_bone', shotCol: '#e8e0c8',
       desc: '第 10 分钟:环形骨矢弹幕,连续蓄力冲撞' },
-    boss_abysseye:  { name: '深渊之眼', hp: 200000, dmg: 30, spd: 42, r: 52, xp: 220,
+    boss_abysseye:  { name: '深渊之眼', hp: 100000, dmg: 30, spd: 42, r: 52, xp: 220,
       music: 'boss_abyss', shotCol: '#c46bff',
       desc: '第 15 分钟:螺旋弹幕,瞬移到背后并召唤怨灵' },
-    boss_darklord:  { name: '暗潮魔王', hp: 450000, dmg: 36, spd: 55, r: 56, xp: 500,
+    boss_darklord:  { name: '暗潮魔王', hp: 225000, dmg: 36, spd: 55, r: 56, xp: 500,
       music: 'boss_dark', shotCol: '#ff4d7a',
       desc: '第 18 分钟:最终决战,兼具冲撞与瞬移。20 分钟后狂暴!' }
   },

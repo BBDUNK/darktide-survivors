@@ -29,6 +29,8 @@ def parse_args() -> argparse.Namespace:
                         choices=("union", "baseline", "center"),
                         help="Fit all frames with one union bbox scale: union=preserve authored offsets, "
                              "baseline=shared bottom contact, center=shared vertical center")
+    parser.add_argument("--resize", choices=("nearest", "lanczos"), default="nearest",
+                        help="Downscale filter: nearest for authored pixel art, lanczos for high-res illustrations")
     parser.add_argument("--padding", type=int, default=3)
     parser.add_argument("--colors", type=int, default=40)
     parser.add_argument("--alpha-threshold", type=int, default=96)
@@ -179,7 +181,7 @@ def main() -> None:
             if args.shared_fit == "center":
                 size = (max(1, round(subject.width * contact_scale)),
                         max(1, round(subject.height * contact_scale)))
-                subject = subject.resize(size, Image.Resampling.NEAREST)
+                subject = subject.resize(size, getattr(Image.Resampling, args.resize.upper()))
                 if args.flatten:
                     cell_x = frame_index * cell_w
                     cell_y = 0
@@ -194,7 +196,7 @@ def main() -> None:
             if args.shared_fit == "baseline":
                 size = (max(1, round(subject.width * contact_scale)),
                         max(1, round(subject.height * contact_scale)))
-                subject = subject.resize(size, Image.Resampling.NEAREST)
+                subject = subject.resize(size, getattr(Image.Resampling, args.resize.upper()))
                 if args.flatten:
                     cell_x = frame_index * cell_w
                     cell_y = 0
@@ -207,7 +209,7 @@ def main() -> None:
                 out.alpha_composite(subject, (x, y))
                 continue
             size = (max(1, round(subject.width * scale)), max(1, round(subject.height * scale)))
-            subject = subject.resize(size, Image.Resampling.NEAREST)
+            subject = subject.resize(size, getattr(Image.Resampling, args.resize.upper()))
             if args.flatten:
                 cell_x = frame_index * cell_w
                 cell_y = 0
@@ -233,7 +235,7 @@ def main() -> None:
                 subject = frame.crop(bbox)
                 scale = min(max_w / subject.width, max_h / subject.height)
                 size = (max(1, round(subject.width * scale)), max(1, round(subject.height * scale)))
-                subject = subject.resize(size, Image.Resampling.NEAREST)
+                subject = subject.resize(size, getattr(Image.Resampling, args.resize.upper()))
                 if args.flatten:
                     x = frame_index * cell_w + (cell_w - subject.width) // 2
                     y = cell_h - args.padding - subject.height
