@@ -2206,6 +2206,34 @@
           FX.ring(d.x, d.y, { r: 84, color: '#d897ff', life: 0.55, width: 4 });
         } else if (m.kind === 'eyeSummonCast') {
           AudioSys.play('elite_spawn');
+        } else if (m.kind === 'lordBladeWarn' || m.kind === 'lordBreathWarn') {
+          FX.ring(d.x, d.y, { r: 120, color: '#a33b4f', life: 0.6, width: 5 });
+        } else if (m.kind === 'lordBladeCast') {
+          FX.ring(d.x, d.y, { r: 134, color: '#a33b4f', life: 0.4, width: 5 });
+          AudioSys.play('hit2');
+        } else if (m.kind === 'lordBreathCast') {
+          FX.lightning(d.x, d.y, d.x + Math.cos(d.a || 0) * 340, d.y + Math.sin(d.a || 0) * 340, '#7a3cff');
+          AudioSys.play('zap');
+        } else if (m.kind === 'lordSplitWarn' || m.kind === 'lordRainWarn') {
+          var pts3 = d.pts || [];
+          for (var li2 = 0; li2 < pts3.length; li2++) {
+            FX.sprite(pts3[li2][0], pts3[li2][1],
+              m.kind === 'lordSplitWarn' ? 'vfx_darklord_rift' : 'vfx_darklord_blackflame_rain', 0.6, 92, true);
+          }
+        } else if (m.kind === 'lordSplitCast' || m.kind === 'lordRainCast') {
+          AudioSys.play('shoot_bolt');
+        } else if (m.kind === 'lordSlashWarn' || m.kind === 'lordSlashCast') {
+          FX.sprite(d.x, d.y, 'vfx_darklord_rift', 0.45, 110, true);
+        } else if (m.kind === 'lordCurseWarn' || m.kind === 'lordCurseCast') {
+          FX.sprite(d.x, d.y, 'vfx_darklord_rift', 0.6, 110, true);
+        } else if (m.kind === 'lordCloneWarn' || m.kind === 'lordCloneCast') {
+          FX.sprite(d.x - 90, d.y, 'vfx_darklord_shadow_clone', 0.7, 160, true, 0.4);
+          FX.sprite(d.x + 90, d.y, 'vfx_darklord_shadow_clone', 0.7, 160, true, 0.4);
+        } else if (m.kind === 'lordRiftCast') {
+          FX.flash('#17020b', 0.5, 0.5);
+          FX.sprite(d.x, d.y, 'vfx_darklord_rift', 0.65, 130, true);
+        } else if (m.kind === 'lordWingWarn') {
+          FX.ring(d.x, d.y, { r: 92, color: '#a33b4f', life: 0.55, width: 4 });
         } else if (m.kind === 'death') {
           AudioSys.play('boss_die');
           FX.explosion(d.x, d.y, 96);

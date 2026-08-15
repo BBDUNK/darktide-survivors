@@ -377,7 +377,7 @@ window.Entities = (function () {
     e.elite = false; e.boss = isBoss; e.bossType = isBoss ? id : '';
     e.bossAction = ''; e.bossActionTick = 0; e.bossActionPhase = 0; e.bossSkill = '';
     e.dying = false; e.dyingT = 0; e.hurtT = 0;
-    e.resurrected = false;
+    e.resurrected = false; e.transformT = 0;
     // Pool entries are reused.  Phase/role state must be cleared explicitly
     // or a freshly spawned monster can inherit a previous boss's second phase.
     e.phase2 = false; e.eyeRole = ''; e.eyeGroup = 0; e.splitT = 0; e.eyeRage = 0;
@@ -473,6 +473,7 @@ window.Entities = (function () {
   function damageEnemy(run, e, dmg, opts) {
     if (!e.alive) return 0;
     if (e.dying) return 0;
+    if (e.transformT > 0) return 0;
     if (opts && opts.fire && e.def && e.def.ai === 'spitter') dmg *= 2;
     // 破土过程中不可被击中(尚未完全出土)
     if (e.burrowT > 0) return 0;
@@ -524,7 +525,12 @@ window.Entities = (function () {
     e.maxHp = 5000000; e.hp = e.maxHp;
     e.dmg *= 1.8; e.spd *= 1.22; e.r = Math.max(76, e.r * 1.42);
     e.aiT = 0.55; e.chargeSeq = 0; e.chargePhase = 0; e.atkCount = 0;
-    if (run.exitGate) { run.exitGate.open = true; run.exitGate.openedAt = run.t; }
+    e.transformT = 0.8;
+    setBossAction(run, e, 'transform');
+    if (run.exitGate) {
+      run.exitGate.open = true; run.exitGate.openedAt = run.t;
+      FX.sprite(run.exitGate.x, run.exitGate.y - 96, 'vfx_darklord_gate_enter', 0.9, 130, true);
+    }
     FX.flash('#7d1530', 0.70, 0.75); FX.shake(16, 1.0); FX.explosion(e.x, e.y, 150);
     AudioSys.play('boss_spawn');
     if (run.cb && run.cb.onWarn) run.cb.onWarn('暗潮魔王显露真身！大门已开启：靠近后按 E 可撤离。');
@@ -537,6 +543,7 @@ window.Entities = (function () {
     if (!gate || !gate.open || gate.used || !p) return false;
     if (E.dist2(p.x, p.y, gate.x, gate.y) >= 92 * 92) return false;
     gate.used = true;
+    FX.sprite(gate.x, gate.y - 96, 'vfx_darklord_gate_enter', 0.9, 140, true);
     run.over = true; run.victory = true;
     return true;
   }
@@ -725,6 +732,12 @@ window.Entities = (function () {
         e.vx = 0; e.vy = 0; e.kx = 0; e.ky = 0;
         if (e.dyingT <= 0) killEnemy(run, e);
         else continue;
+      }
+      if (e.transformT > 0) {
+        e.transformT -= dt;
+        e.vx = 0; e.vy = 0; e.kx = 0; e.ky = 0;
+        if (e.transformT <= 0) setBossAction(run, e, 'idle');
+        continue;
       }
       // 破土出场:静止且不参与碰撞/受伤,出土完成后才正常行动
       if (e.burrowT > 0) {
@@ -1793,31 +1806,216 @@ window.Entities = (function () {
         }
         break;
       }
-      case 'boss_darklord': { // 终局:径向弹幕 + 冲撞 + 瞬移,狂暴后全面加速
-        var dcol = bdef.shotCol;
-        if (e.stiffT > 0) {                    // 瞬移后僵直
+      case 'boss_darklord': { // P1 四技能 / P2 五技能,狂暴加速,变身后保留 500 万生命与逃生门
+        var dcol = bdef.shotCol || '#a33b4f';
+        if (e.dying) { e.vx = 0; e.vy = 0; break; }
+        if (!e.bossAction) setBossAction(run, e, 'idle');
+        if (e.stiffT > 0) {
           e.stiffT -= dt;
           e.vx = 0; e.vy = 0;
           if ((run.frame & 3) === 0) FX.trail(e.x + (Math.random() * 34 - 17), e.y + (Math.random() * 34 - 17), dcol, 3);
+          if (e.stiffT <= 0) setBossAction(run, e, 'idle');
           break;
         }
-        if (e.chargeSeq > 0) {                 // 冲撞连段(用 skT,aiT 被弹幕节奏占用)
+        if (e.bossAction === 'idle' || e.bossAction === 'walk') {
+          e.vx = nx * spd * sMul; e.vy = ny * spd * sMul;
+          e.aiT -= dt;
+          if (e.aiT <= 0) {
+            e.skillCycle = (e.skillCycle || 0) + 1;
+            var c = e.skillCycle;
+            e.bossSkill = e.phase2
+              ? (c % 5 === 0 ? 'breath' : (c % 5 === 1 ? 'wing' : (c % 5 === 2 ? 'rain' : (c % 5 === 3 ? 'clone' : 'rift'))))
+              : (c % 4 === 0 ? 'blade' : (c % 4 === 1 ? 'split' : (c % 4 === 2 ? 'slash' : 'curse')));
+            e.bossActionPhase = 1; e.skillMarked = false;
+            setBossAction(run, e, 'telegraph');
+            e.skillT = e.bossSkill === 'wing' ? 0.55 : 0.65;
+          }
+          break;
+        }
+        e.vx = 0; e.vy = 0;
+        if (e.bossActionPhase === 1) {                   // telegraph
+          if (!e.skillMarked) {
+            e.skillMarked = true;
+            var dd = { x: Math.round(e.x), y: Math.round(e.y) };
+            if (e.bossSkill === 'blade' || e.bossSkill === 'breath') {
+              FX.ring(e.x, e.y, { r: e.phase2 ? 130 : 100, color: dcol, life: 0.6, width: 5 });
+              bossEmitFx(run, e.bossSkill === 'blade' ? 'lordBladeWarn' : 'lordBreathWarn', dd);
+            } else if (e.bossSkill === 'split' || e.bossSkill === 'rain') {
+              for (var pi = 0; pi < 3; pi++) {
+                var pa = Math.atan2(p.lastVy || 0, p.lastVx || 1);
+                var pd = 90 + pi * 46;
+                var ptx = E.clamp(p.x + Math.cos(pa + (pi - 1) * 0.34) * pd, -CFG.GAME.MAP_R, CFG.GAME.MAP_R);
+                var pty = E.clamp(p.y + Math.sin(pa + (pi - 1) * 0.34) * pd, -CFG.GAME.MAP_R, CFG.GAME.MAP_R);
+                (e.skillPts = e.skillPts || []).push({ x: ptx, y: pty });
+                FX.sprite(ptx, pty, e.bossSkill === 'split' ? 'vfx_darklord_rift' : 'vfx_darklord_blackflame_rain', 0.6, 92, true);
+              }
+              bossEmitFx(run, e.bossSkill === 'split' ? 'lordSplitWarn' : 'lordRainWarn',
+                { pts: e.skillPts.map(function (pt) { return [Math.round(pt.x), Math.round(pt.y)]; }) });
+            } else if (e.bossSkill === 'slash') {
+              FX.sprite(e.x, e.y, 'vfx_darklord_rift', 0.45, 110, true);
+              bossEmitFx(run, 'lordSlashWarn', dd);
+            } else if (e.bossSkill === 'clone') {
+              FX.sprite(e.x - 90, e.y, 'vfx_darklord_shadow_clone', 0.6, 160, true, 0.4);
+              FX.sprite(e.x + 90, e.y, 'vfx_darklord_shadow_clone', 0.6, 160, true, 0.4);
+              bossEmitFx(run, 'lordCloneWarn', dd);
+            } else if (e.bossSkill === 'curse') {
+              FX.sprite(p.x, p.y, 'vfx_darklord_rift', 0.65, 110, true);
+              bossEmitFx(run, 'lordCurseWarn', { x: Math.round(p.x), y: Math.round(p.y) });
+            } else {
+              FX.ring(e.x, e.y, { r: 92, color: dcol, life: 0.55, width: 4 });
+              bossEmitFx(run, 'lordWingWarn', dd);
+            }
+          }
+          e.skillT -= dt;
+          if (e.skillT <= 0) {
+            e.bossActionPhase = 2;
+            if (e.bossSkill === 'blade') { e.skillT = 0.5; e.castStep = 0; setBossAction(run, e, 'attack'); }
+            else if (e.bossSkill === 'split') { e.skillT = 0.6; e.castStep = 0; setBossAction(run, e, 'attack'); }
+            else if (e.bossSkill === 'slash') { e.skillT = 0.45; e.castStep = 0; setBossAction(run, e, 'attack'); }
+            else if (e.bossSkill === 'curse') { e.skillT = 0.7; e.castStep = 0; setBossAction(run, e, 'attack'); }
+            else if (e.bossSkill === 'breath') { e.skillT = 0.8; e.castStep = 0; setBossAction(run, e, 'attack'); }
+            else if (e.bossSkill === 'wing') { e.chargeSeq = 2; e.chargePhase = 0; e.skT = 0.05; e.bossActionPhase = 3; e.skillT = 1.4; setBossAction(run, e, 'charge'); }
+            else if (e.bossSkill === 'rain') { e.skillT = 0.6; e.castStep = 0; setBossAction(run, e, 'attack'); }
+            else if (e.bossSkill === 'clone') { e.skillT = 0.6; e.castStep = 0; setBossAction(run, e, 'attack'); }
+            else { e.skillT = 0.7; e.castStep = 0; setBossAction(run, e, 'attack'); }
+          }
+          break;
+        }
+        if (e.bossActionPhase === 2) {                   // cast
+          if (e.bossSkill === 'blade') {
+            if (e.castStep === 0) {
+              e.castStep = 1;
+              var lEnts = playerEntries(run);
+              for (var li = 0; li < lEnts.length; li++) {
+                var lw = lEnts[li];
+                if (!lw.downed && lw.player.hp > 0 && E.dist2(lw.player.x, lw.player.y, e.x, e.y) < 134 * 134) {
+                  damagePlayerAt(run, lw, e.dmg * 1.25 * dMul);
+                }
+              }
+              for (var q = 0; q < 8; q++) {
+                var aa = (Math.PI * 2 / 8) * q + run.t;
+                fireShot(e.x, e.y, Math.cos(aa), Math.sin(aa), 160, e.dmg * 0.5 * dMul, 0, 0, false, dcol);
+              }
+              FX.ring(e.x, e.y, { r: 134, color: dcol, life: 0.4, width: 5 });
+              AudioSys.play('hit2');
+              bossEmitFx(run, 'lordBladeCast', { x: Math.round(e.x), y: Math.round(e.y) });
+            }
+          } else if (e.bossSkill === 'split' || e.bossSkill === 'rain') {
+            if (e.castStep === 0) {
+              e.castStep = 1;
+              var pts = e.skillPts || [];
+              for (var ti = 0; ti < pts.length; ti++) {
+                fireLob(pts[ti].x, pts[ti].y, e.x, e.y, e.bossSkill === 'split' ? 42 : 36,
+                  e.dmg * 0.85 * dMul, 0.5);
+                if (e.bossSkill === 'rain') FX.sprite(pts[ti].x, pts[ti].y, 'vfx_darklord_blackflame_rain', 0.6, 92, true);
+              }
+              AudioSys.play('shoot_bolt');
+              bossEmitFx(run, e.bossSkill === 'split' ? 'lordSplitCast' : 'lordRainCast',
+                { pts: pts.map(function (pt) { return [Math.round(pt.x), Math.round(pt.y)]; }) });
+            }
+          } else if (e.bossSkill === 'slash') {
+            if (e.castStep === 0) {
+              e.castStep = 1;
+              var dpa = Math.atan2(p.lastVy || 0, p.lastVx || 1);
+              if (!p.lastVx && !p.lastVy) dpa = Math.random() * Math.PI * 2;
+              var R3 = CFG.GAME.MAP_R;
+              e.x = E.clamp(p.x - Math.cos(dpa) * 100, -R3, R3);
+              e.y = E.clamp(p.y - Math.sin(dpa) * 100, -R3, R3);
+              FX.sprite(e.x, e.y, 'vfx_darklord_rift', 0.45, 110, true);
+              FX.shake(7, 0.35);
+              AudioSys.play('freeze');
+              bossEmitFx(run, 'lordSlashCast', { x: Math.round(e.x), y: Math.round(e.y) });
+            }
+            if (e.skillT <= 0.2) {
+              var sEnts = playerEntries(run);
+              for (var si = 0; si < sEnts.length; si++) {
+                var sw = sEnts[si];
+                if (!sw.downed && sw.player.hp > 0 && E.dist2(sw.player.x, sw.player.y, e.x, e.y) < 126 * 126) {
+                  damagePlayerAt(run, sw, e.dmg * 1.1 * dMul);
+                }
+              }
+            }
+          } else if (e.bossSkill === 'curse') {
+            if (e.castStep === 0 && e.skillT <= 0.35) {
+              e.castStep = 1;
+              var ppos = run.player;
+              FX.sprite(ppos.x, ppos.y, 'vfx_darklord_rift', 0.5, 110, true);
+              var cEnts = playerEntries(run);
+              for (var ci = 0; ci < cEnts.length; ci++) {
+                var cw = cEnts[ci];
+                if (!cw.downed && cw.player.hp > 0 && E.dist2(cw.player.x, cw.player.y, ppos.x, ppos.y) < 70 * 70) {
+                  damagePlayerAt(run, cw, e.dmg * 0.8 * dMul);
+                }
+              }
+              for (var gi = 0; gi < 2; gi++) spawnAtRing(run, 'wraith');
+              AudioSys.play('freeze');
+              bossEmitFx(run, 'lordCurseCast', { x: Math.round(ppos.x), y: Math.round(ppos.y) });
+            }
+          } else if (e.bossSkill === 'breath') {
+            var bAim = Math.atan2(p.y - e.y, p.x - e.x);
+            if ((run.frame & 2) === 0) {
+              FX.lightning(e.x + Math.cos(bAim) * 20, e.y + Math.sin(bAim) * 20,
+                e.x + Math.cos(bAim) * 340, e.y + Math.sin(bAim) * 340, '#7a3cff');
+            }
+            var bEnts = playerEntries(run);
+            for (var bi2 = 0; bi2 < bEnts.length; bi2++) {
+              var bw = bEnts[bi2];
+              if (bw.downed || bw.player.hp <= 0) continue;
+              var bdx = bw.player.x - e.x, bdy = bw.player.y - e.y;
+              var bAlong = bdx * Math.cos(bAim) + bdy * Math.sin(bAim);
+              var bPerp = Math.abs(-bdx * Math.sin(bAim) + bdy * Math.cos(bAim));
+              if (bAlong > 0 && bAlong < 340 && bPerp < 52 && (run.frame % 10) === 0) {
+                damagePlayerAt(run, bw, e.dmg * 0.36);
+              }
+            }
+            bossEmitFx(run, 'lordBreathCast', { x: Math.round(e.x), y: Math.round(e.y), a: +bAim.toFixed(2) });
+          } else if (e.bossSkill === 'clone') {
+            if (e.castStep === 0) {
+              e.castStep = 1;
+              for (var cl = 0; cl < 2; cl++) {
+                FX.sprite(e.x + (cl ? 90 : -90), e.y, 'vfx_darklord_shadow_clone', 0.7, 160, true, 0.4);
+              }
+              for (var cq = 0; cq < 12; cq++) {
+                var ca = (Math.PI * 2 / 12) * cq + run.t;
+                fireShot(e.x, e.y, Math.cos(ca), Math.sin(ca), 150, e.dmg * 0.42 * dMul, 0, 0, false, dcol);
+              }
+              AudioSys.play('shoot_bolt');
+              bossEmitFx(run, 'lordCloneCast', { x: Math.round(e.x), y: Math.round(e.y) });
+            }
+          } else {
+            if (e.castStep === 0) {
+              e.castStep = 1;
+              FX.flash('#17020b', 0.5, 0.5);
+              FX.sprite(e.x, e.y, 'vfx_darklord_rift', 0.65, 130, true);
+              for (var rq = 0; rq < 24; rq++) {
+                var ra = (Math.PI * 2 / 24) * rq;
+                fireShot(e.x, e.y, Math.cos(ra), Math.sin(ra), 165, e.dmg * 0.45 * dMul, 0, 0, false, dcol);
+              }
+              AudioSys.play('shoot_bolt');
+              bossEmitFx(run, 'lordRiftCast', { x: Math.round(e.x), y: Math.round(e.y) });
+            }
+          }
+          e.skillT -= dt;
+          if (e.skillT <= 0) { e.bossActionPhase = 3; e.skillT = e.bossSkill === 'slash' ? 0.8 : 0.4; }
+          break;
+        }
+        // Wing rush: reuse the authoritative three-charge sequence with the
+        // authored P2 wing-rush strip as its visual.
+        if (e.bossSkill === 'wing' && e.chargeSeq > 0) {
           e.skT -= dt;
           if (e.chargePhase === 0) {
             e.vx = 0; e.vy = 0; e.flash = 0.05;
+            setBossAction(run, e, 'charge');
             if (e.skT <= 0) {
-              e.chargePhase = 1; e.skT = 0.5;
-              e.tgtX = nx; e.tgtY = ny;
-              FX.ring(e.x, e.y, { r: 80, color: dcol, life: 0.3, width: 4 });
+              e.chargePhase = 1; e.skT = 0.5; e.tgtX = nx; e.tgtY = ny;
+              FX.ring(e.x, e.y, { r: 92, color: dcol, life: 0.3, width: 4 });
             }
           } else {
             e.vx = e.tgtX * (enrage ? 520 : 450); e.vy = e.tgtY * (enrage ? 520 : 450);
             e.kx = 0; e.ky = 0;
             if ((run.frame & 1) === 0) FX.trail(e.x, e.y, dcol, 5);
             if (e.skT <= 0) {
-              e.chargeSeq--; e.chargePhase = 0;
-              e.skT = 0.9;                 // 三下冲刺之间的停顿,拉长避免连撞
-              e.aiT = e.chargeSeq > 0 ? 0.9 : 1.2;
+              e.chargeSeq--; e.chargePhase = 0; e.skT = 0.55;
               FX.shake(6, 0.3);
               for (var dj = 0; dj < 8; dj++) {
                 var da = (Math.PI * 2 / 8) * dj + run.t;
@@ -1825,47 +2023,15 @@ window.Entities = (function () {
               }
             }
           }
+          e.skillT -= dt;
+          if (e.skillT <= 0) { e.bossActionPhase = 0; e.bossSkill = ''; setBossAction(run, e, 'idle'); e.aiT = 1.2 / (enrage ? 1.6 : 1); }
           break;
         }
-        e.blinkT -= dt;
-        if (e.blinkT <= 0) {                   // 瞬移
-          e.blinkT = (enrage ? 6 : 9) + Math.random() * 3;
-          FX.burst(e.x, e.y, { color: dcol, n: 20, speed: 170, life: 0.45, size: 3 });
-          var dpa = Math.atan2(p.lastVy || 0, p.lastVx || 1);
-          if (!p.lastVx && !p.lastVy) dpa = Math.random() * Math.PI * 2;
-          var R3 = CFG.GAME.MAP_R;
-          e.x = E.clamp(p.x - Math.cos(dpa) * 100, -R3, R3);
-          e.y = E.clamp(p.y - Math.sin(dpa) * 100, -R3, R3);
-          e.stiffT = enrage ? 0.75 : 1.0;
-          FX.shake(7, 0.35);
-          AudioSys.play('freeze');
-          break;
-        }
-        e.vx = nx * spd * sMul; e.vy = ny * spd * sMul;
-        e.aiPhase += dt * 1.8;
-        // 冲刺冷却:每 10 秒一轮,一轮冲 3 下。冲刺进行中不计数
-        if (e.chargeSeq <= 0) e.chargeCd = (e.chargeCd || 10) - dt;
-        if (e.aiT <= 0) {
-          e.aiT = e.phase2 ? 1.10 : (enrage ? 1.6 : 2.6);
-          e.atkCount = (e.atkCount || 0) + 1;
-          if (e.chargeCd <= 0) {           // 冷却到:开始一轮三连冲
-            e.chargeCd = 10;
-            e.chargeSeq = 3; e.chargePhase = 0; e.skT = 0.55;
-            if (run.cb.onWarn) run.cb.onWarn('⚠ 暗潮魔王冲锋!');
-            break;
-          }
-          var nn = e.phase2 ? 30 : (enrage ? 20 : 12);
-          for (var q = 0; q < nn; q++) {
-            var aa = (Math.PI * 2 / nn) * q + e.aiPhase;
-            fireShot(e.x, e.y, Math.cos(aa), Math.sin(aa), 160, e.dmg * 0.5 * dMul, 0, 0, false, dcol);
-          }
-          AudioSys.play('shoot_bolt');
-          if (e.phase2 && e.atkCount % 2 === 0) {
-            for (var di = 0; di < 3; di++) {
-              var da = Math.random() * Math.PI * 2;
-              spawnEnemy(run, di === 0 ? 'imp' : 'wraith', e.x + Math.cos(da) * 95, e.y + Math.sin(da) * 95, { allowNear: true });
-            }
-          }
+        e.skillT -= dt;                               // recover
+        if (e.skillT <= 0) {
+          e.bossActionPhase = 0; e.bossSkill = '';
+          setBossAction(run, e, 'idle');
+          e.aiT = (e.phase2 ? 1.4 : 2.4) / (enrage ? 1.6 : 1);
         }
         if ((run.frame % 22) === 0) FX.trail(e.x + (Math.random() * 40 - 20), e.y + (Math.random() * 40 - 20), '#7a3cff', 4);
         break;
@@ -2440,7 +2606,10 @@ window.Entities = (function () {
   function drawExitGate(ctx, gate, t) {
     var pulse = 0.5 + Math.sin(t * 2.4) * 0.5;
     var openAmt = gate.open ? E.clamp((t - (gate.openedAt || t)) / 1.1, 0, 1) : 0;
-    var img = SpriteGen.get('exit_gate');
+    var gateFrames = SpriteGen.frames('vfx_darklord_escape_gate');
+    var img = gateFrames && gateFrames.length === 4
+      ? gateFrames[Math.min(3, Math.floor(openAmt * 4))]
+      : SpriteGen.get('exit_gate');
     var gw = 166, gh = 248;
     ctx.save();
     // First paint the dynamic portal light, then the authored stone/iron gate.
@@ -2574,8 +2743,17 @@ window.Entities = (function () {
       var oneShotBoss = false;
       if (e.boss) {
         if (visualState === 'telegraph') visualState = e.bossSkill === 'jump' || e.bossSkill === 'bounce' ? 'charge' : 'attack';
-        if (e.bossType === 'boss_abysseye') {
-          // Split-phase eyes use their role-specific authored sheets.
+        if (e.bossType === 'boss_darklord') {
+          enemySprite = e.phase2 ? 'boss_darklord_phase2' : 'boss_darklord';
+          if (visualState === 'transform') enemySprite = 'boss_darklord_transform';
+          else if (visualState === 'death') enemySprite = 'boss_darklord_death';
+          else if (visualState === 'hurt') enemySprite = e.phase2 ? 'boss_darklord_phase2_hurt' : 'boss_darklord_hurt';
+          else if (visualState === 'walk') enemySprite = e.phase2 ? 'boss_darklord_phase2_walk' : 'boss_darklord_walk';
+          else if (visualState === 'attack') enemySprite = e.phase2 ? 'boss_darklord_phase2_breath' : 'boss_darklord_attack';
+          else if (visualState === 'charge') enemySprite = 'boss_darklord_charge';
+          oneShotBoss = visualState === 'attack' || visualState === 'charge' || visualState === 'death' ||
+            visualState === 'hurt' || visualState === 'transform';
+        } else if (e.bossType === 'boss_abysseye') {          // Split-phase eyes use their role-specific authored sheets.
           if (e.phase2 && e.eyeRole === 'caster') {
             enemySprite = 'boss_abysseye_remote';
             if (visualState === 'attack') enemySprite = 'boss_abysseye_remote_cast';

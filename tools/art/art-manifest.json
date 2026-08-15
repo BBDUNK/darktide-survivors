@@ -9387,134 +9387,134 @@
       "maxBaselineDrift": 12
     },
     {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
       "name": "boss_darklord",
-      "source": "assets/art-v4/repaired/bosses/boss_darklord_actions.png",
+      "source": "assets/art-v6/game-ready/v6/boss_darklord.png",
       "frameSize": [
-        96,
-        96
+        112,
+        112
       ],
-      "frameRow": 0,
-      "frames": 8,
-      "fps": 6,
+      "frames": 6,
+      "fps": 7,
       "size": [
-        96,
-        96
+        112,
+        112
       ],
       "anchor": [
-        48,
-        93
+        56,
+        108
       ],
-      "renderScale": 0.58
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.08,
+      "maxColors": 40,
+      "maxCentroidDrift": 16,
+      "maxBaselineDrift": 1
     },
     {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
       "name": "boss_darklord_walk",
-      "source": "assets/art-v4/repaired/bosses/boss_darklord_actions.png",
+      "source": "assets/art-v6/game-ready/v6/boss_darklord_walk.png",
       "frameSize": [
-        96,
-        96
+        112,
+        112
       ],
-      "frameRow": 1,
       "frames": 8,
-      "fps": 8,
+      "fps": 9,
       "size": [
-        96,
-        96
+        112,
+        112
       ],
       "anchor": [
-        48,
-        93
+        56,
+        108
       ],
-      "renderScale": 0.58
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.2,
+      "maxColors": 40,
+      "maxCentroidDrift": 16,
+      "maxBaselineDrift": 2
     },
     {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
       "name": "boss_darklord_charge",
-      "source": "assets/art-v4/repaired/bosses/boss_darklord_actions.png",
+      "source": "assets/art-v6/game-ready/v6/boss_darklord_charge.png",
       "frameSize": [
-        96,
-        96
+        144,
+        144
       ],
-      "frameRow": 2,
       "frames": 8,
       "fps": 10,
       "size": [
-        96,
-        96
+        144,
+        144
       ],
       "anchor": [
-        48,
-        93
+        72,
+        140
       ],
-      "renderScale": 0.58
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.08,
+      "maxColors": 40,
+      "maxCentroidDrift": 32,
+      "maxBaselineDrift": 32
     },
     {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
       "name": "boss_darklord_attack",
-      "source": "assets/art-v4/repaired/bosses/boss_darklord_actions.png",
+      "source": "assets/art-v6/game-ready/v6/boss_darklord_attack.png",
       "frameSize": [
-        96,
-        96
+        112,
+        112
       ],
-      "frameRow": 3,
       "frames": 8,
-      "fps": 11,
+      "fps": 10,
       "size": [
-        96,
-        96
+        112,
+        112
       ],
       "anchor": [
-        48,
-        93
+        56,
+        108
       ],
-      "renderScale": 0.58
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.08,
+      "maxColors": 40,
+      "maxCentroidDrift": 16,
+      "maxBaselineDrift": 12
     },
     {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
       "name": "boss_darklord_death",
-      "source": "assets/art-v4/repaired/bosses/boss_darklord_actions.png",
+      "source": "assets/art-v6/game-ready/v6/boss_darklord_death.png",
       "frameSize": [
-        96,
-        96
+        144,
+        144
       ],
-      "frameRow": 4,
-      "frames": 8,
-      "fps": 8,
+      "frames": 10,
+      "fps": 10,
       "size": [
-        96,
-        96
+        144,
+        144
       ],
       "anchor": [
-        48,
-        93
+        72,
+        140
       ],
-      "renderScale": 0.58
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.02,
+      "maxColors": 40,
+      "maxCentroidDrift": 28,
+      "maxBaselineDrift": 20
     },
     {
       "preservePixels": true,
@@ -14025,6 +14025,292 @@
       "maxColors": 40,
       "maxCentroidDrift": 4,
       "maxBaselineDrift": 8
+    },
+    {
+      "name": "boss_darklord_transform",
+      "source": "assets/art-v6/game-ready/v6/boss_darklord_transform.png",
+      "frameSize": [
+        144,
+        144
+      ],
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        144,
+        144
+      ],
+      "anchor": [
+        72,
+        140
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.08,
+      "maxColors": 40,
+      "maxCentroidDrift": 16,
+      "maxBaselineDrift": 8
+    },
+    {
+      "name": "boss_darklord_phase2_breath",
+      "source": "assets/art-v6/game-ready/v6/boss_darklord_phase2_breath.png",
+      "frameSize": [
+        144,
+        144
+      ],
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        144,
+        144
+      ],
+      "anchor": [
+        72,
+        140
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.08,
+      "maxColors": 40,
+      "maxCentroidDrift": 18,
+      "maxBaselineDrift": 48
+    },
+    {
+      "name": "vfx_darklord_escape_gate",
+      "source": "assets/art-v6/game-ready/v6/vfx_darklord_escape_gate.png",
+      "frameSize": [
+        128,
+        192
+      ],
+      "frames": 4,
+      "fps": 6,
+      "size": [
+        128,
+        192
+      ],
+      "anchor": [
+        64,
+        188
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.08,
+      "maxColors": 40,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 1
+    },
+    {
+      "name": "boss_darklord_phase2",
+      "source": "assets/art-v6/game-ready/v6/boss_darklord_phase2.png",
+      "frameSize": [
+        144,
+        144
+      ],
+      "frames": 4,
+      "fps": 7,
+      "size": [
+        144,
+        144
+      ],
+      "anchor": [
+        72,
+        140
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.2,
+      "maxColors": 40,
+      "maxCentroidDrift": 6,
+      "maxBaselineDrift": 2
+    },
+    {
+      "name": "boss_darklord_hurt",
+      "source": "assets/art-v6/game-ready/v6/boss_darklord_hurt.png",
+      "frameSize": [
+        112,
+        112
+      ],
+      "frames": 4,
+      "fps": 10,
+      "size": [
+        112,
+        112
+      ],
+      "anchor": [
+        56,
+        108
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.2,
+      "maxColors": 40,
+      "maxCentroidDrift": 16,
+      "maxBaselineDrift": 2
+    },
+    {
+      "name": "vfx_darklord_blackflame_rain",
+      "source": "assets/art-v6/game-ready/v6/vfx_darklord_blackflame_rain.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        92
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.02,
+      "maxColors": 40,
+      "maxCentroidDrift": 6,
+      "maxBaselineDrift": 24
+    },
+    {
+      "name": "vfx_darklord_gate_enter",
+      "source": "assets/art-v6/game-ready/v6/vfx_darklord_gate_enter.png",
+      "frameSize": [
+        64,
+        64
+      ],
+      "frames": 4,
+      "fps": 8,
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.02,
+      "maxColors": 40,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 16
+    },
+    {
+      "name": "boss_darklord_phase2_walk",
+      "source": "assets/art-v6/game-ready/v6/boss_darklord_phase2_walk.png",
+      "frameSize": [
+        144,
+        144
+      ],
+      "frames": 8,
+      "fps": 9,
+      "size": [
+        144,
+        144
+      ],
+      "anchor": [
+        72,
+        140
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.2,
+      "maxColors": 40,
+      "maxCentroidDrift": 6,
+      "maxBaselineDrift": 2
+    },
+    {
+      "name": "boss_darklord_phase2_hurt",
+      "source": "assets/art-v6/game-ready/v6/boss_darklord_phase2_hurt.png",
+      "frameSize": [
+        144,
+        144
+      ],
+      "frames": 4,
+      "fps": 10,
+      "size": [
+        144,
+        144
+      ],
+      "anchor": [
+        72,
+        140
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.2,
+      "maxColors": 40,
+      "maxCentroidDrift": 6,
+      "maxBaselineDrift": 2
+    },
+    {
+      "name": "vfx_darklord_shadow_clone",
+      "source": "assets/art-v6/game-ready/v6/vfx_darklord_shadow_clone.png",
+      "frameSize": [
+        144,
+        144
+      ],
+      "frames": 6,
+      "fps": 12,
+      "size": [
+        144,
+        144
+      ],
+      "anchor": [
+        72,
+        140
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.1,
+      "maxColors": 40,
+      "maxCentroidDrift": 12,
+      "maxBaselineDrift": 2
+    },
+    {
+      "name": "vfx_darklord_rift",
+      "source": "assets/art-v6/game-ready/v6/vfx_darklord_rift.png",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frames": 6,
+      "fps": 10,
+      "size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        48
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.02,
+      "maxColors": 40,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 20
     }
   ]
 }

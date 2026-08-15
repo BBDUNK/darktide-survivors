@@ -206,7 +206,41 @@
 - 回归：`headless.js`、`art-probe.js`、`boss-phase-probe.js` 通过；`coop-probe.js` 首次因客户端首波敌人快照迟到偶发失败，单独重跑通过（记录为环境时序抖动，非代码失败），最终以重跑通过为准。
 - 提交：`art(v6): process abyss eye game-ready assets`、`feat(v6): integrate abyss eye five-skill P1 and split roles`。
 
-### 3.4 暗潮魔王（进行中）
+### 3.4 暗潮魔王 ✅
+
+**素材（16 条 `READY → INTEGRATED`，P1 112×112 / P2 144×144 主体 + 门/黑焰雨/影分身/裂口 VFX，40 色、硬 Alpha）：**
+
+| 运行时名 | 帧 | 说明 |
+|---|---|---|
+| `boss_darklord` / `_walk` / `_hurt` | 6/8/4 | P1 黑甲魔王完整动作 |
+| `boss_darklord_attack` | 8 | P1 暗刃横扫 |
+| `boss_darklord_transform` | 8 | P1→P2 变身，一次性、不可覆盖 |
+| `boss_darklord_charge` | 8 | P2 翼冲 |
+| `boss_darklord_phase2` / `_walk` / `_hurt` | 4/8/4 | P2 真身（明显大于 P1：112→144，黑焰/破翼/角/暗红裂纹由源图承载） |
+| `boss_darklord_phase2_breath` | 8 | 虚空吐息 |
+| `boss_darklord_death` | 10 | P2 最终死亡 |
+| `vfx_darklord_escape_gate` | 4 | 门关闭→符文唤醒→半开→全开 |
+| `vfx_darklord_blackflame_rain` | 8 | **程序化重新生成纯透明背景版本**；带渐变背景废稿仍被禁用 |
+| `vfx_darklord_shadow_clone` | 6 | 影分身 |
+| `vfx_darklord_rift` | 6 | 全屏裂隙/诅咒法阵/地裂共用表现 |
+| `vfx_darklord_gate_enter` | 4 | 大门开启与玩家穿越特效 |
+
+**运行时接入：**
+
+- P1 四技能状态机：暗刃横扫（近身 + 8 发径向）、裂地（沿玩家动向 3 个 lob 落点 + 裂口 VFX）、传送斩（裂口→背后→近身斩）、诅咒法阵（玩家位置法阵 + 2 怨灵）；
+- P2 五技能：虚空吐息（锥形持续伤害 + 闪电表现）、翼冲（沿用三连冲，改用翼冲条）、黑焰雨（3 落点 lob + 黑焰雨 VFX）、影分身（2 个分身 VFX + 12 发径向）、全屏裂隙（24 发径向 + 屏幕闪光）；
+- 变身条 0.8s 一次性播放，期间免伤且动作不可被移动覆盖；P2 保留 **500 万生命**、逃生门选择、击败后中间按钮“进入无尽模式”；
+- 逃生门改用 4 帧 `vfx_darklord_escape_gate` 按开启进度切帧；开启完成与玩家穿越均触发 `vfx_darklord_gate_enter`；
+- 所有离散技能经可靠 `bossEvent/audioEvent` 同步，协议版本不变。
+
+**验收：**
+
+- `test/v6-darklord-probe.js` 真实浏览器全绿：P1 四技能、变身（500 万 HP + 门开启）、P2 五技能、翼冲三连、最终死亡条；截图 `shots/v6-darklord/`。
+- 图集：`578 assets / 3398 frames`，`0 errors / 160 warnings`（暗潮魔王替换后较基线减少 8 条旧警告，新素材 0 新增警告）。
+- 回归：`headless.js`、`art-probe.js`、`boss-phase-probe.js` 全部通过；400 怪 53.5 FPS、p95 33.4ms。
+- 提交：`art(v6): process dark lord game-ready assets`、`feat(v6): integrate dark lord P1/P2 skills, transform and gate`。
+
+## 阶段 4：普通怪、地图和掉落（进行中）
 
 ## 阶段 4：普通怪、地图和掉落（待开始）
 
