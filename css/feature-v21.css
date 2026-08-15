@@ -274,31 +274,54 @@
   background-color: rgba(10,9,10,.94) !important;
   box-shadow: inset 0 0 0 2px #4b3927, inset 0 0 22px rgba(147,91,31,.16), 5px 6px 0 rgba(0,0,0,.52) !important;
 }
-/* 暂停界面：恢复主菜单同款巴洛克金框 + 主菜单同款按钮边框，面积适当放大。 */
+/* 暂停界面：干净精致的暗金面板，不再用厚重巴洛克整图九宫格。
+   深色底 + 金铜双描边 + 顶部柔光 + 标题分隔线，按钮保留主菜单同款金属贴图。 */
 .pause-box {
-  min-width: min(620px, calc(100vw - 30px)) !important;
-  padding: 46px 54px 44px !important;
-  border: 18px solid transparent !important;
-  border-image: url('../assets/art-v4/sprites/ui/baroque_menu_frame.png') 116 104 fill / 18px / 0 stretch !important;
-  outline: none !important;
-  outline-offset: 0 !important;
-  background-color: rgba(13, 8, 11, .95) !important;
-  box-shadow: 0 10px 32px rgba(0,0,0,.68) !important;
+  width: min(560px, calc(100vw - 32px)) !important;
+  max-width: calc(100vw - 32px) !important;
+  min-width: 0 !important;
+  padding: 42px 50px 40px !important;
+  border: 2px solid #c19a55 !important;
+  border-image: none !important;
+  outline: 1px solid #221811 !important;
+  outline-offset: 4px !important;
+  border-radius: 0 !important;
+  background:
+    radial-gradient(120% 70% at 50% 0%, rgba(218,168,86,.12), rgba(0,0,0,0) 58%),
+    linear-gradient(180deg, rgba(26,18,16,.98), rgba(11,7,9,.98)) !important;
+  box-shadow:
+    inset 0 0 0 1px #0e0a0b,
+    inset 0 0 0 3px #3c2d19,
+    inset 0 0 36px rgba(0,0,0,.5),
+    0 0 0 5px rgba(0,0,0,.55),
+    0 16px 42px rgba(0,0,0,.8) !important;
+}
+.pause-box .modal-title {
+  width: 100%;
+  padding-bottom: 14px;
+  margin-bottom: 4px;
+  border-bottom: 2px solid rgba(193,154,85,.45);
+  font-size: 26px;
+  letter-spacing: 8px;
+  text-align: center;
+  color: #f3d99a !important;
+  text-shadow: 2px 2px 0 #1a0d05, 0 0 18px rgba(255,190,90,.28) !important;
 }
 .pause-menu {
   width: 100% !important;
-  gap: 12px !important;
+  gap: 14px !important;
 }
 .pause-menu .btn {
-  width: min(440px, calc(100vw - 120px)) !important;
+  width: min(420px, calc(100% - 20px)) !important;
   min-height: 58px !important;
-  padding: 0 36px !important;
+  padding: 0 30px !important;
   border: 0 !important;
   border-image: none !important;
   outline: 0 !important;
   background: url('../assets/art-v2/ui/menu_btn_frame_edge.png') center / 100% 100% no-repeat !important;
   color: #f1d28a !important;
   font-size: 17px !important;
+  letter-spacing: 2px !important;
   line-height: 1 !important;
   box-shadow: none !important;
   text-shadow: 1px 1px 0 #201300 !important;

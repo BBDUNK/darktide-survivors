@@ -34,8 +34,8 @@ window.L = (function () {
       // 暂停
       pause_title: '⏸ 暂停',
       pause_resume: '▶ 继续',
-      pause_codex: '📖 百科全书',
-      pause_giveup: '🏳 放弃这局',
+      pause_codex: '百科全书',
+      pause_giveup: '放弃这局',
       // 结算
       result_win: '☀ 破晓而归 ☀',
       result_lose: '✝ 你倒下了 ✝',
@@ -117,8 +117,8 @@ window.L = (function () {
       on: 'ON', off: 'OFF',
       pause_title: '⏸ Paused',
       pause_resume: '▶ Resume',
-      pause_codex: '📖 Codex',
-      pause_giveup: '🏳 Give Up',
+      pause_codex: 'Codex',
+      pause_giveup: 'Give Up',
       result_win: '☀ Victory ☀',
       result_lose: '✝ Defeated ✝',
       back: '← Back',
