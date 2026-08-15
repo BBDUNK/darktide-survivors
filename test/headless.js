@@ -787,13 +787,18 @@ try {
         run.player.x = 0; run.player.y = 0;
         Entities.updateEnemies(run, 1 / 60); Entities.updateGems(run, 1 / 60); Entities.updateItems(run, 1 / 60);
       };
+      // 烂泥行者(僵尸)现在有 1 秒出土动画:先等它完全出土再开始对照。
       const z = Entities.spawnEnemy(run, 'zombie', run.player.x + 8, run.player.y, { allowNear: true });
+      for (let f = 0; f < 70; f++) step();
       z.frozen = 5;
+      run.player.hp = run.player.stats.hp; run.player.iframe = 0;
       const hp0 = run.player.hp;
       for (let f = 0; f < 30; f++) step();
       const frozenNoHit = run.player.hp >= hp0;
-      Entities.clearEnemies(run); run.player.hp = run.player.stats.hp; run.player.iframe = 0;
+      Entities.clearEnemies(run);
       const z2 = Entities.spawnEnemy(run, 'zombie', run.player.x + 8, run.player.y, { allowNear: true });
+      for (let f = 0; f < 70; f++) step();
+      run.player.hp = run.player.stats.hp; run.player.iframe = 0;
       const hp1 = run.player.hp;
       for (let f = 0; f < 30; f++) step();
       const normalHit = run.player.hp < hp1;
@@ -1091,7 +1096,7 @@ try {
       const orb = { id: 'arcanebolt', lv: 8, cdT: 99, evolved: true, evoId: 'arcanestorm', curR: 0,
         arcaneBeamTick: 0 };
       r.weapons = [orb]; Entities.recomputeStats(r);
-      for (let i = 0; i < 5; i++) Entities.spawnEnemy(r, 'zombie', p.x + 90 + i * 32, p.y, { allowNear: true });
+      for (let i = 0; i < 5; i++) Entities.spawnEnemy(r, 'slime', p.x + 90 + i * 32, p.y, { allowNear: true });
       Entities.updateEnemies(r, 0.001); // rebuild the authoritative spatial grid
       const hp0 = Entities.pool.filter(e => e.alive).reduce((n, e) => n + e.hp, 0);
       r.t += 0.13; r.frame++; Weapons.update(r, 0.13);

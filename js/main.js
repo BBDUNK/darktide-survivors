@@ -1444,7 +1444,7 @@
         // 墓园沼泽用固定的泥边水坑精灵，而不是随缩放变形的程序椭圆；
         // 世界坐标由 rx/ry 决定，镜头移动时水坑不会游移。
         if (wet && map.id === 'graveyard') {
-          var puddleId = 'terrain_grave_swamp_puddle' + (1 + Math.floor(E.hash2(rx * 109, ry * 113) * 4));
+          var puddleId = 'terrain_grave_swamp_puddle' + (1 + Math.floor(E.hash2(rx * 109, ry * 113) * 6));
           var puddle = SpriteGen.get(puddleId);
           // 数量减少后单个做大(约 1.5x),整体沼泽覆盖感不减但更成片、更像大水洼
           var pw = 372 + Math.floor(E.hash2(rx * 127, ry * 131) * 174);

@@ -5773,212 +5773,212 @@
       "renderScale": 0.48
     },
     {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
       "name": "slime",
-      "source": "assets/art-v4/repaired/enemies/slime_actions.png",
+      "source": "assets/art-v6/game-ready/v6/slime.png",
       "frameSize": [
-        64,
-        64
+        32,
+        32
       ],
-      "frameRow": 0,
-      "frames": 8,
+      "frames": 4,
       "fps": 7,
       "size": [
-        56,
-        58
+        32,
+        32
       ],
       "anchor": [
-        28,
-        56
+        16,
+        30
       ],
-      "renderScale": 0.54
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.05,
+      "maxColors": 40,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4
     },
     {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
       "name": "slime_walk",
-      "source": "assets/art-v4/repaired/enemies/slime_actions.png",
+      "source": "assets/art-v6/game-ready/v6/slime_walk.png",
       "frameSize": [
-        64,
-        64
+        32,
+        32
       ],
-      "frameRow": 1,
-      "frames": 8,
-      "fps": 10,
-      "size": [
-        56,
-        58
-      ],
-      "anchor": [
-        28,
-        56
-      ],
-      "renderScale": 0.54
-    },
-    {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
-      "name": "slime_attack",
-      "source": "assets/art-v4/repaired/enemies/slime_actions.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "frameRow": 2,
-      "frames": 8,
-      "fps": 12,
-      "size": [
-        56,
-        58
-      ],
-      "anchor": [
-        28,
-        56
-      ],
-      "renderScale": 0.54
-    },
-    {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
-      "name": "slime_death",
-      "source": "assets/art-v4/repaired/enemies/slime_actions.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "frameRow": 3,
       "frames": 8,
       "fps": 9,
       "size": [
-        56,
-        58
+        32,
+        32
       ],
       "anchor": [
-        28,
-        56
+        16,
+        30
       ],
-      "renderScale": 0.54
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.05,
+      "maxColors": 40,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4
     },
     {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
-      "name": "slime_big",
-      "source": "assets/art-v4/repaired/enemies/slime_big_actions.png",
+      "name": "slime_attack",
+      "source": "assets/art-v6/game-ready/v6/slime_attack.png",
       "frameSize": [
-        64,
-        64
+        32,
+        32
       ],
-      "frameRow": 0,
       "frames": 8,
+      "fps": 10,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.05,
+      "maxColors": 40,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4
+    },
+    {
+      "name": "slime_death",
+      "source": "assets/art-v6/game-ready/v6/slime_death.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.05,
+      "maxColors": 40,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4
+    },
+    {
+      "name": "slime_big",
+      "source": "assets/art-v6/game-ready/v6/slime_big.png",
+      "frameSize": [
+        48,
+        48
+      ],
+      "frames": 4,
       "fps": 7,
       "size": [
-        60,
-        62
+        48,
+        48
       ],
       "anchor": [
-        30,
-        60
+        24,
+        45
       ],
-      "renderScale": 0.72
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.05,
+      "maxColors": 40,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4
     },
     {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
       "name": "slime_big_walk",
-      "source": "assets/art-v4/repaired/enemies/slime_big_actions.png",
+      "source": "assets/art-v6/game-ready/v6/slime_big_walk.png",
       "frameSize": [
-        64,
-        64
+        48,
+        48
       ],
-      "frameRow": 1,
-      "frames": 8,
-      "fps": 10,
-      "size": [
-        60,
-        62
-      ],
-      "anchor": [
-        30,
-        60
-      ],
-      "renderScale": 0.72
-    },
-    {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
-      "name": "slime_big_attack",
-      "source": "assets/art-v4/repaired/enemies/slime_big_actions.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "frameRow": 2,
-      "frames": 8,
-      "fps": 12,
-      "size": [
-        60,
-        62
-      ],
-      "anchor": [
-        30,
-        60
-      ],
-      "renderScale": 0.72
-    },
-    {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
-      "name": "slime_big_death",
-      "source": "assets/art-v4/repaired/enemies/slime_big_actions.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "frameRow": 3,
       "frames": 8,
       "fps": 9,
       "size": [
-        60,
-        62
+        48,
+        48
       ],
       "anchor": [
-        30,
-        60
+        24,
+        45
       ],
-      "renderScale": 0.72
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.05,
+      "maxColors": 40,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4
+    },
+    {
+      "name": "slime_big_attack",
+      "source": "assets/art-v6/game-ready/v6/slime_big_attack.png",
+      "frameSize": [
+        48,
+        48
+      ],
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        48,
+        48
+      ],
+      "anchor": [
+        24,
+        45
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.05,
+      "maxColors": 40,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4
+    },
+    {
+      "name": "slime_big_death",
+      "source": "assets/art-v6/game-ready/v6/slime_big_death.png",
+      "frameSize": [
+        48,
+        48
+      ],
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        48,
+        48
+      ],
+      "anchor": [
+        24,
+        45
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.05,
+      "maxColors": 40,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4
     },
     {
       "preservePixels": true,
@@ -6293,108 +6293,108 @@
       "renderScale": 0.48
     },
     {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
       "name": "spider",
-      "source": "assets/art-v4/repaired/enemies/spider_actions.png",
+      "source": "assets/art-v6/game-ready/v6/spider.png",
       "frameSize": [
-        64,
-        64
+        32,
+        32
       ],
-      "frameRow": 0,
-      "frames": 8,
+      "frames": 4,
       "fps": 7,
       "size": [
-        56,
-        58
+        32,
+        32
       ],
       "anchor": [
-        28,
-        56
+        16,
+        30
       ],
-      "renderScale": 0.58
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.05,
+      "maxColors": 40,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4
     },
     {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
       "name": "spider_walk",
-      "source": "assets/art-v4/repaired/enemies/spider_actions.png",
+      "source": "assets/art-v6/game-ready/v6/spider_walk.png",
       "frameSize": [
-        64,
-        64
+        32,
+        32
       ],
-      "frameRow": 1,
-      "frames": 8,
-      "fps": 10,
-      "size": [
-        56,
-        58
-      ],
-      "anchor": [
-        28,
-        56
-      ],
-      "renderScale": 0.58
-    },
-    {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
-      "name": "spider_attack",
-      "source": "assets/art-v4/repaired/enemies/spider_actions.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "frameRow": 2,
-      "frames": 8,
-      "fps": 12,
-      "size": [
-        56,
-        58
-      ],
-      "anchor": [
-        28,
-        56
-      ],
-      "renderScale": 0.58
-    },
-    {
-      "preservePixels": true,
-      "allowDuplicateFrames": true,
-      "minCoverage": 0.006,
-      "maxColors": 256,
-      "maxCentroidDrift": 64,
-      "maxBaselineDrift": 8,
-      "name": "spider_death",
-      "source": "assets/art-v4/repaired/enemies/spider_actions.png",
-      "frameSize": [
-        64,
-        64
-      ],
-      "frameRow": 3,
       "frames": 8,
       "fps": 9,
       "size": [
-        56,
-        58
+        32,
+        32
       ],
       "anchor": [
-        28,
-        56
+        16,
+        30
       ],
-      "renderScale": 0.58
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.05,
+      "maxColors": 40,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4
+    },
+    {
+      "name": "spider_attack",
+      "source": "assets/art-v6/game-ready/v6/spider_attack.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.05,
+      "maxColors": 40,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4
+    },
+    {
+      "name": "spider_death",
+      "source": "assets/art-v6/game-ready/v6/spider_death.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.05,
+      "maxColors": 40,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4
     },
     {
       "preservePixels": true,
@@ -14311,6 +14311,162 @@
       "maxColors": 40,
       "maxCentroidDrift": 4,
       "maxBaselineDrift": 20
+    },
+    {
+      "name": "slime_hurt",
+      "source": "assets/art-v6/game-ready/v6/slime_hurt.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 4,
+      "fps": 10,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.05,
+      "maxColors": 40,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4
+    },
+    {
+      "name": "slime_big_hurt",
+      "source": "assets/art-v6/game-ready/v6/slime_big_hurt.png",
+      "frameSize": [
+        48,
+        48
+      ],
+      "frames": 4,
+      "fps": 10,
+      "size": [
+        48,
+        48
+      ],
+      "anchor": [
+        24,
+        45
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.05,
+      "maxColors": 40,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4
+    },
+    {
+      "name": "spider_hurt",
+      "source": "assets/art-v6/game-ready/v6/spider_hurt.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 4,
+      "fps": 10,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": false,
+      "minCoverage": 0.05,
+      "maxColors": 40,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4
+    },
+    {
+      "name": "zombie_emerge",
+      "source": "assets/art-v6/game-ready/v6/zombie_emerge.png",
+      "frameSize": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "fps": 10,
+      "size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        30
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.05,
+      "maxColors": 40,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 8
+    },
+    {
+      "name": "terrain_grave_swamp_puddle5",
+      "source": "assets/art-v6/game-ready/v6/terrain_grave_swamp_puddle5.png",
+      "frameSize": [
+        320,
+        224
+      ],
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        320,
+        224
+      ],
+      "anchor": [
+        160,
+        112
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.1,
+      "maxColors": 256,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4
+    },
+    {
+      "name": "terrain_grave_swamp_puddle6",
+      "source": "assets/art-v6/game-ready/v6/terrain_grave_swamp_puddle6.png",
+      "frameSize": [
+        320,
+        224
+      ],
+      "frames": 1,
+      "fps": 0,
+      "size": [
+        320,
+        224
+      ],
+      "anchor": [
+        160,
+        112
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": false,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.1,
+      "maxColors": 256,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 4
     }
   ]
 }

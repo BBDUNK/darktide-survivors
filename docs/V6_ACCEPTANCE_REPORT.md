@@ -240,7 +240,25 @@
 - 回归：`headless.js`、`art-probe.js`、`boss-phase-probe.js` 全部通过；400 怪 53.5 FPS、p95 33.4ms。
 - 提交：`art(v6): process dark lord game-ready assets`、`feat(v6): integrate dark lord P1/P2 skills, transform and gate`。
 
-## 阶段 4：普通怪、地图和掉落（进行中）
+## 阶段 4：普通怪、地图和掉落 ✅（按“逐帧复核，有问题才返工”执行）
+
+**普通怪（18 条 `READY → INTEGRATED`）：**
+
+- 腐液史莱姆 / 巨腐史莱姆：从 `enemy_corrupted_slime_8f_concept` 裁出待机 4 帧、酸弹攻击 4 帧；确定性派生为 32×32 与 48×48 两套 `idle4/walk8/attack8/hurt4/death8` 完整动作；大型变体碰撞半径仍由 `CFG.ENEMIES` 独立控制。
+- 蜘蛛：从 `enemy_spider_web_attack_concept` 裁出待机 4 帧、蛛网攻击 4 帧；派生 `idle4/walk8/attack8/hurt4/death8`；飞行蛛网保持现有静态旋转，落地大网沿用现有 `p_web`。
+- 烂泥行者：`enemy_mudwalker_emergence_concept` 裁成 8 帧一次性出土条 `zombie_emerge`；`zombie` 增加 `burrow: 1.0`，出土期间只播专属条带、不动作且免伤，出土后恢复 V4 通用动作。
+- 其余 11 种普通怪完成逐帧复核（沿用 art-probe 的 16 普通怪 + 16 精英全动作断言与质量报告），未发现缺帧/脏像素，继续使用 V4，符合“经审核后继续使用兜底”的接力规则。
+
+**地图与掉落：**
+
+- 幽暗墓园沼泽由 4 种泥边大坑补到 **6 种**（`puddle5/6` 为确定性镜像变体，320×224、水面保持在素材中心 58% 判定范围内）；`main.js` 随机选池同步 1～6。
+- 树桩视觉底面（源图 88px 宽）与碰撞不一致已修复：`deco_deadstump` 视觉半径与碰撞半径统一为 42。
+- 道路/沼泽/树/建筑排斥与地板类装饰分层由 `terrain-touch-probe.js` 继续绿灯（45 个装饰无重叠、无占道）。
+- 掉落物逐项截图验收：单枚金币、三档经验、红蓝磁铁、大腿肉、沙漏、圆形炸弹、武器箱/Boss 箱/自然宝箱（`shots/v6-ordinary/02-pickups-lineup.png`）。
+- 三张地图真实浏览器截图验收：`shots/v6-maps/map-graveyard|wilds|abyss.png`。
+- 图集：`584 assets / 3408 frames`，`0 errors / 153 warnings`（替换旧史莱姆/蜘蛛后较阶段 3 再减少 7 条警告）。
+- 回归：`headless.js` 适配烂泥行者出土后通过（R2 冻结接触与 R13 法师光束目标改为非出土怪），`art-probe.js`、`terrain-touch-probe.js` 通过。
+- 提交：`art(v6): process ordinary enemies and swamp variants`、`feat(v6): integrate ordinary enemy emergence and terrain fixes`。
 
 ## 阶段 4：普通怪、地图和掉落（待开始）
 

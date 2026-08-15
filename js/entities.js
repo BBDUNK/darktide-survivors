@@ -2710,8 +2710,15 @@ window.Entities = (function () {
         ctx.rect(e.x - 24, e.y - 40, 48, 40 + 4);
         ctx.clip();
         var rise = (1 - prog) * 26;   // 未出土时整体下沉
-        var burrowF = Math.floor(run.t * animFps(e.id, 6));
-        drawActorSprite(ctx, e.id, burrowF + (e.animo | 0), e.x, e.y + 4 + rise, sc, e.face < 0, 1, '#8a7a5a', true);
+        if (e.id === 'zombie') {
+          // 烂泥行者有独立出土条带:一次性播放,不循环通用动作。
+          var emergeFrames = getFrames('zombie_emerge', false);
+          var emergeF = Math.min(emergeFrames.length - 1, Math.floor(prog * emergeFrames.length));
+          drawActorSprite(ctx, 'zombie_emerge', emergeF, e.x, e.y + 4 + rise, sc, e.face < 0, 1, '#8a7a5a', false);
+        } else {
+          var burrowF = Math.floor(run.t * animFps(e.id, 6));
+          drawActorSprite(ctx, e.id, burrowF + (e.animo | 0), e.x, e.y + 4 + rise, sc, e.face < 0, 1, '#8a7a5a', true);
+        }
         ctx.restore();
         // 飞溅的土屑
         if ((run.frame & 7) === 0) FX.trail(e.x + (Math.random() * 20 - 10), e.y, '#6b5a42', 2);

@@ -400,6 +400,7 @@ window.Engine = (function () {
     if (name.indexOf('tree') >= 0) return 50;
     if (name === 'deco_pillar' || name === 'deco_crystal' || name === 'deco_stalag') return 40;
     if (name === 'deco_grave' || name === 'deco_fence' || name === 'deco_fallenlog') return 30;
+    if (name === 'deco_deadstump') return 42;   // V4 stump visual base is 84px wide; match it
     return 22;
   }
 
@@ -467,7 +468,7 @@ window.Engine = (function () {
     if (name === 'deco_burned_cottage') return 42;
     if (name === 'deco_broken_wagon') return 30;
     if (name === 'deco_broken_sword') return 11;
-    if (name === 'deco_deadstump') return 22;
+    if (name === 'deco_deadstump') return 42;   // must match the 84px authored visual base
     if (name === 'deco_grave' || name === 'deco_pillar' || name === 'deco_stalag') return 18;
     if (name === 'deco_fence' || name === 'deco_skullpost' || name === 'deco_road_marker') return 14;
     if (name === 'deco_deadroots' || name === 'deco_fallenlog') return 13;

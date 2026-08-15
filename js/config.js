@@ -170,7 +170,7 @@ window.CFG = {
     bat:            { name: '骨翼蝠', hp: 6, dmg: 6, spd: 72, r: 10, xp: 1, ai: 'chase' },
     slime:          { name: '腐液史莱姆', hp: 13, dmg: 8, spd: 40, r: 11, xp: 1, ai: 'chase' },
     slime_big:      { name: '巨腐史莱姆', hp: 60, dmg: 12, spd: 34, r: 21, xp: 4, ai: 'chase', split: 'slime' },
-    zombie:         { name: '烂泥行者', hp: 26, dmg: 10, spd: 44, r: 11, xp: 2, ai: 'chase' },
+    zombie:         { name: '烂泥行者', hp: 26, dmg: 10, spd: 44, r: 11, xp: 2, ai: 'chase', burrow: 1.0 },
     // burrow: 从地里钻出(生成时播出土动画,期间不动作),可在安全区内破土
     skeleton:       { name: '白骨兵', hp: 36, dmg: 12, spd: 58, r: 11, xp: 2, ai: 'chase', burrow: 1.0 },
     ghost:          { name: '缚地怨灵', hp: 30, dmg: 12, spd: 55, r: 11, xp: 3, ai: 'phase' },
