@@ -1348,16 +1348,64 @@
     if (groundPatterns[name]) return groundPatterns[name];
     var tile = SpriteGen.get(name);
     if (!tile || tile.width < 2) return null;
+    var tw = tile.width, th = tile.height;
+    // 去掉图块边缘 2px 的深色描边/缝隙：把边缘像素替换成紧邻的内侧像素，
+    // 这样重复拼接时不会出现棋盘网格线，也不缩放拉伸破坏像素。
+    var clean = document.createElement('canvas');
+    clean.width = tw; clean.height = th;
+    var cg = clean.getContext('2d');
+    cg.imageSmoothingEnabled = false;
+    cg.drawImage(tile, 0, 0);
+    if (tw > 4 && th > 4) {
+      var img = cg.getImageData(0, 0, tw, th);
+      var d = img.data;
+      var inset = 2;
+      function pxi(x, y) { return (y * tw + x) * 4; }
+      function lum(i) { return d[i] * 0.299 + d[i + 1] * 0.587 + d[i + 2] * 0.114; }
+      // 1) 去掉图块边缘的深色描边：边缘像素替换成紧邻的内侧像素。
+      for (var y = 0; y < th; y++) {
+        for (var x = 0; x < tw; x++) {
+          if (x < inset || x >= tw - inset || y < inset || y >= th - inset) {
+            var sx = Math.min(Math.max(x, inset), tw - 1 - inset);
+            var sy = Math.min(Math.max(y, inset), th - 1 - inset);
+            var si = pxi(sx, sy), di = pxi(x, y);
+            d[di] = d[si]; d[di + 1] = d[si + 1]; d[di + 2] = d[si + 2]; d[di + 3] = d[si + 3];
+          }
+        }
+      }
+      // 2) 去除图块内部 1~2px 的深色网格线：暗色像素只要四周有更亮的邻居，
+      //    就用这些邻居的平均色填充，让地面拼接后不再出现方格缝隙。
+      for (var y2 = 1; y2 < th - 1; y2++) {
+        for (var x2 = 1; x2 < tw - 1; x2++) {
+          var ci = pxi(x2, y2);
+          if (d[ci + 3] < 10 || lum(ci) > 82) continue;
+          var ns = [];
+          function addN(nx, ny) {
+            if (nx < 0 || ny < 0 || nx >= tw || ny >= th) return;
+            var ni = pxi(nx, ny);
+            if (d[ni + 3] > 10 && lum(ni) > lum(ci) + 16) ns.push(ni);
+          }
+          addN(x2 - 1, y2); addN(x2 + 1, y2); addN(x2, y2 - 1); addN(x2, y2 + 1);
+          if (ns.length >= 2) {
+            var r = 0, g = 0, b = 0;
+            for (var k = 0; k < ns.length; k++) {
+              r += d[ns[k]]; g += d[ns[k] + 1]; b += d[ns[k] + 2];
+            }
+            d[ci] = r / ns.length; d[ci + 1] = g / ns.length; d[ci + 2] = b / ns.length;
+          }
+        }
+      }
+      cg.putImageData(img, 0, 0);
+    }
     // 2×2 镜像拼接消除大块纹理四边的接缝，同时保持最近邻硬像素。
     var patternTile = document.createElement('canvas');
-    var tw = tile.width, th = tile.height;
     patternTile.width = tw * 2; patternTile.height = th * 2;
     var pg = patternTile.getContext('2d');
     pg.imageSmoothingEnabled = false;
-    pg.drawImage(tile, 0, 0);
-    pg.save(); pg.translate(tw * 2, 0); pg.scale(-1, 1); pg.drawImage(tile, 0, 0); pg.restore();
-    pg.save(); pg.translate(0, th * 2); pg.scale(1, -1); pg.drawImage(tile, 0, 0); pg.restore();
-    pg.save(); pg.translate(tw * 2, th * 2); pg.scale(-1, -1); pg.drawImage(tile, 0, 0); pg.restore();
+    pg.drawImage(clean, 0, 0);
+    pg.save(); pg.translate(tw * 2, 0); pg.scale(-1, 1); pg.drawImage(clean, 0, 0); pg.restore();
+    pg.save(); pg.translate(0, th * 2); pg.scale(1, -1); pg.drawImage(clean, 0, 0); pg.restore();
+    pg.save(); pg.translate(tw * 2, th * 2); pg.scale(-1, -1); pg.drawImage(clean, 0, 0); pg.restore();
     groundPatterns[name] = ctx.createPattern(patternTile, 'repeat');
     return groundPatterns[name];
   }

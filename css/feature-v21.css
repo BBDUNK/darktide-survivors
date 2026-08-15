@@ -499,6 +499,25 @@ html, body, button, input, select, textarea, * {
   50% { opacity: 1; transform: scale(1.12); }
 }
 
+/* 主菜单 Logo 右上角：Beta 版红色动画角标（与狂战士“版本之子！”同款脉冲） */
+.menu-logo .menu-big.gothic-title {
+  position: relative !important;
+}
+.menu-logo .menu-logo-badge {
+  position: absolute;
+  top: -8px;
+  right: -12px;
+  z-index: 3;
+  font-size: 14px;
+  line-height: 1;
+  color: #ff3b3b;
+  letter-spacing: 2px;
+  white-space: nowrap;
+  pointer-events: none;
+  text-shadow: 0 0 8px rgba(255, 30, 30, .9), 0 1px 0 #3a0505, 0 -1px 0 #3a0505, 1px 0 0 #3a0505, -1px 0 0 #3a0505;
+  animation: char-badge-pulse .8s ease-in-out infinite;
+}
+
 /* 选人角色一行排开:放大角色、压缩边框和卡片留白。 */
 .panel-col.character-select-screen .card-grid {
   grid-template-columns: repeat(6, minmax(120px, 1fr)) !important;

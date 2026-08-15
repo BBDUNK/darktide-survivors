@@ -129,7 +129,9 @@ window.UI = (function () {
     var s = h('div', 'screen menu-screen');
     // 大标题:居中偏上
     var logo = h('div', 'logo menu-logo');
-    logo.appendChild(h('div', 'logo-main menu-big gothic-title', 'DarkEscaper'));
+    var menuTitle = h('div', 'logo-main menu-big gothic-title', 'DarkEscaper');
+    menuTitle.appendChild(h('span', 'menu-logo-badge', 'Beta版火热推送中！！！'));
+    logo.appendChild(menuTitle);
     logo.appendChild(h('div', 'menu-tagline', '暗黑逃跑神'));
     s.appendChild(logo);
     // 三列主体:左右侧栏对称,中间按钮列
