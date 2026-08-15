@@ -675,8 +675,13 @@ window.Entities = (function () {
       run.bossesKilled++;
       if (run.boss === e) run.boss = null;
       if (e.bossType === 'boss_abysseye' && e.phase2) syncAbyssEyeBossBar(run, e.eyeGroup);
-      // Boss 死亡:淡出战斗曲,恢复地图背景曲
-      AudioSys.playMusic(run.map.music);
+      // Boss 死亡:只有场上没有其他存活 Boss 时才恢复地图背景曲。
+      // 双 Boss 同场时,先死一个不能把战斗曲切走。
+      var stillHasBoss = false;
+      for (var bi = 0; bi < enemies.length; bi++) {
+        if (enemies[bi].alive && enemies[bi].boss) { stillHasBoss = true; break; }
+      }
+      if (!stillHasBoss) AudioSys.playMusic(run.map.music);
       FX.shake(14, 0.8);
       FX.explosion(e.x, e.y, 120);
       AudioSys.play('boss_die');
@@ -2730,7 +2735,8 @@ window.Entities = (function () {
       var tint = null;
       if (e.phase2) tint = '#3c1528';
       else if (e.guard > 0) tint = '#9cf';
-      else if (e.flash > 0) tint = '#ffffff';
+      // Boss 蓄力/受击不再叠加白色闪白图层，否则动作帧会被白光完全盖住。
+      else if (e.flash > 0 && !e.boss) tint = '#ffffff';
       else if (run.freezeT > 0 || e.frozen > 0) tint = '#5fd0ff';
       else if (e.slowT > 0) tint = '#8ab6ff';
       var wob = e.boss ? 0 : Math.sin(run.t * 8 + e.animo) * 1.5;

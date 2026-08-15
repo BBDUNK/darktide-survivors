@@ -421,7 +421,7 @@ window.Weapons = (function () {
         if (w.evolved) {
           if (countKind(w.id, p) > 0) return;
           b = spawn(run, w, st, 'tank', 'tesla_battle_tank', p.x, p.y, 0, 0, 1e9);
-          b.fireT = 3; b.pierce = 9999; b.dmg = st.dmg * 4.2; b.size = 76;
+          b.fireT = 3; b.pierce = 9999; b.dmg = st.dmg * 9; b.size = 76;
           b.zapN = st.zapCount + 2; b.orbitR = st.range * 1.15;
           b.tankDir = p.dir || 'down'; b.tankAction = 'idle'; b.tankActionAge = 0;
           AudioSys.play('evolve');
@@ -607,6 +607,25 @@ window.Weapons = (function () {
     AudioSys.play('zap');
   }
 
+  // 特斯拉战车电磁炮命中/寿命耗尽时爆炸:范围与特效为原 76px 的三倍。
+  function explodeTeslaCannon(run, b) {
+    var radius = 228;
+    if (!run._netVisual) {
+      E.gridQuery(b.x, b.y, radius, function (e) {
+        Entities.damageEnemy(run, e, b.dmg, {
+          kx: (e.x - b.x) * 0.62,
+          ky: (e.y - b.y) * 0.62,
+          noCrit: true
+        });
+        return false;
+      });
+    }
+    FX.sprite(b.x, b.y, 'vfx_tesla_cannon_impact', 0.56, 384, true);
+    FX.explosion(b.x, b.y, radius);
+    FX.shake(12, 0.5);
+    AudioSys.play('zap');
+  }
+
   function updateBullets(run, dt) {
     var p = run.player;
     for (var i = 0; i < BMAX; i++) {
@@ -619,8 +638,7 @@ window.Weapons = (function () {
         if (b.kind === 'lob') landFlask(run, b);
         if (b.kind === 'turret') { releaseTeslaOverload(run, b); removeTurret(b); }
         if (b.kind === 'teslaCannon') {
-          FX.sprite(b.x, b.y, 'vfx_tesla_cannon_impact', 0.56, 128, true);
-          FX.shake(8, 0.28);
+          explodeTeslaCannon(run, b);
         }
         if (b.kind === 'dragonLance') {
           FX.sprite(b.x, b.y, 'vfx_jade_dragon_dissipate', 0.62, 296, true);
@@ -686,8 +704,12 @@ window.Weapons = (function () {
         case 'teslaCannon':
           b.x += b.vx * dt; b.y += b.vy * dt;
           b.angle = Math.atan2(b.vy, b.vx);
-          hitEnemiesAlong(run, b, b.size * 0.42, 0.16);
           if ((run.frame & 1) === 0) FX.trail(b.x, b.y, '#9ff4ff', 7);
+          // 碰到敌人立即爆炸,不再无限穿透;爆炸范围/特效为原来的三倍。
+          if (hitEnemiesAlong(run, b, b.size * 0.42, 0.16)) {
+            explodeTeslaCannon(run, b);
+            b.alive = false;
+          }
           break;
         case 'axe':
           b.vy += 620 * dt;
@@ -1113,7 +1135,7 @@ window.Weapons = (function () {
         FX.sprite(p.x, p.y - 10, 'vfx_jade_dragon_summon', 0.8, 240, true);
         var dragon = spawn(run, w, st, 'dragonLance', 'p_dragon', p.x, p.y - 10,
           Math.cos(w.dragonAngle) * speed, Math.sin(w.dragonAngle) * speed, 1.5);
-        dragon.dmg = st.dmg * 4.5; dragon.pierce = 9999; dragon.size = 58;
+        dragon.dmg = st.dmg * 10; dragon.pierce = 9999; dragon.size = 58;
         dragon.aux = speed; dragon.angle = w.dragonAngle;
         w.cdT = st.cd; w.dragonChargeProgress = 0;
         AudioSys.play('evolve'); FX.shake(7, 0.28);
@@ -1304,17 +1326,25 @@ window.Weapons = (function () {
     }
     var nativeW = p.char ? findWeapon(run, p.char.weapon) : null;
     if (nativeW && nativeW.evolved && p.char) {
+      // 虚影成长值在 update 里推进;绘制前再兜底一次,防止进化瞬间
+      // phantomBaseKills 尚未初始化导致虚影整场缺失。
+      if (nativeW.phantomBaseKills === undefined) nativeW.phantomBaseKills = run.kills || 0;
+      nativeW.phantomKills = E.clamp((run.kills || 0) - nativeW.phantomBaseKills, 0, 300);
       var action = p.attackAnimT > 0 ? 'attack' : (p.moving ? 'walk' : 'idle');
       var spriteId = 'avatar_' + p.char.id + '_' + action + '_' + (p.dir || 'down');
       var phantomFrames = cachedFrames(spriteId);
-      var phantom = phantomFrames[Math.floor((action === 'attack' ? p.attackAnimAge : p.animT) * cachedFps(spriteId, 10)) % phantomFrames.length];
-      var grow = 1 + E.clamp((nativeW.phantomKills || 0) / 300, 0, 1) * 1.5;
-      var pw = Math.round(64 * grow), ph = pw;
-      ctx.save();
-      ctx.globalAlpha = 0.42 + E.clamp((nativeW.phantomKills || 0) / 300, 0, 1) * 0.16;
-      // Shared [32,54] body pivot: exact same x/base as the hero, no offset.
-      ctx.drawImage(phantom, p.x - pw / 2, p.y + 8 - Math.round(54 * grow), pw, ph);
-      ctx.restore();
+      if (phantomFrames && phantomFrames.length) {
+        var phantom = phantomFrames[Math.floor((action === 'attack' ? p.attackAnimAge : p.animT) * cachedFps(spriteId, 10)) % phantomFrames.length];
+        var grow = 1 + E.clamp((nativeW.phantomKills || 0) / 300, 0, 1) * 1.5;
+        // 64×64 是图集虚影规格;这里把底图放大到 80px 起步,让进化后
+        // 立刻有一圈清晰可见的虚影轮廓,而不是被角色身体完全挡住。
+        var pw = Math.round(80 * grow), ph = pw;
+        ctx.save();
+        ctx.globalAlpha = 0.55 + E.clamp((nativeW.phantomKills || 0) / 300, 0, 1) * 0.15;
+        // Shared [32,54] body pivot: exact same x/base as the hero, no offset.
+        ctx.drawImage(phantom, p.x - pw / 2, p.y + 8 - Math.round(54 * pw / 64), pw, ph);
+        ctx.restore();
+      }
     }
     var arcaneW = findWeapon(run, 'arcanebolt');
     if (arcaneW && arcaneW.evolved && p.char && p.char.id === 'mage' && arcaneW.arcaneLocks) {
