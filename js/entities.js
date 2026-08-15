@@ -2396,6 +2396,33 @@ window.Entities = (function () {
   }
 
   // ================= 绘制 =================
+  // Boss 动作条带的画布规格不一(例如暗潮魔王蓄力/死亡用 144×144、普通动作 112×112,
+  // 深渊之眼 attack 用 96×96 且 renderScale 0.58)。这里按 Boss 形态给一个基准视觉宽度,
+  // 再补偿该条带实际画布宽度与 renderScale,保证同一 Boss 的每个动作在屏幕上始终一样大。
+  var BOSS_VISUAL_BASE = {
+    boss_slimeking: 80,
+    boss_bonelord: 96,
+    boss_abysseye_remote: 80,
+    boss_abysseye_charge: 80,
+    boss_abysseye: 80,
+    boss_darklord_phase2: 144,
+    boss_darklord: 112
+  };
+  var bossActionScaleCache = {};
+  function bossActionVisualScale(name) {
+    if (bossActionScaleCache[name] !== undefined) return bossActionScaleCache[name];
+    var base = 0;
+    for (var k in BOSS_VISUAL_BASE) {
+      if (name === k || name.indexOf(k + '_') === 0) { base = BOSS_VISUAL_BASE[k]; break; }
+    }
+    if (!base) { bossActionScaleCache[name] = 1; return 1; }
+    var fr = SpriteGen.frames(name);
+    if (!fr || !fr.length) { bossActionScaleCache[name] = 1; return 1; }
+    var rs = SpriteGen.renderScale(name) || 1;
+    bossActionScaleCache[name] = (base / fr[0].width) / rs;
+    return bossActionScaleCache[name];
+  }
+
   var framesCache = {};        // 原始帧(含 AI 母版夹带的过渡/空白帧)
   var flipCache = {};          // 原始帧的水平翻转副本
   var stableCache = {};        // 稳定帧(剔除几乎空白的过渡帧,消除循环闪烁)
@@ -2693,7 +2720,7 @@ window.Entities = (function () {
     for (i = 0; i < POOL; i++) {
       e = enemies[i];
       if (!e.alive) continue;
-      var sc = (e.boss ? 2 : 1) * (e.elite ? CFG.ELITE.scale : 1) * (e.phase2 ? 1.28 : 1)
+      var sc = (e.boss ? 2 : 1) * (e.elite ? CFG.ELITE.scale : 1) * (e.phase2 ? 1.1 : 1)
         * ((e.def && e.def.drawScale) || 1);
       // 破土动画:翻起的土堆 + 从地下逐渐升起的怪(用裁剪实现"半截在土里")
       if (e.burrowT > 0) {
@@ -2809,7 +2836,8 @@ window.Entities = (function () {
       // 跳到中间帧,把残缺的动作帧画出来。循环动画仍用 animo 错相。
       var enemyFrameIdx = oneShotBoss ? enemyF : enemyF + (e.animo | 0);
       drawActorSprite(ctx, enemySprite, enemyFrameIdx,
-                 e.x, e.y + e.r * 0.7 + wob - hop, sc * sq, e.face < 0, e.alpha, tint, true);
+                 e.x, e.y + e.r * 0.7 + wob - hop, sc * sq * (e.boss ? bossActionVisualScale(enemySprite) : 1),
+                 e.face < 0, e.alpha, tint, true);
       // 被强化的小怪：血气贴着身体向外逸散，不再画一圈廉价的黄色圆环。
       if (e.buffed && !e.elite && !e.boss) {
         var mistFrames = getFrames('vfx_smoke', false);
