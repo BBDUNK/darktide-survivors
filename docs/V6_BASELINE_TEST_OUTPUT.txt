@@ -1,0 +1,158 @@
+﻿﻿==== V6 BASELINE TEST RUN ====
+
+===== test/headless.js =====
+LOAD OK   js/config.js
+LOAD OK   js/i18n.js
+LOAD OK   js/sprites.js
+LOAD OK   js/audio.js
+LOAD OK   js/fx.js
+LOAD OK   js/engine.js
+LOAD OK   js/meta.js
+LOAD OK   js/entities.js
+LOAD OK   js/weapons.js
+LOAD OK   js/minimap.js
+LOAD OK   js/encyclopedia.js
+LOAD OK   js/net.js
+LOAD OK   js/merchant.js
+LOAD OK   js/ui.js
+LOAD OK   js/main.js
+BOOT OK   _?d?_?sЏL?-N
+node : [AudioSys] ,g?s?XN/ec WebAudio,󗑘\P(u
+At line:1 char:476
++ ... tent -Encoding utf8 $out "`n===== $t ====="; node $t *>> $out; Add-Co ...
++                                                  ~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([AudioSys] ,g?s?XN/ec WebAudio,󗑘\P(u:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+RUN OK    _@\b?R(???X ? }^?f?X?V)
+  probe t=20s alive=10 kills=16 picks=0
+  probe t=40s alive=9 kills=42 picks=1
+  probe t=60s alive=11 kills=66 picks=1
+SIM OK    ,{N6??k?[b,GS?~	??b 1 !k,/}???Q@g 66
+PAUSE OK  ?f\P/b`Yck8^
+  {k?N?N,{?N6??k tH"92s
+SIM2 OK   ?Q@g 112(1.23/?y),ё^???_ 86,gsOX[;m 91s
+RUN2 OK   ,{?N@\ 20 ?y,?e?X?Q@g 15
+  WEAPON OK crossblade (?]ۏS)
+  WEAPON OK arcanebolt (?]ۏS)
+  WEAPON OK windbow (?]ۏS)
+  WEAPON OK holyaura (?]ۏS)
+  WEAPON OK whirlaxe
+  WEAPON OK chainlight (?]ۏS)
+  WEAPON OK frostnova (?]ۏS)
+  WEAPON OK fireflask (?]ۏS)
+  WEAPON OK shadowdagger (?]ۏS)
+  WEAPON OK orbitblade (?]ۏS)
+  WEAPON OK holytome (?]ۏS)
+  WEAPON OK teslacoil (?]ۏS)
+WEAPONS OK hQ? 12 ?bfkhV?n?~/ۏS2n?g?e)]?n
+COOP1 OK  Le?N??;e?Q??S,?b;NN?S?l?S (??S 100?!92)
+COOP1B OK ?b;N?}T$OۏeQ?SQe?cP0W,?[@\?~?~
+COOP2 OK  ??SfkhV??Sb*` (13.001624999999999?!0)
+COOP2B OK ?^ߏ?{N?s?~fkhV	c?s?[?r?zЏL?
+COOP3 OK  ?[7b?z?_gq`l3z?[,?SY͑?^?eo?y
+COOP4 OK  ?[7b?z9_U^?~Ɖɉ,N?Nu,g0W$O?[
+COOP5 OK  ??S?S?b?S?p??/?[?{
+COOP6 OK  ??SGS?~uHe (	?y? 3 *N,fkhV 1 ???R 0,?b;NfkhV*g??al?g 1)
+COOP7 OK  banished ƖT?NNal?g,?b;N_(u?]Y?S
+COOP8 OK  3 R??ؚ?S7R*`?S
+NP??~_g (?\<PX[;m 400/
+NP? 400,?\<P9_U^ 30,6e>\X[;m 400)
+COOP9 OK  ƉΑ??jRMRn:Wof1\?~ (ƉΑ?Q 2,ƉΑYnf? 2,ƉΑY?|? 1)
+COOP10 OK ?e?~͑ޏ?OYuۏ?^ (҉r? berserker,fkhV lv7,???R 4,?e}^up??U_,??eQ?]n??,?y?SGS?~͑?c)
+COOP11 OK qQ?N?~??`l?N 0 w?/}?R (??S onCoopLevel 1 !k,I{?~ ?! 2,?_	? 1)
+COOP12 OK P0Wh???SW[?kN? (w.downed N player.downed T?enMO)
+R1 OK Y;m?SuHeN!k,NO?V^\'`͑?{?eP?Y;m
+R2 OK ?Q?~/)wUfLe?N?e?c?$O?[,*g?Q?~?v?[gq?NO?T?N
+R3 OK ё^/?p??	c TTL Ǐg,?[?{8lEN?OYu
+R4 OK kp?tASW[kp:WN5u?xbf??p?QGW:Nw?[?[@\:g6R
+R5 OK ???~:W?S?y?ub0?n?~ۏSv^(Ww?[?[@\-N??6e
+R6 OK ?~@\'Y?ݍ?y!h??0?d?y?~?{N?O\qQ(ueQ?Sck8^
+R7 OK Tg Boss ?EN0?fnow??0@?`?V@?N5uTXRce^?pck8^
+R8 OK hQ?Ve??~?{?mTfkhV/?[irS?wQ????ST8lEN?m1Y
+R9 OK ?ۆ'Y?W܏zۆQ?e?Q?/?[??NޘL???^3z?[
+R10 OK #WsYIQ?s4?0W??V0)YM?#WIQNNMO'Y)YO?[SOck8^
+R11 OK ?[??Q?Q?Nޏ?~JS?_TYibce?O(u?V?[Wb_ }Pg????
+R12 OK ?e=\0?~@\0I{?~N?g?Q@gb1\GW?S??
+R13 OK mQ҉r?Z?q_b?08n?OĄ?R??0???X???~N?l^?V?vhIQ_gck8^
+
+=== ?e4Y?Q?pKmՋhQ??Ǐ ===
+
+[exit: 0] test/headless.js
+
+===== test/art-probe.js =====
+ANCHOR OK  every atlas frame anchor is inside its bounds
+ATLAS OK  539 assets, 3172 frames, four-direction hero actions, VFX and art scales
+ANIM OK  hero, 16 ordinary enemies, 16 elite enemies, all boss and VFX actions have distinct non-empty frames
+THEME STATE {"font":"\"Fusion Pixel\", \"Microsoft YaHei\", \"PingFang SC\", sans-serif","buttonBackground":"url(\"http://127.0.0.1:53629/assets/art-v2/ui/menu_btn_frame_edge.png\")","buttonBorder":"rgb(243, 230, 198)","panelBackground":"url(\"http://127.0.0.1:53629/assets/art-v4/sprites/ui/battle_report_panel.png\")","panelBorder":"rgb(222, 211, 188)","altarBackground":"url(\"http://127.0.0.1:53629/assets/art-v4/sprites/ui/holy_altar_panel.png\")","altarTitle":":_S#W[W","altarIconBackground":"url(\"http://127.0.0.1:53629/assets/art-v4/sprites/ui/altar_cross_states.png\")","altarIconBox":[213,197],"titleFont":"\"Darktide Gothic\", Georgia, serif","titleText":"DarkEscaper","menuBackground":{"loaded":true,"src":"http://127.0.0.1:53629/assets/backgrounds/menu-monolith.png"}}
+THEME OK  Baroque framed menu, large altar cross, authored report/altar panels, DarkEscaper title and local fonts
+SECONDARY UI STATE {"gridBorder":"url(\"http://127.0.0.1:53629/assets/art-v4/sprites/ui/baroque_menu_frame.png\")","gridColumns":"266.656px 266.672px 266.656px","cardBorders":["url(\"http://127.0.0.1:53629/assets/art-v4/sprites/ui/baroque_menu_frame.png\")","url(\"http://127.0.0.1:53629/assets/art-v4/sprites/ui/baroque_menu_frame.png\")","url(\"http://127.0.0.1:53629/assets/art-v4/sprites/ui/baroque_menu_frame.png\")","url(\"http://127.0.0.1:53629/assets/art-v4/sprites/ui/baroque_menu_frame.png\")","url(\"http://127.0.0.1:53629/assets/art-v4/sprites/ui/baroque_menu_frame.png\")","url(\"http://127.0.0.1:53629/assets/art-v4/sprites/ui/baroque_menu_frame.png\")"],"cardBoxes":[[356,179],[356,179],[356,179],[356,174],[356,174],[356,174]],"infoWidth":1013,"contentBottoms":[630,700,720],"infoChildBottom":627,"background":"repeating-linear-gradient(135deg, rgba(148, 104, 52, 0.035) 0px, rgba(148, 104, 52, 0.035) 2px, rgba(0, 0, 0, 0) 2px, rgba(0, 0, 0, 0) 7px), radial-gradient(rgb(42, 28, 25), rgb(5, 5, 8) 72%) / rgba(0, 0, 0, 0)","centerStack":["DIV#.card locked","DIV#.card-grid","DIV#.screen panel-col character-select-screen","CANVAS#game.","DIV#stage.","BODY#.","HTML#."],"visible":true}
+SECONDARY UI OK  framed character grid/cards/detail panel fit at 1280x720
+V5 COMBAT OK  arcane refraction/brand, six-role avatar runtime and charged 270px/s Tesla cannon run in a real browser
+PERF OK   400 enemies: 52.9 FPS mean, p95 33.4ms, 400 alive
+ART OK    real-browser atlas, render and load acceptance passed
+
+[exit: 0] test/art-probe.js
+
+===== test/combat-vfx-probe.js =====
+VFX TESLA OK   bbox 64x159 (3331px), copper 109px, orb 411px, top cyan 129px
+VFX SLASH OK   angle stays 1.230 while moving horizontally
+VFX ARROW OK   horizontal 43x10 (179px), vertical 11x43 (176px), 8 frames
+VFX OK    real-browser tower/slash/arrow pixel acceptance passed
+
+[exit: 0] test/combat-vfx-probe.js
+
+===== test/boss-phase-probe.js =====
+BOSS OK   abyss eye splits into two roles, doubles phase health, and rewards once
+
+[exit: 0] test/boss-phase-probe.js
+
+===== test/coop-probe.js =====
+?b??S: GWSZN
+?b;Nw0RbXTpe: 2
+?]?QY?Npe: 2
+ۏeQb?e: host=true client=true
+?[7b?zNLu: {"t":6.8,"enemies":3,"kills":3}
+?[7b?z9_U^pe: 8
+NET_STATE_V2: {"version":"NET_STATE_V2","sequence":103,"serverTick":408,"serverTime":1786766211023,"seed":1650760487,"enemyAction":true,"playerAction":true,"vaultUid":true,"shopUid":true,"reliable":true}
+FU?^v^?S?~?{: {"uid":"shop-1-0","first":true,"second":false,"reason":"FU?T?].U?Q"}
+qQ?N?~??: {"host":[1,0,4],"client":[1,0,4]}
+?f\PTek: host=true client=true
+b`YT?e??cۏ: 7.6?!9.4
+?b;NP0W: {"downed":true,"over":false,"hp":0}
+?b;NQe?c: {"downed":false,"hp":42}
+?[7b?z>e_?~?{: {"host":"result","client":"result","clientChar":"mage","hostBroadcasts":["pause","over"],"clientCoop":{"on":false,"active":false,"mode":"client"}}
+
+=== T?:ghQ??????Ǐ ===
+
+[exit: 0] test/coop-probe.js
+
+===== test/resp-probe.js =====
+[d16x9] 1280?720 canvas=1280?720 pos=(0,0) ar=1.778 inView=true uiAlign=true aspect=true OK
+  Ɖ?S?[YO:?]?S 0px,
+NN 0px
+[ultra] 2560?1080 canvas=1920?1080 pos=(320,0) ar=1.778 inView=true uiAlign=true aspect=true OK
+  Ɖ?S?[YO:?]?S 320px,
+NN 0px
+[v43] 1024?768 canvas=1024?576 pos=(0,96) ar=1.778 inView=true uiAlign=true aspect=true OK
+  Ɖ?S?[YO:?]?S 0px,
+NN 96px
+[phone] 375?667 canvas=375?211 pos=(0,228) ar=1.777 inView=true uiAlign=true aspect=true OK
+  Ɖ?S?[YO:?]?S 0px,
+NN 228px
+[land] 844?390 canvas=693?390 pos=(76,0) ar=1.777 inView=true uiAlign=true aspect=true OK
+  Ɖ?S?[YO:?]?S 76px,
+NN 0px
+[sq] 800?800 canvas=800?450 pos=(0,175) ar=1.778 inView=true uiAlign=true aspect=true OK
+  Ɖ?S?[YO:?]?S 0px,
+NN 175px
+
+=== I{?k?M?????:hQ?R???sN;u^?[te?S??NN?Sb_ ===
+
+[exit: 0] test/resp-probe.js
+
+===== test/terrain-touch-probe.js =====
+TERRAIN OK  road?1.2, swamp?0.6, deco_deadroots collision, 45 clear props
+TOUCH OK  movement remains active while pause and target-mode buttons use a second finger
+
+[exit: 0] test/terrain-touch-probe.js
