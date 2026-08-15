@@ -386,7 +386,13 @@ def build(manifest_path: Path, skip_previews: bool = False) -> None:
         processed = []
         for index, raw_frame in enumerate(extract_frames(source, spec)):
             try:
-                if spec.get("seamlessTile"):
+                if spec.get("asIs"):
+                    # Game-ready V6 strips are already fitted/quantized/hard-alpha;
+                    # pass them through exactly so anchors and baselines survive.
+                    frame = hard_alpha(raw_frame)
+                    if frame.size != tuple(spec["size"]):
+                        frame = frame.resize(tuple(spec["size"]), Image.Resampling.NEAREST)
+                elif spec.get("seamlessTile"):
                     # Repeatable terrain must cover all four edges. The usual
                     # sprite safety padding would repeat as a large square grid.
                     frame = hard_alpha(raw_frame)

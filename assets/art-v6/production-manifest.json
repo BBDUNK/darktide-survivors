@@ -1,0 +1,1233 @@
+{
+  "version": 1,
+  "updated": "2026-08-15",
+  "note": "V6 production manifest. Only READY entries may be merged into tools/art/art-manifest.json. SOURCE=master exists, FRAMES=sheet exists, READY=validated game-ready strip, INTEGRATED=registered in the runtime atlas, TODO=not yet authored.",
+  "entries": [
+    {
+      "name": "p_dragon",
+      "source": "assets/art-v6/production/weapons/ranger/p_windbow_jade_spirit_dragon_fly_sheet_alpha.png",
+      "output": "assets/art-v6/game-ready/v6/p_dragon.png",
+      "cols": 4,
+      "rows": 2,
+      "frameMap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frameSize": [
+        224,
+        112
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": true,
+      "anchor": [
+        112,
+        56
+      ],
+      "renderScale": 1,
+      "layer": "projectile",
+      "status": "INTEGRATED",
+      "notes": "Single lateral flight cycle, runtime rotates via ctx.rotate; no directional copies. Processed with --cell 224x112 --flatten.",
+      "fit": "center",
+      "maxCentroidDrift": 16,
+      "maxBaselineDrift": 32
+    },
+    {
+      "name": "vfx_jade_dragon_summon",
+      "source": "assets/art-v6/production/weapons/ranger/vfx_windbow_jade_dragon_summon_sheet_alpha.png",
+      "output": "assets/art-v6/game-ready/v6/vfx_jade_dragon_summon.png",
+      "cols": 4,
+      "rows": 2,
+      "frameMap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frameSize": [
+        224,
+        112
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        112,
+        56
+      ],
+      "renderScale": 1,
+      "layer": "ground",
+      "status": "INTEGRATED",
+      "notes": "One-shot summon circle + materializing dragon, 4x2 source grid.",
+      "fit": "center",
+      "minCoverage": 0.003,
+      "maxCentroidDrift": 16,
+      "maxBaselineDrift": 32
+    },
+    {
+      "name": "vfx_jade_dragon_dissipate",
+      "source": "assets/art-v6/game-ready/v6/p_dragon.png",
+      "output": "assets/art-v6/game-ready/v6/vfx_jade_dragon_dissipate.png",
+      "cols": 8,
+      "rows": 1,
+      "frameMap": [
+        7,
+        7,
+        7,
+        7,
+        7,
+        7
+      ],
+      "frameSize": [
+        224,
+        112
+      ],
+      "frames": 6,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        112,
+        56
+      ],
+      "renderScale": 1,
+      "layer": "projectile",
+      "status": "INTEGRATED",
+      "notes": "Deterministically derived from the last flight frame: progressive erosion, dissolve and seeded jade spirit pixels. tools/art/make-jade-dragon-dissipate.py",
+      "fit": "center",
+      "maxCentroidDrift": 16,
+      "maxBaselineDrift": 16,
+      "minCoverage": 0.02
+    },
+    {
+      "name": "boss_slimeking",
+      "source": "assets/art-v6/production/bosses/slimeking/boss_slimeking_idle_6f_alpha.png",
+      "output": "assets/art-v6/game-ready/v6/boss_slimeking.png",
+      "cols": 3,
+      "rows": 2,
+      "frameMap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "frameSize": [
+        80,
+        80
+      ],
+      "frames": 6,
+      "fps": 7,
+      "loop": true,
+      "anchor": [
+        40,
+        76
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "READY",
+      "notes": "Crowned gel body, slow breath idle.",
+      "fit": "baseline"
+    },
+    {
+      "name": "boss_slimeking_walk",
+      "source": "assets/art-v6/production/bosses/slimeking/boss_slimeking_move_8f_alpha.png",
+      "output": "assets/art-v6/game-ready/v6/boss_slimeking_walk.png",
+      "cols": 4,
+      "rows": 2,
+      "frameMap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frameSize": [
+        80,
+        80
+      ],
+      "frames": 8,
+      "fps": 9,
+      "loop": true,
+      "anchor": [
+        40,
+        76
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "READY",
+      "fit": "baseline"
+    },
+    {
+      "name": "boss_slimeking_charge",
+      "source": "assets/art-v6/production/bosses/slimeking/boss_slimeking_jump_slam_8f_alpha.png",
+      "output": "assets/art-v6/game-ready/v6/boss_slimeking_charge.png",
+      "cols": 4,
+      "rows": 2,
+      "frameMap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frameSize": [
+        80,
+        80
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        40,
+        76
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "READY",
+      "notes": "Compress -> leap -> land mud wave, one-shot.",
+      "fit": "union",
+      "maxCentroidDrift": 16,
+      "maxBaselineDrift": 32
+    },
+    {
+      "name": "boss_slimeking_attack",
+      "source": "assets/art-v6/production/bosses/slimeking/boss_slimeking_acid_cast_8f_alpha.png",
+      "output": "assets/art-v6/game-ready/v6/boss_slimeking_attack.png",
+      "cols": 4,
+      "rows": 2,
+      "frameMap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frameSize": [
+        80,
+        80
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        40,
+        76
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "READY",
+      "fit": "union",
+      "maxCentroidDrift": 16,
+      "maxBaselineDrift": 32
+    },
+    {
+      "name": "boss_slimeking_shield",
+      "source": "assets/art-v6/production/bosses/slimeking/boss_slimeking_shield_6f_alpha.png",
+      "output": "assets/art-v6/game-ready/v6/boss_slimeking_shield.png",
+      "cols": 3,
+      "rows": 2,
+      "frameMap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "frameSize": [
+        80,
+        80
+      ],
+      "frames": 6,
+      "fps": 9,
+      "loop": false,
+      "anchor": [
+        40,
+        76
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "READY",
+      "fit": "union",
+      "maxCentroidDrift": 16,
+      "maxBaselineDrift": 32
+    },
+    {
+      "name": "boss_slimeking_death",
+      "source": "assets/art-v6/production/bosses/slimeking/boss_slimeking_death_10f_alpha.png",
+      "output": "assets/art-v6/game-ready/v6/boss_slimeking_death.png",
+      "cols": 5,
+      "rows": 2,
+      "frameMap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "frameSize": [
+        80,
+        80
+      ],
+      "frames": 10,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        40,
+        76
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "READY",
+      "notes": "Final frame is the mud pool.",
+      "fit": "union",
+      "maxCentroidDrift": 16,
+      "maxBaselineDrift": 32
+    },
+    {
+      "name": "p_boss_slimeking_acid_orb",
+      "source": "assets/art-v6/production/bosses/slimeking/p_boss_slimeking_acid_orb_8f.png",
+      "output": "assets/art-v6/game-ready/v6/p_boss_slimeking_acid_orb.png",
+      "cols": 4,
+      "rows": 2,
+      "frameMap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frameSize": [
+        48,
+        48
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": true,
+      "anchor": [
+        24,
+        24
+      ],
+      "renderScale": 1,
+      "layer": "projectile",
+      "status": "READY",
+      "fit": "center"
+    },
+    {
+      "name": "vfx_boss_slimeking_ground_wave",
+      "source": "assets/art-v6/production/bosses/slimeking/vfx_boss_slimeking_ground_wave_8f.png",
+      "output": "assets/art-v6/game-ready/v6/vfx_boss_slimeking_ground_wave.png",
+      "cols": 4,
+      "rows": 2,
+      "frameMap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frameSize": [
+        112,
+        112
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        56,
+        56
+      ],
+      "renderScale": 1,
+      "layer": "ground",
+      "status": "READY",
+      "fit": "center"
+    },
+    {
+      "name": "boss_slimeking_hurt",
+      "source": null,
+      "deriveFrom": "boss_slimeking",
+      "frameSize": [
+        80,
+        80
+      ],
+      "frames": 4,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        40,
+        76
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "TODO",
+      "notes": "Deterministic 4-frame white/hit-flash variant of the idle strip.",
+      "fit": "union"
+    },
+    {
+      "name": "vfx_boss_slimeking_fan_telegraph",
+      "source": null,
+      "deriveFrom": "boss_slimeking_attack",
+      "frameSize": [
+        112,
+        112
+      ],
+      "frames": 4,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        56,
+        104
+      ],
+      "renderScale": 1,
+      "layer": "ground",
+      "status": "TODO",
+      "notes": "Fan-shaped acid spray warning arc before acid_cast.",
+      "fit": "center"
+    },
+    {
+      "name": "vfx_boss_slimeking_summon_gel",
+      "source": null,
+      "deriveFrom": "boss_slimeking_death",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frames": 6,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        48,
+        92
+      ],
+      "renderScale": 1,
+      "layer": "ground",
+      "status": "TODO",
+      "notes": "Gel pool + small slime birth effect for the summon skill.",
+      "fit": "center"
+    },
+    {
+      "name": "vfx_boss_slimeking_bounce_afterimage",
+      "source": null,
+      "deriveFrom": "boss_slimeking_charge",
+      "frameSize": [
+        80,
+        80
+      ],
+      "frames": 6,
+      "fps": 12,
+      "loop": true,
+      "anchor": [
+        40,
+        76
+      ],
+      "renderScale": 1,
+      "layer": "fx",
+      "status": "TODO",
+      "notes": "Translucent afterimages used by the low-health multi-bounce skill.",
+      "fit": "center"
+    },
+    {
+      "name": "vfx_boss_slimeking_wave_dissipate",
+      "source": null,
+      "deriveFrom": "vfx_boss_slimeking_ground_wave",
+      "frameSize": [
+        112,
+        112
+      ],
+      "frames": 4,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        56,
+        56
+      ],
+      "renderScale": 1,
+      "layer": "ground",
+      "status": "TODO",
+      "notes": "End-of-mud-wave dissolve derived from the last ground-wave frame.",
+      "fit": "center"
+    },
+    {
+      "name": "boss_bonelord",
+      "source": "assets/art-v6/production/bosses/bonelord/boss_bonelord_idle_6f_alpha.png",
+      "output": "assets/art-v6/game-ready/v6/boss_bonelord.png",
+      "cols": 3,
+      "rows": 2,
+      "frameMap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "frameSize": [
+        96,
+        96
+      ],
+      "frames": 6,
+      "fps": 7,
+      "loop": true,
+      "anchor": [
+        48,
+        92
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "FRAMES",
+      "fit": "baseline"
+    },
+    {
+      "name": "boss_bonelord_attack",
+      "source": "assets/art-v6/production/bosses/bonelord/boss_bonelord_scythe_sweep_8f_alpha.png",
+      "output": "assets/art-v6/game-ready/v6/boss_bonelord_attack.png",
+      "cols": 4,
+      "rows": 2,
+      "frameMap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frameSize": [
+        96,
+        96
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        48,
+        92
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "FRAMES",
+      "fit": "union"
+    },
+    {
+      "name": "boss_bonelord_charge",
+      "source": "assets/art-v6/production/bosses/bonelord/boss_bonelord_bone_ring_8f_alpha.png",
+      "output": "assets/art-v6/game-ready/v6/boss_bonelord_charge.png",
+      "cols": 4,
+      "rows": 2,
+      "frameMap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frameSize": [
+        96,
+        96
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        48,
+        92
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "FRAMES",
+      "fit": "union"
+    },
+    {
+      "name": "boss_bonelord_resurrect",
+      "source": "assets/art-v6/production/bosses/bonelord/boss_bonelord_resurrection_8f_alpha.png",
+      "output": "assets/art-v6/game-ready/v6/boss_bonelord_resurrect.png",
+      "cols": 4,
+      "rows": 2,
+      "frameMap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frameSize": [
+        96,
+        96
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        48,
+        92
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "FRAMES",
+      "fit": "union"
+    },
+    {
+      "name": "boss_bonelord_death",
+      "source": "assets/art-v6/production/bosses/bonelord/boss_bonelord_death_10f_alpha.png",
+      "output": "assets/art-v6/game-ready/v6/boss_bonelord_death.png",
+      "cols": 5,
+      "rows": 2,
+      "frameMap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "frameSize": [
+        96,
+        96
+      ],
+      "frames": 10,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        48,
+        92
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "FRAMES",
+      "fit": "union"
+    },
+    {
+      "name": "boss_bonelord_walk",
+      "source": null,
+      "deriveFrom": "boss_bonelord",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frames": 8,
+      "fps": 9,
+      "loop": true,
+      "anchor": [
+        48,
+        92
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "TODO",
+      "notes": "Floating-throne drift derived from the idle strip until a dedicated sheet is authored.",
+      "fit": "baseline"
+    },
+    {
+      "name": "boss_bonelord_hurt",
+      "source": null,
+      "deriveFrom": "boss_bonelord",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frames": 4,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        48,
+        92
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "TODO",
+      "fit": "union"
+    },
+    {
+      "name": "vfx_bonelord_bone_prison",
+      "source": null,
+      "deriveFrom": "boss_bonelord_charge",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        48,
+        92
+      ],
+      "renderScale": 1,
+      "layer": "ground",
+      "status": "TODO",
+      "fit": "center"
+    },
+    {
+      "name": "vfx_bonelord_bone_spear_rain",
+      "source": null,
+      "deriveFrom": "boss_bonelord_charge",
+      "frameSize": [
+        96,
+        96
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        48,
+        92
+      ],
+      "renderScale": 1,
+      "layer": "projectile",
+      "status": "TODO",
+      "fit": "center"
+    },
+    {
+      "name": "boss_abysseye",
+      "source": "assets/art-v6/production/bosses/abysseye/boss_abysseye_p1_idle_6f_alpha.png",
+      "output": "assets/art-v6/game-ready/v6/boss_abysseye.png",
+      "cols": 3,
+      "rows": 2,
+      "frameMap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "frameSize": [
+        80,
+        80
+      ],
+      "frames": 6,
+      "fps": 7,
+      "loop": true,
+      "anchor": [
+        40,
+        76
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "FRAMES",
+      "fit": "baseline"
+    },
+    {
+      "name": "boss_abysseye_split",
+      "source": "assets/art-v6/production/bosses/abysseye/boss_abysseye_split_8f_alpha.png",
+      "output": "assets/art-v6/game-ready/v6/boss_abysseye_split.png",
+      "cols": 4,
+      "rows": 2,
+      "frameMap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frameSize": [
+        80,
+        80
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        40,
+        76
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "FRAMES",
+      "fit": "union"
+    },
+    {
+      "name": "boss_abysseye_remote_cast",
+      "source": "assets/art-v6/production/bosses/abysseye/boss_abysseye_remote_cast_8f_alpha.png",
+      "output": "assets/art-v6/game-ready/v6/boss_abysseye_remote_cast.png",
+      "cols": 4,
+      "rows": 2,
+      "frameMap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frameSize": [
+        80,
+        80
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        40,
+        76
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "FRAMES",
+      "fit": "union"
+    },
+    {
+      "name": "boss_abysseye_charge_dash",
+      "source": "assets/art-v6/production/bosses/abysseye/boss_abysseye_charge_dash_8f_alpha.png",
+      "output": "assets/art-v6/game-ready/v6/boss_abysseye_charge_dash.png",
+      "cols": 4,
+      "rows": 2,
+      "frameMap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frameSize": [
+        80,
+        80
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        40,
+        76
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "FRAMES",
+      "fit": "union"
+    },
+    {
+      "name": "boss_abysseye_remote",
+      "source": null,
+      "deriveFrom": "boss_abysseye_remote_cast",
+      "frameSize": [
+        80,
+        80
+      ],
+      "frames": 4,
+      "fps": 7,
+      "loop": true,
+      "anchor": [
+        40,
+        76
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "TODO",
+      "notes": "Remote-eye idle/move loop to be derived from cast sheet frame 0.",
+      "fit": "baseline"
+    },
+    {
+      "name": "boss_abysseye_walk",
+      "source": null,
+      "deriveFrom": "boss_abysseye",
+      "frameSize": [
+        80,
+        80
+      ],
+      "frames": 8,
+      "fps": 9,
+      "loop": true,
+      "anchor": [
+        40,
+        76
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "TODO",
+      "fit": "baseline"
+    },
+    {
+      "name": "boss_abysseye_death",
+      "source": null,
+      "deriveFrom": "boss_abysseye",
+      "frameSize": [
+        80,
+        80
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        40,
+        76
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "TODO",
+      "fit": "union"
+    },
+    {
+      "name": "boss_darklord",
+      "source": "assets/art-v6/production/bosses/darklord/boss_darklord_p1_idle_6f_alpha.png",
+      "output": "assets/art-v6/game-ready/v6/boss_darklord.png",
+      "cols": 3,
+      "rows": 2,
+      "frameMap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "frameSize": [
+        112,
+        112
+      ],
+      "frames": 6,
+      "fps": 7,
+      "loop": true,
+      "anchor": [
+        56,
+        108
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "FRAMES",
+      "fit": "baseline"
+    },
+    {
+      "name": "boss_darklord_attack",
+      "source": "assets/art-v6/production/bosses/darklord/boss_darklord_p1_blade_sweep_8f_alpha.png",
+      "output": "assets/art-v6/game-ready/v6/boss_darklord_attack.png",
+      "cols": 4,
+      "rows": 2,
+      "frameMap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frameSize": [
+        112,
+        112
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        56,
+        108
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "FRAMES",
+      "fit": "union"
+    },
+    {
+      "name": "boss_darklord_transform",
+      "source": "assets/art-v6/production/bosses/darklord/boss_darklord_transform_8f_alpha.png",
+      "output": "assets/art-v6/game-ready/v6/boss_darklord_transform.png",
+      "cols": 4,
+      "rows": 2,
+      "frameMap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frameSize": [
+        144,
+        144
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        72,
+        140
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "FRAMES",
+      "fit": "union"
+    },
+    {
+      "name": "boss_darklord_charge",
+      "source": "assets/art-v6/production/bosses/darklord/boss_darklord_p2_wing_rush_8f_alpha.png",
+      "output": "assets/art-v6/game-ready/v6/boss_darklord_charge.png",
+      "cols": 4,
+      "rows": 2,
+      "frameMap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frameSize": [
+        144,
+        144
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        72,
+        140
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "FRAMES",
+      "fit": "union"
+    },
+    {
+      "name": "boss_darklord_phase2_breath",
+      "source": "assets/art-v6/production/bosses/darklord/boss_darklord_p2_void_breath_8f_alpha.png",
+      "output": "assets/art-v6/game-ready/v6/boss_darklord_phase2_breath.png",
+      "cols": 4,
+      "rows": 2,
+      "frameMap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frameSize": [
+        144,
+        144
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        72,
+        140
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "FRAMES",
+      "fit": "union"
+    },
+    {
+      "name": "boss_darklord_death",
+      "source": "assets/art-v6/production/bosses/darklord/boss_darklord_p2_death_10f_alpha.png",
+      "output": "assets/art-v6/game-ready/v6/boss_darklord_death.png",
+      "cols": 5,
+      "rows": 2,
+      "frameMap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "frameSize": [
+        144,
+        144
+      ],
+      "frames": 10,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        72,
+        140
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "FRAMES",
+      "fit": "union"
+    },
+    {
+      "name": "vfx_darklord_escape_gate",
+      "source": "assets/art-v6/production/bosses/darklord/vfx_darklord_escape_gate_4f_alpha.png",
+      "output": "assets/art-v6/game-ready/v6/vfx_darklord_escape_gate.png",
+      "cols": 4,
+      "rows": 1,
+      "frameMap": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "frameSize": [
+        128,
+        192
+      ],
+      "frames": 4,
+      "fps": 6,
+      "loop": false,
+      "anchor": [
+        64,
+        188
+      ],
+      "renderScale": 1,
+      "layer": "environment",
+      "status": "FRAMES",
+      "notes": "Closed -> runes -> half-open -> fully open. Source is four columns; the lower half carries the gate base detail, so cells span full height.",
+      "fit": "center"
+    },
+    {
+      "name": "boss_darklord_walk",
+      "source": null,
+      "deriveFrom": "boss_darklord",
+      "frameSize": [
+        112,
+        112
+      ],
+      "frames": 8,
+      "fps": 9,
+      "loop": true,
+      "anchor": [
+        56,
+        108
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "TODO",
+      "fit": "baseline"
+    },
+    {
+      "name": "boss_darklord_phase2",
+      "source": null,
+      "deriveFrom": "boss_darklord_transform",
+      "frameSize": [
+        144,
+        144
+      ],
+      "frames": 4,
+      "fps": 7,
+      "loop": true,
+      "anchor": [
+        72,
+        140
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "TODO",
+      "notes": "P2 idle/move loop to be derived from the transform end pose.",
+      "fit": "baseline"
+    },
+    {
+      "name": "boss_darklord_hurt",
+      "source": null,
+      "deriveFrom": "boss_darklord",
+      "frameSize": [
+        112,
+        112
+      ],
+      "frames": 4,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        56,
+        108
+      ],
+      "renderScale": 1,
+      "layer": "actor",
+      "status": "TODO",
+      "fit": "union"
+    },
+    {
+      "name": "vfx_darklord_blackflame_rain",
+      "source": null,
+      "deriveFrom": null,
+      "frameSize": [
+        96,
+        96
+      ],
+      "frames": 8,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        48,
+        92
+      ],
+      "renderScale": 1,
+      "layer": "projectile",
+      "status": "TODO",
+      "notes": "Must be re-authored with a pure key or transparent background; the rejected gradient draft is banned.",
+      "fit": "center"
+    },
+    {
+      "name": "vfx_darklord_gate_enter",
+      "source": null,
+      "deriveFrom": "vfx_darklord_escape_gate",
+      "frameSize": [
+        128,
+        192
+      ],
+      "frames": 4,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        64,
+        188
+      ],
+      "renderScale": 1,
+      "layer": "fx",
+      "status": "TODO",
+      "fit": "center"
+    }
+  ]
+}

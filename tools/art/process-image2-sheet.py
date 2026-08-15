@@ -21,7 +21,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--out", required=True, type=Path)
     parser.add_argument("--cols", type=int, default=8)
     parser.add_argument("--rows", type=int, default=4)
-    parser.add_argument("--cell", type=int, default=64)
+    parser.add_argument("--cell", default="64",
+                        help="Square logical canvas side, or WxH for a rectangular canvas (e.g. 224x112)")
+    parser.add_argument("--flatten", action="store_true",
+                        help="Pack every processed frame into a single horizontal output row")
+    parser.add_argument("--shared-fit", nargs="?", const="union",
+                        choices=("union", "baseline", "center"),
+                        help="Fit all frames with one union bbox scale: union=preserve authored offsets, "
+                             "baseline=shared bottom contact, center=shared vertical center")
     parser.add_argument("--padding", type=int, default=3)
     parser.add_argument("--colors", type=int, default=40)
     parser.add_argument("--alpha-threshold", type=int, default=96)
@@ -93,9 +100,15 @@ def largest_component(image: Image.Image) -> Image.Image:
 
 def main() -> None:
     args = parse_args()
+    if isinstance(args.cell, str) and "x" in args.cell.lower():
+        cell_w, cell_h = (int(part.strip()) for part in args.cell.lower().split("x", 1))
+        if cell_w < 1 or cell_h < 1:
+            raise SystemExit("--cell WxH must contain positive integers")
+    else:
+        cell_w = cell_h = int(args.cell)
     src = harden_alpha(Image.open(args.input), args.alpha_threshold, not args.no_color_key)
-    cell_w = src.width / args.cols
-    cell_h = src.height / args.rows
+    source_cell_w = src.width / args.cols
+    source_cell_h = src.height / args.rows
     frame_map = list(range(args.cols))
     if args.frame_map:
         frame_map = [int(value.strip()) for value in args.frame_map.split(",") if value.strip()]
@@ -120,27 +133,115 @@ def main() -> None:
         if len({len(mapping) for mapping in row_frame_maps}) != 1:
             raise SystemExit("all --frame-map-by-row mappings must have the same length")
         out_cols = len(row_frame_maps[0])
-    out = Image.new("RGBA", (out_cols * args.cell, len(row_map) * args.cell), (0, 0, 0, 0))
+    total_frames = sum(len(mapping) for mapping in row_frame_maps)
+    if args.flatten:
+        out = Image.new("RGBA", (total_frames * cell_w, cell_h), (0, 0, 0, 0))
+    else:
+        out = Image.new("RGBA", (out_cols * cell_w, len(row_map) * cell_h), (0, 0, 0, 0))
+    max_w = max(1, cell_w - args.padding * 2)
+    max_h = max(1, cell_h - args.padding * 2)
+    frame_index = 0
 
-    for out_row, row in enumerate(row_map):
-        for out_col, source_col in enumerate(row_frame_maps[out_row]):
-            left = max(0, round(source_col * cell_w) - args.overlap)
-            top = max(0, round(row * cell_h) - args.overlap)
-            right = min(src.width, round((source_col + 1) * cell_w) + args.overlap)
-            bottom = min(src.height, round((row + 1) * cell_h) + args.overlap)
-            frame = src.crop((left, top, right, bottom))
-            if args.primary_only: frame = largest_component(frame)
-            bbox = frame.getchannel("A").getbbox()
-            if not bbox:
-                raise SystemExit(f"empty cell at row={row} col={source_col}")
+    if args.shared_fit:
+        prepared = []
+        for out_row, row in enumerate(row_map):
+            for out_col, source_col in enumerate(row_frame_maps[out_row]):
+                left = max(0, round(source_col * source_cell_w) - args.overlap)
+                top = max(0, round(row * source_cell_h) - args.overlap)
+                right = min(src.width, round((source_col + 1) * source_cell_w) + args.overlap)
+                bottom = min(src.height, round((row + 1) * source_cell_h) + args.overlap)
+                frame = src.crop((left, top, right, bottom))
+                if args.primary_only: frame = largest_component(frame)
+                bbox = frame.getchannel("A").getbbox()
+                if not bbox:
+                    raise SystemExit(f"empty cell at row={row} col={source_col}")
+                prepared.append((out_row, out_col, frame, bbox))
+        union = (
+            min(bbox[0] for _, _, _, bbox in prepared),
+            min(bbox[1] for _, _, _, bbox in prepared),
+            max(bbox[2] for _, _, _, bbox in prepared),
+            max(bbox[3] for _, _, _, bbox in prepared),
+        )
+        union_w = union[2] - union[0]
+        union_h = union[3] - union[1]
+        scale = min(max_w / union_w, max_h / union_h)
+        max_subject_w = max(bbox[2] - bbox[0] for _, _, _, bbox in prepared)
+        max_subject_h = max(bbox[3] - bbox[1] for _, _, _, bbox in prepared)
+        contact_scale = min(max_w / max_subject_w, max_h / max_subject_h)
+        scaled_union_w = union_w * scale
+        scaled_union_h = union_h * scale
+        contact_union_w = union_w * contact_scale
+        offset_x = (cell_w - scaled_union_w) / 2
+        contact_offset_x = (cell_w - contact_union_w) / 2
+        offset_y = cell_h - args.padding - scaled_union_h
+        for out_row, out_col, frame, bbox in prepared:
             subject = frame.crop(bbox)
-            max_dim = args.cell - args.padding * 2
-            scale = min(max_dim / subject.width, max_dim / subject.height)
+            if args.shared_fit == "center":
+                size = (max(1, round(subject.width * contact_scale)),
+                        max(1, round(subject.height * contact_scale)))
+                subject = subject.resize(size, Image.Resampling.NEAREST)
+                if args.flatten:
+                    cell_x = frame_index * cell_w
+                    cell_y = 0
+                    frame_index += 1
+                else:
+                    cell_x = out_col * cell_w
+                    cell_y = out_row * cell_h
+                x = cell_x + (cell_w - subject.width) // 2
+                y = cell_y + (cell_h - subject.height) // 2
+                out.alpha_composite(subject, (x, y))
+                continue
+            if args.shared_fit == "baseline":
+                size = (max(1, round(subject.width * contact_scale)),
+                        max(1, round(subject.height * contact_scale)))
+                subject = subject.resize(size, Image.Resampling.NEAREST)
+                if args.flatten:
+                    cell_x = frame_index * cell_w
+                    cell_y = 0
+                    frame_index += 1
+                else:
+                    cell_x = out_col * cell_w
+                    cell_y = out_row * cell_h
+                x = round(cell_x + contact_offset_x + (bbox[0] - union[0]) * contact_scale)
+                y = cell_y + cell_h - args.padding - subject.height
+                out.alpha_composite(subject, (x, y))
+                continue
             size = (max(1, round(subject.width * scale)), max(1, round(subject.height * scale)))
             subject = subject.resize(size, Image.Resampling.NEAREST)
-            x = out_col * args.cell + (args.cell - subject.width) // 2
-            y = out_row * args.cell + args.cell - args.padding - subject.height
+            if args.flatten:
+                cell_x = frame_index * cell_w
+                cell_y = 0
+                frame_index += 1
+            else:
+                cell_x = out_col * cell_w
+                cell_y = out_row * cell_h
+            x = round(cell_x + offset_x + (bbox[0] - union[0]) * scale)
+            y = round(cell_y + offset_y + (bbox[1] - union[1]) * scale)
             out.alpha_composite(subject, (x, y))
+    else:
+        for out_row, row in enumerate(row_map):
+            for out_col, source_col in enumerate(row_frame_maps[out_row]):
+                left = max(0, round(source_col * source_cell_w) - args.overlap)
+                top = max(0, round(row * source_cell_h) - args.overlap)
+                right = min(src.width, round((source_col + 1) * source_cell_w) + args.overlap)
+                bottom = min(src.height, round((row + 1) * source_cell_h) + args.overlap)
+                frame = src.crop((left, top, right, bottom))
+                if args.primary_only: frame = largest_component(frame)
+                bbox = frame.getchannel("A").getbbox()
+                if not bbox:
+                    raise SystemExit(f"empty cell at row={row} col={source_col}")
+                subject = frame.crop(bbox)
+                scale = min(max_w / subject.width, max_h / subject.height)
+                size = (max(1, round(subject.width * scale)), max(1, round(subject.height * scale)))
+                subject = subject.resize(size, Image.Resampling.NEAREST)
+                if args.flatten:
+                    x = frame_index * cell_w + (cell_w - subject.width) // 2
+                    y = cell_h - args.padding - subject.height
+                    frame_index += 1
+                else:
+                    x = out_col * cell_w + (cell_w - subject.width) // 2
+                    y = out_row * cell_h + cell_h - args.padding - subject.height
+                out.alpha_composite(subject, (x, y))
 
     out = quantize_rgba(harden_alpha(out, args.alpha_threshold, not args.no_color_key), args.colors)
     args.out.parent.mkdir(parents=True, exist_ok=True)
