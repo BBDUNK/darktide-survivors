@@ -360,29 +360,32 @@ html, body, button, input, select, textarea, * {
    边框改用主菜单按钮同款贴图，保持界面统一。 */
 .hud-timer {
   top: 18px !important;
-  min-width: 180px !important;
-  min-height: 62px !important;
-  padding: 8px 24px 7px !important;
+  min-width: 250px !important;
+  max-width: calc(100vw - 40px) !important;
+  min-height: 66px !important;
+  padding: 10px 34px 9px !important;
+  box-sizing: border-box !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 2px !important;
+  gap: 3px !important;
   background: url('../assets/art-v2/ui/menu_btn_frame_edge.png') center / 100% 100% no-repeat !important;
   border: 0 !important;
   outline: 0 !important;
   outline-offset: 0 !important;
   box-shadow: none !important;
   font-family: var(--font-cn) !important;
-  font-size: 19px !important;
+  font-size: 18px !important;
   letter-spacing: 2px !important;
   color: #f4dda3 !important;
 }
 .hud-timer::before, .hud-timer::after { content: none !important; }
 .hud-timer-time {
-  font-size: 19px !important;
+  font-size: 18px !important;
   line-height: 1.2 !important;
   color: inherit !important;
+  white-space: nowrap !important;
 }
 .hud-nextev {
   position: static !important;
@@ -390,15 +393,18 @@ html, body, button, input, select, textarea, * {
   left: auto !important;
   transform: none !important;
   padding: 0 !important;
-  font-size: 11px !important;
+  font-size: 10px !important;
   font-weight: 700 !important;
-  letter-spacing: 1px !important;
+  letter-spacing: 0.5px !important;
   line-height: 1.2 !important;
   color: #e9cf8e !important;
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
   white-space: nowrap !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
 }
 .hud-nextev.urgent {
   color: #ffb0a0 !important;
