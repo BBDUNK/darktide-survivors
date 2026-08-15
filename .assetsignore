@@ -26,8 +26,12 @@ assets/sprites/quality-report.json
 #   assets/art-v2/ui/          HUD 边框(血条/经验/计时/槽位)
 #   assets/art-v3/ui/          计时器边框
 #   assets/art-v4/sprites/ui/  巴洛克菜单边框
-#   assets/sprites/atlas.png|atlas.json|atlas-data.js
+#   assets/sprites/atlas.webp|atlas-data.js   运行时图集(v0.22 起 webp,URL 带内容版本号)
 #   assets/ui/** assets/backgrounds/** assets/intro.jpg
+
+# ---- 图集中间产物(运行时已改用 atlas.webp,shrink-atlas.py 会同步三处引用) ----
+assets/sprites/atlas.png
+assets/sprites/atlas.json
 
 # ---- 大体积未引用图 ----
 assets/intro-v2.png

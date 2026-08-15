@@ -54,7 +54,7 @@ async function runCase(name, mode, atlasDelay) {
   });
 
   if (mode !== 'normal') {
-    await page.route('**/assets/sprites/atlas.png', async route => {
+    await page.route('**/assets/sprites/atlas.webp*', async route => {
       if (mode === 'stall') return; // hold the request open forever
       if (mode === 'blocked') { await route.abort(); return; }
       if (atlasDelay > 0) await new Promise(r => setTimeout(r, atlasDelay));

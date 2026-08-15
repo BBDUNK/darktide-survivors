@@ -1,0 +1,41 @@
+# Cloudflare Pages 缓存策略(v0.22.0)
+# 默认所有资源走 etag 协商缓存,每次回访都要发 304 往返;这里给大体积二进制开长缓存。
+# 安全性:图集 URL 带内容版本号(tools/art/shrink-atlas.py 维护),图集变更时 URL 变化
+# 自动绕过缓存,因此 atlas.webp 可以 immutable;帧坐标文件 atlas-data.js 与 js/css
+# 一样只给短缓存,保证与新图集严格成对。规则用精确路径,不与目录通配重叠。
+
+/assets/sprites/atlas.webp
+  Cache-Control: public, max-age=604800, immutable
+
+/assets/sprites/atlas-data.js
+  Cache-Control: public, max-age=600, stale-while-revalidate=86400
+
+/assets/audio/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/assets/backgrounds/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/assets/ui/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/assets/art-v2/ui/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/assets/art-v3/ui/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/assets/art-v4/sprites/ui/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/fonts/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/js/*
+  Cache-Control: public, max-age=600, stale-while-revalidate=86400
+
+/css/*
+  Cache-Control: public, max-age=600, stale-while-revalidate=86400
+
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate

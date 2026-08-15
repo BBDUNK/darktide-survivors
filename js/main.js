@@ -2275,8 +2275,8 @@
     Engine.start(update, render);
 
     // 字体后台加载,不阻塞首帧;图集完成后补齐精灵并处理跳过意图。
+    // v0.21.11 起全站正楷,Fusion Pixel 已无任何元素使用,不再强制下载那 648KB 字体。
     if (document.fonts && document.fonts.load) {
-      document.fonts.load('16px "Fusion Pixel"');
       document.fonts.load('700 96px "Darktide Gothic"');
     }
     if (atlasReady) {

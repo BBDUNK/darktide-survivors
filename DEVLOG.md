@@ -20,6 +20,48 @@
 
 ---
 
+## 2026-08-16 — v0.22.0:加载与运行流畅度专项优化(图集 WebP 化 / 空闲切片 / 离线程解码 / 预加载 / 缓存头)
+
+一次以实测数据为准的性能专项,聚焦两条线:进网页加载资源的流畅度、运行期主线程流畅度。
+
+### 加载链路
+
+- **图集 WebP 化(-65% 体积)**:`atlas.png` 7.7MB → `atlas.webp` 2.73MB(无损,逐字节校验像素一致)。
+  图集是 2048×16384 的 RGBA 大图,其中 85% 像素全透明、内容只到 y=9705——打包器把高度取整到
+  2 的幂多出 6.6K 空白行。裁掉空行后 2048×9713,解码内存 128MB → 80MB。
+  新增 `tools/art/shrink-atlas.py` 做裁剪+转码+引用同步(可复现);`pixel-cleanup.py` 的
+  `pack()` 同步改造:不再取 2 的幂、直接产出带内容哈希 `?v=` 的 webp,未来重建图集不走回头路。
+- **图集 URL 带内容版本号**:`atlas-data.js` / `atlas.json` / `index.html` 预加载三处统一指向
+  `atlas.webp?v=<md5 前 10 位>`。图集变更时 URL 变化,长缓存自动失效,不会出现"新坐标配旧图"的错配。
+- **关键资源预加载**:`index.html` 用 `<link rel="preload">` 提前发起图集(低优先级)/开幕图/菜单背景。
+  此前图集 URL 藏在 JS 里,要等 ~830KB 脚本全部解析完 `boot()` 才开始下载。
+  ⚠ 图集必须用 `fetchpriority="low"`:本地实测高优先级会抢占 JS 带宽,首帧反而 219ms→574ms。
+- **砍掉无用的 648KB 字体下载**:v0.21.11 已全站正楷,但 `boot()` 仍强制
+  `document.fonts.load('16px "Fusion Pixel"')`,每次首访白下 648KB。移除(仅保留标题哥特字体加载)。
+- **Cloudflare Pages 缓存头**:新增 `_headers`。图集(带版本号)`immutable` 7 天;音频/背景/UI 贴图/字体
+  24h + SWR;js/css 与 `atlas-data.js` 仅 10 分钟 + SWR(改动频繁,且帧坐标必须与新图集严格成对);
+  HTML 不缓存保证部署即时生效。默认的 etag 协商缓存每次回访要发 20+ 个 304 往返,长缓存直接省掉。
+
+### 运行流畅度(加载期主线程)
+
+- **图集切片空闲化**:旧版图集到达后一次性同步创建 3408 个 canvas,主线程冻结数百毫秒。
+  改为每批 96 帧、批间 `requestIdleCallback`(兜底 `setTimeout`)调度,开幕动画全程不掉帧。
+- **解码移出主线程**:优先 `fetch + createImageBitmap`(大图解码在工作线程完成,`bitmap.close()`
+  确定性释放 80MB 位图);`file://` 直开或 fetch 不可用时自动退回 `Image` 路径(保留原有超时/失败兜底)。
+- **实测(git worktree A/B,`test/jank-probe.js`)**:加载期最长掉帧 **566.7ms → 50.1ms(-91%)**,
+  >33ms 帧数 1→1(剩余那次即 JS 启动本身);本地首帧 181ms、图集就绪 615ms。
+
+### 测试同步
+
+- `loading-probe` 路由拦截改 `atlas.webp*`(带版本号仍能命中);`art-probe` 字体断言从过期的
+  Fusion Pixel 更新为楷体(该断言自 v0.21.11 起基线就是红的);`v6-baseline-shots` 字体探针同步。
+- 新增 `test/jank-probe.js`(加载期掉帧统计,仅供性能对比,不进回归矩阵)。
+- `.assetsignore`:`atlas.png`/`atlas.json` 为中间产物不再进 CDN,运行时只用 `atlas.webp|atlas-data.js`。
+- 回归矩阵:`headless` / `loading` / `art`(400 敌人 60.0FPS、p95 16.8ms 无回归)/ `resp`(含 file:// 模式)/
+  `combat-vfx` / `boss-phase` / `terrain-touch` 全绿。
+
+---
+
 ## 2026-08-16 — v0.21.19:主菜单 Beta 角标从头重做
 
 - **角标整体重做**：不再是单纯的彩色文字，改为“深绿底 + 亮绿描边 + 浅绿文字”的标签徽章，带绿色光晕和轻投影

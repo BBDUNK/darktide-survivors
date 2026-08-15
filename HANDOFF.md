@@ -1,7 +1,7 @@
 # 项目交接文档 (HANDOFF)
 
 > 本文件用于把《暗黑逃跑神》(Darktide Survivors) 项目完整交接给任何后续开发工具/会话。
-> 生成时间:2026-08-16,当前版本 **v0.21.19**(V6 美术接力已全量接入 + Beta 角标徽章重做)。
+> 生成时间:2026-08-16,当前版本 **v0.22.0**(加载/运行流畅度专项优化 + V6 美术接力全量接入)。
 > 若你在新会话接手,请先读本文件,再读 `DEVLOG.md`(完整迭代历史)、`docs/V6_ACCEPTANCE_REPORT.md`(V6 验收报告)与 `SPEC.md`(原始设计)。
 
 ---
@@ -25,7 +25,8 @@
 - ⚠ **用户要求:任何改动(无论大小)改完即自动提交推送,不用问。**
 - 每个大版本要更新两处:`js/config.js` 的 `CFG.GAME.VERSION`,以及 `DEVLOG.md` 顶部新条目
 - Vercel 已下架,不要碰 `.vercel` 目录
-- `assets/art-v6/**` 通过 `.assetsignore` 排除在 Cloudflare Pages 运行目录之外;运行时图集只来自 `assets/sprites/atlas.png|json|atlas-data.js`
+- `assets/art-v6/**` 通过 `.assetsignore` 排除在 Cloudflare Pages 运行目录之外;运行时图集只来自 `assets/sprites/atlas.webp|atlas-data.js`(v0.22 起 webp,URL 带内容版本号;重建图集后跑 `py tools/art/shrink-atlas.py` 同步三处引用)
+- 站点根有 `_headers`(Cloudflare Pages 缓存策略):版本化图集 immutable 长缓存,js/css/atlas-data.js 短缓存,改缓存策略时注意"帧坐标必须与新图集成对"
 
 ## 三、技术栈与文件结构
 
@@ -81,6 +82,7 @@
 - v0.21.17 已合入：Beta 角标改苹果绿；倒计时框竖向加高、两行文字在框内；地面恢复原始拼接效果。
 - v0.21.18 已合入：倒计时框整体缩小不挡视野；Beta 角标改纯绿色 `#00e05a`，与狂战士红色角标区分。
 - v0.21.19 已合入：主菜单 Beta 角标从头重做，改为深绿底 + 亮绿描边徽章，位置更自然。
+- v0.22.0 已合入：加载/运行流畅度专项——图集无损 WebP 化 7.7MB→2.73MB(解码内存 128→80MB,URL 带内容哈希)、关键资源预加载(图集低优先级)、移除无用的 Fusion Pixel 648KB 强制下载、Cloudflare `_headers` 缓存策略、图集切片空闲分批 + `createImageBitmap` 离线程解码 + 位图确定性释放;加载期最长掉帧 566.7ms→50.1ms。`test/jank-probe.js` 为加载期掉帧 A/B 探针。
 
 ## 五、UI 风格与设计约定
 

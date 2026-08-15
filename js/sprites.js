@@ -1912,7 +1912,6 @@
       if (!store.hud_minimap_frame) store.hud_minimap_frame = [new Pix(8, 8).toCanvas()];
       atlasState.image = cfg.image;
       atlasState.promise = new Promise(function (resolve) {
-        var image = new Image();
         var settled = false;
         var timer = setTimeout(function () {
           if (settled) return;
@@ -1931,56 +1930,91 @@
           window.SpriteGen.init();
           resolve(false);
         }
-        image.onload = function () {
-          try {
-            if (settled) return;
-            settled = true;
-            clearTimeout(timer);
-            var replacements = {};
-            var names = Object.keys(cfg.frames);
-            for (var ni = 0; ni < names.length; ni++) {
-              var name = names[ni];
-              var sourceFrames = cfg.frames[name];
-              var canvases = [];
-              for (var fi = 0; fi < sourceFrames.length; fi++) {
-                var frame = sourceFrames[fi];
-                var cv = document.createElement('canvas');
-                cv.width = frame.w; cv.height = frame.h;
-                var g = cv.getContext('2d');
-                g.imageSmoothingEnabled = false;
-                g.drawImage(image, frame.x, frame.y, frame.w, frame.h, 0, 0, frame.w, frame.h);
-                // Preserve authored pivot metadata on the sliced canvas.  Actor
-                // rendering uses this instead of guessing from frame bounds.
-                cv._atlasAnchor = frame.anchor ? { x: frame.anchor.x, y: frame.anchor.y }
-                  : { x: frame.w / 2, y: frame.h / 2 };
-                canvases.push(cv);
+        // 3400+ 帧一次性切片会让主线程卡住数百毫秒(实测掉帧 566ms)。
+        // 分批切片,批间用空闲时段调度(rIC 不行再退 setTimeout);
+        // 全部完成前游戏继续用程序素材渲染,提交语义与旧版一致——
+        // 要么整套替换,要么整体回退。source 是 ImageBitmap 或 HTMLImageElement,
+        // releaseSource 在切片完成后释放解码位图(~80MB,移动端内存压力显著下降)。
+        function startSlicing(source, releaseSource) {
+          // 超时回退后迟到的图集直接丢弃,不与程序兜底混用。
+          if (settled) { releaseSource(); return; }
+          settled = true;
+          clearTimeout(timer);
+          var replacements = {};
+          var names = Object.keys(cfg.frames);
+          var ni = 0;
+          var SLICE_BATCH = 96;
+          var scheduleSlice = window.requestIdleCallback
+            ? function (fn) { window.requestIdleCallback(fn, { timeout: 120 }); }
+            : function (fn) { setTimeout(fn, 0); };
+          function sliceBatch() {
+            try {
+              var end = Math.min(names.length, ni + SLICE_BATCH);
+              for (; ni < end; ni++) {
+                var name = names[ni];
+                var sourceFrames = cfg.frames[name];
+                var canvases = [];
+                for (var fi = 0; fi < sourceFrames.length; fi++) {
+                  var frame = sourceFrames[fi];
+                  var cv = document.createElement('canvas');
+                  cv.width = frame.w; cv.height = frame.h;
+                  var g = cv.getContext('2d');
+                  g.imageSmoothingEnabled = false;
+                  g.drawImage(source, frame.x, frame.y, frame.w, frame.h, 0, 0, frame.w, frame.h);
+                  // Preserve authored pivot metadata on the sliced canvas.  Actor
+                  // rendering uses this instead of guessing from frame bounds.
+                  cv._atlasAnchor = frame.anchor ? { x: frame.anchor.x, y: frame.anchor.y }
+                    : { x: frame.w / 2, y: frame.h / 2 };
+                  canvases.push(cv);
+                }
+                replacements[name] = canvases;
               }
-              replacements[name] = canvases;
+              if (ni < names.length) { scheduleSlice(sliceBatch); return; }
+              for (var key in replacements) {
+                store[key] = replacements[key];
+                atlasState.names[key] = true;
+                if (stableCache[key]) delete stableCache[key];
+              }
+              atlasState.scales = cfg.renderScale || {};
+              atlasState.fps = cfg.animationFps || {};
+              atlasState.count = names.length;
+              atlasState.loaded = true;
+              releaseSource();
+              console.info('[SpriteGen] 本地图集已加载: ' + names.length + ' 项');
+              resolve(true);
+            } catch (err) {
+              atlasState.error = String(err && err.message ? err.message : err);
+              console.warn('[SpriteGen] 图集切片失败,继续使用程序素材:', err);
+              releaseSource();
+              window.SpriteGen.init();
+              resolve(false);
             }
-            for (var key in replacements) {
-              store[key] = replacements[key];
-              atlasState.names[key] = true;
-              if (stableCache[key]) delete stableCache[key];
-            }
-            atlasState.scales = cfg.renderScale || {};
-            atlasState.fps = cfg.animationFps || {};
-            atlasState.count = names.length;
-            atlasState.loaded = true;
-            console.info('[SpriteGen] 本地图集已加载: ' + names.length + ' 项');
-            resolve(true);
-          } catch (err) {
-            atlasState.error = String(err && err.message ? err.message : err);
-            console.warn('[SpriteGen] 图集切片失败,继续使用程序素材:', err);
-            window.SpriteGen.init();
-            resolve(false);
           }
-        };
-        image.onerror = function () {
-          fallback('image load failed: ' + cfg.image);
-        };
-        image.decoding = 'async';
-        image.fetchPriority = 'high';
-        image.src = cfg.image;
+          sliceBatch();
+        }
+        // 首选 createImageBitmap:大图(2048×9713)的解码移出主线程,
+        // 且 bitmap.close() 能确定性释放位图;fetch 失败(或 file:// 直开)退回 Image 路径。
+        function viaImage() {
+          var image = new Image();
+          image.onload = function () { startSlicing(image, function () { image.onload = null; image.onerror = null; }); };
+          image.onerror = function () { fallback('image load failed: ' + cfg.image); };
+          image.decoding = 'async';
+          image.fetchPriority = 'high';
+          image.src = cfg.image;
+        }
+        var httpish = location && (location.protocol === 'http:' || location.protocol === 'https:');
+        if (httpish && window.fetch && window.createImageBitmap) {
+          fetch(cfg.image).then(function (resp) {
+            if (!resp.ok) throw new Error('http ' + resp.status);
+            return resp.blob();
+          }).then(function (blob) {
+            return createImageBitmap(blob);
+          }).then(function (bitmap) {
+            startSlicing(bitmap, function () { if (bitmap.close) bitmap.close(); });
+          }).catch(viaImage);
+        } else {
+          viaImage();
+        }
       });
       return atlasState.promise;
     },

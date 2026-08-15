@@ -55,7 +55,7 @@ const MIME = {
       return {
         resources: entries.length,
         atlasMs: Math.max(0, ...entries.map(e => e.responseEnd - e.startTime)),
-        fonts: document.fonts.check('16px "Fusion Pixel"')
+        fonts: document.fonts.check('700 96px "Darktide Gothic"')
       };
     });
     return { loadMs, perf };

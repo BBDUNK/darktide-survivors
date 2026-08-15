@@ -286,7 +286,8 @@ function assert(ok, message) {
 
   // Skip intro and start the default knight/graveyard run through the real UI.
   await page.mouse.click(640, 360);
-  await page.waitForFunction(() => document.fonts.check('16px "Fusion Pixel"'));
+  // v0.21.11 起全站正楷,标题保留哥特艺术字;Fusion Pixel 已不再加载。
+  await page.waitForFunction(() => document.fonts.check('700 96px "Darktide Gothic"'));
   await page.waitForFunction(() => Debug.menuBackground().loaded);
   const theme = await page.evaluate(() => {
     const button = document.querySelector('.menu-screen:not(.hidden) .menu-col .btn:not(.primary)');
@@ -310,7 +311,7 @@ function assert(ok, message) {
     };
   });
   console.log('THEME STATE ' + JSON.stringify(theme));
-  assert(theme.font.includes('Fusion Pixel'), 'Fusion Pixel font is not active');
+  assert(theme.font.includes('KaiTi'), 'KaiTi body font is not active');
   assert(theme.buttonBackground.includes('menu_btn_frame_edge.png') || theme.buttonBackground.includes('hud_coin_frame.png'),
     'Baroque framed main-menu button skin is not active');
   assert(theme.panelBackground.includes('battle_report_panel.png') && theme.altarBackground.includes('holy_altar_panel.png'),

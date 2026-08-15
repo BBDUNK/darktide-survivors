@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import time
@@ -295,20 +296,24 @@ def pack(frames: dict[str, list[Image.Image]], manifest: dict, out_dir: Path) ->
         placements.setdefault(name, []).append({"x": x, "y": y, "w": frame.width, "h": frame.height})
         x += frame.width + padding
         row_h = max(row_h, frame.height)
-    height = 1
-    needed = y + row_h + padding
-    while height < needed:
-        height *= 2
+    height = max(1, needed)
     atlas = Image.new("RGBA", (width, height))
     for name, index, frame in ordered:
         pos = placements[name][index]
         atlas.alpha_composite(frame, (pos["x"], pos["y"]))
     save_retry(atlas, out_dir / "atlas.png")
+    # 运行时用无损 WebP(约 -65% 体积,像素逐位一致);URL 带内容哈希,
+    # 让 _headers 里的 immutable 长缓存在图集变更时自动失效。
+    # 2 的幂高度没有任何收益,只会在画布尾部留几千行空白(解码内存白占)。
+    webp_path = out_dir / "atlas.webp"
+    atlas.save(webp_path, lossless=True, quality=100, method=6, exact=True)
+    digest = hashlib.md5(webp_path.read_bytes()).hexdigest()[:10]
+    image_ref = f"assets/sprites/atlas.webp?v={digest}"
 
     assets_by_name = {a["name"]: a for a in manifest["assets"]}
     result = {
         "version": manifest["version"],
-        "image": "assets/sprites/atlas.png",
+        "image": image_ref,
         "frames": {},
         "renderScale": {},
         "animationFps": {},
