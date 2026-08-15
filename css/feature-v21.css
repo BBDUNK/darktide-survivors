@@ -412,6 +412,50 @@ html, body, button, input, select, textarea, * {
   animation: none !important;
 }
 
+/* 左下角金币/击杀：两个框统一尺寸，横着拉长，图标+文字完整居中排版 */
+.hud-tr {
+  gap: 8px !important;
+}
+.hud-stat {
+  width: 168px !important;
+  min-width: 168px !important;
+  max-width: 168px !important;
+  height: 42px !important;
+  padding: 0 16px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  background: url('../assets/art-v2/ui/hud_coin_frame.png') center / 100% 100% no-repeat !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  color: #ffe094 !important;
+  font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+}
+.hud-stat + .hud-stat {
+  background-image: url('../assets/art-v2/ui/hud_kill_frame.png') !important;
+}
+.hud-stat canvas {
+  flex: none !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+.hud-stat-label {
+  font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #c8b6dd !important;
+}
+.hud-stat span:last-child {
+  flex: none !important;
+}
+
 .page-title, .modal-title, .info-title {
   color: #e6c986;
   text-shadow: 2px 2px #140907;

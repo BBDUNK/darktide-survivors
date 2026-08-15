@@ -505,6 +505,12 @@ window.Engine = (function () {
     cam: cam, start: start, fitCanvas: fitCanvas, refit: refit,
     isTouch: function () { return isTouch; },
     viewScale: function () { return viewScale; },
+    // 世界缩放时反向放大字体，保证画布文字在缩小视野后依然清晰锐利
+    zoomFont: function (fontStr) {
+      var z = (Engine.zoom ? Engine.zoom() : 1);
+      if (!z || z <= 0.01) z = 1;
+      return fontStr.replace(/(\d+(?:\.\d+)?)px/, function (m, p) { return (parseFloat(p) / z).toFixed(1) + 'px'; });
+    },
     terrainEffect: terrainEffect, roadBend: roadBend,
     // 绘制侧(main.js drawTerrain)必须复用这两个常量,保证视觉与减速判定同步
     SWAMP_THRESHOLD: SWAMP_THRESHOLD, SWAMP_WATER_RATIO: SWAMP_WATER_RATIO,

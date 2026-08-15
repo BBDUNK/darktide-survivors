@@ -2661,7 +2661,7 @@ window.Entities = (function () {
       ctx.globalAlpha = 0.85;
       ctx.strokeStyle = '#f1c16c'; ctx.lineWidth = 1;
       ctx.strokeRect(gate.x - slit / 2 - 2, gate.y - gh + 54, slit + 4, gh - 74);
-      ctx.globalAlpha = 1; ctx.fillStyle = '#f4d292'; ctx.font = 'bold 11px "KaiTi","楷体","STKaiti","华文楷体",serif'; ctx.textAlign = 'center';
+      ctx.globalAlpha = 1; ctx.fillStyle = '#f4d292'; ctx.font = Engine.zoomFont('bold 11px "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif'); ctx.textAlign = 'center';
       ctx.fillText('撤离之门  [E]', gate.x, gate.y - gh - 12); ctx.textAlign = 'left';
     }
     ctx.restore();
@@ -3170,7 +3170,7 @@ window.Entities = (function () {
         }
       }
       // 名字 + 血条
-      ctx.font = '9px "KaiTi","楷体","STKaiti","华文楷体",serif';
+      ctx.font = Engine.zoomFont('9px "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif');
       ctx.textAlign = 'center';
       ctx.fillStyle = m.downed ? '#ff8b94' : '#cfe6ff';
       ctx.fillText(m.name || '队友', m.x, m.y - 26);

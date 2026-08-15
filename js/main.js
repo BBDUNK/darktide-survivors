@@ -2,6 +2,7 @@
 (function () {
   'use strict';
   var E = Engine;
+  E.zoom = function () { return worldZoom; };
   var canvas, ctx;
   var state = 'intro'; // intro | menu | run | levelup | chest | pause | result
   var run = null;
@@ -73,18 +74,18 @@
 
     // 中央题字(放大,两行)
     ctx.textAlign = 'center';
-    ctx.font = 'bold 56px "KaiTi","楷体","STKaiti","华文楷体",serif';
+    ctx.font = 'bold 56px "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif';
     ctx.lineWidth = 10;
     ctx.strokeStyle = 'rgba(0,0,0,0.9)';
     ctx.strokeText('天庭制作组', W / 2, H / 2 - 38);
     ctx.fillStyle = '#ffd76b';
     ctx.fillText('天庭制作组', W / 2, H / 2 - 38);
-    ctx.font = 'bold 30px "KaiTi","楷体","STKaiti","华文楷体",serif';
+    ctx.font = 'bold 30px "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif';
     ctx.lineWidth = 7;
     ctx.strokeText('倾心呈现', W / 2, H / 2 + 24);
     ctx.fillStyle = '#fff3c8';
     ctx.fillText('倾心呈现', W / 2, H / 2 + 24);
-    ctx.font = '20px "KaiTi","楷体","STKaiti","华文楷体",serif';
+    ctx.font = '20px "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif';
     ctx.lineWidth = 5;
     ctx.strokeText('特别鸣谢:SOTA Model', W / 2, H / 2 + 68);
     ctx.fillStyle = '#cfe6ff';
@@ -112,7 +113,7 @@
 
     // 右下角跳过提示
     ctx.textAlign = 'right';
-    ctx.font = '12px "KaiTi","楷体","STKaiti","华文楷体",serif';
+    ctx.font = '12px "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif';
     ctx.lineWidth = 4;
     ctx.strokeText('轻触屏幕以跳过...', W - 12, H - 12);
     ctx.fillStyle = '#ffffff';
@@ -684,7 +685,7 @@
       var marker = SpriteGen.get(v.rewardKind === 'weapon' ? 'w_crossblade' : v.itemId);
       ctx.drawImage(marker, sx + 17, sy - 38 + bob, 16, 16);
       // 金币数字
-      ctx.font = 'bold 10px "KaiTi","楷体","STKaiti","华文楷体",serif';
+      ctx.font = Engine.zoomFont('bold 10px "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif');
       ctx.textAlign = 'center';
       ctx.lineWidth = 3;
       ctx.strokeStyle = 'rgba(8,6,18,0.9)';

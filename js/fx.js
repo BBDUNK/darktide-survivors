@@ -20,9 +20,9 @@
   var SH_BEAM = 2;    // 竖直光柱(str = 定高)
   var SH_SPRITE = 3;  // 图集多帧特效(str = SpriteGen 名字)
 
-  var FONT_N = 'bold 10px "KaiTi","楷体","STKaiti","华文楷体",serif';
-  var FONT_C = 'bold 15px "KaiTi","楷体","STKaiti","华文楷体",serif';
-  var FONT_H = 'bold 11px "KaiTi","楷体","STKaiti","华文楷体",serif';
+  var FONT_N = 'bold 10px "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif';
+  var FONT_C = 'bold 15px "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif';
+  var FONT_H = 'bold 11px "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif';
   var FONTS = [FONT_N, FONT_C, FONT_H];
 
   var FIRE_COLS = ['#fff3b0', '#ffd24a', '#ff9531', '#ff5722'];
@@ -406,7 +406,7 @@
       var fade = t.max * 0.3;
       var ta = t.life < fade ? t.life / fade : 1;
       ctx.globalAlpha = ta;
-      ctx.font = FONTS[t.font];
+      ctx.font = Engine.zoomFont(FONTS[t.font]);
       var tx = t.x, ty = t.y, scaled = false;
       if (t.crit) {
         var age = t.max - t.life;
