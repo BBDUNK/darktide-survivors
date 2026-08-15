@@ -335,3 +335,86 @@
   .test-panel .btn { padding:4px 2px; font-size:9px; }
   .hud-exitgate { bottom:82px; min-width:136px; min-height:34px; padding:5px 12px; font-size:11px; }
 }
+
+/* 用户反馈轮 2:去掉选人页内部重复金色边框,只保留屏幕最外层边框。 */
+.panel-col.character-select-screen .page-title {
+  border: 0 !important;
+  border-image: none !important;
+  box-shadow: none !important;
+  background: none !important;
+}
+.panel-col.character-select-screen .card-grid {
+  border: 0 !important;
+  border-image: none !important;
+  box-shadow: none !important;
+  background: none !important;
+  padding: 4px 0 !important;
+}
+.panel-col.character-select-screen .card {
+  border: 1px solid #3a2f22 !important;
+  border-image: none !important;
+  box-shadow: none !important;
+  background: rgba(14, 10, 13, .82) !important;
+  border-radius: 0 !important;
+}
+.panel-col.character-select-screen .card.selected {
+  border-color: #6b5636 !important;
+  box-shadow: 0 0 12px rgba(255, 215, 107, .28) !important;
+}
+.panel-col.character-select-screen .info-box {
+  border: 1px solid #3a2f22 !important;
+  border-image: none !important;
+  box-shadow: none !important;
+  background: rgba(14, 10, 13, .82) !important;
+  border-radius: 0 !important;
+}
+.panel-col.character-select-screen .btn-row .btn,
+.panel-col.character-select-screen .small-btn {
+  border: 0 !important;
+  border-image: none !important;
+  box-shadow: none !important;
+  background: rgba(14, 10, 13, .82) !important;
+  border-radius: 0 !important;
+  color: #f1d28a !important;
+}
+.panel-col.character-select-screen .btn-row .btn:hover,
+.panel-col.character-select-screen .small-btn:hover {
+  background: rgba(40, 26, 20, .9) !important;
+  color: #ffe9a8 !important;
+  transform: none !important;
+}
+
+/* 用户反馈轮 2:图鉴页面整体缩小,避免卡片铺满全屏。 */
+.enc-body {
+  max-width: 820px !important;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)) !important;
+  gap: 12px !important;
+  padding: 4px 8px !important;
+}
+.enc-card { padding: 12px 14px !important; gap: 8px !important; }
+.enc-name { font-size: 16px !important; }
+.enc-sub { font-size: 12px !important; line-height: 1.45 !important; }
+.enc-base { font-size: 12px !important; padding: 5px 8px !important; }
+.enc-lvrow { font-size: 12px !important; }
+.enc-lvnum { width: 40px !important; }
+.enc-statval { font-size: 14px !important; }
+.enc-statlabel { font-size: 10px !important; }
+.enc-trait { font-size: 12px !important; line-height: 1.5 !important; }
+.enc-head canvas { width: 38px !important; height: 38px !important; }
+.enc-card.boss .enc-head canvas { width: 48px !important; height: 48px !important; }
+.enc-evohead canvas { width: 34px !important; height: 34px !important; }
+
+/* 用户反馈轮 2:训练场小把手/小按钮去掉不适配的厚边框,改用扁平暗色。 */
+.test-panel .btn {
+  border: 1px solid #6b5636 !important;
+  border-image: none !important;
+  box-shadow: none !important;
+  background: rgba(14, 10, 13, .9) !important;
+  border-radius: 0 !important;
+}
+.test-panel-toggle {
+  min-height: 28px !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  padding: 4px 8px !important;
+}
