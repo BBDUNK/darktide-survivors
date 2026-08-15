@@ -296,7 +296,8 @@ def pack(frames: dict[str, list[Image.Image]], manifest: dict, out_dir: Path) ->
         placements.setdefault(name, []).append({"x": x, "y": y, "w": frame.width, "h": frame.height})
         x += frame.width + padding
         row_h = max(row_h, frame.height)
-    height = max(1, needed)
+    # 直接取实际需要的高度(不再取 2 的幂,避免画布尾部留几千行空白)。
+    height = max(1, y + row_h + padding)
     atlas = Image.new("RGBA", (width, height))
     for name, index, frame in ordered:
         pos = placements[name][index]

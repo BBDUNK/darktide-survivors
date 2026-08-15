@@ -107,6 +107,26 @@ The original user-provided Jade Emperor opening image remains `assets/intro.jpg`
 - Ars Notoria hero spritesheets (CC0): archived at `_unused/vendor/ars-notoria/source.zip`; author Balmer, source https://opengameart.org/content/hero-spritesheets-ars-notoria.
 - Status: both packs were downloaded while evaluating replacement art, but no runtime atlas asset currently references them.
 
+## Gothicvania — Flying Demon (ansimuz)
+
+- Author: ansimuz (ansimuz.com)
+- Source: https://opengameart.org/content/gothicvania-patreons-collection
+- License: Creative Commons Zero (CC0 1.0) — no attribution required, appreciated.
+- Used file: `assets/sprites/vendor/gothicvania/demon-idle.png` (6 frames, 160x144)
+  -> atlas entry `summon_demon`: 禁忌典籍(所罗门秘典终极进化)召唤的恶魔。
+- Full pack archived at `assets/sprites/vendor/gothicvania/gothicvania-patreon-collection.zip`
+  (contains Fire Skull / Hell Beast / Hell Hound / Nightmare / Dark Ghost, all CC0, 备用).
+
+## Kenney 音效包(CC0)
+
+- Author: Kenney (kenney.nl)
+- Source: https://kenney.nl/assets/impact-sounds , ui-audio , rpg-audio , casino-audio , digital-audio
+- License: Creative Commons Zero (CC0 1.0) — no attribution required.
+- 原始包归档于 `assets/audio/vendor/kenney_*.zip`;`tools/audio/build-sfx.py` 按
+  `tools/audio/sfx-manifest.json` 转码为 `assets/audio/sfx/*.wav`(单声道 22.05kHz,
+  峰值归一 + 静音裁剪 + 12ms 淡出)。运行时 `AudioSys.play()` 录音版优先,
+  加载失败自动退回程序合成。播放速率带 ±5% 随机微调避免机械感。
+
 ## UnifrakturCook
 
 - Designer: Peter Wiegel; Google Fonts distribution

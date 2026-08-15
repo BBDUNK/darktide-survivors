@@ -9,7 +9,7 @@
     'shoot_book', 'shoot_flask', 'zap', 'nova', 'turret_place',
     'hit1', 'hit2', 'crit', 'enemy_die', 'splat', 'player_hurt',
     'gem', 'coin', 'meat', 'magnet', 'bomb', 'freeze', 'chest_open',
-    'levelup', 'upgrade_pick', 'evolve',
+    'levelup', 'upgrade_pick', 'evolve', 'summon_demon',
     'boss_spawn', 'boss_die', 'elite_spawn', 'achievement', 'gameover', 'victory'
   ];
   const THEME_NAMES = ['menu', 'graveyard', 'wilds', 'abyss'];
@@ -645,6 +645,89 @@
   }
 
   // ---------------- 音效表(全部走 sfxBus) ----------------
+  // 文件音效:Kenney CC0 录音(tools/audio/build-sfx.py 从 vendor 包转码)。
+  // play() 优先播放文件版;加载失败(file:// 或 404)永久退回程序合成。
+  // rate 为基准播放速率,运行时再叠加 ±5% 随机微调,避免重复机械感。
+  const SFX_DIR = JS_DIR + '../assets/audio/sfx/';
+  const SFX_FILE = {
+    ui_click: { f: 'ui_click.wav', rate: 1.0 },
+    ui_hover: { f: 'ui_hover.wav', rate: 1.0 },
+    ui_back: { f: 'ui_back.wav', rate: 0.92 },
+    run_start: { f: 'run_start.wav', rate: 1.0 },
+    levelup: { f: 'levelup.wav', rate: 1.0 },
+    upgrade_pick: { f: 'upgrade_pick.wav', rate: 1.0 },
+    evolve: { f: 'evolve.wav', rate: 1.0 },
+    achievement: { f: 'achievement.wav', rate: 1.0 },
+    gameover: { f: 'gameover.wav', rate: 0.8 },
+    victory: { f: 'victory.wav', rate: 1.05 },
+    shoot_slash: { f: 'shoot_slash.wav', rate: 1.0 },
+    shoot_bolt: { f: 'shoot_bolt.wav', rate: 1.0 },
+    shoot_arrow: { f: 'shoot_arrow.wav', rate: 0.96 },
+    shoot_axe: { f: 'shoot_axe.wav', rate: 1.0 },
+    shoot_dagger: { f: 'shoot_dagger.wav', rate: 1.3 },
+    shoot_book: { f: 'shoot_book.wav', rate: 1.0 },
+    shoot_flask: { f: 'shoot_flask.wav', rate: 0.9 },
+    zap: { f: 'zap.wav', rate: 1.0 },
+    nova: { f: 'nova.wav', rate: 0.9 },
+    turret_place: { f: 'turret_place.wav', rate: 1.0 },
+    summon_demon: { f: 'summon_demon.wav', rate: 0.58 },
+    hit1: { f: 'hit1.wav', rate: 1.0 },
+    hit2: { f: 'hit2.wav', rate: 1.0 },
+    crit: { f: 'crit.wav', rate: 0.9 },
+    enemy_die: { f: 'enemy_die.wav', rate: 0.85 },
+    splat: { f: 'splat.wav', rate: 0.8 },
+    player_hurt: { f: 'player_hurt.wav', rate: 0.7 },
+    boss_spawn: { f: 'boss_spawn.wav', rate: 0.5 },
+    boss_die: { f: 'boss_die.wav', rate: 0.9 },
+    elite_spawn: { f: 'elite_spawn.wav', rate: 0.72 },
+    gem: { f: 'gem.wav', rate: 1.15 },
+    coin: { f: 'coin.wav', rate: 1.1 },
+    meat: { f: 'meat.wav', rate: 0.85 },
+    magnet: { f: 'magnet.wav', rate: 1.0 },
+    bomb: { f: 'bomb.wav', rate: 1.0 },
+    freeze: { f: 'freeze.wav', rate: 0.9 },
+    chest_open: { f: 'chest_open.wav', rate: 1.0 }
+  };
+  const sfxBuffers = Object.create(null);   // name -> AudioBuffer | 'failed' | undefined(加载中)
+  const fileSfxUsable = !!(window.fetch && window.AudioContext);
+  function loadSfxBuffer(name) {
+    const state = sfxBuffers[name];
+    if (state !== undefined) return state;
+    const spec = SFX_FILE[name];
+    if (!spec || !fileSfxUsable) { sfxBuffers[name] = 'failed'; return 'failed'; }
+    sfxBuffers[name] = 'failed';          // 先标记失败,成功后覆盖(防止并发重复请求)
+    fetch(SFX_DIR + spec.f).then(function (resp) {
+      if (!resp.ok) throw new Error('http ' + resp.status);
+      return resp.arrayBuffer();
+    }).then(function (ab) {
+      const p = ctx.decodeAudioData(ab, function (buf) {
+        sfxBuffers[name] = buf;
+      }, function () { sfxBuffers[name] = 'failed'; });
+      if (p && typeof p.catch === 'function') p.then(function (buf) { sfxBuffers[name] = buf; })
+        .catch(function () { sfxBuffers[name] = 'failed'; });
+    }).catch(function () { sfxBuffers[name] = 'failed'; });
+    return undefined;                      // 本次先走合成兜底
+  }
+  function playSfxFile(name) {
+    const buf = loadSfxBuffer(name);
+    if (!buf || buf === 'failed') return false;
+    const spec = SFX_FILE[name];
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    // 基准速率 + 每次微调,录音音效不再像循环样本一样机械
+    src.playbackRate.value = spec.rate * (0.95 + Math.random() * 0.1);
+    const g = ctx.createGain();
+    g.gain.value = 1;
+    src.connect(g); g.connect(sfxBus);
+    src.start();
+    return true;
+  }
+  // 手势解锁后预热最常用的一批,首次触发即零延迟
+  function warmSfxFiles() {
+    const warm = ['ui_click', 'hit1', 'hit2', 'coin', 'gem', 'shoot_bolt', 'enemy_die', 'crit'];
+    for (let i = 0; i < warm.length; i++) loadSfxBuffer(warm[i]);
+  }
+
   const SFX = {
     // --- UI / 流程 ---
     ui_click: function (t) {
@@ -802,6 +885,13 @@
       _noise(sfxBus, t + 0.27, 0.45, 0.05, 'highpass', 5500, 0, 1, 1);
       _tone(sfxBus, t, 0.6, 'sine', 98, 45, 0.22, 0, 0.05);
     },
+    // 禁忌典籍恶魔入场:低频轰鸣 + 向下扫频的黑烟 + 尖啸泛音
+    summon_demon: function (t) {
+      _noise(sfxBus, t, 0.85, 0.3, 'lowpass', 900, 90, 0.9, 0.6);
+      _tone(sfxBus, t, 0.8, 'sawtooth', 130, 38, 0.3, -3, 0.25);
+      _tone(sfxBus, t + 0.12, 0.5, 'square', 620, 140, 0.09, 2);
+      _tone(sfxBus, t + 0.4, 0.6, 'sine', 55, 30, 0.4);
+    },
 
     // --- 事件 stinger ---
     boss_spawn: function (t) {
@@ -922,6 +1012,7 @@
     if (!unlocked) {
       unlocked = true;
       applyVolumes();
+      warmSfxFiles();
       if (pendingTheme) { startMusic(pendingTheme); }
     } else if (mus.playing && mus.mediaEl && mus.mediaEl.paused) {
       // 首个手势解锁时,重试此前被自动播放策略拦下的录音曲(过场自动跳菜单后必点才能出声的场景)
@@ -939,6 +1030,12 @@
     const now = ctx.currentTime;
     if (now - lastAt[name] < MIN_GAP) { return; }   // 同名限流 ≥40ms
     lastAt[name] = now;
+    // 录音版优先;尚未就绪/加载失败时退回程序合成,反馈永不缺席
+    if (SFX_FILE[name]) {
+      try {
+        if (playSfxFile(name)) return;
+      } catch (e) { /* 文件路径异常,走合成 */ }
+    }
     try {
       SFX[name](now);
     } catch (e) {

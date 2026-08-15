@@ -514,6 +514,12 @@ window.Entities = (function () {
       if (e.boss) beginBossDeath(run, e);
       else killEnemy(run, e, opts);
     }
+    // 打击感:精英倒地给 1 帧顿挫,Boss 倒地/变阶段给 2~3 帧,普通怪不顿
+    // (怪海里逐怪顿帧会变成PPT)。
+    if (e.hp <= 0 && !e.dying) {
+      if (e.boss) E.hitStop(150);
+      else if (e.elite) E.hitStop(70);
+    }
     if (e.phase2 && e.bossType === 'boss_abysseye') syncAbyssEyeBossBar(run, e.eyeGroup);
     return final;
   }
@@ -532,6 +538,7 @@ window.Entities = (function () {
       FX.sprite(run.exitGate.x, run.exitGate.y - 96, 'vfx_darklord_gate_enter', 0.9, 130, true);
     }
     FX.flash('#7d1530', 0.70, 0.75); FX.shake(16, 1.0); FX.explosion(e.x, e.y, 150);
+    E.hitStop(120);
     AudioSys.play('boss_spawn');
     if (run.cb && run.cb.onWarn) run.cb.onWarn('暗潮魔王显露真身！大门已开启：靠近后按 E 可撤离。');
   }
@@ -593,6 +600,7 @@ window.Entities = (function () {
     }
     syncAbyssEyeBossBar(run, group);
     FX.flash('#663399', 0.5, 0.62); FX.shake(12, 0.65); FX.explosion(e.x, e.y, 105);
+    E.hitStop(110);
     AudioSys.play('boss_spawn');
     if (run.cb && run.cb.onWarn) run.cb.onWarn('深渊之眼一分为二：远程瞳与冲撞瞳！');
   }

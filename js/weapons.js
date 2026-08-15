@@ -399,11 +399,17 @@ window.Weapons = (function () {
         // 其轨道会主动朝附近目标偏移，由 update 的 demon 分支负责追猎。
         if (w.evolved) {
           if (countKind(w.id, p) > 0) return;
-          b = spawn(run, w, st, 'demon', 'vfx_spirit', p.x, p.y, 0, 0, 1e9);
+          b = spawn(run, w, st, 'demon', 'summon_demon', p.x, p.y, 0, 0, 1e9);
           b.phase = run.t * 1.4;
           b.orbitR = 82 * (w.area || 1); b.orbitSpd = 1.8;
-          b.pierce = 9999; b.dmg = st.dmg * 2.5; b.size = 18;
+          b.pierce = 9999; b.dmg = st.dmg * 2.5; b.size = 34;
           b.huntX = p.x; b.huntY = p.y;
+          b.born = run.t;
+          // 召唤阵:双层紫环 + 黑烟爆散 + 专属音效(Gothicvania 恶魔入场)
+          FX.ring(p.x, p.y, { r: 88, color: '#b26bff', life: 0.75, width: 5 });
+          FX.ring(p.x, p.y, { r: 56, color: '#7a3cff', life: 0.55, width: 3 });
+          FX.sprite(p.x, p.y, 'vfx_smoke', 1.1, 220, true, 0.65);
+          AudioSys.play('summon_demon');
           AudioSys.play('evolve');
           break;
         }
@@ -828,6 +834,7 @@ window.Weapons = (function () {
           b.x += (tx - b.x) * Math.min(1, dt * follow);
           b.y += (ty - b.y) * Math.min(1, dt * follow);
           b.angle = Math.atan2(ty - b.y, tx - b.x);
+          if ((run.frame & 3) === 0) FX.trail(b.x, b.y + 14, '#8a5cff', 4);
           hitEnemiesAlong(run, b, b.size * 0.72, 0.28);
           break;
         }
@@ -1493,6 +1500,25 @@ window.Weapons = (function () {
         drawTeslaTank(ctx, b, run);
         continue;
       }
+      // 禁忌典籍召唤的恶魔:角色型精灵,不随 b.angle 旋转(否则任意角度会倒置),
+      // 按猎物方向水平翻转 + 悬浮起伏 + 脚下投影,帧率走素材自带 fps。
+      if (b.kind === 'demon') {
+        var dmFrames = cachedFrames('summon_demon');
+        var dmFps = cachedFps('summon_demon', 10);
+        var dmAge = Math.max(0, run.t - (b.born || 0));
+        var dmImg = dmFrames[Math.floor(dmAge * dmFps) % dmFrames.length];
+        var dmW = 104, dmH = dmImg.height * dmW / dmImg.width;
+        var dmBob = Math.sin(dmAge * 4.6) * 5;
+        ctx.globalAlpha = 0.5;
+        ctx.drawImage(SpriteGen.get('vfx_shadow'), b.x - 42, b.y + 30, 84, 18);
+        ctx.globalAlpha = 1;
+        ctx.save();
+        ctx.translate(b.x, b.y + dmBob);
+        if (Math.cos(b.angle) < 0) ctx.scale(-1, 1);
+        ctx.drawImage(dmImg, -dmW / 2, -dmH / 2 - 8, dmW, dmH);
+        ctx.restore();
+        continue;
+      }
       // 受队友光环加持的弹幕:先铺一层金色光晕(缓存辉光贴图,不再每帧建渐变)
       if (b.blessed) {
         var bgR = b.size * 0.9;
@@ -1506,7 +1532,6 @@ window.Weapons = (function () {
       var dw = img.width * 2 * (b.size / 16);
       if (b.spr === 'p_arcane_orb') dw = b.evolved ? 42 : 34;
       if (b.spr === 'p_tesla_cannon') dw = 112;
-      if (b.kind === 'demon') dw = img.width * 1.7 * (b.size / 16);
       // The V6 dragon strip is 224x112. Scale it to the same ~300px flight
       // silhouette as before, preserving aspect instead of inflating the
       // larger logical cell into a screen-filling block.

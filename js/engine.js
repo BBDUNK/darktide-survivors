@@ -239,13 +239,16 @@ window.Engine = (function () {
   var STEP = 1 / 60;
   var updateFn = null, renderFn = null;
   var timeScale = 1;
+  // 顿帧(hit-stop):精英击杀/Boss 倒地等重事件让世界短暂近乎冻结,渲染照常跑。
+  // 用 rAF 时间戳计时,不受 timeScale 自身影响;窗口极短(1~3 帧)不吞输入。
+  var hitStopUntil = -1;
 
   function frame(t) {
     if (!running) return;
     requestAnimationFrame(frame);
     var dt = Math.min(0.1, (t - lastT) / 1000);
     lastT = t;
-    acc += dt * timeScale;
+    acc += dt * (t < hitStopUntil ? 0.12 : timeScale);
     var steps = 0;
     while (acc >= STEP && steps < 5) {
       if (updateFn) updateFn(STEP);
@@ -517,6 +520,10 @@ window.Engine = (function () {
     forEachDecor: forEachDecor, decorCollisionRadius: decorCollisionRadius, decorVisualRadius: decorRadius,
     resolveDecorCollision: resolveDecorCollision,
     setTimeScale: function (s) { timeScale = s; },
+    // 打击感:ms 毫秒的顿帧窗口(取多次调用的最大值,不叠加)
+    hitStop: function (ms) {
+      hitStopUntil = Math.max(hitStopUntil, performance.now() + (ms || 60));
+    },
     nextUid: function () { return uidCounter++; },
     onPause: null, onBlur: null, onToggleMap: null, onScroll: null, onMiddleClick: null, onPinch: null, isOverMinimap: null
   };

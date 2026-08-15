@@ -2,7 +2,7 @@
   "ok": true,
   "atlas": {
     "width": 2048,
-    "height": 16384
+    "height": 9762
   },
   "assets": {
     "deco_grave": [
@@ -51019,6 +51019,104 @@
         "signature": "9cfa99529e8c"
       }
     ],
+    "summon_demon": [
+      {
+        "index": 0,
+        "coverage": 0.2851,
+        "colors": 9,
+        "bbox": [
+          18,
+          3,
+          152,
+          127
+        ],
+        "centroid": [
+          74.817,
+          66.917
+        ],
+        "signature": "d3d4979a6fcb"
+      },
+      {
+        "index": 1,
+        "coverage": 0.2673,
+        "colors": 9,
+        "bbox": [
+          4,
+          35,
+          160,
+          128
+        ],
+        "centroid": [
+          71.419,
+          76.639
+        ],
+        "signature": "1326b4bdbe70"
+      },
+      {
+        "index": 2,
+        "coverage": 0.2439,
+        "colors": 9,
+        "bbox": [
+          12,
+          35,
+          152,
+          126
+        ],
+        "centroid": [
+          70.619,
+          83.52
+        ],
+        "signature": "8c2043ebebed"
+      },
+      {
+        "index": 3,
+        "coverage": 0.209,
+        "colors": 9,
+        "bbox": [
+          18,
+          33,
+          118,
+          126
+        ],
+        "centroid": [
+          68.709,
+          85.088
+        ],
+        "signature": "28d284b77ff6"
+      },
+      {
+        "index": 4,
+        "coverage": 0.2423,
+        "colors": 9,
+        "bbox": [
+          12,
+          35,
+          152,
+          126
+        ],
+        "centroid": [
+          70.627,
+          83.432
+        ],
+        "signature": "042328e1200f"
+      },
+      {
+        "index": 5,
+        "coverage": 0.2664,
+        "colors": 9,
+        "bbox": [
+          4,
+          35,
+          160,
+          126
+        ],
+        "centroid": [
+          71.308,
+          76.349
+        ],
+        "signature": "6c4455b198d8"
+      }
+    ],
     "vfx_jade_dragon_dissipate": [
       {
         "index": 0,
@@ -56242,6 +56340,8 @@
     "terrain_grave_swamp_puddle3[0]: silhouette touches logical frame edge",
     "terrain_grave_swamp_puddle4[0]: silhouette touches logical frame edge",
     "hud_minimap_frame[0]: silhouette touches logical frame edge",
+    "summon_demon[1]: silhouette touches logical frame edge",
+    "summon_demon[5]: silhouette touches logical frame edge",
     "vfx_glow[0]: silhouette touches logical frame edge",
     "icon_gold[0]: silhouette touches logical frame edge",
     "icon_hp[0]: silhouette touches logical frame edge",

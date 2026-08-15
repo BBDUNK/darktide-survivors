@@ -1,0 +1,134 @@
+/* ============================================================
+   v23 商业化精修层(最终覆盖,加载在 feature-v21.css 之后)
+   目标:去掉"生成感",对齐成熟商业游戏的 UI 打磨标准——
+   1) 战报面板:点线引导 + 右对齐表格数字,信息层级清晰
+   2) 按钮微交互:hover 抬升提亮 / active 下压,带过渡
+   3) 面板统一光效语言:同色系投影 + 金色描边,光源一致
+   4) 布局节奏:三列等高对齐、按钮行列同宽
+   注意:不动 art-probe 依赖的背景贴图与圣坛图标尺寸。
+   ============================================================ */
+
+/* ---------- 战报面板:表格化排版 ---------- */
+.menu-board-body {
+  padding-top: 6px !important;
+  border-top: 1px solid rgba(216, 178, 106, 0.25);
+  margin-top: 6px !important;
+}
+.board-row {
+  position: relative;
+  align-items: baseline;
+  gap: 0 !important;
+  padding: 5px 2px 4px !important;
+  border-bottom: 1px dotted rgba(140, 112, 62, 0.35);
+}
+.board-row:nth-child(even) { background: rgba(255, 236, 200, 0.045); }
+.board-row:last-child { border-bottom: none; }
+/* 点线引导:标签(1) —— 引导线(2) —— 数值(3),印刷风表格 */
+.board-row .board-label {
+  order: 1;
+  flex: 0 0 auto;
+  white-space: nowrap;
+  letter-spacing: 1px;
+}
+.board-row::after {
+  content: '';
+  order: 2;
+  flex: 1 1 auto;
+  align-self: flex-end;
+  height: 1px;
+  margin: 0 7px 5px;
+  border-bottom: 1px dotted rgba(170, 136, 78, 0.45);
+}
+.board-row .board-val {
+  order: 3;
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.5px;
+}
+
+/* ---------- 按钮微交互(hover 抬升 / active 下压) ---------- */
+.menu-col .btn,
+.menu-subrow .btn,
+.menu-settings-row .btn,
+.menu-altar .btn {
+  transition: transform 0.12s ease, filter 0.12s ease, box-shadow 0.12s ease !important;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.45), 0 6px 14px rgba(0, 0, 0, 0.35);
+}
+.menu-col .btn:hover,
+.menu-subrow .btn:hover,
+.menu-settings-row .btn:hover,
+.menu-altar .btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.12) saturate(1.05);
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.45), 0 10px 20px rgba(0, 0, 0, 0.42);
+}
+.menu-col .btn:active,
+.menu-subrow .btn:active,
+.menu-settings-row .btn:active,
+.menu-altar .btn:active {
+  transform: translateY(1px);
+  filter: brightness(0.96);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.45), 0 4px 10px rgba(0, 0, 0, 0.35);
+}
+/* 触屏设备不做悬停抬升,只保留按压反馈 */
+.touch-device .menu-col .btn:hover,
+.touch-device .menu-subrow .btn:hover,
+.touch-device .menu-settings-row .btn:hover,
+.touch-device .menu-altar .btn:hover {
+  transform: none;
+  filter: none;
+}
+
+/* ---------- 面板统一光效语言 ---------- */
+.menu-altar, .menu-board {
+  box-shadow:
+    0 10px 26px rgba(0, 0, 0, 0.5),
+    0 2px 0 rgba(255, 226, 168, 0.07) inset,
+    0 -2px 6px rgba(0, 0, 0, 0.35) inset !important;
+}
+/* 标题统一:小号大写字距 + 金色分隔线 */
+.menu-altar-title, .menu-board-title {
+  letter-spacing: 3px !important;
+  padding-bottom: 4px !important;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.65) !important;
+}
+
+/* ---------- 布局节奏 ---------- */
+.menu-col .btn, .menu-subrow .btn.sub { border-radius: 3px; }
+.menu-settings-row .btn { width: 100%; box-sizing: border-box; }
+
+/* ---------- 主标题 ---------- */
+.menu-big {
+  letter-spacing: 10px;
+  text-indent: 10px;   /* 抵消末字字距,保证视觉居中 */
+  paint-order: stroke fill;
+}
+.menu-tagline { letter-spacing: 12px; text-indent: 12px; }
+
+/* ---------- 版本角标 ---------- */
+.menu-version {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.82;
+}
+
+/* ============================================================
+   HUD 精修:填充条统一"亮顶 + 暗轨 + 落影"三段光效,
+   Boss 条与血条/经验条同一视觉语言。
+   ============================================================ */
+.xp-fill, .hp-fill, .boss-fill {
+  background-blend-mode: normal;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.38),
+    0 0 8px rgba(0, 0, 0, 0.35) !important;
+}
+.hp-wrap, .xp-wrap, .boss-wrap .boss-bar {
+  box-shadow:
+    inset 0 2px 5px rgba(0, 0, 0, 0.55),
+    0 2px 0 rgba(0, 0, 0, 0.4) !important;
+}
+/* 掉血/掉经验时的宽度变化做 0.1s 过渡,Boss 条稍快 */
+.hp-fill { transition: width 0.12s ease-out; }
+.xp-fill { transition: width 0.15s ease-out; }
+.boss-fill { transition: width 0.1s ease-out; }
+

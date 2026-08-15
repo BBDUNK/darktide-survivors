@@ -13325,6 +13325,32 @@
       "maxBaselineDrift": 32
     },
     {
+      "name": "summon_demon",
+      "source": "assets/sprites/vendor/gothicvania/demon-idle.png",
+      "frameSize": [
+        160,
+        144
+      ],
+      "frames": 6,
+      "fps": 10,
+      "size": [
+        160,
+        144
+      ],
+      "anchor": [
+        80,
+        76
+      ],
+      "renderScale": 1,
+      "asIs": true,
+      "preservePixels": true,
+      "allowDuplicateFrames": true,
+      "minCoverage": 0.01,
+      "maxColors": 320,
+      "maxCentroidDrift": 40,
+      "maxBaselineDrift": 24
+    },
+    {
       "name": "vfx_jade_dragon_dissipate",
       "source": "assets/art-v6/game-ready/v6/vfx_jade_dragon_dissipate.png",
       "frameSize": [

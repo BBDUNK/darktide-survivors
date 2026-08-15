@@ -49,3 +49,6 @@ _unused/**
 shots/**
 screenshot.png
 .playwright-mcp/**
+
+# ---- 音效原始包(运行时只用转码后的 assets/audio/sfx/*.wav) ----
+assets/audio/vendor/**

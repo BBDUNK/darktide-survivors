@@ -1856,6 +1856,7 @@
     if (base === 'icon_gold') return 'coin';
     if (base === 'icon_kill') return 'p_slash';
     if (base === 'ps_barrier') return 'ps_core';
+    if (base === 'summon_demon') return 'vfx_spirit';
     return base;
   }
 
