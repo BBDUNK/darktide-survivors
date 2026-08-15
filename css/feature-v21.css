@@ -359,30 +359,30 @@ html, body, button, input, select, textarea, * {
 /* 顶部中央计时：下一事件倒计时放进同一个框里（第二行），
    边框改用主菜单按钮同款贴图，保持界面统一。 */
 .hud-timer {
-  top: 18px !important;
-  min-width: 200px !important;
+  top: 14px !important;
+  min-width: 170px !important;
   max-width: calc(100vw - 40px) !important;
-  min-height: 96px !important;
-  padding: 16px 24px 14px !important;
+  min-height: 74px !important;
+  padding: 9px 18px 8px !important;
   box-sizing: border-box !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 3px !important;
+  gap: 2px !important;
   background: url('../assets/art-v2/ui/menu_btn_frame_edge.png') center / 100% 100% no-repeat !important;
   border: 0 !important;
   outline: 0 !important;
   outline-offset: 0 !important;
   box-shadow: none !important;
   font-family: var(--font-cn) !important;
-  font-size: 18px !important;
+  font-size: 16px !important;
   letter-spacing: 2px !important;
   color: #f4dda3 !important;
 }
 .hud-timer::before, .hud-timer::after { content: none !important; }
 .hud-timer-time {
-  font-size: 18px !important;
+  font-size: 16px !important;
   line-height: 1.2 !important;
   color: inherit !important;
   white-space: nowrap !important;
@@ -393,7 +393,7 @@ html, body, button, input, select, textarea, * {
   left: auto !important;
   transform: none !important;
   padding: 0 !important;
-  font-size: 10px !important;
+  font-size: 9px !important;
   font-weight: 700 !important;
   letter-spacing: 0.5px !important;
   line-height: 1.2 !important;
@@ -514,11 +514,11 @@ html, body, button, input, select, textarea, * {
   z-index: 3;
   font-size: 15px;
   line-height: 1;
-  color: #a8e000;
+  color: #00e05a;
   letter-spacing: 2px;
   white-space: nowrap;
   pointer-events: none;
-  text-shadow: 0 0 10px rgba(150, 230, 0, .9), 0 1px 0 #1f3a00, 0 -1px 0 #1f3a00, 1px 0 0 #1f3a00, -1px 0 0 #1f3a00;
+  text-shadow: 0 0 10px rgba(0, 224, 90, .9), 0 1px 0 #003d1a, 0 -1px 0 #003d1a, 1px 0 0 #003d1a, -1px 0 0 #003d1a;
   animation: char-badge-pulse .8s ease-in-out infinite;
 }
 
