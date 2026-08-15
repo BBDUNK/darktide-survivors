@@ -1021,8 +1021,11 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "FRAMES",
-      "fit": "baseline"
+      "status": "INTEGRATED",
+      "fit": "baseline",
+      "maxCentroidDrift": 16,
+      "maxBaselineDrift": 1,
+      "minCoverage": 0.08
     },
     {
       "name": "boss_darklord_attack",
@@ -1053,8 +1056,11 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "FRAMES",
-      "fit": "union"
+      "status": "INTEGRATED",
+      "fit": "union",
+      "maxCentroidDrift": 16,
+      "maxBaselineDrift": 12,
+      "minCoverage": 0.08
     },
     {
       "name": "boss_darklord_transform",
@@ -1085,8 +1091,11 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "FRAMES",
-      "fit": "union"
+      "status": "INTEGRATED",
+      "fit": "union",
+      "maxCentroidDrift": 16,
+      "maxBaselineDrift": 8,
+      "minCoverage": 0.08
     },
     {
       "name": "boss_darklord_charge",
@@ -1117,8 +1126,11 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "FRAMES",
-      "fit": "union"
+      "status": "INTEGRATED",
+      "fit": "union",
+      "maxCentroidDrift": 32,
+      "maxBaselineDrift": 32,
+      "minCoverage": 0.08
     },
     {
       "name": "boss_darklord_phase2_breath",
@@ -1149,8 +1161,11 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "FRAMES",
-      "fit": "union"
+      "status": "INTEGRATED",
+      "fit": "union",
+      "maxCentroidDrift": 18,
+      "maxBaselineDrift": 48,
+      "minCoverage": 0.08
     },
     {
       "name": "boss_darklord_death",
@@ -1183,8 +1198,11 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "FRAMES",
-      "fit": "union"
+      "status": "INTEGRATED",
+      "fit": "union",
+      "maxCentroidDrift": 28,
+      "maxBaselineDrift": 20,
+      "minCoverage": 0.02
     },
     {
       "name": "vfx_darklord_escape_gate",
@@ -1211,7 +1229,7 @@
       ],
       "renderScale": 1,
       "layer": "environment",
-      "status": "FRAMES",
+      "status": "INTEGRATED",
       "notes": "Closed -> runes -> half-open -> fully open. Source is four columns; the lower half carries the gate base detail, so cells span full height.",
       "fit": "center"
     },
@@ -1232,8 +1250,12 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "TODO",
-      "fit": "baseline"
+      "status": "INTEGRATED",
+      "fit": "baseline",
+      "output": "assets/art-v6/game-ready/v6/boss_darklord_walk.png",
+      "minCoverage": 0.2,
+      "maxCentroidDrift": 16,
+      "maxBaselineDrift": 2
     },
     {
       "name": "boss_darklord_phase2",
@@ -1252,9 +1274,13 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "TODO",
+      "status": "INTEGRATED",
       "notes": "P2 idle/move loop to be derived from the transform end pose.",
-      "fit": "baseline"
+      "fit": "baseline",
+      "output": "assets/art-v6/game-ready/v6/boss_darklord_phase2.png",
+      "minCoverage": 0.2,
+      "maxCentroidDrift": 6,
+      "maxBaselineDrift": 2
     },
     {
       "name": "boss_darklord_hurt",
@@ -1273,8 +1299,12 @@
       ],
       "renderScale": 1,
       "layer": "actor",
-      "status": "TODO",
-      "fit": "union"
+      "status": "INTEGRATED",
+      "fit": "union",
+      "output": "assets/art-v6/game-ready/v6/boss_darklord_hurt.png",
+      "minCoverage": 0.2,
+      "maxCentroidDrift": 16,
+      "maxBaselineDrift": 2
     },
     {
       "name": "vfx_darklord_blackflame_rain",
@@ -1293,29 +1323,37 @@
       ],
       "renderScale": 1,
       "layer": "projectile",
-      "status": "TODO",
+      "status": "INTEGRATED",
       "notes": "Must be re-authored with a pure key or transparent background; the rejected gradient draft is banned.",
-      "fit": "center"
+      "fit": "center",
+      "output": "assets/art-v6/game-ready/v6/vfx_darklord_blackflame_rain.png",
+      "minCoverage": 0.02,
+      "maxCentroidDrift": 6,
+      "maxBaselineDrift": 24
     },
     {
       "name": "vfx_darklord_gate_enter",
       "source": null,
       "deriveFrom": "vfx_darklord_escape_gate",
       "frameSize": [
-        128,
-        192
+        64,
+        64
       ],
       "frames": 4,
-      "fps": 10,
+      "fps": 8,
       "loop": false,
       "anchor": [
-        64,
-        188
+        32,
+        32
       ],
       "renderScale": 1,
       "layer": "fx",
-      "status": "TODO",
-      "fit": "center"
+      "status": "INTEGRATED",
+      "fit": "center",
+      "output": "assets/art-v6/game-ready/v6/vfx_darklord_gate_enter.png",
+      "minCoverage": 0.02,
+      "maxCentroidDrift": 4,
+      "maxBaselineDrift": 16
     },
     {
       "loop": false,
@@ -1591,6 +1629,104 @@
       "loop": false,
       "maxBaselineDrift": 8,
       "b": 8
+    },
+    {
+      "loop": true,
+      "maxCentroidDrift": 6,
+      "fit": "center",
+      "frames": 8,
+      "layer": "actor",
+      "output": "assets/art-v6/game-ready/v6/boss_darklord_phase2_walk.png",
+      "maxBaselineDrift": 2,
+      "fps": 9,
+      "renderScale": 1,
+      "source": null,
+      "status": "INTEGRATED",
+      "deriveFrom": "boss_darklord_transform",
+      "frameSize": [
+        144,
+        144
+      ],
+      "notes": "P2 true-form drift loop.",
+      "anchor": [
+        72,
+        140
+      ],
+      "name": "boss_darklord_phase2_walk",
+      "minCoverage": 0.2
+    },
+    {
+      "frames": 4,
+      "deriveFrom": "boss_darklord_transform",
+      "fit": "center",
+      "minCoverage": 0.2,
+      "layer": "actor",
+      "renderScale": 1,
+      "maxCentroidDrift": 6,
+      "frameSize": [
+        144,
+        144
+      ],
+      "name": "boss_darklord_phase2_hurt",
+      "status": "INTEGRATED",
+      "source": null,
+      "fps": 10,
+      "anchor": [
+        72,
+        140
+      ],
+      "output": "assets/art-v6/game-ready/v6/boss_darklord_phase2_hurt.png",
+      "loop": false,
+      "maxBaselineDrift": 2
+    },
+    {
+      "frames": 6,
+      "deriveFrom": "boss_darklord_charge",
+      "fit": "center",
+      "minCoverage": 0.1,
+      "layer": "fx",
+      "renderScale": 1,
+      "maxCentroidDrift": 12,
+      "frameSize": [
+        144,
+        144
+      ],
+      "name": "vfx_darklord_shadow_clone",
+      "status": "INTEGRATED",
+      "source": null,
+      "fps": 12,
+      "anchor": [
+        72,
+        140
+      ],
+      "output": "assets/art-v6/game-ready/v6/vfx_darklord_shadow_clone.png",
+      "loop": true,
+      "maxBaselineDrift": 2
+    },
+    {
+      "loop": false,
+      "maxCentroidDrift": 4,
+      "fit": "center",
+      "frames": 6,
+      "layer": "ground",
+      "output": "assets/art-v6/game-ready/v6/vfx_darklord_rift.png",
+      "maxBaselineDrift": 20,
+      "fps": 10,
+      "renderScale": 1,
+      "source": null,
+      "status": "INTEGRATED",
+      "deriveFrom": null,
+      "frameSize": [
+        96,
+        96
+      ],
+      "notes": "Full-screen rift ember burst.",
+      "anchor": [
+        48,
+        48
+      ],
+      "name": "vfx_darklord_rift",
+      "minCoverage": 0.02
     }
   ]
 }
