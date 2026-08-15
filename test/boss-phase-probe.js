@@ -56,10 +56,18 @@ function assert(value, message) { if (!value) throw new Error(message); }
     const phaseShots = Entities.getShots().filter(shot => shot.alive).length;
     const chestCount = () => Entities.getItems().filter(item => item.alive && item.type === 'chest').length;
     const before = chestCount();
+    const tickWhile = (predicate, limit) => {
+      for (let tick = 0; tick < limit && predicate(); tick++) {
+        run.frame++;
+        Entities.updateEnemies(run, 1 / 60);
+      }
+    };
     Entities.damageEnemy(run, parts[0], parts[0].hp + 1000, { noCrit: true });
+    tickWhile(() => parts[0].alive, 180);   // wait for the authored death strip
     const afterFirst = { chest: chestCount(), bossesKilled: run.bossesKilled, remaining: Entities.pool.filter(e => e.alive && e.bossType === 'boss_abysseye').length };
     const last = Entities.pool.find(e => e.alive && e.bossType === 'boss_abysseye');
     Entities.damageEnemy(run, last, last.hp + 1000, { noCrit: true });
+    tickWhile(() => run.bossesKilled === 0, 180);
     return { phaseOneMax, count: parts.length, roles, totalMax, totalHp, phaseShots, peakChargeSpeed, barName: run.bossBarName,
       before, afterFirst, finalChest: chestCount(), finalBossesKilled: run.bossesKilled };
   });

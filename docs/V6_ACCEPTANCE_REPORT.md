@@ -100,7 +100,49 @@
 - 回归测试同时通过：`headless.js`（含 R13）、`art-probe.js`、`combat-vfx-probe.js` 全绿；400 怪 57.4 FPS、p95 16.8ms。
 - 提交：`art(v6): process jade dragon game-ready assets`、`feat(v6): integrate jade spirit dragon`。
 
-## 阶段 3：四个 Boss（待开始）
+## 阶段 3：四个 Boss
+
+### 3.1 腐液之王 ✅（Boss 垂直切片）
+
+**素材（13 条 `READY → INTEGRATED`，全部 40 色、硬 Alpha、共享画布/锚点）：**
+
+| 运行时名 | 帧 | 画布 | FPS | 说明 |
+|---|---|---|---|---|
+| `boss_slimeking` | 6 | 80×80 | 7 | 待机慢呼吸 |
+| `boss_slimeking_walk` | 8 | 80×80 | 9 | 底部泥浪移动，共享脚底基线 |
+| `boss_slimeking_charge` | 8 | 80×80 | 10 | 压缩→起跳→落地，一次性 |
+| `boss_slimeking_attack` | 8 | 80×80 | 10 | 扇形酸弹施法 |
+| `boss_slimeking_shield` | 6 | 80×80 | 9 | 成盾后冻结末帧 |
+| `boss_slimeking_death` | 10 | 80×80 | 10 | 末帧泥池，死亡不可被覆盖 |
+| `boss_slimeking_hurt` | 4 | 80×80 | 10 | 由待机确定性派生 |
+| `p_boss_slimeking_acid_orb` | 8 | 48×48 | 10 | 酸弹飞行循环 |
+| `vfx_boss_slimeking_ground_wave` | 8 | 112×112 | 10 | 贴地环形泥浪 |
+| `vfx_boss_slimeking_fan_telegraph` | 4 | 112×112 | 10 | 扇形预警，运行时旋转对准玩家 |
+| `vfx_boss_slimeking_summon_gel` | 6 | 96×96 | 10 | 凝胶池 + 小史莱姆冒出 |
+| `vfx_boss_slimeking_bounce_afterimage` | 6 | 80×80 | 12 | 低血量连跳残影 |
+| `vfx_boss_slimeking_wave_dissipate` | 4 | 112×112 | 10 | 泥浪结束消散 |
+
+**统一 Boss 动作接口（不升级联机协议）：**
+
+- 实体新增 `bossAction / bossActionTick / bossActionPhase / bossSkill / dying / dyingT / hurtT`；`Entities.setBossAction(run, e, action)` 切换动作。
+- 快照继续用 `ac/ae/ap/cp/ph/er` 承载动作、动作纪元、阶段、双瞳角色；客户端按 `ae` 服务器纪元播放，不按快照到达次数切帧。
+- 绘制优先 `boss_<id>_<action>`：`idle/walk/attack/charge/shield/hurt/death`；`telegraph` 回退本体，一次性动作播放到末帧后冻结。
+- 受击动作只抢 `idle/walk`，死亡动作不可被移动/技能覆盖。
+- 所有离散技能经可靠 `bossEvent/audioEvent` 触发；客户端在 `onBossEvent` 重放扇面预警、泥浪、召唤、落地和死亡表现。
+
+**六技能状态机（`idle → telegraph → cast/charge → recover`）：**
+
+跳砸、扇形酸弹（3 波 × 5 发 `p_boss_slimeking_acid_orb`，独立减速）、环形泥浪（16 发限程减速弹 + 地面波 VFX）、召唤 4 小史莱姆、凝胶护盾（`guard` 免伤）、低血量连续弹跳（残影 + 2～3 连跳）。
+
+**验收：**
+
+- `test/v6-slimeking-probe.js` 真实浏览器全绿：六技能逐一进入正确动作/阶段、酸弹 sprite、护盾 guard、召唤数量、低血量连跳、10 帧死亡条完成后再结算；截图 `shots/v6-slimeking/`。
+- 图集：`549 assets / 3232 frames`，`quality-report.json` = `0 errors / 161 warnings`，腐液之王新素材 0 新增警告。
+- 回归：`headless.js`（R1–R13）、`art-probe.js`（已同步 V6 尺寸断言）、`boss-phase-probe.js`（已适配死亡条结算）、`coop-probe.js`（双浏览器全链路）全部通过；400 怪 59.0 FPS、p95 16.8ms。
+- 主体 80×80 明显大于 32×32 巨腐史莱姆，王冠/凝胶主体/底部接地点稳定，无透明洞、缺块；未发现脏像素。
+- 提交：`art(v6): process slime king game-ready assets`、`feat(v6): integrate slime king six-skill boss`。
+
+### 3.2 骸骨领主（待开始）
 
 ## 阶段 4：普通怪、地图和掉落（待开始）
 

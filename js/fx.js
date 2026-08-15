@@ -49,7 +49,7 @@
   var pCur = 0;
   for (var i0 = 0; i0 < P_MAX; i0++) {
     P[i0] = { x: 0, y: 0, vx: 0, vy: 0, grav: 0, damp: 0, life: 0, inv: 0,
-      s0: 0, s1: 0, a0: 0, a1: 0, color: '#fff', glow: false, shape: 0, str: 0 };
+      s0: 0, s1: 0, a0: 0, a1: 0, color: '#fff', glow: false, shape: 0, str: 0, rot: 0 };
   }
 
   var T = new Array(T_MAX);   // 伤害数字
@@ -101,9 +101,12 @@
     return p;
   }
 
-  function spawnVfx(x, y, name, life, size, glow) {
-    return spawnP(x, y, 0, 0, life, size, size, 1, 0, '#fff', !!glow,
+  function spawnVfx(x, y, name, life, size, glow, alpha, angle) {
+    var p = spawnP(x, y, 0, 0, life, size, size,
+      typeof alpha === 'number' ? alpha : 1, 0, '#fff', !!glow,
       0, 0, SH_SPRITE, name);
+    p.rot = angle || 0;
+    return p;
   }
 
   function spawnRing(x, y, r, color, life, w) {
@@ -141,8 +144,8 @@
   // Public atlas-driven one-shot VFX.  Gameplay systems emit a semantic
   // effect once; the pooled renderer advances all authored frames exactly
   // once and never loops back to a spawn/explosion frame.
-  FX.sprite = function (x, y, name, life, size, glow) {
-    return spawnVfx(x, y, name, life, size, glow);
+  FX.sprite = function (x, y, name, life, size, glow, alpha, angle) {
+    return spawnVfx(x, y, name, life, size, glow, alpha, angle);
   };
 
   // ---------- 环境氛围粒子(浮游尘埃/萤火) ----------
@@ -325,7 +328,15 @@
       // Preserve authored aspect ratio: non-square strips such as the jade
       // spirit dragon must never be squashed into a square particle quad.
       var drawH = frame.height === frame.width ? s : s * frame.height / frame.width;
-      ctx.drawImage(frame, p.x - s * 0.5, p.y - drawH * 0.5, s, drawH);
+      if (p.rot) {
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.drawImage(frame, -s * 0.5, -drawH * 0.5, s, drawH);
+        ctx.restore();
+      } else {
+        ctx.drawImage(frame, p.x - s * 0.5, p.y - drawH * 0.5, s, drawH);
+      }
     }
   }
 

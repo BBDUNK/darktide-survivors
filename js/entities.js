@@ -375,6 +375,8 @@ window.Entities = (function () {
     e.netX = x; e.netY = y; e.netVx = 0; e.netVy = 0;
     e.netAnimState = ''; e.netAnimEpoch = 0; e.netSeen = false;
     e.elite = false; e.boss = isBoss; e.bossType = isBoss ? id : '';
+    e.bossAction = ''; e.bossActionTick = 0; e.bossActionPhase = 0; e.bossSkill = '';
+    e.dying = false; e.dyingT = 0; e.hurtT = 0;
     // Pool entries are reused.  Phase/role state must be cleared explicitly
     // or a freshly spawned monster can inherit a previous boss's second phase.
     e.phase2 = false; e.eyeRole = ''; e.eyeGroup = 0;
@@ -469,7 +471,7 @@ window.Entities = (function () {
   // 中心伤害入口(武器调用)
   function damageEnemy(run, e, dmg, opts) {
     if (!e.alive) return 0;
-    // 火焰对蛛类双倍伤害(烈焰瓶/火池)
+    if (e.dying) return 0;
     if (opts && opts.fire && e.def && e.def.ai === 'spitter') dmg *= 2;
     // 破土过程中不可被击中(尚未完全出土)
     if (e.burrowT > 0) return 0;
@@ -503,9 +505,13 @@ window.Entities = (function () {
     if (opts.burn) { e.burn = opts.burn; e.burnT = Math.max(e.burnT, opts.burnDur || 2); }
     FX.dmgText(e.x + (Math.random() * 12 - 6), e.y - e.r - 6, Math.round(final), { crit: crit });
     if (crit) AudioSys.play('crit');
+    if (e.boss && !e.dying) e.hurtT = Math.max(e.hurtT, 0.32);
     if (e.hp <= 0 && e.bossType === 'boss_darklord' && !e.phase2) enterDarklordPhase2(run, e);
     else if (e.hp <= 0 && e.bossType === 'boss_abysseye' && !e.phase2) enterAbyssEyePhase2(run, e);
-    else if (e.hp <= 0) killEnemy(run, e, opts);
+    else if (e.hp <= 0) {
+      if (e.boss) beginBossDeath(run, e);
+      else killEnemy(run, e, opts);
+    }
     if (e.phase2 && e.bossType === 'boss_abysseye') syncAbyssEyeBossBar(run, e.eyeGroup);
     return final;
   }
@@ -585,6 +591,30 @@ window.Entities = (function () {
   function clearSlow(e) {
     if (!e) return;
     e.slow = 0; e.slowT = 0;
+  }
+
+  // Unified boss action interface.  The snapshot carries bossAction/bossActionTick/
+  // bossActionPhase through the existing ac/ae/ap fields; clients advance frames
+  // from the server action epoch instead of replaying on snapshot arrival.
+  function setBossAction(run, e, action) {
+    if (!e || !e.boss) return;
+    e.bossAction = action;
+    e.bossActionTick = run.frame;
+    if (run.cb && run.cb.onBossAction) run.cb.onBossAction(e, action);
+  }
+
+  function beginBossDeath(run, e) {
+    if (e.dying) return;
+    e.dying = true;
+    e.dyingT = 0.8;
+    e.hp = 0; e.vx = 0; e.vy = 0; e.guard = 0; e.squash = 1; e.hop = 0;
+    var deathName = e.bossType + '_death';
+    var deathFrames = SpriteGen.frames(deathName);
+    if (deathFrames && deathFrames.length > 1) {
+      e.dyingT = Math.max(0.6, deathFrames.length / Math.max(1, SpriteGen.animationFps(deathName, 10)));
+    }
+    setBossAction(run, e, 'death');
+    if (run.cb && run.cb.onBossDeath) run.cb.onBossDeath(e.bossType, { x: e.x, y: e.y });
   }
 
   function killEnemy(run, e, opts) {
@@ -674,6 +704,15 @@ window.Entities = (function () {
       if (!e.alive) continue;
       if (e.flash > 0) e.flash -= dt;
       if (e.attackAnimT > 0) e.attackAnimT = Math.max(0, e.attackAnimT - dt);
+      if (e.hurtT > 0) e.hurtT = Math.max(0, e.hurtT - dt);
+      // Boss death animation must finish before loot/score resolution and can
+      // never be overwritten by movement or skill states.
+      if (e.dying) {
+        e.dyingT -= dt;
+        e.vx = 0; e.vy = 0; e.kx = 0; e.ky = 0;
+        if (e.dyingT <= 0) killEnemy(run, e);
+        else continue;
+      }
       // 破土出场:静止且不参与碰撞/受伤,出土完成后才正常行动
       if (e.burrowT > 0) {
         e.burrowT -= dt;
@@ -1055,7 +1094,7 @@ window.Entities = (function () {
   }
 
   var shots = [];
-  function fireShot(x, y, nx, ny, spd, dmg, slow, slowDur, webType, col, size, maxRange) {
+  function fireShot(x, y, nx, ny, spd, dmg, slow, slowDur, webType, col, size, maxRange, sprite) {
     for (var i = 0; i < shots.length; i++) {
       if (!shots[i].alive) {
         var s = shots[i];
@@ -1063,10 +1102,10 @@ window.Entities = (function () {
         s.vx = nx * spd; s.vy = ny * spd; s.dmg = dmg; s.ttl = 5;
         // Fixed authored hostile projectiles replace the old colour-only dots.
         var c = (col || '').toLowerCase();
-        s.sprite = c.indexOf('7fd') >= 0 || c.indexOf('green') >= 0 ? 'p_enemy_toxic' :
+        s.sprite = sprite || (c.indexOf('7fd') >= 0 || c.indexOf('green') >= 0 ? 'p_enemy_toxic' :
           (c.indexOf('e8e0') >= 0 ? 'p_enemy_bone' :
           (c.indexOf('c46b') >= 0 ? 'p_enemy_arcane' :
-          (c.indexOf('ffd7') >= 0 ? 'p_enemy_hellfire' : 'p_enemy_blood')));
+          (c.indexOf('ffd7') >= 0 ? 'p_enemy_hellfire' : 'p_enemy_blood'))));
         s.slow = slow || 0; s.slowDur = slowDur || 0;
         s.webType = webType || false;
         s.col = col || null;          // 自定义配色(Boss 弹幕差异化)
@@ -1122,6 +1161,56 @@ window.Entities = (function () {
   }
 
   // ================= Boss AI =================
+  function bossEmitFx(run, kind, data) {
+    if (run.cb && run.cb.onBossFx) run.cb.onBossFx(kind, data || {});
+  }
+  function bossEmitAudio(run, kind) {
+    if (run.cb && run.cb.onBossAudio) run.cb.onBossAudio(kind);
+  }
+
+  function slimePickSkill(e, lowHp) {
+    e.bounceCd = e.bounceCd || 0; e.summonCd = e.summonCd || 0; e.shieldCd = e.shieldCd || 0;
+    if (lowHp && e.bounceCd <= 0) { e.bounceCd = 10; return 'bounce'; }
+    e.skillCycle = (e.skillCycle || 0) + 1;
+    var c = e.skillCycle;
+    if (c >= 4 && c % 4 === 0 && e.summonCd <= 0) { e.summonCd = 16; return 'summon'; }
+    if (c >= 3 && c % 5 === 0 && e.shieldCd <= 0) { e.shieldCd = 14; return 'shield'; }
+    return c % 3 === 0 ? 'jump' : (c % 3 === 1 ? 'fan' : 'ring');
+  }
+
+  function slimeBeginTelegraph(run, e, nx, ny, scol) {
+    var aim = Math.atan2(ny, nx);
+    e.skillAim = aim;
+    var data = { x: Math.round(e.x), y: Math.round(e.y), a: +aim.toFixed(2) };
+    if (e.bossSkill === 'fan') {
+      FX.sprite(e.x, e.y, 'vfx_boss_slimeking_fan_telegraph', 0.5, 168, false, 0.75, aim + Math.PI / 2);
+      AudioSys.play('elite_spawn');
+      bossEmitFx(run, 'slimeFanWarn', data);
+    } else if (e.bossSkill === 'ring') {
+      FX.ring(e.x, e.y, { r: 96, color: scol, life: 0.6, width: 5 });
+      AudioSys.play('elite_spawn');
+      bossEmitFx(run, 'slimeRingWarn', data);
+    } else if (e.bossSkill === 'summon') {
+      FX.burst(e.x, e.y, { color: scol, n: 16, speed: 110, life: 0.5, size: 3, glow: true });
+      AudioSys.play('elite_spawn');
+      bossEmitFx(run, 'slimeSummonWarn', data);
+    } else if (e.bossSkill === 'shield') {
+      FX.ring(e.x, e.y, { r: 74, color: '#9cf', life: 0.5, width: 4 });
+      AudioSys.play('hit1');
+      bossEmitFx(run, 'slimeShieldWarn', data);
+    } else {
+      var LEAP_R = 85;
+      var p = run.player;
+      var lx = p.x + (p.lastVx || 0) * 0.4, ly = p.y + (p.lastVy || 0) * 0.4;
+      var lR = CFG.GAME.MAP_R;
+      e.leapX = E.clamp(lx, -lR, lR); e.leapY = E.clamp(ly, -lR, lR);
+      e.leapMark = fireLob(e.leapX, e.leapY, e.x, e.y, LEAP_R, 0, 0.5);
+      AudioSys.play('elite_spawn');
+      bossEmitFx(run, e.bossSkill === 'bounce' ? 'slimeBounceWarn' : 'slimeJumpWarn',
+        { x: Math.round(e.leapX), y: Math.round(e.leapY), a: +aim.toFixed(2) });
+    }
+  }
+
   function bossAI(run, e, dt, nx, ny, dist, spd, tgt) {
     e.aiT -= dt;
     var p = tgt ? tgt.player : run.player;
@@ -1129,60 +1218,152 @@ window.Entities = (function () {
     var enrage = (e.bossType === 'boss_darklord' && run.t >= CFG.GAME.RUN_TIME);
     var sMul = enrage ? 1.6 : 1, dMul = enrage ? 2 : 1;
     switch (e.bossType) {
-      case 'boss_slimeking': { // 蓄力跳跃:落点显示危险半径,落地后释放一圈弹幕
+      case 'boss_slimeking': { // 六技能循环:idle → telegraph → cast/charge → recover
         var scol = bdef.shotCol || '#7fd44f';
-        var LEAP_R = 85;                   // 落地伤害半径(缩小,可躲避)
-        if (e.aiPhase === 0) {             // 逼近
-          e.vx = nx * spd * 0.6; e.vy = ny * spd * 0.6;
-          if (e.aiT <= 0) { e.aiPhase = 1; e.aiT = 0.85; e.vx = 0; e.vy = 0; }
-        } else if (e.aiPhase === 1) {      // 蓄力:锁定落点并亮出危险圈
-          e.vx = 0; e.vy = 0;
-          if (!e.leapMark) {
-            // 落点预判玩家去向,但预判量有限,持续移动可以躲开
-            var lx = p.x + (p.lastVx || 0) * 0.4, ly = p.y + (p.lastVy || 0) * 0.4;
-            var lR = CFG.GAME.MAP_R;
-            e.leapX = E.clamp(lx, -lR, lR); e.leapY = E.clamp(ly, -lR, lR);
-            e.leapMark = fireLob(e.leapX, e.leapY, e.x, e.y, LEAP_R, 0, 0.85);
-            AudioSys.play('elite_spawn');
-          }
-          // 蓄力时身体压扁的视觉靠 squash 字段
-          e.squash = 1 - E.clamp(1 - e.aiT / 0.85, 0, 1) * 0.35;
+        var LEAP_R = 85;
+        var lowHp = e.maxHp > 0 && e.hp < e.maxHp * 0.3;
+        e.bounceCd = Math.max(0, (e.bounceCd || 0) - dt);
+        e.summonCd = Math.max(0, (e.summonCd || 0) - dt);
+        e.shieldCd = Math.max(0, (e.shieldCd || 0) - dt);
+        if (e.dying) { e.vx = 0; e.vy = 0; break; }
+        if (!e.bossAction) setBossAction(run, e, 'idle');
+
+        if (e.bossAction === 'idle' || e.bossAction === 'walk') {
+          if (e.guard > 0) e.guard = Math.max(0, e.guard - dt);
+          e.vx = nx * spd * 0.62; e.vy = ny * spd * 0.62;
+          e.aiT -= dt;
           if (e.aiT <= 0) {
-            e.aiPhase = 2; e.aiT = 0.42;
-            e.jumpFrom = { x: e.x, y: e.y };
-            e.leapMark = null;             // 预警圈由 updateLobs 自行结束
+            var sk = slimePickSkill(e, lowHp);
+            e.bossSkill = sk; e.bossActionPhase = 1; e.skillMarked = false;
+            setBossAction(run, e, 'telegraph');
+            if (sk === 'jump') { e.skillT = 0.72; }
+            else if (sk === 'bounce') { e.skillT = 0.5; e.bounceLeft = 2 + (lowHp ? 1 : 0); }
+            else if (sk === 'fan') { e.skillT = 0.55; }
+            else if (sk === 'ring') { e.skillT = 0.65; }
+            else if (sk === 'summon') { e.skillT = 0.6; }
+            else { e.skillT = 0.5; }
           }
-        } else {                           // 腾空:沿抛物线落到锁定点
-          var t01 = 1 - E.clamp(e.aiT / 0.42, 0, 1);
-          var jf = e.jumpFrom || { x: e.x, y: e.y };
-          e.x = E.lerp(jf.x, e.leapX, t01);
-          e.y = E.lerp(jf.y, e.leapY, t01);
-          e.hop = Math.sin(t01 * Math.PI) * 70;   // 绘制时抬高
-          e.squash = 1 + Math.sin(t01 * Math.PI) * 0.25;
-          e.vx = 0; e.vy = 0;
-          if (e.aiT <= 0) {
-            e.aiPhase = 0; e.aiT = 20;    // 20 秒冷却,不会一直跳
-            e.hop = 0; e.squash = 1;
-            FX.ring(e.x, e.y, { r: LEAP_R, color: scol, life: 0.45, width: 5 });
-            FX.explosion(e.x, e.y, LEAP_R);
-            FX.shake(8, 0.35);
-            AudioSys.play('splat');
-            // 落地范围伤害:覆盖所有存活玩家
-            var ents = playerEntries(run);
-            for (var ei2 = 0; ei2 < ents.length; ei2++) {
-              var ew = ents[ei2];
-              if (ew.downed || ew.player.hp <= 0) continue;
-              if (E.dist2(ew.player.x, ew.player.y, e.x, e.y) < LEAP_R * LEAP_R) {
-                damagePlayerAt(run, ew, e.dmg * 1.2 * dMul);
+          break;
+        }
+
+        e.vx = 0; e.vy = 0;
+        if (e.bossActionPhase === 1) {               // telegraph
+          if (!e.skillMarked) { e.skillMarked = true; slimeBeginTelegraph(run, e, nx, ny, scol); }
+          if (e.bossSkill === 'jump' || e.bossSkill === 'bounce') {
+            e.squash = 1 - E.clamp(1 - e.skillT / 0.5, 0, 1) * 0.35;
+          }
+          e.skillT -= dt;
+          if (e.skillT <= 0) {
+            e.bossActionPhase = 2;
+            if (e.bossSkill === 'jump') { e.skillT = 0.42; e.jumpFrom = { x: e.x, y: e.y }; e.leapMark = null; setBossAction(run, e, 'charge'); }
+            else if (e.bossSkill === 'bounce') { e.skillT = 0.34; e.jumpFrom = { x: e.x, y: e.y }; e.leapMark = null; setBossAction(run, e, 'charge'); }
+            else if (e.bossSkill === 'fan') { e.skillT = 0.72; e.castStep = 0; e.castCd = 0; setBossAction(run, e, 'attack'); }
+            else if (e.bossSkill === 'ring') { e.skillT = 0.55; e.castStep = 0; setBossAction(run, e, 'attack'); }
+            else if (e.bossSkill === 'summon') { e.skillT = 0.55; e.castStep = 0; setBossAction(run, e, 'attack'); }
+            else { e.skillT = 3.2; e.guard = 3.2; setBossAction(run, e, 'shield'); }
+          }
+          break;
+        }
+
+        if (e.bossActionPhase === 2) {               // cast / charge
+          if (e.bossSkill === 'fan') {
+            e.castCd -= dt;
+            if (e.castCd <= 0 && e.castStep < 3) {
+              e.castCd = 0.18; e.castStep++;
+              var fanA = e.skillAim || Math.atan2(ny, nx);
+              for (var fi = 0; fi < 5; fi++) {
+                var fa = fanA + (fi - 2) * 0.155;
+                fireShot(e.x, e.y, Math.cos(fa), Math.sin(fa), 172, e.dmg * 0.4,
+                  0.18, 1.4, false, scol, 26, 430, 'p_boss_slimeking_acid_orb');
+              }
+              AudioSys.play('shoot_bolt');
+              bossEmitFx(run, 'slimeFanCast', { x: Math.round(e.x), y: Math.round(e.y), a: +fanA.toFixed(2) });
+            }
+            e.skillT -= dt;
+            if (e.skillT <= 0) { e.bossActionPhase = 3; e.skillT = 0.4; }
+          } else if (e.bossSkill === 'ring') {
+            if (e.castStep === 0) {
+              e.castStep = 1;
+              for (var rj = 0; rj < 16; rj++) {
+                var ra = Math.PI * 2 * rj / 16;
+                fireShot(e.x, e.y, Math.cos(ra), Math.sin(ra), 138, e.dmg * 0.42,
+                  0.4, 2.0, false, scol, 18, 235);
+              }
+              FX.sprite(e.x, e.y, 'vfx_boss_slimeking_ground_wave', 0.85, 190, true);
+              FX.shake(5, 0.3);
+              AudioSys.play('splat');
+              bossEmitFx(run, 'slimeRingCast', { x: Math.round(e.x), y: Math.round(e.y) });
+            }
+            e.skillT -= dt;
+            if (e.skillT <= 0) { e.bossActionPhase = 3; e.skillT = 0.4; }
+          } else if (e.bossSkill === 'summon') {
+            if (e.castStep === 0) {
+              e.castStep = 1;
+              for (var gj = 0; gj < 4; gj++) {
+                var ga = Math.PI * 2 * gj / 4 + 0.6;
+                spawnEnemy(run, 'slime', e.x + Math.cos(ga) * 72, e.y + Math.sin(ga) * 72, { allowNear: true });
+              }
+              FX.sprite(e.x, e.y, 'vfx_boss_slimeking_summon_gel', 0.7, 110, false, 0.85);
+              FX.burst(e.x, e.y, { color: scol, n: 20, speed: 130, life: 0.5, size: 3 });
+              AudioSys.play('elite_spawn');
+              bossEmitFx(run, 'slimeSummonCast', { x: Math.round(e.x), y: Math.round(e.y) });
+            }
+            e.skillT -= dt;
+            if (e.skillT <= 0) { e.bossActionPhase = 3; e.skillT = 0.35; }
+          } else if (e.bossSkill === 'shield') {
+            if (e.guard > 0) {
+              e.guard = Math.max(0, e.guard - dt);
+              if (e.guard <= 0) { e.bossActionPhase = 3; e.skillT = 0.3; }
+            }
+            e.skillT -= dt;
+            if (e.skillT <= 0 && e.guard > 0) e.skillT = 0.05;
+          } else {                                  // jump / low-HP bounce
+            var t01 = 1 - E.clamp(e.skillT / (e.bossSkill === 'bounce' ? 0.34 : 0.42), 0, 1);
+            var jf = e.jumpFrom || { x: e.x, y: e.y };
+            e.x = E.lerp(jf.x, e.leapX, t01);
+            e.y = E.lerp(jf.y, e.leapY, t01);
+            e.hop = Math.sin(t01 * Math.PI) * 70;
+            e.squash = 1 + Math.sin(t01 * Math.PI) * 0.25;
+            e.skillT -= dt;
+            if (e.skillT <= 0) {
+              e.hop = 0; e.squash = 1;
+              FX.ring(e.x, e.y, { r: LEAP_R, color: scol, life: 0.45, width: 5 });
+              FX.explosion(e.x, e.y, LEAP_R);
+              FX.shake(8, 0.35);
+              AudioSys.play('splat');
+              bossEmitFx(run, 'slimeJumpLand', { x: Math.round(e.x), y: Math.round(e.y) });
+              var ents = playerEntries(run);
+              for (var ei2 = 0; ei2 < ents.length; ei2++) {
+                var ew = ents[ei2];
+                if (ew.downed || ew.player.hp <= 0) continue;
+                if (E.dist2(ew.player.x, ew.player.y, e.x, e.y) < LEAP_R * LEAP_R) {
+                  damagePlayerAt(run, ew, e.dmg * 1.2 * dMul);
+                }
+              }
+              for (var sj = 0; sj < 12; sj++) {
+                var sa = (Math.PI * 2 / 12) * sj + run.t * 0.5;
+                fireShot(e.x, e.y, Math.cos(sa), Math.sin(sa), 130, e.dmg * 0.35 * dMul,
+                  0.25, 1.2, false, scol);
+              }
+              for (var i = 0; i < 2; i++) spawnEnemy(run, 'slime', e.x + (Math.random() * 60 - 30), e.y + (Math.random() * 60 - 30), { allowNear: true });
+              if (e.bossSkill === 'bounce' && e.bounceLeft > 0) {
+                e.bounceLeft--;
+                e.bossActionPhase = 1; e.skillT = 0.3; e.skillMarked = false;
+                setBossAction(run, e, 'telegraph');
+                FX.sprite(e.x, e.y, 'vfx_boss_slimeking_bounce_afterimage', 0.4, 92, true, 0.26);
+              } else {
+                e.bossActionPhase = 3; e.skillT = 0.5;
               }
             }
-            // 落地释放一圈腐液弹
-            for (var sj = 0; sj < 12; sj++) {
-              var sa = (Math.PI * 2 / 12) * sj + run.t * 0.5;
-              fireShot(e.x, e.y, Math.cos(sa), Math.sin(sa), 130, e.dmg * 0.35 * dMul, 0.25, 1.2, false, scol);
-            }
-            for (var i = 0; i < 2; i++) spawnEnemy(run, 'slime', e.x + (Math.random() * 60 - 30), e.y + (Math.random() * 60 - 30), { allowNear: true });
           }
+          break;
+        }
+
+        e.skillT -= dt;                             // recover
+        if (e.skillT <= 0) {
+          e.bossActionPhase = 0; e.bossSkill = '';
+          setBossAction(run, e, 'idle');
+          e.aiT = lowHp ? 1.2 : 2.0;
         }
         break;
       }
@@ -2089,18 +2270,35 @@ window.Entities = (function () {
       // 史莱姆跳跃:hop 抬高机体,squash 做蓄力压扁/腾空拉伸
       var hop = e.hop || 0, sq = e.squash || 1;
       var enemySprite = e.boss ? e.bossType : (e.elite ? 'elite_' + e.id : e.id);
-      var visualState = e.netAnimState || '';
+      var visualState = e.boss ? (e.bossAction || e.netAnimState || '') : (e.netAnimState || '');
       if (!visualState) {
         if (e.attackAnimT > 0) visualState = 'attack';
         else if (e.boss && (e.chargeSeq > 0 || e.aiPhase === 1)) visualState = 'charge';
         else if (e.vx !== 0 || e.vy !== 0) visualState = 'walk';
         else visualState = 'idle';
       }
-      if (visualState === 'attack') enemySprite += '_attack';
+      // 受击动作只在 idle/walk/recover 时抢表现,永远不能覆盖死亡。
+      if (e.boss && !e.dying && e.hurtT > 0 &&
+          (visualState === 'idle' || visualState === 'walk')) visualState = 'hurt';
+      if (e.boss && (e.dying || visualState === 'death')) visualState = 'death';
+      var oneShotBoss = false;
+      if (e.boss) {
+        if (visualState === 'telegraph') visualState = e.bossSkill === 'jump' || e.bossSkill === 'bounce' ? 'charge' : 'attack';
+        var actionSuffix = { idle: '', walk: '_walk', attack: '_attack', charge: '_charge',
+          shield: '_shield', hurt: '_hurt', death: '_death' }[visualState];
+        if (actionSuffix === undefined) actionSuffix = '';
+        enemySprite += actionSuffix;
+        oneShotBoss = actionSuffix !== '' && actionSuffix !== '_walk';
+      } else if (visualState === 'attack') enemySprite += '_attack';
       else if (visualState === 'charge' && e.boss) enemySprite += '_charge';
       else if (visualState === 'walk') enemySprite += '_walk';
-      var animAge = e.netAnimState ? Math.max(0, (run.frame - e.netAnimEpoch) / 60) : run.t;
+      var animAge = e.bossAction && e.bossActionTick ? Math.max(0, (run.frame - e.bossActionTick) / 60)
+        : (e.netAnimState ? Math.max(0, (run.frame - e.netAnimEpoch) / 60) : run.t);
       var enemyF = Math.floor(animAge * animFps(enemySprite, visualState === 'idle' ? 6 : 10));
+      if (oneShotBoss) {
+        var authored = SpriteGen.frames(enemySprite);
+        if (authored && authored.length > 1) enemyF = Math.min(enemyF, authored.length - 1);
+      }
       drawActorSprite(ctx, enemySprite, enemyF + (e.animo | 0),
                  e.x, e.y + e.r * 0.7 + wob - hop, sc * sq, e.face < 0, e.alpha, tint, true);
       // 被强化的小怪：血气贴着身体向外逸散，不再画一圈廉价的黄色圆环。
@@ -2288,6 +2486,10 @@ window.Entities = (function () {
       e.flash = 0; e.alpha = 1; e.animo = (s.u % 10);
       e.netAnimState = s.ac || 'idle';
       e.netAnimEpoch = run.frame - Math.max(0, (snap.tk || 0) - (s.ae || snap.tk || 0));
+      e.bossAction = e.boss ? (s.ac || 'idle') : '';
+      e.bossActionTick = e.netAnimEpoch;
+      e.bossActionPhase = e.boss ? (s.ap || 0) : 0;
+      e.dying = e.boss && s.h <= 0;
       e.guard = s.g || 0; e.burrowT = s.b || 0; e.burrowMax = def.burrow || 0;
       e.buffed = !!s.bf; e.buffSpd = 1; e.buffDmg = 1;
       e.slow = 0; e.slowT = 0; e.stun = 0; e.frozen = 0; e.kx = 0; e.ky = 0;
@@ -2306,6 +2508,7 @@ window.Entities = (function () {
       shots[i].alive = true;
       shots[i].x = s.x; shots[i].y = s.y; shots[i].vx = s.vx; shots[i].vy = s.vy;
       shots[i].webType = !!s.w; shots[i].col = s.c || null; shots[i].size = s.z || 16;
+      shots[i].sprite = s.sp || shots[i].sprite || '';
       shots[i].dmg = 0; shots[i].ttl = 5;   // 客户端不做伤害判定
     }
     // 抛击落点预警

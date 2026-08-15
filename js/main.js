@@ -203,10 +203,10 @@
   }
 
   function stampSnapshotAction(e) {
-    var action = enemySnapshotAction(e);
+    var action = e.bossAction || enemySnapshotAction(e);
     if (e.netAnimState !== action) {
       e.netAnimState = action;
-      e.netAnimEpoch = run.frame;
+      e.netAnimEpoch = e.bossActionTick || run.frame;
     }
     return action;
   }
@@ -266,7 +266,8 @@
         b: e.burrowT > 0 ? +e.burrowT.toFixed(2) : 0,
         bf: e.buffed ? 1 : 0, ph: e.phase2 ? 1 : 0, er: e.eyeRole || '',
         ac: stampSnapshotAction(e), ae: e.netAnimEpoch || run.frame,
-        ap: e.aiPhase || 0, cp: e.chargePhase || 0, es: e.eliteSkill || ''
+        ap: e.bossAction ? (e.bossActionPhase || 0) : (e.aiPhase || 0),
+        cp: e.chargePhase || 0, es: e.eliteSkill || ''
       });
     }
     var shots = Entities.getShots(), ss = [];
@@ -276,7 +277,8 @@
       ss.push({
         x: Math.round(shots[i].x), y: Math.round(shots[i].y),
         vx: Math.round(shots[i].vx), vy: Math.round(shots[i].vy),
-        w: shots[i].webType ? 1 : 0, c: shots[i].col || 0, z: shots[i].size || 16
+        w: shots[i].webType ? 1 : 0, c: shots[i].col || 0, z: shots[i].size || 16,
+        sp: shots[i].sprite || ''
       });
     }
     var lobs = Entities.getLobs(), ls = [];
@@ -749,6 +751,13 @@
           UI.warn('☠ 精英怪现身,击杀掉落宝箱!');
           emitGameEvent('eliteSpawn', { uid: elite && elite.uid || 0 });
           emitAudioEvent('elite_spawn', { uid: elite && elite.uid || 0 });
+        },
+        onBossFx: function (kind, data) { emitBossEvent(kind, data || {}); },
+        onBossAudio: function (kind) { emitAudioEvent(kind, {}); },
+        onBossAction: function (e, action) { emitBossEvent('action', { u: e && e.uid || 0, a: action }); },
+        onBossDeath: function (id, data) {
+          emitBossEvent('death', { id: id || '', x: data && data.x || 0, y: data && data.y || 0 });
+          emitAudioEvent('boss_die', {});
         }
       }
     };
@@ -2118,8 +2127,37 @@
       },
       onBossEvent: function (m) {
         if (!run || !coop.on || !m) return;
+        var d = m.data || {};
         if (m.kind === 'spawn') { AudioSys.play('boss_spawn'); FX.flash('#7d1530', 0.35, 0.35); }
         else if (m.kind === 'phase') { AudioSys.play('boss_roar'); FX.flash('#17020b', 0.55, 0.45); }
+        else if (m.kind === 'slimeFanWarn') {
+          FX.sprite(d.x, d.y, 'vfx_boss_slimeking_fan_telegraph', 0.5, 168, false, 0.75, (d.a || 0) + Math.PI / 2);
+          AudioSys.play('elite_spawn');
+        } else if (m.kind === 'slimeRingWarn') {
+          FX.ring(d.x, d.y, { r: 96, color: '#7fd44f', life: 0.6, width: 5 });
+          AudioSys.play('elite_spawn');
+        } else if (m.kind === 'slimeSummonWarn') {
+          FX.burst(d.x, d.y, { color: '#7fd44f', n: 16, speed: 110, life: 0.5, size: 3, glow: true });
+        } else if (m.kind === 'slimeShieldWarn') {
+          FX.ring(d.x, d.y, { r: 74, color: '#9cf', life: 0.5, width: 4 });
+        } else if (m.kind === 'slimeJumpWarn' || m.kind === 'slimeBounceWarn') {
+          FX.ring(d.x, d.y, { r: 85, color: '#7fd44f', life: 0.4, width: 3 });
+        } else if (m.kind === 'slimeFanCast') {
+          FX.burst(d.x, d.y, { color: '#7fd44f', n: 10, speed: 150, life: 0.4, size: 3 });
+          AudioSys.play('shoot_bolt');
+        } else if (m.kind === 'slimeRingCast') {
+          FX.sprite(d.x, d.y, 'vfx_boss_slimeking_ground_wave', 0.85, 190, true);
+          FX.shake(5, 0.3); AudioSys.play('splat');
+        } else if (m.kind === 'slimeSummonCast') {
+          FX.sprite(d.x, d.y, 'vfx_boss_slimeking_summon_gel', 0.7, 110, false, 0.85);
+          AudioSys.play('elite_spawn');
+        } else if (m.kind === 'slimeJumpLand') {
+          FX.ring(d.x, d.y, { r: 85, color: '#7fd44f', life: 0.45, width: 5 });
+          FX.explosion(d.x, d.y, 85); FX.shake(8, 0.35); AudioSys.play('splat');
+        } else if (m.kind === 'death') {
+          AudioSys.play('boss_die');
+          FX.explosion(d.x, d.y, 96);
+        }
       },
       onWorldResult: function (m) {
         if (m && m.ok === false && m.reason) UI.warn(m.reason);
