@@ -20,6 +20,18 @@
 
 ---
 
+## 2026-08-15 — v0.21.7:选人背景与 Boss 混合素材微调
+
+- **选人界面背景透出**：`character-select-screen` 背景从深色径向渐变改为 `rgba(7,3,15,0.38)`，不再挡住主菜单动画背景
+- **狂战士“版本之子！”**：狂战士卡片右上角新增红色动画小字徽章（呼吸缩放+红字描边）
+- **骸骨领主放大一半**：`drawScale 0.75 → 1.125`
+- **深渊之眼 P2 改回 V6**：分裂/远程/冲锋角色等 P2 专用动作恢复 V6 素材，P1 继续 V4
+- **暗潮魔王 P1 改 V4 并放大一半**：P1 全部动作改用 V4 96×96 行切取，`drawScale 1.125`；P2 保留 V6，新增 `drawScaleP2: 0.75` 让 P1/P2 尺寸分开控制
+- 新增 `tools/art/apply-mixed-boss-art.js` 记录这次混合素材的 manifest 调整
+- 回归：`headless.js`、`art-probe.js`、`v6-slimeking/abysseye/darklord-probe.js` 全绿
+
+---
+
 ## 2026-08-15 — v0.21.6:Boss 素材回退（深渊之眼 V4 / 史莱姆王 V2）
 
 - **深渊之眼改用 V4 版素材**：全部动作（idle/walk/charge/death/分裂/远程/受击）统一从 `assets/art-v4/repaired/bosses/boss_abysseye_actions.png` 的 96×96 行切取

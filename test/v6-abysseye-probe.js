@@ -60,11 +60,11 @@ function assert(ok, message) { if (!ok) throw new Error(message); }
     chargerDash: SpriteGen.frames('boss_abysseye_charge_dash').length,
     chargerDeath: SpriteGen.frames('boss_abysseye_charge_death').length
   }));
-  assert(atlasFacts.p1 === 8 && atlasFacts.split === 8 && atlasFacts.remote === 8 &&
-    atlasFacts.remoteCast === 8 && atlasFacts.remoteDeath === 8 && atlasFacts.charger === 8 &&
-    atlasFacts.chargerDash === 8 && atlasFacts.chargerDeath === 8,
-    'legacy V4 abyss eye strips are incorrect: ' + JSON.stringify(atlasFacts));
-  console.log('ABYSSEYE ATLAS OK  legacy V4 8-frame p1/split/remote/charger strips');
+  assert(atlasFacts.p1 === 8 && atlasFacts.split === 8 && atlasFacts.remote === 4 &&
+    atlasFacts.remoteCast === 8 && atlasFacts.remoteDeath === 6 && atlasFacts.charger === 4 &&
+    atlasFacts.chargerDash === 8 && atlasFacts.chargerDeath === 6,
+    'mixed V4 P1 / V6 P2 abyss eye strips are incorrect: ' + JSON.stringify(atlasFacts));
+  console.log('ABYSSEYE ATLAS OK  V4 P1 + V6 P2 mixed strips');
 
   await page.evaluate(() => {
     const r = Debug.run();

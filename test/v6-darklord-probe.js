@@ -60,11 +60,11 @@ function assert(ok, message) { if (!ok) throw new Error(message); }
     gate: SpriteGen.frames('vfx_darklord_escape_gate').length,
     rain: SpriteGen.frames('vfx_darklord_blackflame_rain').length
   }));
-  assert(atlasFacts.p1 === 6 && atlasFacts.attack === 8 && atlasFacts.transform === 8 &&
-    atlasFacts.charge === 8 && atlasFacts.breath === 8 && atlasFacts.death === 10 &&
+  assert(atlasFacts.p1 === 8 && atlasFacts.attack === 8 && atlasFacts.transform === 8 &&
+    atlasFacts.charge === 8 && atlasFacts.breath === 8 && atlasFacts.death === 8 &&
     atlasFacts.gate === 4 && atlasFacts.rain === 8,
-    'dark lord strips are incorrect: ' + JSON.stringify(atlasFacts));
-  console.log('DARKLORD ATLAS OK   P1/attack/transform/wing-rush/breath/death/gate/blackflame strips');
+    'mixed V4 P1 / V6 P2 dark lord strips are incorrect: ' + JSON.stringify(atlasFacts));
+  console.log('DARKLORD ATLAS OK   V4 P1 + V6 P2 mixed strips');
 
   await page.evaluate(() => {
     const r = Debug.run();

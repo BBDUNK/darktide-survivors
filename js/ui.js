@@ -213,6 +213,9 @@ window.UI = (function () {
       } else {
         card.appendChild(h('div', 'card-sub', CFG.WEAPONS[c.weapon].name));
       }
+      if (c.id === 'berserker') {
+        card.appendChild(h('span', 'char-badge', '版本之子！'));
+      }
       if (unlocked) card.addEventListener('click', function () {
         AudioSys.play('ui_click');
         sel.charId = c.id; refreshChars();

@@ -336,6 +336,32 @@
   .hud-exitgate { bottom:82px; min-width:136px; min-height:34px; padding:5px 12px; font-size:11px; }
 }
 
+/* 选人界面背景透出主菜单动画背景,不再被深色径向渐变整块挡住。 */
+.panel-col.character-select-screen {
+  background: rgba(7, 3, 15, 0.38) !important;
+}
+.character-select-screen .card {
+  position: relative !important;
+}
+.character-select-screen .card .char-badge {
+  position: absolute;
+  top: 4px;
+  right: 7px;
+  z-index: 2;
+  font-size: 11px;
+  line-height: 1;
+  color: #ff3b3b;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  pointer-events: none;
+  text-shadow: 0 0 6px rgba(255, 30, 30, .85), 0 1px 0 #3a0505, 0 -1px 0 #3a0505, 1px 0 0 #3a0505, -1px 0 0 #3a0505;
+  animation: char-badge-pulse .8s ease-in-out infinite;
+}
+@keyframes char-badge-pulse {
+  0%, 100% { opacity: .65; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.12); }
+}
+
 /* 用户反馈轮 2:去掉选人页内部重复金色边框,只保留屏幕最外层边框。 */
 .panel-col.character-select-screen .page-title {
   border: 0 !important;
