@@ -29,7 +29,7 @@ body, #game { image-rendering: pixelated; }
   outline-color: #8d7044;
   box-shadow: inset 0 0 0 2px #394047, 5px 6px 0 rgba(0, 0, 0, .5);
 }
-.hud-tl::before { content: '⚔ VITALS & RELICS'; font-family: var(--font-pix); color: #d5bd83; }
+.hud-tl::before { content: 'VITALS & RELICS'; font-family: var(--font-pix); color: #d5bd83; }
 .hp-wrap {
   width: 244px;
   height: 42px;

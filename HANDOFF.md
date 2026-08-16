@@ -1,7 +1,7 @@
 # 项目交接文档 (HANDOFF)
 
 > 本文件用于把《暗黑逃跑神》(Darktide Survivors) 项目完整交接给任何后续开发工具/会话。
-> 生成时间:2026-08-16,当前版本 **v0.23.4**(商业化精品化改革第一轮 + UI 对齐 + 免费战斗/脚步音效)。
+> 生成时间:2026-08-16,当前版本 **v0.24.0**(去 AI 味 · UI 素材统一 · 全局动效;回退点标签 `backup-pre-v23-overhaul-v0.22.0`)。
 > 若你在新会话接手,请先读本文件,再读 `DEVLOG.md`(完整迭代历史)、`docs/V6_ACCEPTANCE_REPORT.md`(V6 验收报告)与 `SPEC.md`(原始设计)。
 
 ---
@@ -83,6 +83,7 @@
 - v0.21.18 已合入：倒计时框整体缩小不挡视野；Beta 角标改纯绿色 `#00e05a`，与狂战士红色角标区分。
 - v0.21.19 已合入：主菜单 Beta 角标从头重做，改为深绿底 + 亮绿描边徽章，位置更自然。
 - v0.22.0 已合入：加载/运行流畅度专项——图集无损 WebP 化 7.7MB→2.73MB(解码内存 128→80MB,URL 带内容哈希)、关键资源预加载(图集低优先级)、移除无用的 Fusion Pixel 648KB 强制下载、Cloudflare `_headers` 缓存策略、图集切片空闲分批 + `createImageBitmap` 离线程解码 + 位图确定性释放;加载期最长掉帧 566.7ms→50.1ms。`test/jank-probe.js` 为加载期掉帧 A/B 探针。
+- v0.24.0 已合入：去 AI 味专项——Kenney Fantasy UI Borders(CC0)按亮度重映射为项目金色阶后统一全部二级界面框体(`assets/ui/kenney/`,新层 `css/unify-v24.css` 管框体+色板 token+动效);emoji 图标全部替换(图鉴 tab/成就/暂停/索敌/Boss/警告/favicon→图集图标或 CSS 绘制);界面切换/升级卡交错入场/toast 滑入动效;新增 `test/allui-shots.js` 全界面审查工具。
 - v0.23.0 已合入：商业化精品化第一轮——**禁忌典籍召唤恶魔**换 Gothicvania CC0 飞行恶魔(`summon_demon`,6 帧,完整图集流水线接入,新增 `test/demon-summon-probe.js`);**音效换血**为 Kenney CC0 录音(37 个 WAV,`tools/audio/build-sfx.py` 从 `assets/audio/vendor` 转码,`AudioSys` 新增 AudioBuffer 文件通道+合成兜底,新增 `test/sfx-file-probe.js`);**主菜单精修**(新最终层 `css/commercial-v23.css`:战报点线表格/按钮微交互/面板光效统一);**HUD 三段光效 + hit-stop 顿帧**(`Engine.hitStop`,精英 70ms/Boss 150ms/变阶段 120ms)。
 - v0.22.1 已合入：移除小地图周边黑色阴影，右上角更干净。
 - v0.22.2 已合入：主菜单 Beta 角标去掉背景/边框/光晕，改为高辨识度亮苹果绿 `#a8ff00`。

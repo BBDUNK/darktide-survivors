@@ -369,7 +369,10 @@ window.UI = (function () {
       var has = !!d.achv[a.id];
       if (has) got++;
       var row = h('div', 'achv-row' + (has ? ' got' : ''));
-      row.appendChild(h('div', 'achv-ico', has ? '🏆' : '🔒'));
+      // 奖杯用图集皇冠图标(未解锁灰化),替代 emoji
+      var ico = iconCanvas('elite_crown', 20);
+      ico.className = 'achv-ico' + (has ? '' : ' locked-ico');
+      row.appendChild(ico);
       var mid = h('div', 'achv-mid');
       mid.appendChild(h('div', 'achv-name', a.name));
       mid.appendChild(h('div', 'achv-desc', a.desc));
@@ -608,10 +611,23 @@ window.UI = (function () {
 
   function renderCodexTabs() {
     codexTabs.innerHTML = '';
-    var tabs = [['w', '⚔ 武器'], ['p', '💠 被动'], ['e', '☠ 敌人'], ['m', '📖 机制'], ['g', '🎮 操作指南'], ['s', '📜 故事']];
+    // 图标来自运行图集(iconCanvas 快照),不再用 emoji——emoji 是"AI 生成感"的典型来源,
+    // 且与像素美术风格完全脱节。
+    var tabs = [
+      ['w', '武器', 'w_crossblade'],
+      ['p', '被动', 'ps_core'],
+      ['e', '敌人', 'icon_kill'],
+      ['m', '机制', 'icon_time'],
+      ['g', '操作', 'icon_speed'],
+      ['s', '故事', 'we_forbidden']
+    ];
     tabs.forEach(function (t) {
-      codexTabs.appendChild(btn(t[1], codexTab === t[0] ? 'primary small-btn' : 'small-btn',
-        function () { codexTab = t[0]; refreshCodex(); }));
+      var b = btn(t[1], codexTab === t[0] ? 'primary small-btn' : 'small-btn',
+        function () { codexTab = t[0]; refreshCodex(); });
+      var ico = iconCanvas(t[2], 15);
+      ico.className = 'tab-ico';
+      b.insertBefore(ico, b.firstChild);
+      codexTabs.appendChild(b);
     });
   }
 
@@ -720,7 +736,7 @@ window.UI = (function () {
       var head = h('div', 'enc-head');
       head.appendChild(iconCanvas(e.id, e.boss ? 40 : 30));
       var ht = h('div', 'enc-headtext');
-      ht.appendChild(h('div', 'enc-name', (e.boss ? '👑 ' : '') + e.name));
+      ht.appendChild(h('div', 'enc-name', e.name));
       ht.appendChild(h('div', 'enc-sub', e.ai));
       head.appendChild(ht);
       card.appendChild(head);
@@ -889,13 +905,15 @@ window.UI = (function () {
     hudRefs.nextEv = h('div', 'hud-nextev hidden', '');
     hudRefs.timer.appendChild(hudRefs.nextEv);
     s.appendChild(hudRefs.timer);
-    // 触屏暂停按钮(仅移动端显示):小地图左侧,贴顶部边缘
-    hudRefs.pauseBtn = btn('⏸', 'hud-pausebtn', function () {
+    // 触屏暂停按钮(仅移动端显示):小地图左侧,贴顶部边缘。
+    // 图标用 CSS 双竖线绘制,替代 emoji(清晰锐利且风格统一)。
+    hudRefs.pauseBtn = btn('', 'hud-pausebtn icon-pause', function () {
       cb.onPauseToggle && cb.onPauseToggle();
     });
     s.appendChild(hudRefs.pauseBtn);
-    // 触屏索敌切换按钮(仅移动端显示):暂停键下方,底部与小地图对齐
-    hudRefs.targetBtn = btn('🎯', 'hud-targetbtn', function () {
+    // 触屏索敌切换按钮(仅移动端显示):暂停键下方,底部与小地图对齐。
+    // CSS 同心环准星,替代 emoji。
+    hudRefs.targetBtn = btn('', 'hud-targetbtn icon-target', function () {
       var m = Weapons.cycleTargetMode();
       cb.onTargetChanged && cb.onTargetChanged(m.name);
     });
@@ -1340,7 +1358,12 @@ window.UI = (function () {
     if (newAchvs.length) {
       var aBox = h('div', 'result-achvs');
       newAchvs.forEach(function (a) {
-        aBox.appendChild(h('div', 'result-achv', '🏆 ' + a.name + ' (+' + a.reward + L.t('achv_reward') + ')'));
+        var line = h('div', 'result-achv');
+        var crown = iconCanvas('elite_crown', 16);
+        crown.className = 'inline-ico';
+        line.appendChild(crown);
+        line.appendChild(h('span', '', a.name + ' (+' + a.reward + L.t('achv_reward') + ')'));
+        aBox.appendChild(line);
       });
       resBody.appendChild(aBox);
     }
@@ -1361,7 +1384,12 @@ window.UI = (function () {
   function toastAchv(a) {
     AudioSys.play('achievement');
     var t = h('div', 'toast');
-    t.appendChild(h('div', 'toast-title', '🏆 成就达成:' + a.name));
+    var tt = h('div', 'toast-title');
+    var crown = iconCanvas('elite_crown', 15);
+    crown.className = 'inline-ico';
+    tt.appendChild(crown);
+    tt.appendChild(h('span', '', '成就达成:' + a.name));
+    t.appendChild(tt);
     t.appendChild(h('div', 'toast-desc', a.desc + ' (+' + a.reward + ' 金币)'));
     screens.toasts.appendChild(t);
     setTimeout(function () { t.classList.add('out'); }, 3600);

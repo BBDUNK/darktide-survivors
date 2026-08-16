@@ -52,3 +52,7 @@ screenshot.png
 
 # ---- 音效原始包(运行时只用转码后的 assets/audio/sfx/*.wav) ----
 assets/audio/vendor/**
+
+# ---- UI 素材原始包(运行时只用调色后的 panel-gold*.png / divider-*.png) ----
+assets/ui/kenney/*.zip
+assets/ui/kenney/_panel-test.png

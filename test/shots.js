@@ -58,7 +58,7 @@ const URL = 'file://' + path.join(ROOT, 'index.html').replace(/\\/g, '/');
   await vis('text=百科全书').click();
   await page.waitForTimeout(500);
   await shot('03-enc-weapons');
-  for (const [label, name] of [['💠 被动', '04-enc-passives'], ['☠ 敌人', '05-enc-enemies'], ['📖 机制', '06-enc-mechanics']]) {
+  for (const [label, name] of [['被动', '04-enc-passives'], ['敌人', '05-enc-enemies'], ['机制', '06-enc-mechanics']]) {
     await vis('text=' + label).click();
     await page.waitForTimeout(400);
     await shot(name);

@@ -749,7 +749,7 @@
         },
         onWarn: function (msg) { UI.warn(msg); emitGameEvent('warn', { text: msg }); },
         onElite: function (elite) {
-          UI.warn('☠ 精英怪现身,击杀掉落宝箱!');
+          UI.warn('精英怪现身,击杀掉落宝箱!');
           emitGameEvent('eliteSpawn', { uid: elite && elite.uid || 0 });
           emitAudioEvent('elite_spawn', { uid: elite && elite.uid || 0 });
         },
@@ -1305,7 +1305,7 @@
     }
     // 无尽模式的循环 Boss
     if (run.endless && run.nextEndlessBoss > run.t && (!best || run.nextEndlessBoss < best.t)) {
-      best = { t: run.nextEndlessBoss, label: '☠ BOSS' };
+      best = { t: run.nextEndlessBoss, label: 'BOSS' };
     }
     if (!best) return null;
     return { label: best.label, left: Math.max(0, best.t - run.t) };
@@ -1818,7 +1818,7 @@
     E.onToggleMap = function () {
       if (state !== 'run') return;
       var m = Minimap.toggle();
-      UI.warn(m === 'full' ? '🗺 小地图:全图' : '🗺 小地图:周围');
+      UI.warn(m === 'full' ? '小地图:全图' : '小地图:周围');
     };
     // 滚轮切换索敌方式(小地图下方小字实时显示,不弹提示)
     E.onScroll = function (dy) {
@@ -2130,7 +2130,7 @@
         if (!run || !coop.on) return;
         var d = m.data || {};
         if (m.kind === 'warn' && d.text) UI.warn(d.text);
-        else if (m.kind === 'eliteSpawn') UI.warn('☠ 精英怪现身,击杀掉落宝箱!');
+        else if (m.kind === 'eliteSpawn') UI.warn('精英怪现身,击杀掉落宝箱!');
         else if (m.kind === 'bossSpawn') { AudioSys.play('boss_spawn'); FX.flash('#7d1530', 0.35, 0.35); }
         else if (m.kind === 'vaultOpen') {
           FX.burst(d.x, d.y, { color: '#ffd76b', n: 14, speed: 110, life: 0.5, size: 2 });

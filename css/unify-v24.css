@@ -1,0 +1,194 @@
+/* ============================================================
+   v24 风格统一层(加载在 commercial-v23.css 之后)
+   目标:根除"AI 生成感"的两大来源——
+   A. 框体不统一:二级界面的卡片/行/信息框此前是各代 CSS 金属框混用,
+      现在统一为 Kenney Fantasy UI Borders(CC0)重新按游戏金色调色后的
+      九宫格面框(assets/ui/kenney/),与主菜单巴洛克同语言;
+   B. 色彩杂乱:定义全站色板 token,正文/金色/描边/面板底色一套变量管到底;
+   C. 动作:统一界面过渡(淡入+微缩放)、卡片入场交错动画、
+      成就提示滑入、选卡呼吸高亮、HUD 按钮 CSS 绘制图标。
+   ============================================================ */
+
+/* ---------- B. 全站色板(token) ---------- */
+:root {
+  --dk-bg-deep: #0b0713;        /* 最深底 */
+  --dk-bg-panel: #171026;       /* 面板底 */
+  --dk-bg-panel-2: #1e152f;     /* 面板底(亮一档) */
+  --dk-line: #2c203f;           /* 暗描边 */
+  --dk-gold: #c89c55;           /* 主金 */
+  --dk-gold-bright: #e8cf96;    /* 亮金(高亮文字) */
+  --dk-gold-dim: #8a6a37;       /* 暗金(次级描边) */
+  --dk-text: #e8e0cf;           /* 主文字 */
+  --dk-text-dim: #a89a82;       /* 次级文字 */
+  --dk-red: #c23a4e;            /* 危险/主行动 */
+  --dk-purple: #6d4fa0;         /* 联机/奥术 */
+}
+
+/* ---------- A. 统一框体:金色九宫格 ---------- */
+/* 大面板:信息框 / 联机面板 / 升级弹窗体 / 设置分组 */
+.info-box, .coop-entry, .coop-lobby, .enc-card, .achv-row, .shop-item, .lu-card, .chest-item,
+.pause-box .pause-menu {
+  border: 0 !important;
+  border-image: none !important;
+  background:
+    linear-gradient(180deg, rgba(30, 21, 47, 0.96), rgba(16, 10, 26, 0.97)) !important;
+  border-radius: 0 !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45) !important;
+  position: relative;
+}
+/* 面板通过 ::before 铺九宫格边框,内容不被拉伸 */
+.info-box::before, .enc-card::before, .achv-row::before, .shop-item::before,
+.lu-card::before, .chest-item::before, .coop-entry::before, .coop-lobby::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 12px solid transparent;
+  border-image: url('../assets/ui/kenney/panel-gold-soft.png') 12 fill / 12px / 0 stretch;
+  opacity: 0.92;
+}
+/* 更轻的行(成就/商店条)用更细的框 */
+.achv-row::before, .shop-item::before, .chest-item::before {
+  border-width: 8px;
+  border-image-slice: 14;
+  border-image-width: 8px;
+  opacity: 0.7;
+}
+
+/* 选人/选图/图鉴的卡片:统一细金框,选中态亮金 */
+.card, .map-card {
+  border: 0 !important;
+  border-image: none !important;
+  background: linear-gradient(180deg, rgba(23, 16, 38, 0.94), rgba(13, 8, 22, 0.96)) !important;
+  position: relative;
+  transition: transform 0.14s ease, box-shadow 0.14s ease;
+}
+.card::before, .map-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 7px solid transparent;
+  border-image: url('../assets/ui/kenney/panel-gold-soft.png') 14 fill / 7px / 0 stretch;
+  opacity: 0.75;
+  transition: opacity 0.14s ease;
+}
+.card:hover, .map-card:hover { transform: translateY(-3px); }
+.card:hover::before, .map-card:hover::before { opacity: 1; }
+.card.selected, .map-card.selected { box-shadow: 0 0 14px rgba(200, 156, 85, 0.4), 0 6px 18px rgba(0, 0, 0, 0.5); }
+.card.selected::before, .map-card.selected::before {
+  border-image-source: url('../assets/ui/kenney/panel-gold.png');
+  opacity: 1;
+  animation: cardBreath 1.6s ease-in-out infinite;
+}
+@keyframes cardBreath {
+  0%, 100% { box-shadow: inset 0 0 6px rgba(232, 207, 150, 0.12); }
+  50% { box-shadow: inset 0 0 10px rgba(232, 207, 150, 0.3); }
+}
+.card.locked, .map-card.locked { filter: saturate(0.25) brightness(0.72); }
+
+/* 章节分隔线:金色 Kenney divider */
+.enc-section-title, .page-title {
+  position: relative;
+}
+.enc-section-title::after {
+  content: '';
+  display: block;
+  height: 8px;
+  margin-top: 6px;
+  background: url('../assets/ui/kenney/divider-gold-fade.png') center / contain repeat-x;
+  opacity: 0.85;
+}
+
+/* ---------- 色彩统一:文字/面板底 ---------- */
+.achv-name, .enc-name, .shop-name, .lu-name, .card-name, .info-title {
+  color: var(--dk-gold-bright) !important;
+  letter-spacing: 1px;
+}
+.achv-desc, .enc-desc, .shop-desc, .lu-desc, .card-desc, .info-desc {
+  color: var(--dk-text-dim) !important;
+}
+.achv-row:not(.got) .achv-name { color: var(--dk-text-dim) !important; }
+.achv-row .achv-reward { color: var(--dk-gold) !important; font-variant-numeric: tabular-nums; }
+
+/* 图鉴 tab 内嵌图标 */
+.tab-ico, .inline-ico, .achv-ico {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 6px;
+  image-rendering: pixelated;
+}
+.achv-ico { filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5)); }
+.achv-ico.locked-ico { filter: grayscale(1) brightness(0.5); }
+.locked-ico { filter: grayscale(1) brightness(0.55); }
+
+/* ---------- C. 动作:界面过渡与入场 ---------- */
+/* 统一界面切换:淡入 + 4% 缩放回落,比裸 fadeIn 更有"进场"感 */
+.screen {
+  animation: screenIn 0.22s cubic-bezier(0.2, 0.7, 0.3, 1) !important;
+}
+@keyframes screenIn {
+  from { opacity: 0; transform: scale(1.04); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* 升级三选一卡片:交错滑入(每张延迟 70ms) */
+.lu-card { animation: luIn 0.26s cubic-bezier(0.2, 0.8, 0.3, 1) backwards; }
+.lu-card:nth-child(1) { animation-delay: 0.02s; }
+.lu-card:nth-child(2) { animation-delay: 0.09s; }
+.lu-card:nth-child(3) { animation-delay: 0.16s; }
+.lu-card:nth-child(4) { animation-delay: 0.23s; }
+@keyframes luIn {
+  from { opacity: 0; transform: translateY(22px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.lu-card:hover { transform: translateY(-4px); }
+
+/* 成就提示:从右侧滑入,退出时滑出 */
+.toast {
+  animation: toastIn 0.3s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+.toast.out { animation: toastOut 0.45s ease forwards; }
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(46px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes toastOut {
+  to { opacity: 0; transform: translateX(46px); }
+}
+
+/* ---------- HUD 按钮 CSS 图标(替代 emoji) ---------- */
+.icon-pause::before {
+  content: '';
+  display: inline-block;
+  width: 14px; height: 16px;
+  background:
+    linear-gradient(#f0e2c0, #f0e2c0) 0 0 / 4px 16px no-repeat,
+    linear-gradient(#f0e2c0, #f0e2c0) 10px 0 / 4px 16px no-repeat;
+}
+.icon-target::before {
+  content: '';
+  display: inline-block;
+  width: 18px; height: 18px;
+  box-sizing: border-box;
+  border: 2.5px solid #f0e2c0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #f0e2c0 0 2px, transparent 2px);
+}
+
+/* 暂停/索敌按钮与 HUD 金属语言一致 */
+.hud-pausebtn, .hud-targetbtn {
+  background: linear-gradient(180deg, #2b1f3d, #171026) !important;
+  border: 2px solid var(--dk-line) !important;
+  outline: 1px solid var(--dk-gold-dim) !important;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.5) !important;
+}
+.hud-pausebtn:active, .hud-targetbtn:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0, 0, 0, 0.5) !important; }
+
+/* ---------- 移动端框体同步(窄屏不过度装饰) ---------- */
+@media (max-width: 820px) {
+  .info-box::before, .enc-card::before, .achv-row::before, .shop-item::before,
+  .card::before, .map-card::before { border-image-width: 5px; border-width: 5px; }
+  .achv-row::before, .shop-item::before, .chest-item::before { border-image-width: 5px; }
+}

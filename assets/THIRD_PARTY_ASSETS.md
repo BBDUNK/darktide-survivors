@@ -127,6 +127,16 @@ The original user-provided Jade Emperor opening image remains `assets/intro.jpg`
   峰值归一 + 静音裁剪 + 12ms 淡出)。运行时 `AudioSys.play()` 录音版优先,
   加载失败自动退回程序合成。播放速率带 ±5% 随机微调避免机械感。
 
+## Kenney Fantasy UI Borders(CC0)
+
+- Author: Kenney (kenney.nl)
+- Source: https://kenney.nl/assets/fantasy-ui-borders
+- License: Creative Commons Zero (CC0 1.0) — no attribution required.
+- 原始包归档于 `assets/ui/kenney/kenney_fantasy-ui-borders.zip`;
+  运行时使用 `panel-gold.png` / `panel-gold-soft.png` / `divider-gold-fade.png`
+  (从 panel-border-024 / 023 / divider-fade-002 按亮度重映射到游戏金色阶调色)。
+  用途: v0.24 起全部二级界面卡片/列表行的统一九宫格面框。
+
 ## UnifrakturCook
 
 - Designer: Peter Wiegel; Google Fonts distribution
