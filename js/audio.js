@@ -4,7 +4,7 @@
 
   // ---------------- 清单(覆盖率自检 / 限流表以此为准) ----------------
   const SFX_NAMES = [
-    'ui_click', 'ui_hover', 'ui_back', 'run_start', 'run_step',
+    'ui_click', 'ui_hover', 'ui_back', 'run_start', 'run_step', 'run_step_grass', 'run_step_road',
     'shoot_slash', 'shoot_bolt', 'shoot_arrow', 'shoot_axe', 'shoot_dagger',
     'shoot_book', 'shoot_flask', 'zap', 'nova', 'turret_place',
     'hit1', 'hit2', 'crit', 'enemy_die', 'splat', 'player_hurt',
@@ -655,6 +655,8 @@
     ui_back: { f: 'ui_back.wav', rate: 0.92 },
     run_start: { f: 'run_start.wav', rate: 1.0 },
     run_step: { f: 'run_step.wav', rate: 1.0 },
+    run_step_grass: { f: 'run_step_grass.wav', rate: 1.0 },
+    run_step_road: { f: 'run_step_road.wav', rate: 1.0 },
     levelup: { f: 'levelup.wav', rate: 1.0 },
     upgrade_pick: { f: 'upgrade_pick.wav', rate: 1.0 },
     evolve: { f: 'evolve.wav', rate: 1.0 },
@@ -749,6 +751,13 @@
     run_step: function (t) {
       _noise(sfxBus, t, 0.06, 0.1, 'lowpass', 500, 180, 1, 0.9);
       _tone(sfxBus, t, 0.05, 'sine', 140, 90, 0.08);
+    },
+    run_step_grass: function (t) {
+      _noise(sfxBus, t, 0.05, 0.08, 'lowpass', 380, 120, 1, 0.7);
+    },
+    run_step_road: function (t) {
+      _noise(sfxBus, t, 0.05, 0.12, 'bandpass', 900, 2200, 1, 0.9);
+      _tone(sfxBus, t, 0.04, 'sine', 180, 110, 0.07);
     },
 
     // --- 攻击 ---

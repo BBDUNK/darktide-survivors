@@ -1,0 +1,159 @@
+/* ============================================================
+   v26 三级界面深水区精修层
+   选人/选图/暂停统一使用主菜单按钮语言 + Kenney 免费金框，
+   暂停面板升级为双线雕花框，所有按钮不再“简陋默认按钮”。
+   ============================================================ */
+
+/* ---------- 1. 按钮统一为主菜单同款金属贴图 ---------- */
+.character-select-screen .btn,
+.map-select-screen .btn,
+.pause-menu .btn {
+  background: url('../assets/art-v2/ui/menu_btn_frame_edge.png') center / 100% 100% no-repeat !important;
+  border: 0 !important;
+  border-image: none !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  color: #f1d28a !important;
+  text-shadow: 1px 1px 0 #201300 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+}
+.character-select-screen .btn.primary,
+.map-select-screen .btn.primary,
+.pause-menu .btn.primary {
+  color: #ffe9a8 !important;
+  text-shadow: 1px 1px 0 #3a1605, 0 0 10px rgba(255, 190, 90, .35) !important;
+}
+.character-select-screen .btn.danger,
+.map-select-screen .btn.danger,
+.pause-menu .btn.danger {
+  color: #ffb0a0 !important;
+  text-shadow: 1px 1px 0 #3a0505 !important;
+}
+.character-select-screen .btn:hover,
+.map-select-screen .btn:hover,
+.pause-menu .btn:hover {
+  filter: brightness(1.15) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* ---------- 2. 暂停面板：双线雕花金框 + 内容分区 ---------- */
+.pause-box {
+  position: relative !important;
+  width: min(520px, calc(100vw - 32px)) !important;
+  max-width: calc(100vw - 32px) !important;
+  min-height: 0 !important;
+  padding: 40px 44px 36px !important;
+  border: 0 !important;
+  border-image: none !important;
+  outline: 0 !important;
+  outline-offset: 0 !important;
+  border-radius: 0 !important;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(218, 168, 86, .10), rgba(0, 0, 0, 0) 55%),
+    linear-gradient(180deg, rgba(28, 19, 35, .98), rgba(12, 8, 18, .98)) !important;
+  box-shadow: 0 16px 44px rgba(0, 0, 0, .8), inset 0 0 32px rgba(0, 0, 0, .45) !important;
+}
+.pause-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  border: 18px solid transparent;
+  border-image: url('../assets/ui/kenney/panel-double-gold.png') 24 fill / 18px / 0 stretch;
+  opacity: .95;
+}
+.pause-box > * {
+  position: relative;
+  z-index: 1;
+}
+.pause-box .modal-title {
+  width: 100% !important;
+  padding-bottom: 12px !important;
+  margin-bottom: 6px !important;
+  border-bottom: 0 !important;
+  font-size: 24px !important;
+  letter-spacing: 8px !important;
+  text-align: center !important;
+  color: #f3d99a !important;
+  text-shadow: 2px 2px 0 #1a0d05, 0 0 18px rgba(255, 190, 90, .28) !important;
+}
+.pause-box .modal-title::after {
+  content: '';
+  display: block;
+  height: 10px;
+  margin: 8px auto 0;
+  width: min(360px, 80%);
+  background: url('../assets/ui/kenney/divider-gold.png') center / auto 10px repeat-x;
+  opacity: .85;
+}
+.pause-box .pause-build {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 10px 12px !important;
+  margin: 2px 0 10px !important;
+  background:
+    linear-gradient(180deg, rgba(16, 10, 26, .88), rgba(8, 5, 14, .92)) !important;
+  border: 0 !important;
+  position: relative;
+}
+.pause-box .pause-build::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 8px solid transparent;
+  border-image: url('../assets/ui/kenney/panel-gold-soft.png') 14 fill / 8px / 0 stretch;
+  opacity: .7;
+}
+.pause-box .pause-build > * {
+  position: relative;
+  z-index: 1;
+}
+.pause-menu {
+  width: 100% !important;
+  gap: 12px !important;
+}
+.pause-menu .btn {
+  width: min(380px, calc(100% - 20px)) !important;
+  min-height: 52px !important;
+  font-size: 16px !important;
+  letter-spacing: 2px !important;
+}
+
+/* ---------- 3. 选人/选图：信息框与底部按钮行更饱满 ---------- */
+.character-select-screen .info-box,
+.map-select-screen .info-box {
+  padding: 18px 22px !important;
+  min-height: 74px !important;
+}
+.character-select-screen .info-box .info-title,
+.map-select-screen .info-box .info-title {
+  font-size: 18px !important;
+  letter-spacing: 2px !important;
+}
+.character-select-screen .btn-row,
+.map-select-screen .btn-row {
+  gap: 16px !important;
+  margin-top: 4px !important;
+}
+.character-select-screen .btn-row .btn,
+.map-select-screen .btn-row .btn {
+  min-width: 180px !important;
+  min-height: 50px !important;
+  font-size: 16px !important;
+  letter-spacing: 2px !important;
+}
+
+/* 窄屏仍保持可用，不堆装饰 */
+@media (max-width: 700px), (max-height: 430px) {
+  .pause-box { padding: 26px 22px 24px !important; }
+  .pause-box::before { border-width: 12px; border-image-width: 12px; }
+  .pause-box .pause-build { padding: 8px 6px !important; }
+  .pause-menu .btn { min-height: 46px !important; font-size: 14px !important; }
+  .character-select-screen .btn-row .btn,
+  .map-select-screen .btn-row .btn { min-width: 140px !important; min-height: 44px !important; font-size: 14px !important; }
+}

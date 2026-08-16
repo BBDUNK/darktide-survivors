@@ -173,11 +173,13 @@ window.Entities = (function () {
     if (p.moving) {
       p.x += iv.x * mspd * dt;
       p.y += iv.y * mspd * dt;
-      // 跑步脚步音效(约每 0.34 秒一步,叠随机微调避免机械感)
+      // 跑步脚步音效(约每 0.34 秒一步,按地形区分:草地/沼泽用闷软脚步,道路用清脆脚步)
       p.stepT = (p.stepT || 0) - dt;
       if (p.stepT <= 0) {
         p.stepT = 0.34;
-        if (typeof AudioSys !== 'undefined' && AudioSys.play) AudioSys.play('run_step');
+        var stepSfx = terrain.type === 'road' ? 'run_step_road' :
+          (terrain.type === 'grass' || terrain.type === 'swamp' ? 'run_step_grass' : 'run_step');
+        if (typeof AudioSys !== 'undefined' && AudioSys.play) AudioSys.play(stepSfx);
       }
       // 脚步尘土(隔帧少量,避免粒子池被占满)
       if ((run.frame & 3) === 0) {

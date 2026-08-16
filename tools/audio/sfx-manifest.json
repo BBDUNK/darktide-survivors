@@ -13,6 +13,8 @@
     { "name": "victory",       "pack": "digital-audio", "file": "powerUp12.ogg",               "gain": 0.8,  "rate": 1.05 },
 
     { "name": "run_step",      "pack": "rpg-audio",     "file": "footstep00.ogg",              "gain": 0.5,  "rate": 1.0 },
+    { "name": "run_step_grass", "pack": "impact-sounds", "file": "footstep_grass_000.ogg",     "gain": 0.42, "rate": 1.0 },
+    { "name": "run_step_road",  "pack": "impact-sounds", "file": "footstep_concrete_000.ogg",  "gain": 0.5,  "rate": 1.0 },
     { "name": "shoot_slash",   "pack": "rpg-audio",     "file": "knifeSlice.ogg",              "gain": 0.6,  "rate": 1.0 },
     { "name": "shoot_bolt",    "pack": "digital-audio", "file": "laser4.ogg",                  "gain": 0.4,  "rate": 1.0 },
     { "name": "shoot_arrow",   "pack": "rpg-audio",     "file": "knifeSlice2.ogg",             "gain": 0.55, "rate": 0.96 },
