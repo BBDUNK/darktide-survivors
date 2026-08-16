@@ -1507,10 +1507,10 @@ window.Weapons = (function () {
         var dmFps = cachedFps('summon_demon', 10);
         var dmAge = Math.max(0, run.t - (b.born || 0));
         var dmImg = dmFrames[Math.floor(dmAge * dmFps) % dmFrames.length];
-        var dmW = 104, dmH = dmImg.height * dmW / dmImg.width;
-        var dmBob = Math.sin(dmAge * 4.6) * 5;
+        var dmW = 208, dmH = dmImg.height * dmW / dmImg.width;
+        var dmBob = Math.sin(dmAge * 4.6) * 8;
         ctx.globalAlpha = 0.5;
-        ctx.drawImage(SpriteGen.get('vfx_shadow'), b.x - 42, b.y + 30, 84, 18);
+        ctx.drawImage(SpriteGen.get('vfx_shadow'), b.x - 84, b.y + 62, 168, 34);
         ctx.globalAlpha = 1;
         ctx.save();
         ctx.translate(b.x, b.y + dmBob);

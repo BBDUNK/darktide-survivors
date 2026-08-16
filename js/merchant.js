@@ -499,7 +499,7 @@ window.Merchant = (function () {
         ctx.globalAlpha = 1;
       }
       // 名称 + 价格:加大描边文字保证可读,不要黑底
-      ctx.font = Engine.zoomFont('bold 13px "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif');
+      ctx.font = Engine.zoomFont('bold 13px "KaiTi","楷体","STKaiti","华文楷体",serif');
       ctx.textAlign = 'center';
       var costTxt = '◈ ' + s.good.cost;
       ctx.lineWidth = 4;
@@ -548,7 +548,7 @@ window.Merchant = (function () {
     ctx.lineTo(x + 13, y + h); ctx.quadraticCurveTo(x, y + h, x, y + h - 13);
     ctx.lineTo(x, y + 13); ctx.quadraticCurveTo(x, y, x + 13, y); ctx.closePath(); ctx.fill(); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(M.x - 9, y + h); ctx.lineTo(M.x + 3, y + h); ctx.lineTo(M.x - 3, y + h + 9); ctx.closePath(); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = '#38241a'; ctx.font = Engine.zoomFont('bold 10px "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif'); ctx.textAlign = 'center';
+    ctx.fillStyle = '#38241a'; ctx.font = Engine.zoomFont('bold 11px "KaiTi","楷体","STKaiti","华文楷体",serif'); ctx.textAlign = 'center';
     for (var i = 0; i < lines.length; i++) {
       ctx.fillText(lines[i], M.x, y + 18 + i * lh);
     }

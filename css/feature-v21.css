@@ -412,28 +412,31 @@ html, body, button, input, select, textarea, * {
   animation: none !important;
 }
 
-/* 左下角金币/击杀：两个框统一尺寸，横着拉长，图标+文字完整居中排版 */
+/* 左下角金币/击杀：两个框统一尺寸，贴左下角对齐，横着拉长，图标+文字完整居中排版 */
 .hud-tr {
-  gap: 8px !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  padding-left: 0 !important;
+  gap: 4px !important;
 }
 .hud-stat {
-  width: 168px !important;
-  min-width: 168px !important;
-  max-width: 168px !important;
-  height: 42px !important;
-  padding: 0 16px !important;
+  width: 150px !important;
+  min-width: 150px !important;
+  max-width: 150px !important;
+  height: 40px !important;
+  padding: 0 12px !important;
   box-sizing: border-box !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 8px !important;
+  gap: 6px !important;
   background: url('../assets/art-v2/ui/hud_coin_frame.png') center / 100% 100% no-repeat !important;
   border: 0 !important;
   outline: 0 !important;
   box-shadow: none !important;
   color: #ffe094 !important;
-  font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif !important;
-  font-size: 14px !important;
+  font-family: var(--font-cn) !important;
+  font-size: 13px !important;
   font-weight: 700 !important;
   white-space: nowrap !important;
   overflow: hidden !important;
@@ -443,12 +446,12 @@ html, body, button, input, select, textarea, * {
 }
 .hud-stat canvas {
   flex: none !important;
-  width: 18px !important;
-  height: 18px !important;
+  width: 16px !important;
+  height: 16px !important;
 }
 .hud-stat-label {
-  font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif !important;
-  font-size: 11px !important;
+  font-family: var(--font-cn) !important;
+  font-size: 10px !important;
   font-weight: 700 !important;
   color: #c8b6dd !important;
 }
