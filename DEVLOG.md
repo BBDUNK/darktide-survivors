@@ -20,6 +20,16 @@
 
 ---
 
+## 2026-08-16 — v0.23.4:左下角 UI 对齐 + 免费挥剑/挥斧/跑步音效
+
+- **左下角 UI 对齐**：金币/击杀两个框统一使用同一张金币边框贴图，视觉上完全对齐，不再一个框对不齐
+- **挥剑音效替换**：`shoot_slash` 改用免费 Medieval Weapons 剑挥击 MP3（happysoulmusic.com）
+- **挥斧音效替换**：`shoot_axe` 改用免费 Medieval Weapons 斧挥击 MP3（happysoulmusic.com）
+- **角色跑步音效**：新增 `run_step`，使用 Kenney CC0 脚步声，移动时约每 0.34 秒播放一次
+- 回归：`headless.js` 全绿
+
+---
+
 ## 2026-08-16 — v0.23.3:左下角 HUD 内容左对齐防数字越界
 
 - 金币/击杀图标改为贴左边框，文字整体左移

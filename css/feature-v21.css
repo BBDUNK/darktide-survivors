@@ -442,7 +442,7 @@ html, body, button, input, select, textarea, * {
   overflow: hidden !important;
 }
 .hud-stat + .hud-stat {
-  background-image: url('../assets/art-v2/ui/hud_kill_frame.png') !important;
+  background-image: url('../assets/art-v2/ui/hud_coin_frame.png') !important;
 }
 .hud-stat canvas {
   flex: none !important;

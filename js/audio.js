@@ -4,7 +4,7 @@
 
   // ---------------- 清单(覆盖率自检 / 限流表以此为准) ----------------
   const SFX_NAMES = [
-    'ui_click', 'ui_hover', 'ui_back', 'run_start',
+    'ui_click', 'ui_hover', 'ui_back', 'run_start', 'run_step',
     'shoot_slash', 'shoot_bolt', 'shoot_arrow', 'shoot_axe', 'shoot_dagger',
     'shoot_book', 'shoot_flask', 'zap', 'nova', 'turret_place',
     'hit1', 'hit2', 'crit', 'enemy_die', 'splat', 'player_hurt',
@@ -654,16 +654,17 @@
     ui_hover: { f: 'ui_hover.wav', rate: 1.0 },
     ui_back: { f: 'ui_back.wav', rate: 0.92 },
     run_start: { f: 'run_start.wav', rate: 1.0 },
+    run_step: { f: 'run_step.wav', rate: 1.0 },
     levelup: { f: 'levelup.wav', rate: 1.0 },
     upgrade_pick: { f: 'upgrade_pick.wav', rate: 1.0 },
     evolve: { f: 'evolve.wav', rate: 1.0 },
     achievement: { f: 'achievement.wav', rate: 1.0 },
     gameover: { f: 'gameover.wav', rate: 0.8 },
     victory: { f: 'victory.wav', rate: 1.05 },
-    shoot_slash: { f: 'shoot_slash.wav', rate: 1.0 },
+    shoot_slash: { f: 'shoot_slash.mp3', rate: 1.0 },
     shoot_bolt: { f: 'shoot_bolt.wav', rate: 1.0 },
     shoot_arrow: { f: 'shoot_arrow.wav', rate: 0.96 },
-    shoot_axe: { f: 'shoot_axe.wav', rate: 1.0 },
+    shoot_axe: { f: 'shoot_axe.mp3', rate: 1.0 },
     shoot_dagger: { f: 'shoot_dagger.wav', rate: 1.3 },
     shoot_book: { f: 'shoot_book.wav', rate: 1.0 },
     shoot_flask: { f: 'shoot_flask.wav', rate: 0.9 },
@@ -744,6 +745,10 @@
       _tone(sfxBus, t + 0.09, 0.1, 'square', 330, 0, 0.14);
       _duo(sfxBus, t + 0.18, 0.28, 'square', 440, 0.13);
       _noise(sfxBus, t, 0.3, 0.06, 'highpass', 1500, 5000, 1, 1);
+    },
+    run_step: function (t) {
+      _noise(sfxBus, t, 0.06, 0.1, 'lowpass', 500, 180, 1, 0.9);
+      _tone(sfxBus, t, 0.05, 'sine', 140, 90, 0.08);
     },
 
     // --- 攻击 ---

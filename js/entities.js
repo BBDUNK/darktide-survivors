@@ -8,7 +8,7 @@ window.Entities = (function () {
     return {
       x: 0, y: 0, r: 10,
       hp: 100, iframe: 0, hurtFlash: 0, dashT: 0, dashCd: 0, dashX: 0, dashY: 0,
-      face: 1, dir: 'down', moving: false, animT: 0,
+      face: 1, dir: 'down', moving: false, animT: 0, stepT: 0,
       attackAnimT: 0, attackAnimAge: 0,
       char: charDef,
       shield: 0, shieldRegenT: 0,  // 护盾当前值 / 下次恢复计时
@@ -173,6 +173,12 @@ window.Entities = (function () {
     if (p.moving) {
       p.x += iv.x * mspd * dt;
       p.y += iv.y * mspd * dt;
+      // 跑步脚步音效(约每 0.34 秒一步,叠随机微调避免机械感)
+      p.stepT = (p.stepT || 0) - dt;
+      if (p.stepT <= 0) {
+        p.stepT = 0.34;
+        if (typeof AudioSys !== 'undefined' && AudioSys.play) AudioSys.play('run_step');
+      }
       // 脚步尘土(隔帧少量,避免粒子池被占满)
       if ((run.frame & 3) === 0) {
         var stepCol = terrain.type === 'swamp' ? '#60764b' :
