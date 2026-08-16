@@ -5988,7 +5988,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "zombie",
-      "source": "assets/art-v4/repaired/enemies/zombie_actions.png",
+      "source": "assets/art-v6/game-ready/existing-v4/repaired/enemies/mudwalker_actions_rework.png",
       "frameSize": [
         64,
         64
@@ -6014,7 +6014,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "zombie_walk",
-      "source": "assets/art-v4/repaired/enemies/zombie_actions.png",
+      "source": "assets/art-v6/game-ready/existing-v4/repaired/enemies/mudwalker_actions_rework.png",
       "frameSize": [
         64,
         64
@@ -6040,7 +6040,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "zombie_attack",
-      "source": "assets/art-v4/repaired/enemies/zombie_actions.png",
+      "source": "assets/art-v6/game-ready/existing-v4/repaired/enemies/mudwalker_actions_rework.png",
       "frameSize": [
         64,
         64
@@ -6066,7 +6066,7 @@
       "maxCentroidDrift": 64,
       "maxBaselineDrift": 8,
       "name": "zombie_death",
-      "source": "assets/art-v4/repaired/enemies/zombie_actions.png",
+      "source": "assets/art-v6/game-ready/existing-v4/repaired/enemies/mudwalker_actions_rework.png",
       "frameSize": [
         64,
         64
