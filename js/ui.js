@@ -203,6 +203,26 @@ window.UI = (function () {
 
   // ---------- 选人 ----------
   var charGrid, charInfo;
+  // 界面氛围件:四角金饰 + 上浮余烬粒子(CSS 动画,零每帧 JS 成本)
+  function decorateScreen(s, emberCount) {
+    var orn = h('div', 'corner-orn tl'); s.appendChild(orn);
+    var orn2 = h('div', 'corner-orn tr'); s.appendChild(orn2);
+    var orn3 = h('div', 'corner-orn br'); s.appendChild(orn3);
+    var orn4 = h('div', 'corner-orn bl'); s.appendChild(orn4);
+    var layer = h('div', 'ember-layer');
+    for (var i = 0; i < (emberCount || 16); i++) {
+      var e = h('span', 'ember');
+      e.style.left = (3 + Math.random() * 94) + '%';
+      e.style.animationDelay = (Math.random() * 6).toFixed(2) + 's';
+      e.style.animationDuration = (4.5 + Math.random() * 4.5).toFixed(2) + 's';
+      var sz = 2 + Math.random() * 2.5;
+      e.style.width = sz.toFixed(1) + 'px';
+      e.style.height = sz.toFixed(1) + 'px';
+      e.style.opacity = (0.25 + Math.random() * 0.5).toFixed(2);
+      layer.appendChild(e);
+    }
+    s.appendChild(layer);
+  }
   function buildChars() {
     var s = h('div', 'screen panel-col character-select-screen');
     s.appendChild(h('div', 'page-title', L.t('pick_char')));
@@ -221,20 +241,31 @@ window.UI = (function () {
     row.appendChild(btn(L.t('back'), '', function () { show('menu'); }));
     row.appendChild(btn(L.t('next') + ' →', 'primary', function () { refreshMaps(); show('maps'); }));
     s.appendChild(row);
+    decorateScreen(s, 18);
     screens.chars = s; root.appendChild(s);
   }
   function refreshChars() {
     charGrid.innerHTML = '';
     CFG.CHARS.forEach(function (c) {
       var unlocked = Meta.isCharUnlocked(c);
-      var card = h('div', 'card' + (unlocked ? '' : ' locked') + (sel.charId === c.id ? ' selected' : ''));
-      card.appendChild(iconCanvas(unlocked ? c.sprite : c.sprite, 72));
-      card.appendChild(h('div', 'card-name', unlocked ? c.name : '???'));
+      var card = h('div', 'card char-card' + (unlocked ? '' : ' locked') + (sel.charId === c.id ? ' selected' : ''));
+      // 立绘区:径向底光 + 角色精灵,选中态点亮
+      var portrait = h('div', 'char-portrait');
+      portrait.appendChild(iconCanvas(c.sprite, 78));
+      card.appendChild(portrait);
+      // 铭牌:角色名(锁定显示 ???)
+      card.appendChild(h('div', 'char-plate', unlocked ? c.name : '???'));
       if (!unlocked) {
         var a = achvById(c.unlock.achv);
-        card.appendChild(h('div', 'card-lock', '🔒 ' + (a ? a.desc.split('(')[0] : '')));
+        card.appendChild(h('div', 'card-lock', a ? a.desc.split('(')[0] : '尚未解锁'));
       } else {
-        card.appendChild(h('div', 'card-sub', CFG.WEAPONS[c.weapon].name));
+        // 初始武器行:像素图标 + 武器名
+        var wr = h('div', 'card-sub');
+        var wico = iconCanvas(CFG.WEAPONS[c.weapon].icon, 14);
+        wico.className = 'inline-ico';
+        wr.appendChild(wico);
+        wr.appendChild(h('span', '', CFG.WEAPONS[c.weapon].name));
+        card.appendChild(wr);
       }
       if (c.id === 'berserker') {
         card.appendChild(h('span', 'char-badge', '版本之子！'));
@@ -250,6 +281,13 @@ window.UI = (function () {
     charInfo.appendChild(h('div', 'info-title', c.name));
     charInfo.appendChild(h('div', 'info-desc', c.desc));
     charInfo.appendChild(h('div', 'info-bonus', '★ ' + c.bonusText));
+    // 初始武器行,与卡片一致
+    var iw = h('div', 'info-weapon');
+    var iwico = iconCanvas(CFG.WEAPONS[c.weapon].icon, 18);
+    iwico.className = 'inline-ico';
+    iw.appendChild(iwico);
+    iw.appendChild(h('span', '', '初始武器 · ' + CFG.WEAPONS[c.weapon].name));
+    charInfo.appendChild(iw);
   }
   function charById(id) { for (var i = 0; i < CFG.CHARS.length; i++) if (CFG.CHARS[i].id === id) return CFG.CHARS[i]; return CFG.CHARS[0]; }
   function achvById(id) { for (var i = 0; i < CFG.ACHV.length; i++) if (CFG.ACHV[i].id === id) return CFG.ACHV[i]; return null; }
@@ -257,7 +295,7 @@ window.UI = (function () {
   // ---------- 选图 ----------
   var mapGrid;
   function buildMaps() {
-    var s = h('div', 'screen panel-col');
+    var s = h('div', 'screen panel-col map-select-screen');
     s.appendChild(h('div', 'page-title', L.t('pick_map')));
     mapGrid = h('div', 'card-grid maps');
     s.appendChild(mapGrid);
@@ -268,6 +306,7 @@ window.UI = (function () {
       cb.onStartRun(sel.charId, sel.mapId);
     }));
     s.appendChild(row);
+    decorateScreen(s, 16);
     screens.maps = s; root.appendChild(s);
   }
   function refreshMaps() {
@@ -276,16 +315,27 @@ window.UI = (function () {
       var unlocked = Meta.isMapUnlocked(m);
       if (!unlocked && sel.mapId === m.id) sel.mapId = 'graveyard';
       var card = h('div', 'card map-card' + (unlocked ? '' : ' locked') + (sel.mapId === m.id ? ' selected' : ''));
+      // 预览区:地图主色渐变 + 两件代表性装饰(更有"地形预览"感)
       var sw = h('div', 'map-swatch');
-      sw.style.background = 'linear-gradient(135deg,' + m.palette.ground2 + ',' + m.palette.fog + ')';
-      var dec = iconCanvas(m.decors[0], 32);
-      sw.appendChild(dec);
+      sw.style.background = 'linear-gradient(150deg,' + m.palette.ground2 + ' 0%,' +
+        m.palette.fog + ' 55%,' + m.palette.vign + ' 100%)';
+      sw.appendChild(iconCanvas(m.decors[0], 34));
+      var sw2 = iconCanvas(m.decors[m.decors.length > 1 ? 1 : 0], 26);
+      sw2.className = 'map-swatch-deco2';
+      sw.appendChild(sw2);
       card.appendChild(sw);
-      card.appendChild(h('div', 'card-name', unlocked ? m.name : '???'));
-      card.appendChild(h('div', 'card-sub', unlocked ? m.desc : ''));
+      card.appendChild(h('div', 'char-plate', unlocked ? m.name : '???'));
       if (!unlocked) {
         var a = achvById(m.unlock.achv);
-        card.appendChild(h('div', 'card-lock', '🔒 ' + (a ? a.desc.split('(')[0] : '')));
+        card.appendChild(h('div', 'card-lock', a ? a.desc.split('(')[0] : '尚未解锁'));
+      } else {
+        card.appendChild(h('div', 'card-sub', m.desc));
+        // 难度:血量+刷怪倍率折算 1~3 颗星(样式星,非 emoji)
+        var diffIdx = (m.hpMul - 1) * 2 + (m.rateMul - 1) * 2;
+        var stars = diffIdx >= 1.8 ? 3 : (diffIdx >= 0.8 ? 2 : 1);
+        var dif = h('div', 'map-diff');
+        for (var si = 0; si < 3; si++) dif.appendChild(h('span', si < stars ? 'on' : '', '★'));
+        card.appendChild(dif);
       }
       if (unlocked) card.addEventListener('click', function () {
         AudioSys.play('ui_click');
