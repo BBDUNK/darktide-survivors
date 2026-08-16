@@ -424,12 +424,12 @@ html, body, button, input, select, textarea, * {
   min-width: 150px !important;
   max-width: 150px !important;
   height: 40px !important;
-  padding: 0 12px !important;
+  padding: 0 8px 0 10px !important;
   box-sizing: border-box !important;
   display: flex !important;
   align-items: center !important;
-  justify-content: center !important;
-  gap: 6px !important;
+  justify-content: flex-start !important;
+  gap: 5px !important;
   background: url('../assets/art-v2/ui/hud_coin_frame.png') center / 100% 100% no-repeat !important;
   border: 0 !important;
   outline: 0 !important;
